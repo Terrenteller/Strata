@@ -1,0 +1,22 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "minecraft:blocks/stone",
+			"particle": "#all"
+		},
+		"uvlock": true
+	},
+	"variants": {
+		"type": {
+			"basaltic_mineral_sand": {"textures": {"all": "strata:blocks/ore/sand/basaltic_mineral_sand"}},
+			"cassiterite_sand":      {"textures": {"all": "strata:blocks/ore/sand/cassiterite_sand"}},
+			"garnet_sand":           {"textures": {"all": "strata:blocks/ore/sand/garnet_sand"}},
+			"granitic_mineral_sand": {"textures": {"all": "strata:blocks/ore/sand/granitic_mineral_sand"}},
+			"quartz_sand":           {"textures": {"all": "strata:blocks/ore/sand/quartz_sand"}},
+			"volcanic_ash":          {"textures": {"all": "strata:blocks/ore/sand/volcanic_ash"}},
+			"glauconite":            {"textures": {"all": "strata:blocks/ore/sand/glauconite"}}
+		}
+	}
+}

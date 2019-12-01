@@ -1,0 +1,20 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "minecraft:blocks/stone",
+			"particle": "#all"
+		},
+		"uvlock": true
+	},
+	"variants": {
+		"type": {
+			"breccia":      {"textures": {"all": "strata:blocks/rubble/weak/breccia"}},
+			"claystone":    {"textures": {"all": "strata:blocks/rubble/weak/claystone"}},
+			"carbonatite":  {"textures": {"all": "strata:blocks/rubble/weak/carbonatite"}},
+			"conglomerate": {"textures": {"all": "strata:blocks/rubble/weak/conglomerate"}},
+			"mudstone":     {"textures": {"all": "strata:blocks/rubble/weak/mudstone"}}
+		}
+	}
+}

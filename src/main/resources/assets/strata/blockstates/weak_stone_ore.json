@@ -1,0 +1,31 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "minecraft:blocks/stone",
+			"particle": "#all"
+		},
+		"uvlock": true
+	},
+	"variants": {
+		"type": {
+			"borax":       {"textures": {"all": "strata:blocks/ore/weak/borax"}},
+			"cinnabar":    {"textures": {"all": "strata:blocks/ore/weak/cinnabar"}},
+			"galena":      {"textures": {"all": "strata:blocks/ore/weak/galena"}},
+			"molybdenite": {"textures": {"all": "strata:blocks/ore/weak/molybdenite"}},
+			"pyrolusite":  {"textures": {"all": "strata:blocks/ore/weak/pyrolusite"}},
+			"salt":        {"textures": {"all": "strata:blocks/ore/weak/salt"}},
+			"stibnite":    {"textures": {"all": "strata:blocks/ore/weak/stibnite"}},
+			"chrysotile":  {"textures": {"all": "strata:blocks/ore/weak/chrysotile"}},
+			"diatomite":   {"textures": {"all": "strata:blocks/ore/weak/diatomite"}},
+			"realgar":     {"textures": {"all": "strata:blocks/ore/weak/realgar"}},
+			"graphite":    {"textures": {"all": "strata:blocks/ore/weak/graphite"}},
+			"gypsum":      {"textures": {"all": "strata:blocks/ore/weak/gypsum"}},
+			"mirabilite":  {"textures": {"all": "strata:blocks/ore/weak/mirabilite"}},
+			"mica":        {"textures": {"all": "strata:blocks/ore/weak/mica"}},
+			"soapstone":   {"textures": {"all": "strata:blocks/ore/weak/soapstone"}},
+			"trona":       {"textures": {"all": "strata:blocks/ore/weak/trona"}}
+		}
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "minecraft:blocks/stone",
+			"particle": "#all"
+		},
+		"uvlock": true
+	},
+	"variants": {
+		"type": {
+			"limestone":     {"textures": {"all": "strata:blocks/cobble/medium/limestone"}},
+			"schist":        {"textures": {"all": "strata:blocks/cobble/medium/schist"}},
+			"serpentinite":  {"textures": {"all": "strata:blocks/cobble/medium/serpentinite"}},
+			"slate":         {"textures": {"all": "strata:blocks/cobble/medium/slate"}},
+			"skarn":         {"textures": {"all": "strata:blocks/cobble/medium/skarn"}},
+			"chalk":         {"textures": {"all": "strata:blocks/cobble/medium/chalk"}}
+		}
+	}
+}

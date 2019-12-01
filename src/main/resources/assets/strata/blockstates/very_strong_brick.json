@@ -1,0 +1,20 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "minecraft:blocks/stone",
+			"particle": "#all"
+		},
+		"uvlock": true
+	},
+	"variants": {
+		"type": {
+			"diorite":    {"textures": {"all": "strata:blocks/brick/very_strong/diorite"}},
+			"gabbro":     {"textures": {"all": "strata:blocks/brick/very_strong/gabbro"}},
+			"hornfels":   {"textures": {"all": "strata:blocks/brick/very_strong/hornfels"}},
+			"peridotite": {"textures": {"all": "strata:blocks/brick/very_strong/peridotite"}},
+			"quartzite":  {"textures": {"all": "strata:blocks/brick/very_strong/quartzite"}}
+		}
+	}
+}

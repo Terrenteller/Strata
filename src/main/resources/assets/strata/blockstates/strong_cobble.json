@@ -1,0 +1,25 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "minecraft:blocks/stone",
+			"particle": "#all"
+		},
+		"uvlock": true
+	},
+	"variants": {
+		"type": {
+			"andesite":      {"textures": {"all": "strata:blocks/cobble/strong/andesite"}},
+			"basalt":        {"textures": {"all": "strata:blocks/cobble/strong/basalt"}},
+			"gneiss":        {"textures": {"all": "strata:blocks/cobble/strong/gneiss"}},
+			"granite":       {"textures": {"all": "strata:blocks/cobble/strong/granite"}},
+			"greenschist":   {"textures": {"all": "strata:blocks/cobble/strong/greenschist"}},
+			"marble":        {"textures": {"all": "strata:blocks/cobble/strong/marble"}},
+			"pegmatite":     {"textures": {"all": "strata:blocks/cobble/strong/pegmatite"}},
+			"rhyolite":      {"textures": {"all": "strata:blocks/cobble/strong/rhyolite"}},
+			"sandstone":     {"textures": {"all": "strata:blocks/cobble/strong/sandstone"}},
+			"red_sandstone": {"textures": {"all": "strata:blocks/cobble/strong/red_sandstone"}}
+		}
+	}
+}
