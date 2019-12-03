@@ -52,7 +52,7 @@ public class OreItemTextureManager
 
         long endTime = System.nanoTime();
         LOGGER.info( String.format(
-            "Generate %d ore item textures in %d millisecond(s)",
+            "Generated %d ore item textures in %d millisecond(s)",
             generatedTextureCount,
             ( endTime - startTime ) / 1000000 ) );
 

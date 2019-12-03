@@ -157,7 +157,7 @@ public class DynamicOreHostManager
 
         long endTime = System.nanoTime();
         LOGGER.info( String.format(
-            "Generate %d texture(s) from %d hosts and %d ores in %d millisecond(s)",
+            "Generated %d texture(s) from %d hosts and %d ores in %d millisecond(s)",
             generatedTextureCount,
             hostCount / oreCount,
             oreCount,
