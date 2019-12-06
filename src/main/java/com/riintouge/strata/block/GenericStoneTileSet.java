@@ -91,11 +91,8 @@ public class GenericStoneTileSet
         {
             GenericBlockItemPair cobble = tiles.getOrDefault( StoneBlockType.COBBLE , null );
 
-            String overlayPath = tileSetInfo.stoneStrength() == StoneStrength.WEAK
-                ? "overlays/rubble"
-                : "overlays/cobble";
             LayeredTextureLayer cobbleLayer = new LayeredTextureLayer(
-                new ResourceLocation( Strata.modid , overlayPath ),
+                new ResourceLocation( Strata.modid , "overlays/cobble" ),
                 tileSetInfo.cobbleOverlayBlendMode(),
                 tileSetInfo.cobbleOverlayOpacity() );
             LayeredTextureLayer baseLayer = new LayeredTextureLayer( baseTextureLocation );
@@ -110,11 +107,11 @@ public class GenericStoneTileSet
             GenericBlockItemPair brick = tiles.getOrDefault( StoneBlockType.BRICK , null );
 
             LayeredTextureLayer brickLightenLayer = new LayeredTextureLayer(
-                new ResourceLocation( Strata.modid , "overlays/brick_lighten" ),
+                new ResourceLocation( Strata.modid , "overlays/brick_highlight" ),
                 tileSetInfo.brickHighlightBlendMode(),
                 tileSetInfo.brickHighlightOverlayOpacity() );
             LayeredTextureLayer brickDarkenLayer = new LayeredTextureLayer(
-                new ResourceLocation( Strata.modid , "overlays/brick_darken" ),
+                new ResourceLocation( Strata.modid , "overlays/brick_shadow" ),
                 tileSetInfo.brickShadowBlendMode(),
                 tileSetInfo.brickShadowOverlayOpacity() );
             LayeredTextureLayer stoneLayer = new LayeredTextureLayer( baseTextureLocation );

@@ -40,7 +40,10 @@ public class Blocks
     {
         GenericStoneRegistry stoneRegistry = GenericStoneRegistry.INSTANCE;
 
-        for( WeakStoneTileSetInfo info : WeakStoneTileSetInfo.values() )
+        for( IGenericStoneTileSetInfo info : WeakStoneTileSetInfo.values() )
+            stoneRegistry.register( new GenericStoneTileSet( info ) );
+
+        for( IGenericStoneTileSetInfo info : MediumStoneTileSetInfo.values() )
             stoneRegistry.register( new GenericStoneTileSet( info ) );
 
         weakStone = WeakStoneBlock.INSTANCE;
