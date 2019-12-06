@@ -1,5 +1,6 @@
 package com.riintouge.strata.init;
 
+import com.riintouge.strata.GenericStoneRegistry;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.item.*;
 import com.riintouge.strata.item.ore.*;
@@ -66,9 +67,11 @@ public class Items
     @SubscribeEvent
     public static void onEvent( RegistryEvent.Register< Item > event )
     {
-        System.out.println( "Items::registerBlocks()" );
+        System.out.println( "Items::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
+
+        GenericStoneRegistry.INSTANCE.registerItems( event );
 
         itemRegistry.register( weakStone );
         itemRegistry.register( mediumStone );
@@ -99,6 +102,8 @@ public class Items
     public static void onEvent( ModelRegistryEvent event )
     {
         System.out.println( "Items::registerModels()" );
+
+        GenericStoneRegistry.INSTANCE.registerModels( event );
 
         // FIXME: We know a tad too much about implementation details here...
 

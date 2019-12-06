@@ -2,6 +2,8 @@ package com.riintouge.strata.proxy.event;
 
 import com.riintouge.strata.block.DynamicOreHostManager;
 import com.riintouge.strata.block.DynamicOreHostModel;
+import com.riintouge.strata.GenericStoneRegistry;
+import com.riintouge.strata.block.GenericStoneModelLoader;
 import com.riintouge.strata.item.OreItemModelLoader;
 import com.riintouge.strata.item.OreItemTextureManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -21,6 +23,7 @@ public class ClientPreInitEventHandlers
     {
         System.out.println( "ClientPreInitEventHandlers::onEvent( ModelRegistryEvent )" );
 
+        ModelLoaderRegistry.registerLoader( new GenericStoneModelLoader() );
         ModelLoaderRegistry.registerLoader( new OreItemModelLoader() );
     }
 
@@ -29,6 +32,7 @@ public class ClientPreInitEventHandlers
     {
         System.out.println( "ClientPreInitEventHandlers::onEvent( TextureStitchEvent.Pre )" );
 
+        GenericStoneRegistry.INSTANCE.stitchTextures( event );
         DynamicOreHostManager.INSTANCE.regenerate( event.getMap() );
         OreItemTextureManager.INSTANCE.regenerate( event.getMap() );
     }
