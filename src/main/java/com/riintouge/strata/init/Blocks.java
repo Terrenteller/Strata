@@ -46,6 +46,12 @@ public class Blocks
         for( IGenericStoneTileSetInfo info : MediumStoneTileSetInfo.values() )
             stoneRegistry.register( new GenericStoneTileSet( info ) );
 
+        for( IGenericStoneTileSetInfo info : StrongStoneTileSetInfo.values() )
+            stoneRegistry.register( new GenericStoneTileSet( info ) );
+
+        for( IGenericStoneTileSetInfo info : VeryStrongStoneTileSetInfo.values() )
+            stoneRegistry.register( new GenericStoneTileSet( info ) );
+
         weakStone = WeakStoneBlock.INSTANCE;
         mediumStone = MediumStoneBlock.INSTANCE;
         strongStone = StrongStoneBlock.INSTANCE;

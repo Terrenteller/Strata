@@ -2,20 +2,24 @@ package com.riintouge.strata.block;
 
 import com.riintouge.strata.image.BlendMode;
 
-public enum MediumStoneTileSetInfo implements IGenericStoneTileSetInfo
+public enum StrongStoneTileSetInfo implements IGenericStoneTileSetInfo
 {
-    LIMESTONE    (  94.0f ,  43.0f ,  23.0f ),
-    SCHIST       (  97.0f ,  46.0f ,  40.0f ),
-    SERPENTINITE ( 100.0f ,  19.0f ,  36.0f ),
-    SLATE        (  94.0f ,  10.0f ,  28.0f ),
-    SKARN        (  95.0f ,  23.0f ,  28.0f ),
-    CHALK        (  88.0f , 100.0f ,   8.0f );
+    ANDESITE      (  95.0f ,  46.0f ,  34.0f ),
+    BASALT        (  82.0f ,  10.0f ,  27.0f ),
+    GNEISS        ( 100.0f ,  19.0f ,  26.0f ),
+    GRANITE       (  87.0f ,  21.0f ,  28.0f ),
+    GREENSCHIST   ( 100.0f ,  10.0f ,  37.0f ),
+    MARBLE        (  71.0f ,  59.0f ,  36.0f ),
+    PEGMATITE     (  78.0f ,  58.0f ,  29.0f ),
+    RHYOLITE      (  78.0f ,  59.0f ,  34.0f ),
+    SANDSTONE     (  82.0f ,  39.0f ,  29.0f ),
+    RED_SANDSTONE (  58.0f ,  13.0f ,  27.0f );
 
     private float cobbleOverlayOpacity;
     private float brickHighlightOpacity;
     private float brickShadowOpacity;
 
-    MediumStoneTileSetInfo(
+    StrongStoneTileSetInfo(
         float cobbleOverlayOpacity,
         float brickHighlightOpacity,
         float brickShadowOpacity )
@@ -34,7 +38,7 @@ public enum MediumStoneTileSetInfo implements IGenericStoneTileSetInfo
     @Override
     public StoneStrength stoneStrength()
     {
-        return StoneStrength.MEDIUM;
+        return StoneStrength.STRONG;
     }
 
     @Override

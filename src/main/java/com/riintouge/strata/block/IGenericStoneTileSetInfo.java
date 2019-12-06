@@ -14,9 +14,9 @@ public interface IGenericStoneTileSetInfo
 
     BlendMode brickHighlightBlendMode();
 
-    float brickHighlightOverlayOpacity();
+    float brickHighlightOpacity();
 
     BlendMode brickShadowBlendMode();
 
-    float brickShadowOverlayOpacity();
+    float brickShadowOpacity();
 }

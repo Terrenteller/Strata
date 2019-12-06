@@ -106,18 +106,18 @@ public class GenericStoneTileSet
         {
             GenericBlockItemPair brick = tiles.getOrDefault( StoneBlockType.BRICK , null );
 
-            LayeredTextureLayer brickLightenLayer = new LayeredTextureLayer(
+            LayeredTextureLayer brickHighlightLayer = new LayeredTextureLayer(
                 new ResourceLocation( Strata.modid , "overlays/brick_highlight" ),
                 tileSetInfo.brickHighlightBlendMode(),
-                tileSetInfo.brickHighlightOverlayOpacity() );
-            LayeredTextureLayer brickDarkenLayer = new LayeredTextureLayer(
+                tileSetInfo.brickHighlightOpacity() );
+            LayeredTextureLayer brickShadowLayer = new LayeredTextureLayer(
                 new ResourceLocation( Strata.modid , "overlays/brick_shadow" ),
                 tileSetInfo.brickShadowBlendMode(),
-                tileSetInfo.brickShadowOverlayOpacity() );
+                tileSetInfo.brickShadowOpacity() );
             LayeredTextureLayer stoneLayer = new LayeredTextureLayer( baseTextureLocation );
             TextureAtlasSprite brickTexture = new LayeredTexture(
                 brick.getBlock().getRegistryName(),
-                new LayeredTextureLayer[] { brickLightenLayer , brickDarkenLayer , stoneLayer } );
+                new LayeredTextureLayer[] { brickHighlightLayer , brickShadowLayer , stoneLayer } );
 
             textureMap.setTextureEntry( brickTexture );
         }
