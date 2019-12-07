@@ -1,8 +1,11 @@
 package com.riintouge.strata.block;
 
+import com.riintouge.strata.GenericOreRegistry;
 import com.riintouge.strata.property.UnlistedPropertyHostRock;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -21,18 +24,21 @@ public class DynamicOreHostModel implements IBakedModel
     }
 
     @Override
-    public List<BakedQuad> getQuads( @Nullable IBlockState state , @Nullable EnumFacing side , long rand )
+    public List< BakedQuad > getQuads( @Nullable IBlockState state , @Nullable EnumFacing side , long rand )
     {
-        // When side is null is it the inventory item?
         if( side == null || !( state instanceof IExtendedBlockState ) )
             return originalModel.getQuads( state , side , rand );
 
-        String ore = DynamicOreHostManager.INSTANCE.getOreName( state );
-        String host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+        String oreName = state.getBlock().getRegistryName().getResourcePath();
+        if( !GenericOreRegistry.INSTANCE.contains( oreName ) )
+            oreName = DynamicOreHostManager.INSTANCE.getOreName( state );
+            // Use this instead when DynamicOreHostManager is reworked
+            //return originalModel.getQuads( state , side , rand );
 
-        TextureAtlasSprite hostOreSprite = DynamicOreHostManager.INSTANCE.getGeneratedTexture( ore , host );
-        List<BakedQuad> newQuads = new Vector<>();
-        newQuads.add( BakedQuadUtil.createBakedQuadForFace( 0 , hostOreSprite , side ) );
+        String host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+        TextureAtlasSprite hostTexture = DynamicOreHostManager.INSTANCE.getGeneratedTexture( oreName , host );
+        List< BakedQuad > newQuads = new Vector<>();
+        newQuads.add( BakedQuadUtil.createBakedQuadForFace( 0 , hostTexture , side ) );
 
         return newQuads;
     }
@@ -40,30 +46,32 @@ public class DynamicOreHostModel implements IBakedModel
     @Override
     public ItemOverrideList getOverrides()
     {
-        return originalModel.getOverrides();
+        return ItemOverrideList.NONE;
     }
 
     @Override
     public TextureAtlasSprite getParticleTexture()
     {
+        // FIXME: This will ultimately return the ore overlay instead of the host.
+        // Not a deal breaker, but could stand to be improved.
         return originalModel.getParticleTexture();
     }
 
     @Override
     public boolean isAmbientOcclusion()
     {
-        return originalModel.isAmbientOcclusion();
+        return true;
     }
 
     @Override
     public boolean isBuiltInRenderer()
     {
-        return originalModel.isBuiltInRenderer();
+        return false;
     }
 
     @Override
     public boolean isGui3d()
     {
-        return originalModel.isGui3d();
+        return true;
     }
 }

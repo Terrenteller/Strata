@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,12 +25,17 @@ public class GenericStoneRegistry
 
     public void register( GenericStoneTileSet tileSet )
     {
-        stoneTileSetMap.put( tileSet.stoneName , tileSet );
+        stoneTileSetMap.put( tileSet.tileSetInfo.stoneName() , tileSet );
     }
 
     public GenericStoneTileSet find( String stoneName )
     {
         return stoneTileSetMap.getOrDefault( stoneName , null );
+    }
+
+    public boolean contains( String stoneName )
+    {
+        return stoneTileSetMap.getOrDefault( stoneName , null ) != null;
     }
 
     public void registerBlocks( RegistryEvent.Register< Block > event )

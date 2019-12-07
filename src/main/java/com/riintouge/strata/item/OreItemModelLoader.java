@@ -14,6 +14,8 @@ import net.minecraftforge.client.model.ItemLayerModel;
 
 import java.util.ArrayList;
 
+// TODO: Adjust this class to accept and create flat and full block models depending on overlay transparency.
+// e.g. fully opaque textures become blocks while anything else is rendered as a flat item.
 public class OreItemModelLoader implements ICustomModelLoader
 {
     private static final String ItemNamePrefix = "ore_";
@@ -29,9 +31,9 @@ public class OreItemModelLoader implements ICustomModelLoader
     }
 
     @Override
-    public IModel loadModel( ResourceLocation modelLocation ) throws Exception
+    public IModel loadModel( ResourceLocation modelLocation )
     {
-        //System.out.println( String.format( "OreItemModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        System.out.println( String.format( "OreItemModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
         ImmutableMap.Builder< String , String > textures = ImmutableMap.builder();
         String oreName = modelLocation.getResourcePath().replaceAll( ResourcePrefix , "" );

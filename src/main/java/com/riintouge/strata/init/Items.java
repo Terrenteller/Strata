@@ -1,5 +1,6 @@
 package com.riintouge.strata.init;
 
+import com.riintouge.strata.GenericOreRegistry;
 import com.riintouge.strata.GenericStoneRegistry;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.item.*;
@@ -72,6 +73,7 @@ public class Items
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
 
         GenericStoneRegistry.INSTANCE.registerItems( event );
+        GenericOreRegistry.INSTANCE.registerItems( event );
 
         itemRegistry.register( weakStone );
         itemRegistry.register( mediumStone );
@@ -104,6 +106,7 @@ public class Items
         System.out.println( "Items::registerModels()" );
 
         GenericStoneRegistry.INSTANCE.registerModels( event );
+        GenericOreRegistry.INSTANCE.registerModels( event );
 
         // FIXME: We know a tad too much about implementation details here...
 
@@ -130,6 +133,5 @@ public class Items
         ResourceUtil.registerOreItem( weakStoneOreItem );
         ResourceUtil.registerOreItem( mediumStoneOreItem );
         ResourceUtil.registerOreItem( strongStoneOreItem );
-
     }
 }

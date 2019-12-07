@@ -1,5 +1,6 @@
 package com.riintouge.strata.property;
 
+import com.riintouge.strata.GenericStoneRegistry;
 import com.riintouge.strata.block.StateUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -45,6 +46,15 @@ public class UnlistedPropertyHostRock implements IUnlistedProperty< String >
         {
             BlockPos adjPos = pos.offset( facing );
             IBlockState adjState = worldIn.getBlockState( adjPos );
+
+            // TODO: Add support for vanilla blocks by prioritizing a lookup over block state.
+            // What about netherrack or clay? Or gravel?
+            // If ores "generate" in FallingBlockBase they should break when they "fall"
+
+            String stoneName = adjState.getBlock().getRegistryName().getResourcePath();
+            if( GenericStoneRegistry.INSTANCE.contains( stoneName ) )
+                return stoneName;
+
             if( !( adjState instanceof IExtendedBlockState ) )
                 continue;
 

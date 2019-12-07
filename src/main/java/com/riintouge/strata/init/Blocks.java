@@ -1,5 +1,6 @@
 package com.riintouge.strata.init;
 
+import com.riintouge.strata.GenericOreRegistry;
 import com.riintouge.strata.GenericStoneRegistry;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.block.brick.*;
@@ -52,6 +53,11 @@ public class Blocks
         for( IGenericStoneTileSetInfo info : VeryStrongStoneTileSetInfo.values() )
             stoneRegistry.register( new GenericStoneTileSet( info ) );
 
+        GenericOreRegistry oreRegistry = GenericOreRegistry.INSTANCE;
+
+        for( IOreInfo info : WeakOreInfo.values() )
+            oreRegistry.register( new GenericOreTileSet( info ) );
+
         weakStone = WeakStoneBlock.INSTANCE;
         mediumStone = MediumStoneBlock.INSTANCE;
         strongStone = StrongStoneBlock.INSTANCE;
@@ -81,6 +87,7 @@ public class Blocks
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
 
         GenericStoneRegistry.INSTANCE.registerBlocks( event );
+        GenericOreRegistry.INSTANCE.registerBlocks( event );
 
         blockRegistry.register( weakStone );
         blockRegistry.register( mediumStone );

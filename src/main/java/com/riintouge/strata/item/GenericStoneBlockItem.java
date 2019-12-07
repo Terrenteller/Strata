@@ -14,8 +14,8 @@ public class GenericStoneBlockItem extends ItemBlock
         String blockRegistryName = block.getRegistryName().toString();
         setRegistryName( blockRegistryName );
         setUnlocalizedName( blockRegistryName );
+
         setCreativeTab( Strata.ITEM_TAB );
-        setHasSubtypes( false );
     }
 
     // ItemBlock overrides
