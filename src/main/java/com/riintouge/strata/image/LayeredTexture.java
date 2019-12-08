@@ -17,10 +17,11 @@ public class LayeredTexture extends TextureAtlasSprite
     public LayeredTexture( ResourceLocation registryName , LayeredTextureLayer[] layers )
     {
         super( registryName.toString() );
-        System.out.println( "LayeredTexture // " + registryName.toString() );
 
         this.layers = layers;
     }
+
+    // TextureAtlasSprite overrides
 
     @Override
     public Collection< ResourceLocation > getDependencies()
@@ -44,8 +45,6 @@ public class LayeredTexture extends TextureAtlasSprite
         @Nonnull ResourceLocation location,
         @Nonnull Function< ResourceLocation , TextureAtlasSprite > textureGetter )
     {
-        System.out.println( "LayeredTexture::load()" );
-
         if( layers.length == 1 )
         {
             final TextureAtlasSprite texture = textureGetter.apply( layers[ 0 ].resource );

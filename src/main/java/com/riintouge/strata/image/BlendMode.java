@@ -97,7 +97,6 @@ public enum BlendMode
         final float bottomGreen = ( ( bottom >>>  8 ) & 0xFF ) / 255.0f;
         final float bottomBlue  = (   bottom          & 0xFF ) / 255.0f;
 
-        // c = ( topAlpha * max( topC , bottomC ) + ( 1.0 - topAlpha ) * bottomC )
         final int targetAlpha = clamp( 255.0f * ( topAlpha                                          + ( 1.0f - topAlpha ) * bottomAlpha ) );
         final int targetRed   = clamp( 255.0f * ( topAlpha * ( Math.min( topRed   , bottomRed   ) ) + ( 1.0f - topAlpha ) * bottomRed   ) );
         final int targetGreen = clamp( 255.0f * ( topAlpha * ( Math.min( topGreen , bottomGreen ) ) + ( 1.0f - topAlpha ) * bottomGreen ) );

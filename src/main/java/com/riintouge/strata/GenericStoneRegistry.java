@@ -1,12 +1,14 @@
 package com.riintouge.strata;
 
 import com.riintouge.strata.block.DynamicOreHostManager;
+import com.riintouge.strata.block.GenericStoneModelLoader;
 import com.riintouge.strata.block.GenericStoneTileSet;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -68,6 +70,8 @@ public class GenericStoneRegistry
     public static void registerModels( ModelRegistryEvent event )
     {
         System.out.println( "GenericStoneRegistry::registerModels()" );
+
+        ModelLoaderRegistry.registerLoader( new GenericStoneModelLoader() );
 
         for( GenericStoneTileSet tileSet : INSTANCE.stoneTileSetMap.values() )
             tileSet.registerModels( event );

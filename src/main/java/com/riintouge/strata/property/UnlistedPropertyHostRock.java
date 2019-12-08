@@ -14,6 +14,8 @@ public class UnlistedPropertyHostRock implements IUnlistedProperty< String >
     public static UnlistedPropertyHostRock PROPERTY = new UnlistedPropertyHostRock();
     public static String DEFAULT = "";
 
+    // IUnlistedProperty overrides
+
     @Override
     public String getName()
     {
@@ -37,6 +39,8 @@ public class UnlistedPropertyHostRock implements IUnlistedProperty< String >
     {
         return value;
     }
+
+    // Statics
 
     public static String determineHostAdjacent( IBlockAccess worldIn , BlockPos pos )
     {

@@ -73,20 +73,6 @@ public class GenericStoneOreBlock extends Block
     }
 
     @Override
-    public IBlockState getExtendedState( IBlockState state , IBlockAccess world , BlockPos pos )
-    {
-        IExtendedBlockState extendedState = (IExtendedBlockState)state;
-        TileEntity entity = world.getTileEntity( pos );
-        if( entity instanceof DynamicOreHostTileEntity )
-        {
-            String cachedHost = ( (DynamicOreHostTileEntity)entity ).getCachedHost();
-            extendedState = extendedState.withProperty( UnlistedPropertyHostRock.PROPERTY , cachedHost );
-        }
-
-        return extendedState;
-    }
-
-    @Override
     public void getDrops( NonNullList<ItemStack> drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
     {
         TileEntity tileEntity = world.getTileEntity( pos );
@@ -105,6 +91,21 @@ public class GenericStoneOreBlock extends Block
         GenericOreTileSet oreTileSet = GenericOreRegistry.INSTANCE.find( oreInfo.oreName() );
         int fortuneBonus = fortune > 0 ? RANDOM.nextInt( fortune + 1 ) : 0;
         drops.add( new ItemStack( oreTileSet.blockItem , 1 + fortuneBonus ) );
+    }
+
+    @Override
+    public IBlockState getExtendedState( IBlockState state , IBlockAccess world , BlockPos pos )
+    {
+        IExtendedBlockState extendedState = (IExtendedBlockState)state;
+        TileEntity entity = world.getTileEntity( pos );
+
+        if( entity instanceof DynamicOreHostTileEntity )
+        {
+            String cachedHost = ( (DynamicOreHostTileEntity)entity ).getCachedHost();
+            extendedState = extendedState.withProperty( UnlistedPropertyHostRock.PROPERTY , cachedHost );
+        }
+
+        return extendedState;
     }
 
     @Override

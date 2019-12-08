@@ -8,7 +8,7 @@ public class StrataBlockTab extends CreativeTabs
 {
     public StrataBlockTab()
     {
-        super( "blockTab" );
+        super( "strataBlocksTab" );
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.riintouge.strata;
 
 import com.riintouge.strata.block.DynamicOreHostManager;
 import com.riintouge.strata.block.DynamicOreHostModel;
+import com.riintouge.strata.block.ore.GenericOreBlockModelLoader;
 import com.riintouge.strata.block.ore.GenericOreTileSet;
 import com.riintouge.strata.item.OreItemModelLoader;
 import com.riintouge.strata.item.OreItemTextureManager;
@@ -14,13 +15,13 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,12 +58,6 @@ public class GenericOreRegistry
         return oreTileSetMap.getOrDefault( oreName , null ) != null;
     }
 
-    public Collection< GenericOreTileSet > getTileSets()
-    {
-        // TODO: return collection of interfaces
-        return oreTileSetMap.values();
-    }
-
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerBlocks( RegistryEvent.Register< Block > event )
     {
@@ -94,6 +89,9 @@ public class GenericOreRegistry
     {
         System.out.println( "GenericOreRegistry::registerModels()" );
 
+        ModelLoaderRegistry.registerLoader( new GenericOreBlockModelLoader() );
+        ModelLoaderRegistry.registerLoader( new OreItemModelLoader() );
+
         // TODO: Adjust this code to use either an item or a block for the model like so:
         //new ModelResourceLocation( "minecraft:stone" , "inventory" )
         //new ModelResourceLocation( String.format( "%s:%s%s" , Strata.modid , ResourceUtil.ModelResourceBasePath , "ore_cinnabar" ) , "inventory" )
@@ -124,14 +122,15 @@ public class GenericOreRegistry
     {
         for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
-            ResourceLocation asdf = new ResourceLocation( Strata.modid , tileSet.oreInfo.oreName() );
-            ModelResourceLocation modelResource = new ModelResourceLocation( asdf , null );
-            IBakedModel existingModel = event.getModelRegistry().getObject( modelResource );
+            ResourceLocation modelResource = new ResourceLocation( Strata.modid , tileSet.oreInfo.oreName() );
+            ModelResourceLocation modelVariantResource = new ModelResourceLocation( modelResource , null );
+            IBakedModel existingModel = event.getModelRegistry().getObject( modelVariantResource );
+
             if( existingModel != null )
             {
                 // FIXME: Replacing the model here wrecks the ItemBlock
                 DynamicOreHostModel customModel = new DynamicOreHostModel( existingModel );
-                event.getModelRegistry().putObject( modelResource , customModel );
+                event.getModelRegistry().putObject( modelVariantResource , customModel );
             }
         }
     }

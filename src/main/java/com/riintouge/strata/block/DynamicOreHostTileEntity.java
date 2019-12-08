@@ -19,16 +19,9 @@ public class DynamicOreHostTileEntity extends TileEntity
         // Nothing to do
     }
 
-    @Override
-    public void onLoad()
+    public String getCachedHost()
     {
-        super.onLoad();
-
-        // TODO: Can we save the stone type as part of NBT data? May help cut down on corner cases.
-
-        // Only the server should poll
-        if( !world.isRemote )
-            world.scheduleBlockUpdate( pos , this.getBlockType() , 20 , 10 );
+        return cachedHost;
     }
 
     public void pollHost()
@@ -63,9 +56,18 @@ public class DynamicOreHostTileEntity extends TileEntity
         markDirty();
     }
 
-    public String getCachedHost()
+    // TileEntity overrides
+
+    @Override
+    public void onLoad()
     {
-        return cachedHost;
+        super.onLoad();
+
+        // TODO: Can we save the stone type as part of NBT data? May help cut down on corner cases.
+
+        // Only the server should poll
+        if( !world.isRemote )
+            world.scheduleBlockUpdate( pos , this.getBlockType() , 20 , 10 );
     }
 
     @Override

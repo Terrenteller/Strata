@@ -6,5 +6,5 @@ public enum StoneBlockType
     COBBLE,
     BRICK
 
-    // TODO: brick, slabs (cobble, stone, brick), walls (cobble, stone, brick), stairs (cobble, stone, brick), etc.
+    // TODO: slabs (cobble, stone, brick), walls (cobble, stone, brick), stairs (cobble, stone, brick), etc.
 }

@@ -1,9 +1,14 @@
 package com.riintouge.strata.item;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.image.LayeredTexture;
+import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,20 +37,33 @@ public class OreItemTextureManager
             oreNameToTextureResourceMap.put( ore , resourceLocation );
     }
 
-    public void regenerate( TextureMap textureMap )
+    // Statics
+
+    public static ResourceLocation getTextureLocation( String oreName )
+    {
+        return new ResourceLocation( Strata.modid , "items/ore_" + oreName );
+    }
+
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void stitchTextures( TextureStitchEvent.Pre event )
     {
         System.out.println( "OreItemTextureManager::onEvent( TextureStitchEvent.Pre )" );
 
-        long startTime = System.nanoTime();
+        TextureMap textureMap = event.getMap();
         int generatedTextureCount = 0;
+        long startTime = System.nanoTime();
 
-        // Here goes...
-        for( String oreName : oreNameToTextureResourceMap.keySet() )
+        for( String oreName : INSTANCE.oreNameToTextureResourceMap.keySet() )
         {
-            ResourceLocation textureResource = oreNameToTextureResourceMap.get( oreName );
+            ResourceLocation textureResource = INSTANCE.oreNameToTextureResourceMap.get( oreName );
             ResourceLocation generatedResourceLocation = getTextureLocation( oreName );
             //System.out.println( "Generating " + generatedResourceLocation.toString() );
-            TextureAtlasSprite generatedTexture = new GeneratedOreItemTexture( textureResource , generatedResourceLocation.toString() );
+
+            LayeredTextureLayer oreLayer = new LayeredTextureLayer( textureResource );
+            TextureAtlasSprite generatedTexture = new LayeredTexture(
+                generatedResourceLocation,
+                new LayeredTextureLayer[] { oreLayer } );
+
             textureMap.setTextureEntry( generatedTexture );
             generatedTextureCount++;
         }
@@ -56,11 +74,6 @@ public class OreItemTextureManager
             generatedTextureCount,
             ( endTime - startTime ) / 1000000 ) );
 
-        alreadyInitializedOnce = true;
-    }
-
-    public static ResourceLocation getTextureLocation( String oreName )
-    {
-        return new ResourceLocation( Strata.modid , "items/ore_" + oreName );
+        INSTANCE.alreadyInitializedOnce = true;
     }
 }

@@ -7,7 +7,7 @@ public class StrataItemTab extends CreativeTabs
 {
     public StrataItemTab()
     {
-        super( "oreTab" );
+        super( "strataItemsTab" );
     }
 
     @Override

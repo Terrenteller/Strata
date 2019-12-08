@@ -14,6 +14,7 @@ import net.minecraftforge.common.model.IModelState;
 import java.util.Collection;
 import java.util.function.Function;
 
+// GenericModel? We aren't required to retexture it and instead use it to duplicate block states...
 public final class RetexturableModel implements IModel
 {
     private final ModelResourceLocation templateModelResource;
@@ -41,7 +42,7 @@ public final class RetexturableModel implements IModel
     public IBakedModel bake(
         IModelState state,
         VertexFormat format,
-        Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter)
+        Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter )
     {
         IModel model = ModelLoaderRegistry.getModelOrLogError(
             templateModelResource,
@@ -49,6 +50,8 @@ public final class RetexturableModel implements IModel
         return model.bake(
             new ModelStateComposition( state , model.getDefaultState() ),
             format,
-            ( resourceLocation ) -> bakedTextureGetter.apply( textureResource ) );
+            textureResource == null
+                ? bakedTextureGetter
+                : ( resourceLocation ) -> bakedTextureGetter.apply( textureResource ) );
     }
 }

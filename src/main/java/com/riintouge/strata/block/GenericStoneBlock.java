@@ -1,8 +1,13 @@
 package com.riintouge.strata.block;
 
+import com.riintouge.strata.GenericStoneRegistry;
 import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.Item;
+
+import java.util.Random;
 
 public class GenericStoneBlock extends Block
 {
@@ -36,5 +41,22 @@ public class GenericStoneBlock extends Block
         setResistance( 5f );
 
         setCreativeTab( Strata.BLOCK_TAB );
+    }
+
+    // Block overrides
+
+    @Override
+    public Item getItemDropped( IBlockState state , Random rand , int fortune )
+    {
+        try
+        {
+            String stoneName = getRegistryName().getResourcePath();
+            GenericStoneTileSet tileSet = GenericStoneRegistry.INSTANCE.find( stoneName );
+            return tileSet.tiles.get( StoneBlockType.COBBLE ).getItem();
+        }
+        catch( NullPointerException e )
+        {
+            return super.getItemDropped( state , rand , fortune );
+        }
     }
 }

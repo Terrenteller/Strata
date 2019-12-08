@@ -1,168 +1,105 @@
 # General
 
-itemGroup.blockTab=Strata Blocks
-itemGroup.oreTab=Strata Ores
+itemGroup.strataBlocksTab=Strata Blocks
+itemGroup.strataItemsTab=Strata Ores
 
 # Stone
 
-strata:weak_stone_breccia.name=Breccia
-strata:weak_stone_claystone.name=Claystone
-strata:weak_stone_carbonatite.name=Carbonatite
-strata:weak_stone_conglomerate.name=Conglomerate
-strata:weak_stone_mudstone.name=Mudstone
+strata:breccia.name=Breccia
+strata:claystone.name=Claystone
+strata:carbonatite.name=Carbonatite
+strata:conglomerate.name=Conglomerate
+strata:mudstone.name=Mudstone
 
-strata:medium_stone_limestone.name=Limestone
-strata:medium_stone_schist.name=Schist
-strata:medium_stone_serpentinite.name=Serpentinite
-strata:medium_stone_slate.name=Slate
-strata:medium_stone_skarn.name=Skarn
-strata:medium_stone_chalk.name=Chalk
+strata:limestone.name=Limestone
+strata:schist.name=Schist
+strata:serpentinite.name=Serpentinite
+strata:slate.name=Slate
+strata:skarn.name=Skarn
+strata:chalk.name=Chalk
 
-strata:strong_stone_andesite.name=Andesite
-strata:strong_stone_basalt.name=Basalt
-strata:strong_stone_gneiss.name=Gneiss
-strata:strong_stone_granite.name=Granite
-strata:strong_stone_greenschist.name=Greenschist
-strata:strong_stone_marble.name=Marble
-strata:strong_stone_pegmatite.name=Pegmatite
-strata:strong_stone_rhyolite.name=Rhyolite
-strata:strong_stone_sandstone.name=Sandstone
-strata:strong_stone_red_sandstone.name=Red Sandstone
+strata:andesite.name=Andesite
+strata:basalt.name=Basalt
+strata:gneiss.name=Gneiss
+strata:granite.name=Granite
+strata:greenschist.name=Greenschist
+strata:marble.name=Marble
+strata:pegmatite.name=Pegmatite
+strata:rhyolite.name=Rhyolite
+strata:sandstone.name=Sandstone
+strata:red_sandstone.name=Red Sandstone
 
-strata:very_strong_stone_diorite.name=Diorite
-strata:very_strong_stone_gabbro.name=Gabbro
-strata:very_strong_stone_hornfels.name=Hornfels
-strata:very_strong_stone_peridotite.name=Peridotite
-strata:very_strong_stone_quartzite.name=Quartzite
-
-# Rubble
-
-strata:weak_rubble_breccia.name=Breccia Rubble
-strata:weak_rubble_claystone.name=Claystone Rubble
-strata:weak_rubble_carbonatite.name=Carbonatite Rubble
-strata:weak_rubble_conglomerate.name=Conglomerate Rubble
-strata:weak_rubble_mudstone.name=Mudstone Rubble
+strata:diorite.name=Diorite
+strata:gabbro.name=Gabbro
+strata:hornfels.name=Hornfels
+strata:peridotite.name=Peridotite
+strata:quartzite.name=Quartzite
 
 # Cobble
 
-strata:medium_cobble_limestone.name=Limestone Cobblestone
-strata:medium_cobble_schist.name=Schist Cobblestone
-strata:medium_cobble_serpentinite.name=Serpentinite Cobblestone
-strata:medium_cobble_slate.name=Slate Cobblestone
-strata:medium_cobble_skarn.name=Skarn Cobblestone
-strata:medium_cobble_chalk.name=Chalk Cobblestone
+strata:breccia_cobble.name=Breccia Cobblestone
+strata:claystone_cobble.name=Claystone Cobblestone
+strata:carbonatite_cobble.name=Carbonatite Cobblestone
+strata:conglomerate_cobble.name=Conglomerate Cobblestone
+strata:mudstone_cobble.name=Mudstone Cobblestone
 
-strata:strong_cobble_andesite.name=Andesite Cobblestone
-strata:strong_cobble_basalt.name=Basalt Cobblestone
-strata:strong_cobble_gneiss.name=Gneiss Cobblestone
-strata:strong_cobble_granite.name=Granite Cobblestone
-strata:strong_cobble_greenschist.name=Greenschist Cobblestone
-strata:strong_cobble_marble.name=Marble Cobblestone
-strata:strong_cobble_pegmatite.name=Pegmatite Cobblestone
-strata:strong_cobble_rhyolite.name=Rhyolite Cobblestone
-strata:strong_cobble_sandstone.name=Sandstone Cobblestone
-strata:strong_cobble_red_sandstone.name=Red Sandstone Cobblestone
+strata:limestone_cobble.name=Limestone Cobblestone
+strata:schist_cobble.name=Schist Cobblestone
+strata:serpentinite_cobble.name=Serpentinite Cobblestone
+strata:slate_cobble.name=Slate Cobblestone
+strata:skarn_cobble.name=Skarn Cobblestone
+strata:chalk_cobble.name=Chalk Cobblestone
 
-strata:very_strong_cobble_diorite.name=Diorite Cobblestone
-strata:very_strong_cobble_gabbro.name=Gabbro Cobblestone
-strata:very_strong_cobble_hornfels.name=Hornfels Cobblestone
-strata:very_strong_cobble_peridotite.name=Peridotite Cobblestone
-strata:very_strong_cobble_quartzite.name=Quartzite Cobblestone
+strata:andesite_cobble.name=Andesite Cobblestone
+strata:basalt_cobble.name=Basalt Cobblestone
+strata:gneiss_cobble.name=Gneiss Cobblestone
+strata:granite_cobble.name=Granite Cobblestone
+strata:greenschist_cobble.name=Greenschist Cobblestone
+strata:marble_cobble.name=Marble Cobblestone
+strata:pegmatite_cobble.name=Pegmatite Cobblestone
+strata:rhyolite_cobble.name=Rhyolite Cobblestone
+strata:sandstone_cobble.name=Sandstone Cobblestone
+strata:red_sandstone_cobble.name=Red Sandstone Cobblestone
+
+strata:diorite_cobble.name=Diorite Cobblestone
+strata:gabbro_cobble.name=Gabbro Cobblestone
+strata:hornfels_cobble.name=Hornfels Cobblestone
+strata:peridotite_cobble.name=Peridotite Cobblestone
+strata:quartzite_cobble.name=Quartzite Cobblestone
 
 # Brick
 
-strata:weak_brick_breccia.name=Breccia Bricks
-strata:weak_brick_claystone.name=Claystone Bricks
-strata:weak_brick_carbonatite.name=Carbonatite Bricks
-strata:weak_brick_conglomerate.name=Conglomerate Bricks
-strata:weak_brick_mudstone.name=Mudstone Bricks
+strata:breccia_brick.name=Breccia Bricks
+strata:claystone_brick.name=Claystone Bricks
+strata:carbonatite_brick.name=Carbonatite Bricks
+strata:conglomerate_brick.name=Conglomerate Bricks
+strata:mudstone_brick.name=Mudstone Bricks
 
-strata:medium_brick_limestone.name=Limestone Bricks
-strata:medium_brick_schist.name=Schist Bricks
-strata:medium_brick_serpentinite.name=Serpentinite Bricks
-strata:medium_brick_slate.name=Slate Bricks
-strata:medium_brick_skarn.name=Skarn Bricks
-strata:medium_brick_chalk.name=Chalk Bricks
+strata:limestone_brick.name=Limestone Bricks
+strata:schist_brick.name=Schist Bricks
+strata:serpentinite_brick.name=Serpentinite Bricks
+strata:slate_brick.name=Slate Bricks
+strata:skarn_brick.name=Skarn Bricks
+strata:chalk_brick.name=Chalk Bricks
 
-strata:strong_brick_andesite.name=Andesite Bricks
-strata:strong_brick_basalt.name=Basalt Bricks
-strata:strong_brick_gneiss.name=Gneiss Bricks
-strata:strong_brick_granite.name=Granite Bricks
-strata:strong_brick_greenschist.name=Greenschist Bricks
-strata:strong_brick_marble.name=Marble Bricks
-strata:strong_brick_pegmatite.name=Pegmatite Bricks
-strata:strong_brick_rhyolite.name=Rhyolite Bricks
-strata:strong_brick_sandstone.name=Sandstone Bricks
-strata:strong_brick_red_sandstone.name=Red Sandstone Bricks
+strata:andesite_brick.name=Andesite Bricks
+strata:basalt_brick.name=Basalt Bricks
+strata:gneiss_brick.name=Gneiss Bricks
+strata:granite_brick.name=Granite Bricks
+strata:greenschist_brick.name=Greenschist Bricks
+strata:marble_brick.name=Marble Bricks
+strata:pegmatite_brick.name=Pegmatite Bricks
+strata:rhyolite_brick.name=Rhyolite Bricks
+strata:sandstone_brick.name=Sandstone Bricks
+strata:red_sandstone_brick.name=Red Sandstone Bricks
 
-strata:very_strong_brick_diorite.name=Diorite Bricks
-strata:very_strong_brick_gabbro.name=Gabbro Bricks
-strata:very_strong_brick_hornfels.name=Hornfels Bricks
-strata:very_strong_brick_peridotite.name=Peridotite Bricks
-strata:very_strong_brick_quartzite.name=Quartzite Bricks
+strata:diorite_brick.name=Diorite Bricks
+strata:gabbro_brick.name=Gabbro Bricks
+strata:hornfels_brick.name=Hornfels Bricks
+strata:peridotite_brick.name=Peridotite Bricks
+strata:quartzite_brick.name=Quartzite Bricks
 
 # Ore
-
-strata:weak_sand_ore_basaltic_mineral_sand.name=Basaltic Mineral Sand
-strata:weak_sand_ore_cassiterite_sand.name=Cassiterite Sand (Tin Ore)
-strata:weak_sand_ore_garnet_sand.name=Garnet Sand
-strata:weak_sand_ore_granitic_mineral_sand.name=Granitic Mineral Sand
-strata:weak_sand_ore_quartz_sand.name=Quartz Sand
-strata:weak_sand_ore_volcanic_ash.name=Volcanic Ash
-strata:weak_sand_ore_glauconite.name=Glauconite
-
-strata:weak_stone_ore_borax.name=Borax
-strata:weak_stone_ore_cinnabar.name=Cinnabar (Mercury Ore)
-strata:weak_stone_ore_galena.name=Galena (Lead Ore)
-strata:weak_stone_ore_molybdenite.name=Molybdenite (Molybdenum Ore)
-strata:weak_stone_ore_pyrolusite.name=Pyrolusite (Manganese Ore)
-strata:weak_stone_ore_salt.name=Salt
-strata:weak_stone_ore_stibnite.name=Stibnite (Antimony Ore)
-strata:weak_stone_ore_chrysotile.name=Chrysotile
-strata:weak_stone_ore_diatomite.name=Diatomite
-strata:weak_stone_ore_realgar.name=Realgar (Arsenic Ore)
-strata:weak_stone_ore_graphite.name=Graphite
-strata:weak_stone_ore_gypsum.name=Gypsum
-strata:weak_stone_ore_mirabilite.name=Mirabilite
-strata:weak_stone_ore_mica.name=Mica
-strata:weak_stone_ore_soapstone.name=Soapstone
-strata:weak_stone_ore_trona.name=Trona
-
-strata:medium_stone_ore_barite.name=Barite (Barium Ore)
-strata:medium_stone_ore_bastnasite.name=Bastnasite
-strata:medium_stone_ore_chalcopyrite.name=Chalcopyrite (Copper Ore)
-strata:medium_stone_ore_garnierite.name=Garnierite (Nickel Ore)
-strata:medium_stone_ore_lepidolite.name=Lepidolite (Lithium Ore)
-strata:medium_stone_ore_magnesite.name=Magnesite
-strata:medium_stone_ore_pentlandite.name=Pentlandite
-strata:medium_stone_ore_scheelite.name=Scheelite (Tungsten Ore)
-strata:medium_stone_ore_sphalerite.name=Sphalerite (Zinc Ore)
-strata:medium_stone_ore_wolframite.name=Wolframite (Tungsten Ore)
-strata:medium_stone_ore_alunite.name=Alunite (Aluminum Ore)
-strata:medium_stone_ore_celestine.name=Celestine (Strontium Ore)
-strata:medium_stone_ore_dolomite.name=Dolomite (Magnesium Ore)
-strata:medium_stone_ore_fluorite.name=Fluorite
-strata:medium_stone_ore_wollastonite.name=Wollastonite
-strata:medium_stone_ore_zeolite.name=Zeolite
-
-strata:strong_stone_ore_banded_iron.name=Banded Iron (Iron Ore)
-strata:strong_stone_ore_quartz.name=Quartz
-strata:strong_stone_ore_cassiterite.name=Cassiterite (Tin Ore)
-strata:strong_stone_ore_chromite.name=Chromite (Chromium Ore)
-strata:strong_stone_ore_ilmenite.name=Ilmenite (Titanium Ore)
-strata:strong_stone_ore_magnetite.name=Magnetite (Iron Ore)
-strata:strong_stone_ore_pollucite.name=Pollucite (Caesium Ore)
-strata:strong_stone_ore_spodumene.name=Spodumene (Lithium Ore)
-strata:strong_stone_ore_tantalite.name=Tantalite (Tantalum Ore)
-strata:strong_stone_ore_pitchblende.name=Pitchblende (Uranium Ore)
-strata:strong_stone_ore_vanadium_magnetite.name=Vanadium Magnetite (Vanadium Ore)
-strata:strong_stone_ore_apatite.name=Apatite
-strata:strong_stone_ore_kyanite.name=Kyanite
-strata:strong_stone_ore_perlite.name=Perlite
-strata:strong_stone_ore_pumice.name=Pumice
-strata:strong_stone_ore_pyrite.name=Pyrite
-
-# Ore Items
 
 strata:borax.name=Borax
 strata:cinnabar.name=Cinnabar (Mercury Ore)

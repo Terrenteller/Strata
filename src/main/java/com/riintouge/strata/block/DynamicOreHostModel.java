@@ -23,6 +23,8 @@ public class DynamicOreHostModel implements IBakedModel
         this.originalModel = originalModel;
     }
 
+    // IBakedModel overrides
+
     @Override
     public List< BakedQuad > getQuads( @Nullable IBlockState state , @Nullable EnumFacing side , long rand )
     {
@@ -31,9 +33,7 @@ public class DynamicOreHostModel implements IBakedModel
 
         String oreName = state.getBlock().getRegistryName().getResourcePath();
         if( !GenericOreRegistry.INSTANCE.contains( oreName ) )
-            oreName = DynamicOreHostManager.INSTANCE.getOreName( state );
-            // Use this instead when DynamicOreHostManager is reworked
-            //return originalModel.getQuads( state , side , rand );
+            return originalModel.getQuads( state , side , rand );
 
         String host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
         TextureAtlasSprite hostTexture = DynamicOreHostManager.INSTANCE.getGeneratedTexture( oreName , host );

@@ -13,7 +13,7 @@ public class Strata
 {
     public static final String modid = "strata";
     public static final String name = "Strata";
-    public static final String version = "1.12.2-19.12.01";
+    public static final String version = "1.12.2-19.12.08";
 
     public static final StrataBlockTab BLOCK_TAB = new StrataBlockTab();
     public static final StrataItemTab ITEM_TAB = new StrataItemTab();

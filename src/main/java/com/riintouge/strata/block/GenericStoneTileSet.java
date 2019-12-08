@@ -28,7 +28,7 @@ public class GenericStoneTileSet
     {
         this.tileSetInfo = tileSetInfo;
 
-        GenericStoneBlock stoneBlock = new StrataStoneBlock( tileSetInfo );
+        GenericStoneBlock stoneBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.STONE );
         GenericBlockItemPair stone = new GenericBlockItemPair( stoneBlock , new GenericStoneBlockItem( stoneBlock ) );
 
         GenericStoneBlock cobbleBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.COBBLE );
