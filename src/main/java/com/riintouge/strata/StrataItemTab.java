@@ -1,6 +1,5 @@
 package com.riintouge.strata;
 
-import com.riintouge.strata.item.ore.WeakStoneOreItem;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
@@ -14,6 +13,6 @@ public class StrataItemTab extends CreativeTabs
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( WeakStoneOreItem.INSTANCE );
+        return new ItemStack( GenericOreRegistry.INSTANCE.find( "tantalite" ).blockItem );
     }
 }

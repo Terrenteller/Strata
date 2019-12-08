@@ -1,7 +1,8 @@
 package com.riintouge.strata.proxy;
 
+import com.riintouge.strata.GenericOreRegistry;
+import com.riintouge.strata.GenericStoneRegistry;
 import com.riintouge.strata.init.Blocks;
-import com.riintouge.strata.init.Items;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -15,7 +16,8 @@ public class CommonProxy
         System.out.println( "CommonProxy::preInit()" );
 
         MinecraftForge.EVENT_BUS.register( Blocks.class );
-        MinecraftForge.EVENT_BUS.register( Items.class );
+        MinecraftForge.EVENT_BUS.register( GenericStoneRegistry.class );
+        MinecraftForge.EVENT_BUS.register( GenericOreRegistry.class );
     }
 
     public void init( FMLInitializationEvent event )

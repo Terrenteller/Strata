@@ -2,7 +2,6 @@ package com.riintouge.strata.item;
 
 import com.google.common.collect.ImmutableMap;
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.ResourceUtil;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -18,8 +17,10 @@ import java.util.ArrayList;
 // e.g. fully opaque textures become blocks while anything else is rendered as a flat item.
 public class OreItemModelLoader implements ICustomModelLoader
 {
+    public static final String ModelResourceBasePath = "models/item/";
+
     private static final String ItemNamePrefix = "ore_";
-    private static final String ResourcePrefix = ResourceUtil.ModelResourceBasePath + ItemNamePrefix;
+    private static final String ResourcePrefix = ModelResourceBasePath + ItemNamePrefix;
     private static final String DomainResourcePrefix = Strata.modid + ":" + ResourcePrefix;
 
     // ICustomModelLoader overrides

@@ -1,10 +1,10 @@
 package com.riintouge.strata;
 
+import com.riintouge.strata.block.DynamicOreHostManager;
 import com.riintouge.strata.block.DynamicOreHostModel;
-import com.riintouge.strata.block.ResourceUtil;
 import com.riintouge.strata.block.ore.GenericOreTileSet;
-import com.riintouge.strata.block.ore.IOreInfo;
-import com.riintouge.strata.block.ore.WeakOreInfo;
+import com.riintouge.strata.item.OreItemModelLoader;
+import com.riintouge.strata.item.OreItemTextureManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -15,6 +15,8 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -35,6 +37,13 @@ public class GenericOreRegistry
     public void register( GenericOreTileSet tileSet )
     {
         oreTileSetMap.put( tileSet.oreInfo.oreName() , tileSet );
+
+        DynamicOreHostManager.INSTANCE.registerOre(
+            tileSet.oreInfo.oreName(),
+            tileSet.oreInfo.oreBlockOverlayTextureResource() );
+        OreItemTextureManager.INSTANCE.registerOre(
+            tileSet.oreInfo.oreName(),
+            tileSet.oreInfo.oreItemTextureResource() );
     }
 
     public GenericOreTileSet find( String oreName )
@@ -54,21 +63,23 @@ public class GenericOreRegistry
         return oreTileSetMap.values();
     }
 
-    public void registerBlocks( RegistryEvent.Register< Block > event )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void registerBlocks( RegistryEvent.Register< Block > event )
     {
         System.out.println( "GenericOreRegistry::registerBlocks()" );
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
-        for( GenericOreTileSet tileSet : oreTileSetMap.values() )
+        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
             blockRegistry.register( tileSet.block );
     }
 
-    public void registerItems( RegistryEvent.Register< Item > event )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void registerItems( RegistryEvent.Register< Item > event )
     {
         System.out.println( "GenericOreRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
-        for( GenericOreTileSet tileSet : oreTileSetMap.values() )
+        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
             itemRegistry.register( tileSet.blockItem );
 
@@ -78,7 +89,8 @@ public class GenericOreRegistry
         }
     }
 
-    public void registerModels( ModelRegistryEvent event )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void registerModels( ModelRegistryEvent event )
     {
         System.out.println( "GenericOreRegistry::registerModels()" );
 
@@ -90,25 +102,27 @@ public class GenericOreRegistry
         // The process of replacing auto-generated blocks models with DynamicOreHostModel
         // during ModelBakeEvent trashes the would-be generated item models. Instead,
         // load them from yet another auto-generated resource.
-        for( GenericOreTileSet tileSet : oreTileSetMap.values() )
+        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
             ModelLoader.setCustomModelResourceLocation(
                 tileSet.blockItem,
                 0,
-                new ModelResourceLocation( String.format( "%s:%sore_%s" , Strata.modid , ResourceUtil.ModelResourceBasePath , tileSet.oreInfo.oreName() ) , "inventory" ) );
+                new ModelResourceLocation( String.format( "%s:%sore_%s" , Strata.modid , OreItemModelLoader.ModelResourceBasePath , tileSet.oreInfo.oreName() ) , "inventory" ) );
         }
     }
 
-    public void stitchTextures( TextureStitchEvent.Pre event )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void stitchTextures( TextureStitchEvent.Pre event )
     {
         System.out.println( "GenericOreRegistry::stitchTextures()" );
 
         // TODO: Move logic out of DynamicOreHostManager
     }
 
-    public void bakeModels( ModelBakeEvent event )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void bakeModels( ModelBakeEvent event )
     {
-        for( GenericOreTileSet tileSet : oreTileSetMap.values() )
+        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
             ResourceLocation asdf = new ResourceLocation( Strata.modid , tileSet.oreInfo.oreName() );
             ModelResourceLocation modelResource = new ModelResourceLocation( asdf , null );

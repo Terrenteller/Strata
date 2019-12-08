@@ -1,16 +1,10 @@
 package com.riintouge.strata.proxy.event;
 
-import com.riintouge.strata.GenericOreRegistry;
-import com.riintouge.strata.GenericStoneRegistry;
 import com.riintouge.strata.block.DynamicOreHostManager;
-import com.riintouge.strata.block.DynamicOreHostModel;
 import com.riintouge.strata.block.GenericStoneModelLoader;
 import com.riintouge.strata.block.ore.GenericOreBlockModelLoader;
 import com.riintouge.strata.item.OreItemModelLoader;
 import com.riintouge.strata.item.OreItemTextureManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -25,6 +19,7 @@ public class ClientPreInitEventHandlers
     {
         System.out.println( "ClientPreInitEventHandlers::onEvent( ModelRegistryEvent )" );
 
+        // TODO: Move into respective registries
         ModelLoaderRegistry.registerLoader( new GenericStoneModelLoader() );
         ModelLoaderRegistry.registerLoader( new OreItemModelLoader() );
         ModelLoaderRegistry.registerLoader( new GenericOreBlockModelLoader() );
@@ -35,27 +30,7 @@ public class ClientPreInitEventHandlers
     {
         System.out.println( "ClientPreInitEventHandlers::onEvent( TextureStitchEvent.Pre )" );
 
-        GenericStoneRegistry.INSTANCE.stitchTextures( event );
         DynamicOreHostManager.INSTANCE.regenerate( event.getMap() );
         OreItemTextureManager.INSTANCE.regenerate( event.getMap() );
-        GenericOreRegistry.INSTANCE.stitchTextures( event );
-    }
-
-    @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void onEvent( ModelBakeEvent event )
-    {
-        System.out.println( "ClientPreInitEventHandlers::onEvent( ModelBakeEvent )" );
-
-        for( ModelResourceLocation modelResource : DynamicOreHostManager.INSTANCE.getAllOreBlockModels() )
-        {
-            IBakedModel existingModel = event.getModelRegistry().getObject( modelResource );
-            if( existingModel != null )
-            {
-                DynamicOreHostModel customModel = new DynamicOreHostModel( existingModel );
-                event.getModelRegistry().putObject( modelResource , customModel );
-            }
-        }
-
-        GenericOreRegistry.INSTANCE.bakeModels( event );
     }
 }
