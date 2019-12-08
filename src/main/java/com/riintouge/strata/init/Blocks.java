@@ -58,6 +58,12 @@ public class Blocks
         for( IOreInfo info : WeakOreInfo.values() )
             oreRegistry.register( new GenericOreTileSet( info ) );
 
+        for( IOreInfo info : MediumOreInfo.values() )
+            oreRegistry.register( new GenericOreTileSet( info ) );
+
+        for( IOreInfo info : StrongOreInfo.values() )
+            oreRegistry.register( new GenericOreTileSet( info ) );
+
         weakStone = WeakStoneBlock.INSTANCE;
         mediumStone = MediumStoneBlock.INSTANCE;
         strongStone = StrongStoneBlock.INSTANCE;
