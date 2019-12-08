@@ -24,6 +24,8 @@ public class DynamicOreHostTileEntity extends TileEntity
     {
         super.onLoad();
 
+        // TODO: Can we save the stone type as part of NBT data? May help cut down on corner cases.
+
         // Only the server should poll
         if( !world.isRemote )
             world.scheduleBlockUpdate( pos , this.getBlockType() , 20 , 10 );
@@ -46,11 +48,17 @@ public class DynamicOreHostTileEntity extends TileEntity
         {
             // Unable to determine host. Try again later
             //System.out.println( "Unable to determine host" );
+
+            // FIXME: We can't exactly "timeout". Consider an ore block that has a single,
+            // adjacent stone in the neighbouring, but unloaded, chunk. Can a chunk load
+            // trigger a block update?
+
             world.scheduleBlockUpdate( pos , this.getBlockType() , 20 , 10 );
             return;
         }
 
         world.markBlockRangeForRenderUpdate( pos , pos );
+        // TODO: Dig up the documentation for flags 1 and 2
         world.notifyBlockUpdate( pos , state , state , 3 );
         markDirty();
     }

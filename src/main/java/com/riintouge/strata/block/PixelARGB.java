@@ -2,6 +2,11 @@ package com.riintouge.strata.block;
 
 public class PixelARGB
 {
+    private final static int ALPHA = 0;
+    private final static int RED = 1;
+    private final static int GREEN = 2;
+    private final static int BLUE = 3;
+
     private int argb[] = new int[ 4 ];
 
     public PixelARGB()
@@ -17,17 +22,17 @@ public class PixelARGB
 
     public void setPixel( int pixel ) { argb = decompose( pixel ); }
 
-    public int getAlpha() { return argb[ 0 ]; }
-    public void setAlpha( int alpha ) { argb[ 0 ] = clamp( alpha ); }
+    public int getAlpha() { return argb[ ALPHA ]; }
+    public void setAlpha( int alpha ) { argb[ ALPHA ] = clamp( alpha ); }
 
-    public int getRed() { return argb[ 1 ]; }
-    public void setRed( int red ) { argb[ 1 ] = clamp( red ); }
+    public int getRed() { return argb[ RED ]; }
+    public void setRed( int red ) { argb[ RED ] = clamp( red ); }
 
-    public int getGreen() { return argb[ 2 ]; }
-    public void setGreen( int green ) { argb[ 2 ] = clamp( green ); }
+    public int getGreen() { return argb[ GREEN ]; }
+    public void setGreen( int green ) { argb[ GREEN ] = clamp( green ); }
 
-    public int getBlue() { return argb[ 3 ]; }
-    public void setBlue( int blue ) { argb[ 3 ] = clamp( blue ); }
+    public int getBlue() { return argb[ BLUE ]; }
+    public void setBlue( int blue ) { argb[ BLUE ] = clamp( blue ); }
 
     public int getIndex( int index ) { return argb[ index ]; }
     public void setIndex( int index , int value ) { argb[ index ] = value; }
@@ -35,15 +40,18 @@ public class PixelARGB
     public int toInt()
     {
         int pixel = 0;
-        pixel |= ( argb[ 0 ] << 24 ) & 0xFF000000;
-        pixel |= ( argb[ 1 ] << 16 ) & 0x00FF0000;
-        pixel |= ( argb[ 2 ] << 8 ) & 0x0000FF00;
-        pixel |= ( argb[ 3 ] ) & 0x000000FF;
+        pixel |= ( argb[ ALPHA ] << 24 ) & 0xFF000000;
+        pixel |= ( argb[ RED ] << 16 ) & 0x00FF0000;
+        pixel |= ( argb[ GREEN ] << 8 ) & 0x0000FF00;
+        pixel |= ( argb[ BLUE ] ) & 0x000000FF;
 
         return pixel;
     }
 
-    private int clamp( int value ) { return value < 0 ? 0 : ( value > 255 ? 255 : value ); }
+    private int clamp( int value )
+    {
+        return value < 0 ? 0 : ( value > 255 ? 255 : value );
+    }
 
     private int[] decompose( int pixel )
     {

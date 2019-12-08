@@ -17,22 +17,16 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: Add an interface
 public class GenericStoneTileSet
 {
-    private IGenericStoneTileSetInfo tileSetInfo;
-    public String stoneName;
-    public ResourceLocation baseTextureLocation;
+    // TODO: Add getters
+    public IGenericStoneTileSetInfo tileSetInfo;
     public Map< StoneBlockType , GenericBlockItemPair > tiles;
 
     public GenericStoneTileSet( IGenericStoneTileSetInfo tileSetInfo )
     {
         this.tileSetInfo = tileSetInfo;
-        this.stoneName = tileSetInfo.stoneName();
-        // TODO: Should this move into IGenericStoneTileSetInfo or a derived type?
-        // It would clean up stitchTextures
-        this.baseTextureLocation = new ResourceLocation(
-            Strata.modid,
-            String.format( "blocks/stone/%s/%s" , tileSetInfo.stoneStrength().toString() , stoneName ) );
 
         GenericStoneBlock stoneBlock = new StrataStoneBlock( tileSetInfo );
         GenericBlockItemPair stone = new GenericBlockItemPair( stoneBlock , new GenericStoneBlockItem( stoneBlock ) );
@@ -76,6 +70,8 @@ public class GenericStoneTileSet
     {
         // TODO: Don't generate a texture if a texture already exists, such as from a texture pack.
         // I think ModelDynBucket has example code for this...
+
+        ResourceLocation baseTextureLocation = tileSetInfo.baseTextureLocation();
 
         {
             GenericBlockItemPair stone = tiles.getOrDefault( StoneBlockType.STONE , null );

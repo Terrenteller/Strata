@@ -56,10 +56,10 @@ public class BakedQuadUtil
         float height = texture.getIconHeight();
 
         return Ints.concat(
-            vertexToInts( vec[ 0 ] , Color.WHITE.getRGB() , texture , 0 , 0 , packedNormal ),
-            vertexToInts( vec[ 1 ] , Color.WHITE.getRGB() , texture , 0 , height , packedNormal ),
+            vertexToInts( vec[ 0 ] , Color.WHITE.getRGB() , texture ,     0 ,      0 , packedNormal ),
+            vertexToInts( vec[ 1 ] , Color.WHITE.getRGB() , texture ,     0 , height , packedNormal ),
             vertexToInts( vec[ 2 ] , Color.WHITE.getRGB() , texture , width , height , packedNormal ),
-            vertexToInts( vec[ 3 ] , Color.WHITE.getRGB() , texture , width , 0, packedNormal ) );
+            vertexToInts( vec[ 3 ] , Color.WHITE.getRGB() , texture , width ,      0 , packedNormal ) );
     }
 
     private static int[] vertexToInts( Vector3f vec , int color , TextureAtlasSprite texture , float u , float v , int normal )

@@ -25,6 +25,8 @@ public enum MediumStoneTileSetInfo implements IGenericStoneTileSetInfo
         this.brickShadowOpacity = brickShadowOpacity;
     }
 
+    // IGenericStoneTileSetInfo overrides
+
     @Override
     public String stoneName()
     {

@@ -41,7 +41,7 @@ public class GenericStoneOreBlock extends Block
         setHardness( 3f );
         setResistance( 5f );
 
-        setCreativeTab( Strata.BLOCK_TAB );
+        setCreativeTab( Strata.ITEM_TAB );
     }
 
     // Block overrides

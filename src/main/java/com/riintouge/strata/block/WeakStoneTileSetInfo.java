@@ -24,6 +24,8 @@ public enum WeakStoneTileSetInfo implements IGenericStoneTileSetInfo
         this.brickShadowOpacity = brickShadowOpacity;
     }
 
+    // IGenericStoneTileSetInfo overrides
+
     @Override
     public String stoneName()
     {
