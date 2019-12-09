@@ -101,6 +101,24 @@ strata:quartzite_brick.name=Quartzite Bricks
 
 # Ore
 
+strata:coal.name=Coal Ore
+strata:diamond.name=Diamond Ore
+strata:emerald.name=Emerald Ore
+strata:gold.name=Gold Ore
+strata:iron.name=Iron Ore
+strata:lapis.name=Lapis Lazuli Ore
+strata:redstone.name=Redstone Ore
+
+strata:basaltic_mineral_sand.name=Basaltic Mineral Sand
+strata:cassiterite_sand.name=Cassiterite Sand
+strata:garnet_sand.name=Garnet Sand
+strata:granitic_mineral_sand.name=Granitic Mineral Sand
+strata:quartz_sand.name=Quartz Sand
+strata:volcanic_ash.name=Volcanic Ash
+strata:glauconite.name=Glauconite Sand
+strata:diatomite.name=Diatomerous Earth
+strata:sulfur.name=Sulfur
+
 strata:borax.name=Borax
 strata:cinnabar.name=Cinnabar (Mercury Ore)
 strata:galena.name=Galena (Lead Ore)
@@ -109,7 +127,7 @@ strata:pyrolusite.name=Pyrolusite (Manganese Ore)
 strata:salt.name=Salt
 strata:stibnite.name=Stibnite (Antimony Ore)
 strata:chrysotile.name=Chrysotile (Asbestos Ore)
-strata:diatomite.name=Diatomite
+strata:salitre.name=Salitre
 strata:realgar.name=Realgar (Arsenic Ore)
 strata:graphite.name=Graphite
 strata:gypsum.name=Gypsum

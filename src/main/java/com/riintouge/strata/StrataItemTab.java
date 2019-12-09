@@ -13,6 +13,6 @@ public class StrataItemTab extends CreativeTabs
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( GenericOreRegistry.INSTANCE.find( "tantalite" ).blockItem );
+        return new ItemStack( GenericOreRegistry.INSTANCE.find( "tantalite" ).getItem() );
     }
 }

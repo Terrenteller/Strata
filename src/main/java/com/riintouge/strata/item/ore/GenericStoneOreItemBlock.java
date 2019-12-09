@@ -1,7 +1,7 @@
 package com.riintouge.strata.item.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.ore.GenericStoneOreBlock;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class GenericStoneOreItemBlock extends ItemBlock
 {
-    public GenericStoneOreItemBlock( GenericStoneOreBlock block )
+    public GenericStoneOreItemBlock( Block block )
     {
         super( block );
 
@@ -21,7 +21,7 @@ public class GenericStoneOreItemBlock extends ItemBlock
         setRegistryName( blockRegistryName );
         setUnlocalizedName( blockRegistryName );
 
-        setCreativeTab( Strata.BLOCK_TAB );
+        setCreativeTab( Strata.ITEM_TAB );
     }
 
     // ItemBlock overrides

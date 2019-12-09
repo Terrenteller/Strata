@@ -2,34 +2,35 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.StoneStrength;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 
-public enum MediumOreInfo implements IOreInfo
+public enum VanillaOreInfo implements IProxyOreInfo
 {
-    BARITE( "oreBarium" ),
-    BASTNASITE( null ),
-    CHALCOPYRITE( "oreCopper" ),
-    GARNIERITE( "oreNickel" ),
-    LEPIDOLITE( "oreLithium" ),
-    MAGNESITE( null ),
-    PENTLANDITE( null ),
-    SCHEELITE( "oreTungsten" ),
-    SPHALERITE( "oreZinc" ),
-    WOLFRAMITE( "oreTungsten" ),
-    ALUNITE( "oreBauxite" ), // oreBauxite because "aluminium" vs. "aluminum"
-    CELESTINE( "oreStrontium" ),
-    DOLOMITE( "oreMagnesium" ),
-    FLUORITE( null ),
-    WOLLASTONITE( null ),
-    ZEOLITE( null );
+    COAL( Blocks.COAL_ORE ),
+    DIAMOND( Blocks.DIAMOND_ORE ),
+    EMERALD( Blocks.EMERALD_ORE ),
+    GOLD( Blocks.GOLD_ORE ),
+    IRON( Blocks.IRON_ORE ),
+    LAPIS( Blocks.LAPIS_ORE ),
+    REDSTONE( Blocks.REDSTONE_ORE ); // TODO: Make glowy-glowy. See BlockRedstoneOre for details.
 
-    private String oreDictionaryName;
+    private Block vanillaBlock;
 
-    MediumOreInfo( String oreDictionaryName )
+    VanillaOreInfo( Block vanillaBlock )
     {
-        this.oreDictionaryName = oreDictionaryName;
+        this.vanillaBlock = vanillaBlock;
+    }
+
+    // IProxyOreInfo overrides
+
+    @Override
+    public Block getProxyBlock()
+    {
+        return vanillaBlock;
     }
 
     // IOreInfo overrides
@@ -37,13 +38,13 @@ public enum MediumOreInfo implements IOreInfo
     @Override
     public String oreName()
     {
-        return this.toString().toLowerCase();
+        return toString().toLowerCase();
     }
 
     @Override
     public String oreDictionaryName()
     {
-        return oreDictionaryName;
+        return null;
     }
 
     @Override
@@ -61,7 +62,7 @@ public enum MediumOreInfo implements IOreInfo
     @Override
     public StoneStrength stoneStrength()
     {
-        return StoneStrength.MEDIUM;
+        return StoneStrength.values()[ vanillaBlock.getHarvestLevel( vanillaBlock.getDefaultState() ) ];
     }
 
     @Override
@@ -69,7 +70,7 @@ public enum MediumOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/%s/%s" , stoneStrength().toString() , oreName() ) );
+            String.format( "blocks/ore/vanilla/%s" , oreName() ) );
     }
 
     @Override

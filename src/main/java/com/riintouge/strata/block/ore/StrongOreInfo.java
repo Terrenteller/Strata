@@ -2,6 +2,8 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.StoneStrength;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
 public enum StrongOreInfo implements IOreInfo
@@ -42,6 +44,18 @@ public enum StrongOreInfo implements IOreInfo
     public String oreDictionaryName()
     {
         return oreDictionaryName;
+    }
+
+    @Override
+    public Material material()
+    {
+        return Material.ROCK;
+    }
+
+    @Override
+    public SoundType soundType()
+    {
+        return SoundType.STONE;
     }
 
     @Override

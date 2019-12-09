@@ -33,6 +33,12 @@ public class Blocks
 
         GenericOreRegistry oreRegistry = GenericOreRegistry.INSTANCE;
 
+        for( IProxyOreInfo info : VanillaOreInfo.values() )
+            oreRegistry.register( new VanillaOreTileSet( info ) );
+
+        for( IOreInfo info : SandOreInfo.values() )
+            oreRegistry.register( new GenericOreTileSet( info ) );
+
         for( IOreInfo info : WeakOreInfo.values() )
             oreRegistry.register( new GenericOreTileSet( info ) );
 

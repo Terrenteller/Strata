@@ -3,7 +3,7 @@ package com.riintouge.strata;
 import com.riintouge.strata.block.DynamicOreHostManager;
 import com.riintouge.strata.block.DynamicOreHostModel;
 import com.riintouge.strata.block.ore.GenericOreBlockModelLoader;
-import com.riintouge.strata.block.ore.GenericOreTileSet;
+import com.riintouge.strata.block.ore.IOreTileSet;
 import com.riintouge.strata.item.OreItemModelLoader;
 import com.riintouge.strata.item.OreItemTextureManager;
 import net.minecraft.block.Block;
@@ -29,25 +29,25 @@ public class GenericOreRegistry
 {
     public static final GenericOreRegistry INSTANCE = new GenericOreRegistry();
 
-    private Map< String , GenericOreTileSet > oreTileSetMap = new HashMap<>();
+    private Map< String , IOreTileSet > oreTileSetMap = new HashMap<>();
 
     private GenericOreRegistry()
     {
     }
 
-    public void register( GenericOreTileSet tileSet )
+    public void register( IOreTileSet tileSet )
     {
-        oreTileSetMap.put( tileSet.oreInfo.oreName() , tileSet );
+        oreTileSetMap.put( tileSet.getInfo().oreName() , tileSet );
 
         DynamicOreHostManager.INSTANCE.registerOre(
-            tileSet.oreInfo.oreName(),
-            tileSet.oreInfo.oreBlockOverlayTextureResource() );
+            tileSet.getInfo().oreName(),
+            tileSet.getInfo().oreBlockOverlayTextureResource() );
         OreItemTextureManager.INSTANCE.registerOre(
-            tileSet.oreInfo.oreName(),
-            tileSet.oreInfo.oreItemTextureResource() );
+            tileSet.getInfo().oreName(),
+            tileSet.getInfo().oreItemTextureResource() );
     }
 
-    public GenericOreTileSet find( String oreName )
+    public IOreTileSet find( String oreName )
     {
         // TODO: toLower here and elsewhere? ResourceLocation overload?
         return oreTileSetMap.getOrDefault( oreName , null );
@@ -64,8 +64,8 @@ public class GenericOreRegistry
         System.out.println( "GenericOreRegistry::registerBlocks()" );
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
-        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
-            blockRegistry.register( tileSet.block );
+        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+            blockRegistry.register( tileSet.getBlock() );
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -74,13 +74,13 @@ public class GenericOreRegistry
         System.out.println( "GenericOreRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
-        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
-            itemRegistry.register( tileSet.blockItem );
+            itemRegistry.register( tileSet.getItem() );
 
-            String oreDictionaryName = tileSet.oreInfo.oreDictionaryName();
+            String oreDictionaryName = tileSet.getInfo().oreDictionaryName();
             if( oreDictionaryName != null )
-                OreDictionary.registerOre( oreDictionaryName , tileSet.blockItem );
+                OreDictionary.registerOre( oreDictionaryName , tileSet.getItem() );
         }
     }
 
@@ -100,12 +100,12 @@ public class GenericOreRegistry
         // The process of replacing auto-generated blocks models with DynamicOreHostModel
         // during ModelBakeEvent trashes the would-be generated item models. Instead,
         // load them from yet another auto-generated resource.
-        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
             ModelLoader.setCustomModelResourceLocation(
-                tileSet.blockItem,
+                tileSet.getItem(),
                 0,
-                new ModelResourceLocation( String.format( "%s:%sore_%s" , Strata.modid , OreItemModelLoader.ModelResourceBasePath , tileSet.oreInfo.oreName() ) , "inventory" ) );
+                new ModelResourceLocation( String.format( "%s:%sore_%s" , Strata.modid , OreItemModelLoader.ModelResourceBasePath , tileSet.getInfo().oreName() ) , "inventory" ) );
         }
     }
 
@@ -120,9 +120,9 @@ public class GenericOreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void bakeModels( ModelBakeEvent event )
     {
-        for( GenericOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
-            ResourceLocation modelResource = new ResourceLocation( Strata.modid , tileSet.oreInfo.oreName() );
+            ResourceLocation modelResource = new ResourceLocation( Strata.modid , tileSet.getInfo().oreName() );
             ModelResourceLocation modelVariantResource = new ModelResourceLocation( modelResource , null );
             IBakedModel existingModel = event.getModelRegistry().getObject( modelVariantResource );
 

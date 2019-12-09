@@ -42,7 +42,7 @@ public class GenericOreBlockModelLoader implements ICustomModelLoader
         ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_stone" );
         ModelResourceLocation templateModelResource = new ModelResourceLocation( blockState , null );
         String oreName = matcher.group( ResourcePatternOreNameGroup );
-        ResourceLocation textureResource = GenericOreRegistry.INSTANCE.find( oreName ).oreInfo.oreItemTextureResource();
+        ResourceLocation textureResource = GenericOreRegistry.INSTANCE.find( oreName ).getInfo().oreItemTextureResource();
         return new RetexturableModel( templateModelResource , textureResource );
     }
 
