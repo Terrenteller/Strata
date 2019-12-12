@@ -11,9 +11,9 @@ public enum WeakOreInfo implements IOreInfo
     BORAX( null ),
     CINNABAR( "oreCinnabar" ),
     GALENA( "oreLead" ),
-    MOLYBDENITE( "oreMolybdenum" ),
+    MOLYBDENITE( "oreMolybdenum" ), // This was referred to oreMolydenum in the original COG XML
     PYROLUSITE( "oreManganese" ),
-    SALT( null ),
+    SALT( "oreSalt" ),
     STIBNITE( null ),
     CHRYSOTILE( null ),
     SALITRE( null ),
@@ -22,7 +22,7 @@ public enum WeakOreInfo implements IOreInfo
     GYPSUM( null ),
     MIRABILITE( null ),
     MICA( null ),
-    SOAPSTONE( null ),
+    SOAPSTONE( null ), // oreMagnesium? oreTalc?
     TRONA( null );
 
     private String oreDictionaryName;

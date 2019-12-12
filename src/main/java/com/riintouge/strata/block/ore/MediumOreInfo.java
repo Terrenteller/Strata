@@ -10,10 +10,10 @@ public enum MediumOreInfo implements IOreInfo
 {
     BARITE( "oreBarium" ),
     BASTNASITE( null ),
-    CHALCOPYRITE( "oreCopper" ),
+    CHALCOPYRITE( "oreCopper" ), // COG XML mentions malachite
     GARNIERITE( "oreNickel" ),
     LEPIDOLITE( "oreLithium" ),
-    MAGNESITE( null ),
+    MAGNESITE( "oreMagnesium" ),
     PENTLANDITE( null ),
     SCHEELITE( "oreTungsten" ),
     SPHALERITE( "oreZinc" ),

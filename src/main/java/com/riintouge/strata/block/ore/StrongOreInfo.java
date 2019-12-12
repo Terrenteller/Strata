@@ -14,12 +14,12 @@ public enum StrongOreInfo implements IOreInfo
     CHROMITE( "oreChromium" ),
     ILMENITE( "oreTitanium" ),
     MAGNETITE( "oreIron" ),
-    POLLUCITE( "oreCaesium" ),
+    POLLUCITE( "oreCaesium" ), // This is the IUPAC name. Beware of oreCesium
     SPODUMENE( "oreLithium" ),
     TANTALITE( "oreTantalum" ),
-    PITCHBLENDE( "oreUranium" ), // TODO: Do other mods use this as an ACTUAL ore or uranium itself?
+    PITCHBLENDE( "oreUranium" ), // orePitchblende? TODO: Do other mods use this as an ACTUAL ore or uranium itself?
     VANADIUM_MAGNETITE( "oreVanadium" ),
-    APATITE( null ),
+    APATITE( "oreApatite" ), // orePhosphate or orePhosphorus? COG XML uses oreApatite
     KYANITE( null ),
     PERLITE( null ),
     PUMICE( null ),
