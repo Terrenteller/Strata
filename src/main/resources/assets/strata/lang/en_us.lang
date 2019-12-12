@@ -118,6 +118,13 @@ strata:volcanic_ash.name=Volcanic Ash
 strata:glauconite.name=Glauconite Sand
 strata:diatomite.name=Diatomerous Earth
 strata:sulfur.name=Sulfur
+strata:oil_sand.name=Oil Sand
+
+strata:oil_shale.name=Oil Shale
+strata:bituminous_coal.name=Bituminous Coal
+strata:lignite.name=Lignite
+strata:anthracite.name=Anthracite
+strata:coke.name=Coke
 
 strata:borax.name=Borax
 strata:cinnabar.name=Cinnabar (Mercury Ore)
@@ -135,6 +142,7 @@ strata:mirabilite.name=Mirabilite
 strata:mica.name=Mica
 strata:soapstone.name=Soapstone
 strata:trona.name=Trona
+strata:bog_iron.name=Bog Iron
 
 strata:barite.name=Barite (Barium Ore)
 strata:bastnasite.name=Bastnasite

@@ -23,7 +23,8 @@ public enum WeakOreInfo implements IOreInfo
     MIRABILITE( null ),
     MICA( null ),
     SOAPSTONE( null ), // oreMagnesium? oreTalc?
-    TRONA( null );
+    TRONA( null ),
+    BOG_IRON( "oreIron" );
 
     private String oreDictionaryName;
 

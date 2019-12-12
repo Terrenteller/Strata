@@ -36,6 +36,9 @@ public class Blocks
         for( IProxyOreInfo info : VanillaOreInfo.values() )
             oreRegistry.register( new VanillaOreTileSet( info ) );
 
+        for( IOreInfo info : CrudeOreInfo.values() )
+            oreRegistry.register( new GenericOreTileSet( info ) );
+
         for( IOreInfo info : SandOreInfo.values() )
             oreRegistry.register( new GenericOreTileSet( info ) );
 

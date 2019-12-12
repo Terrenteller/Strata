@@ -6,22 +6,17 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
-public enum SandOreInfo implements IOreInfo
+public enum CrudeOreInfo implements IOreInfo
 {
-    BASALTIC_MINERAL_SAND( null ),
-    CASSITERITE_SAND( null ),
-    GARNET_SAND( null ),
-    GRANITIC_MINERAL_SAND( null ),
-    QUARTZ_SAND( null ),
-    VOLCANIC_ASH( null ),
-    GLAUCONITE( null ),
-    DIATOMITE( null ),
-    SULFUR( null ),
-    OIL_SAND( null );
+    OIL_SHALE( null ),
+    BITUMINOUS_COAL( null ),
+    LIGNITE( null ),
+    ANTHRACITE( null ),
+    COKE( null );
 
     private String oreDictionaryName;
 
-    SandOreInfo( String oreDictionaryName )
+    CrudeOreInfo( String oreDictionaryName )
     {
         this.oreDictionaryName = oreDictionaryName;
     }
@@ -43,13 +38,13 @@ public enum SandOreInfo implements IOreInfo
     @Override
     public Material material()
     {
-        return Material.SAND;
+        return Material.ROCK;
     }
 
     @Override
     public SoundType soundType()
     {
-        return SoundType.SAND;
+        return SoundType.STONE;
     }
 
     @Override
@@ -63,7 +58,7 @@ public enum SandOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/sand/%s" , oreName() ) );
+            String.format( "blocks/ore/crude/%s" , oreName() ) );
     }
 
     @Override
