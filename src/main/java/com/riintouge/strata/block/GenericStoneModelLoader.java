@@ -2,7 +2,7 @@ package com.riintouge.strata.block;
 
 import com.riintouge.strata.RetexturableModel;
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.GenericStoneRegistry;
+import com.riintouge.strata.GenericTileSetRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +30,7 @@ public class GenericStoneModelLoader implements ICustomModelLoader
             return false;
 
         Pair< String , String > stoneAndType = getStoneAndTypePairFromFoundMatch( matcher );
-        return GenericStoneRegistry.INSTANCE.find( stoneAndType.getLeft() ) != null;
+        return GenericTileSetRegistry.INSTANCE.find( stoneAndType.getLeft() ) != null;
     }
 
     @Override

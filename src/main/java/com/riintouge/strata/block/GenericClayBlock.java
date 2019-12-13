@@ -10,35 +10,21 @@ import net.minecraft.item.Item;
 
 import java.util.Random;
 
-public class GenericStoneBlock extends Block
+public class GenericClayBlock extends Block
 {
-    public final String CobbleSuffix = "_cobble";
-    public final String BrickSuffix = "_brick";
+    protected IGenericTileSetInfo tileSetInfo;
 
-    protected IGenericStoneTileSetInfo tileSetInfo;
-
-    public GenericStoneBlock( IGenericStoneTileSetInfo tileSetInfo , StoneBlockType blockType )
+    public GenericClayBlock( IGenericTileSetInfo tileSetInfo )
     {
-        super( Material.ROCK );
+        super( Material.CLAY );
         this.tileSetInfo = tileSetInfo;
 
         String blockName = tileSetInfo.stoneName();
-        switch( blockType )
-        {
-            case COBBLE:
-                blockName += CobbleSuffix;
-                break;
-            case BRICK:
-                blockName += BrickSuffix;
-                break;
-            default: { }
-        }
-
         setRegistryName( Strata.modid + ":" + blockName );
         setUnlocalizedName( Strata.modid + ":" + blockName );
 
-        setHarvestLevel( "pickaxe" , blockType == StoneBlockType.STONE ? tileSetInfo.stoneStrength().ordinal() : 0 );
-        setSoundType( SoundType.STONE );
+        setHarvestLevel( "shovel" , tileSetInfo.stoneStrength().ordinal() );
+        setSoundType( SoundType.GROUND );
         setHardness( 3f );
         setResistance( 5f );
 
@@ -53,8 +39,8 @@ public class GenericStoneBlock extends Block
         try
         {
             String tileSetName = getRegistryName().getResourcePath();
-            GenericStoneTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( tileSetName , GenericStoneTileSet.class );
-            return tileSet.tiles.get( StoneBlockType.COBBLE ).getItem();
+            GenericClayTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( tileSetName , GenericClayTileSet.class );
+            return tileSet.getClayItemBlock();
         }
         catch( NullPointerException e )
         {

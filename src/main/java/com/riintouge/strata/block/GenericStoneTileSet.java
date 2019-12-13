@@ -3,7 +3,7 @@ package com.riintouge.strata.block;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
-import com.riintouge.strata.item.GenericStoneBlockItem;
+import com.riintouge.strata.item.GenericItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -17,11 +17,10 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Add an interface
-public class GenericStoneTileSet
+public class GenericStoneTileSet implements IGenericTileSet
 {
     // TODO: Add getters
-    public IGenericStoneTileSetInfo tileSetInfo;
+    private IGenericStoneTileSetInfo tileSetInfo;
     public Map< StoneBlockType , GenericBlockItemPair > tiles;
 
     public GenericStoneTileSet( IGenericStoneTileSetInfo tileSetInfo )
@@ -29,13 +28,13 @@ public class GenericStoneTileSet
         this.tileSetInfo = tileSetInfo;
 
         GenericStoneBlock stoneBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.STONE );
-        GenericBlockItemPair stone = new GenericBlockItemPair( stoneBlock , new GenericStoneBlockItem( stoneBlock ) );
+        GenericBlockItemPair stone = new GenericBlockItemPair( stoneBlock , new GenericItemBlock( stoneBlock ) );
 
         GenericStoneBlock cobbleBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.COBBLE );
-        GenericBlockItemPair cobble = new GenericBlockItemPair( cobbleBlock , new GenericStoneBlockItem( cobbleBlock ) );
+        GenericBlockItemPair cobble = new GenericBlockItemPair( cobbleBlock , new GenericItemBlock( cobbleBlock ) );
 
         GenericStoneBlock brickBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.BRICK );
-        GenericBlockItemPair brick = new GenericBlockItemPair( brickBlock , new GenericStoneBlockItem( brickBlock ) );
+        GenericBlockItemPair brick = new GenericBlockItemPair( brickBlock , new GenericItemBlock( brickBlock ) );
 
         tiles = new HashMap<>();
         tiles.put( StoneBlockType.STONE , stone );
@@ -43,18 +42,29 @@ public class GenericStoneTileSet
         tiles.put( StoneBlockType.BRICK , brick );
     }
 
+    // IGenericTileSet overrides
+
+    @Override
+    public IGenericTileSetInfo tileSetInfo()
+    {
+        return tileSetInfo;
+    }
+
+    @Override
     public void registerBlocks( IForgeRegistry< Block > blockRegistry )
     {
         for( GenericBlockItemPair pair : tiles.values() )
             blockRegistry.register( pair.getBlock() );
     }
 
+    @Override
     public void registerItems( IForgeRegistry< Item > itemRegistry )
     {
         for( GenericBlockItemPair pair : tiles.values() )
             itemRegistry.register( pair.getItem() );
     }
 
+    @Override
     public void registerModels( ModelRegistryEvent event )
     {
         for( GenericBlockItemPair pair : tiles.values() )
@@ -66,6 +76,7 @@ public class GenericStoneTileSet
         }
     }
 
+    @Override
     public void stitchTextures( TextureMap textureMap )
     {
         // TODO: Don't generate a texture if a texture already exists, such as from a texture pack.

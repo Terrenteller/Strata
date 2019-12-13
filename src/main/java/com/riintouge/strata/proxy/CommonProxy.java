@@ -1,7 +1,7 @@
 package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.GenericOreRegistry;
-import com.riintouge.strata.GenericStoneRegistry;
+import com.riintouge.strata.GenericTileSetRegistry;
 import com.riintouge.strata.init.Blocks;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -16,7 +16,7 @@ public class CommonProxy
         System.out.println( "CommonProxy::preInit()" );
 
         MinecraftForge.EVENT_BUS.register( Blocks.class );
-        MinecraftForge.EVENT_BUS.register( GenericStoneRegistry.class );
+        MinecraftForge.EVENT_BUS.register( GenericTileSetRegistry.class );
         MinecraftForge.EVENT_BUS.register( GenericOreRegistry.class );
     }
 

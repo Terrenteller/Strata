@@ -3,6 +3,14 @@
 itemGroup.strataBlocksTab=Strata Blocks
 itemGroup.strataItemsTab=Strata Ores
 
+# Ground
+
+strata:peat.name=Peat
+
+# Clay
+
+strata:laterite.name=Laterite
+
 # Stone
 
 strata:breccia.name=Breccia
@@ -120,6 +128,14 @@ strata:diatomite.name=Diatomerous Earth
 strata:sulfur.name=Sulfur
 strata:oil_sand.name=Oil Sand
 
+strata:bauxite.name=Bauxite (Aluminium Ore)
+strata:sodium_bentonite.name=Sodium Bentonite
+strata:calcium_bentonite.name=Calcium Bentonite
+strata:kaolinite.name=Kaolinite
+strata:brown_limonite.name=Brown Limonite (Iron Ore)
+strata:yellow_limonite.name=Yellow Limonite (Iron Ore)
+strata:vermiculite.name=Vermiculite
+
 strata:oil_shale.name=Oil Shale
 strata:bituminous_coal.name=Bituminous Coal
 strata:lignite.name=Lignite
@@ -154,7 +170,7 @@ strata:pentlandite.name=Pentlandite
 strata:scheelite.name=Scheelite (Tungsten Ore)
 strata:sphalerite.name=Sphalerite (Zinc Ore)
 strata:wolframite.name=Wolframite (Tungsten Ore)
-strata:alunite.name=Alunite (Aluminum Ore)
+strata:alunite.name=Alunite (Aluminium Ore)
 strata:celestine.name=Celestine (Strontium Ore)
 strata:dolomite.name=Dolomite (Magnesium Ore)
 strata:fluorite.name=Fluorite

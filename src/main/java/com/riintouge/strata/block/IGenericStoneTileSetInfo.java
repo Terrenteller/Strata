@@ -1,16 +1,9 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.image.BlendMode;
-import net.minecraft.util.ResourceLocation;
 
-public interface IGenericStoneTileSetInfo
+public interface IGenericStoneTileSetInfo extends IGenericTileSetInfo
 {
-    String stoneName();
-
-    StoneStrength stoneStrength();
-
-    ResourceLocation baseTextureLocation();
-
     BlendMode cobbleOverlayBlendMode();
 
     float cobbleOverlayOpacity();

@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.GenericOreRegistry;
-import com.riintouge.strata.GenericStoneRegistry;
+import com.riintouge.strata.GenericTileSetRegistry;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.property.UnlistedPropertyHostRock;
@@ -75,7 +75,7 @@ public class GenericStoneOreBlock extends Block
     public void getDrops( NonNullList<ItemStack> drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
     {
         String hostRock = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , DEFAULT );
-        GenericStoneTileSet hostTileSet = GenericStoneRegistry.INSTANCE.find( hostRock );
+        GenericStoneTileSet hostTileSet = GenericTileSetRegistry.INSTANCE.find( hostRock , GenericStoneTileSet.class );
         if( hostTileSet != null )
         {
             GenericBlockItemPair hostCobble = hostTileSet.tiles.getOrDefault( StoneBlockType.COBBLE , null );

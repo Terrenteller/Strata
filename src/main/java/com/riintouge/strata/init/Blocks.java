@@ -1,7 +1,7 @@
 package com.riintouge.strata.init;
 
 import com.riintouge.strata.GenericOreRegistry;
-import com.riintouge.strata.GenericStoneRegistry;
+import com.riintouge.strata.GenericTileSetRegistry;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.block.ore.*;
 import net.minecraft.block.Block;
@@ -17,24 +17,33 @@ public class Blocks
     {
         System.out.println( "Blocks::registerBlocks()" );
 
-        GenericStoneRegistry stoneRegistry = GenericStoneRegistry.INSTANCE;
+        GenericTileSetRegistry tileSetRegistry = GenericTileSetRegistry.INSTANCE;
+
+        for( IGenericTileSetInfo info : CrudeGroundTileSetInfo.values() )
+            tileSetRegistry.register( new GenericGroundTileSet( info ) );
+
+        for( IGenericTileSetInfo info : ClayTileSetInfo.values() )
+            tileSetRegistry.register( new GenericClayTileSet( info ) );
 
         for( IGenericStoneTileSetInfo info : WeakStoneTileSetInfo.values() )
-            stoneRegistry.register( new GenericStoneTileSet( info ) );
+            tileSetRegistry.register( new GenericStoneTileSet( info ) );
 
         for( IGenericStoneTileSetInfo info : MediumStoneTileSetInfo.values() )
-            stoneRegistry.register( new GenericStoneTileSet( info ) );
+            tileSetRegistry.register( new GenericStoneTileSet( info ) );
 
         for( IGenericStoneTileSetInfo info : StrongStoneTileSetInfo.values() )
-            stoneRegistry.register( new GenericStoneTileSet( info ) );
+            tileSetRegistry.register( new GenericStoneTileSet( info ) );
 
         for( IGenericStoneTileSetInfo info : VeryStrongStoneTileSetInfo.values() )
-            stoneRegistry.register( new GenericStoneTileSet( info ) );
+            tileSetRegistry.register( new GenericStoneTileSet( info ) );
 
         GenericOreRegistry oreRegistry = GenericOreRegistry.INSTANCE;
 
         for( IProxyOreInfo info : VanillaOreInfo.values() )
             oreRegistry.register( new VanillaOreTileSet( info ) );
+
+        for( IOreInfo info : ClayOreInfo.values() )
+            oreRegistry.register( new GenericOreTileSet( info ) );
 
         for( IOreInfo info : CrudeOreInfo.values() )
             oreRegistry.register( new GenericOreTileSet( info ) );

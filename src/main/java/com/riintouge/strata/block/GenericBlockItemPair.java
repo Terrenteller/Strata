@@ -1,24 +1,25 @@
 package com.riintouge.strata.block;
 
-import com.riintouge.strata.item.GenericStoneBlockItem;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 
 public class GenericBlockItemPair
 {
-    private GenericStoneBlock block;
-    private GenericStoneBlockItem itemBlock;
+    private Block block;
+    private ItemBlock itemBlock;
 
-    public GenericBlockItemPair( GenericStoneBlock block , GenericStoneBlockItem itemBlock )
+    public GenericBlockItemPair( Block block , ItemBlock itemBlock )
     {
         this.block = block;
         this.itemBlock = itemBlock;
     }
 
-    public GenericStoneBlock getBlock()
+    public Block getBlock()
     {
         return block;
     }
 
-    public GenericStoneBlockItem getItem()
+    public ItemBlock getItem()
     {
         return itemBlock;
     }
