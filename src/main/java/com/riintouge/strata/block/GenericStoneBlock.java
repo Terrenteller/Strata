@@ -3,8 +3,6 @@ package com.riintouge.strata.block;
 import com.riintouge.strata.GenericTileSetRegistry;
 import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 
@@ -19,7 +17,7 @@ public class GenericStoneBlock extends Block
 
     public GenericStoneBlock( IGenericStoneTileSetInfo tileSetInfo , StoneBlockType blockType )
     {
-        super( Material.ROCK );
+        super( tileSetInfo.material() );
         this.tileSetInfo = tileSetInfo;
 
         String blockName = tileSetInfo.stoneName();
@@ -37,8 +35,8 @@ public class GenericStoneBlock extends Block
         setRegistryName( Strata.modid + ":" + blockName );
         setUnlocalizedName( Strata.modid + ":" + blockName );
 
-        setHarvestLevel( "pickaxe" , blockType == StoneBlockType.STONE ? tileSetInfo.stoneStrength().ordinal() : 0 );
-        setSoundType( SoundType.STONE );
+        setHarvestLevel( tileSetInfo.harvestTool() , tileSetInfo.harvestLevel() );
+        setSoundType( tileSetInfo.soundType() );
         setHardness( 3f );
         setResistance( 5f );
 

@@ -1,7 +1,6 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.StoneStrength;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -60,9 +59,15 @@ public enum VanillaOreInfo implements IProxyOreInfo
     }
 
     @Override
-    public StoneStrength stoneStrength()
+    public String harvestTool()
     {
-        return StoneStrength.values()[ vanillaBlock.getHarvestLevel( vanillaBlock.getDefaultState() ) ];
+        return "pickaxe";
+    }
+
+    @Override
+    public int harvestLevel()
+    {
+        return vanillaBlock.getHarvestLevel( vanillaBlock.getDefaultState() );
     }
 
     @Override

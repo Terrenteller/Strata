@@ -1,7 +1,6 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.StoneStrength;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
@@ -50,9 +49,15 @@ public enum ClayOreInfo implements IOreInfo
     }
 
     @Override
-    public StoneStrength stoneStrength()
+    public String harvestTool()
     {
-        return StoneStrength.WEAK;
+        return "shovel";
+    }
+
+    @Override
+    public int harvestLevel()
+    {
+        return 0;
     }
 
     @Override

@@ -3,8 +3,6 @@ package com.riintouge.strata.block;
 import com.riintouge.strata.GenericTileSetRegistry;
 import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 
@@ -16,15 +14,15 @@ public class GenericClayBlock extends Block
 
     public GenericClayBlock( IGenericTileSetInfo tileSetInfo )
     {
-        super( Material.CLAY );
+        super( tileSetInfo.material() );
         this.tileSetInfo = tileSetInfo;
 
         String blockName = tileSetInfo.stoneName();
         setRegistryName( Strata.modid + ":" + blockName );
         setUnlocalizedName( Strata.modid + ":" + blockName );
 
-        setHarvestLevel( "shovel" , tileSetInfo.stoneStrength().ordinal() );
-        setSoundType( SoundType.GROUND );
+        setHarvestLevel( tileSetInfo.harvestTool() , tileSetInfo.harvestLevel() );
+        setSoundType( tileSetInfo.soundType() );
         setHardness( 3f );
         setResistance( 5f );
 

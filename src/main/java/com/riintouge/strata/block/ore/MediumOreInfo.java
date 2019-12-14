@@ -1,7 +1,6 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.StoneStrength;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
@@ -59,9 +58,15 @@ public enum MediumOreInfo implements IOreInfo
     }
 
     @Override
-    public StoneStrength stoneStrength()
+    public String harvestTool()
     {
-        return StoneStrength.MEDIUM;
+        return "pickaxe";
+    }
+
+    @Override
+    public int harvestLevel()
+    {
+        return 0;
     }
 
     @Override
@@ -69,7 +74,7 @@ public enum MediumOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/%s/%s" , stoneStrength().toString() , oreName() ) );
+            String.format( "blocks/ore/medium/%s" , oreName() ) );
     }
 
     @Override

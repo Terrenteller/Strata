@@ -2,6 +2,8 @@ package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.image.BlendMode;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
 public enum StrongStoneTileSetInfo implements IGenericStoneTileSetInfo
@@ -40,9 +42,27 @@ public enum StrongStoneTileSetInfo implements IGenericStoneTileSetInfo
     }
 
     @Override
-    public StoneStrength stoneStrength()
+    public Material material()
     {
-        return StoneStrength.STRONG;
+        return Material.ROCK;
+    }
+
+    @Override
+    public SoundType soundType()
+    {
+        return SoundType.STONE;
+    }
+
+    @Override
+    public String harvestTool()
+    {
+        return "pickaxe";
+    }
+
+    @Override
+    public int harvestLevel()
+    {
+        return 1;
     }
 
     @Override
@@ -50,7 +70,7 @@ public enum StrongStoneTileSetInfo implements IGenericStoneTileSetInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/stone/%s/%s" , stoneStrength().toString() , this.toString() ) );
+            String.format( "blocks/stone/strong/%s" , this.toString() ) );
     }
 
     @Override

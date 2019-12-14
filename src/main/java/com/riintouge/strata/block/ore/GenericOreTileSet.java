@@ -16,10 +16,11 @@ public class GenericOreTileSet implements IOreTileSet
         this.oreInfo = oreInfo;
 
         // Material values aren't constant so can't use switch
+        // TODO: If GenericOreBlock takes on a host affected by gravity, it should replace itself
         if( oreInfo.material() == Material.SAND )
             block = new GenericSandOreBlock( oreInfo );
         else
-            block = new GenericStoneOreBlock( oreInfo );
+            block = new GenericOreBlock( oreInfo );
 
         item = new GenericStoneOreItemBlock( block );
     }

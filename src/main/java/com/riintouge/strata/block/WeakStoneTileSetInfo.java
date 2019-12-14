@@ -2,6 +2,8 @@ package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.image.BlendMode;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
 public enum WeakStoneTileSetInfo implements IGenericStoneTileSetInfo
@@ -29,15 +31,33 @@ public enum WeakStoneTileSetInfo implements IGenericStoneTileSetInfo
     // IGenericStoneTileSetInfo overrides
 
     @Override
-    public String stoneName()
+    public Material material()
     {
-        return this.toString().toLowerCase();
+        return Material.ROCK;
     }
 
     @Override
-    public StoneStrength stoneStrength()
+    public SoundType soundType()
     {
-        return StoneStrength.WEAK;
+        return SoundType.STONE;
+    }
+
+    @Override
+    public String harvestTool()
+    {
+        return "pickaxe";
+    }
+
+    @Override
+    public int harvestLevel()
+    {
+        return 0;
+    }
+
+    @Override
+    public String stoneName()
+    {
+        return this.toString().toLowerCase();
     }
 
     @Override
@@ -45,7 +65,7 @@ public enum WeakStoneTileSetInfo implements IGenericStoneTileSetInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/stone/%s/%s" , stoneStrength().toString() , this.toString() ) );
+            String.format( "blocks/stone/weak/%s" , this.toString() ) );
     }
 
     @Override

@@ -6,8 +6,11 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.property.UnlistedPropertyHostRock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,19 +26,20 @@ import java.util.Random;
 
 import static com.riintouge.strata.property.UnlistedPropertyHostRock.DEFAULT;
 
-public class GenericStoneOreBlock extends Block
+public class GenericOreBlock extends Block
 {
     protected IOreInfo oreInfo;
 
-    public GenericStoneOreBlock( IOreInfo oreInfo )
+    public GenericOreBlock( IOreInfo oreInfo )
     {
         super( oreInfo.material() );
         this.oreInfo = oreInfo;
 
+        // TODO: Do NOT set the registry name here because it cannot then be set by derivations or new instances!
         setRegistryName( Strata.modid + ":" + oreInfo.oreName() );
         setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
 
-        setHarvestLevel( "pickaxe" , oreInfo.stoneStrength().ordinal() );
+        setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
         setSoundType( oreInfo.soundType() );
         setHardness( 3f );
         setResistance( 5f );
@@ -71,14 +75,26 @@ public class GenericStoneOreBlock extends Block
         return new DynamicOreHostTileEntity();
     }
 
+    @Deprecated
+    public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
+    {
+        return super.getBlockHardness( blockState , worldIn , pos );
+    }
+
     @Override
     public void getDrops( NonNullList<ItemStack> drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
     {
         String hostRock = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , DEFAULT );
-        GenericStoneTileSet hostTileSet = GenericTileSetRegistry.INSTANCE.find( hostRock , GenericStoneTileSet.class );
-        if( hostTileSet != null )
+        IGenericTileSet hostTileSet = GenericTileSetRegistry.INSTANCE.find( hostRock );
+        if( hostTileSet instanceof GenericClayTileSet )
         {
-            GenericBlockItemPair hostCobble = hostTileSet.tiles.getOrDefault( StoneBlockType.COBBLE , null );
+            GenericClayTileSet clayTileSet = (GenericClayTileSet)hostTileSet;
+            clayTileSet.getClayBlock().getDrops( drops , world , pos , state , fortune );
+        }
+        else if( hostTileSet instanceof GenericStoneTileSet )
+        {
+            GenericStoneTileSet stoneTileSet = (GenericStoneTileSet)hostTileSet;
+            GenericBlockItemPair hostCobble = stoneTileSet.tiles.getOrDefault( StoneBlockType.COBBLE , null );
             if( hostCobble != null )
                 drops.add( new ItemStack( hostCobble.getBlock().getItemDropped( state , RANDOM , fortune ) , 1 ) );
         }
@@ -88,11 +104,12 @@ public class GenericStoneOreBlock extends Block
         if( oreInfo instanceof IProxyOreInfo )
         {
             ( (IProxyOreInfo)oreInfo ).getProxyBlock().getDrops( drops , world , pos , state , fortune );
-            return;
         }
-
-        int fortuneBonus = fortune > 0 ? RANDOM.nextInt( fortune + 1 ) : 0;
-        drops.add( new ItemStack( oreTileSet.getItem() , 1 + fortuneBonus ) );
+        else
+        {
+            int fortuneBonus = fortune > 0 ? RANDOM.nextInt( fortune + 1 ) : 0;
+            drops.add( new ItemStack( oreTileSet.getItem() , 1 + fortuneBonus ) );
+        }
     }
 
     @Override
@@ -121,6 +138,18 @@ public class GenericStoneOreBlock extends Block
     public Item getItemDropped( IBlockState state , Random rand , int fortune )
     {
         return net.minecraft.init.Items.AIR;
+    }
+
+    @Deprecated
+    public Material getMaterial( IBlockState state)
+    {
+        return super.getMaterial( state );
+    }
+
+    @Override
+    public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
+    {
+        return super.getSoundType( state , world , pos , entity );
     }
 
     @Override

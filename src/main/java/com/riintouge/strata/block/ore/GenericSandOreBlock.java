@@ -15,7 +15,7 @@ public class GenericSandOreBlock extends BlockFalling
         setRegistryName( Strata.modid + ":" + oreInfo.oreName() );
         setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
 
-        setHarvestLevel( "shovel" , oreInfo.stoneStrength().ordinal() );
+        setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
         setSoundType( oreInfo.soundType() );
         setHardness( 3f );
         setResistance( 5f );

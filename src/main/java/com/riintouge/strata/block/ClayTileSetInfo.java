@@ -1,6 +1,8 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
 public enum ClayTileSetInfo implements IGenericTileSetInfo
@@ -14,15 +16,33 @@ public enum ClayTileSetInfo implements IGenericTileSetInfo
     // IGenericTileSetInfo overrides
 
     @Override
-    public String stoneName()
+    public Material material()
     {
-        return this.toString().toLowerCase();
+        return Material.CLAY;
     }
 
     @Override
-    public StoneStrength stoneStrength()
+    public SoundType soundType()
     {
-        return StoneStrength.WEAK;
+        return SoundType.GROUND;
+    }
+
+    @Override
+    public String harvestTool()
+    {
+        return "shovel";
+    }
+
+    @Override
+    public int harvestLevel()
+    {
+        return 0;
+    }
+
+    @Override
+    public String stoneName()
+    {
+        return this.toString().toLowerCase();
     }
 
     @Override
