@@ -109,14 +109,6 @@ strata:quartzite_brick.name=Quartzite Bricks
 
 # Ore
 
-strata:coal.name=Coal Ore
-strata:diamond.name=Diamond Ore
-strata:emerald.name=Emerald Ore
-strata:gold.name=Gold Ore
-strata:iron.name=Iron Ore
-strata:lapis.name=Lapis Lazuli Ore
-strata:redstone.name=Redstone Ore
-
 strata:basaltic_mineral_sand.name=Basaltic Mineral Sand
 strata:cassiterite_sand.name=Cassiterite Sand
 strata:garnet_sand.name=Garnet Sand

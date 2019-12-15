@@ -15,7 +15,7 @@ public class VanillaOreTileSet implements IOreTileSet
         this.oreInfo = oreInfo;
 
         block = new GenericOreBlock( oreInfo );
-        item  = new GenericStoneOreItemBlock( block );
+        item = new GenericStoneOreItemBlock( block );
     }
 
     // IOreTileSet overrides

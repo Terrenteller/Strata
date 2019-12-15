@@ -37,6 +37,7 @@ public class GenericStoneOreItemBlock extends ItemBlock
         float hitY,
         float hitZ )
     {
+        // Ore item blocks should not be treated as blocks, especially if fortune is involved!
         return player != null && player.isCreative()
             ? super.onItemUse( player , worldIn , pos , hand , facing , hitX , hitY , hitZ )
             : EnumActionResult.FAIL;
@@ -45,6 +46,9 @@ public class GenericStoneOreItemBlock extends ItemBlock
     @Override
     public String getUnlocalizedName( ItemStack stack )
     {
-        return this.block.getUnlocalizedName().replaceAll( "tile." , "" );
+        // Block.getUnlocalizedName tacks on a prefix for some reason.
+        // Strata localization doesn't make a distinction between blocks and items.
+        // Proxy ores need to report their wrapped block's unmodified, unlocalized name.
+        return this.block.getUnlocalizedName().replaceFirst( "tile." , "" );
     }
 }

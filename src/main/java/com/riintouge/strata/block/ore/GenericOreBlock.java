@@ -38,7 +38,10 @@ public class GenericOreBlock extends Block
 
         // TODO: Do NOT set the registry name here because it cannot then be set by derivations or new instances!
         setRegistryName( Strata.modid + ":" + oreInfo.oreName() );
-        setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
+        if( oreInfo instanceof IProxyOreInfo )
+            setUnlocalizedName( ( (IProxyOreInfo)oreInfo ).getProxyBlock().getUnlocalizedName() );
+        else
+            setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
 
         setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
         setSoundType( oreInfo.soundType() );
