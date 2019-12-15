@@ -61,6 +61,12 @@ public enum ClayOreInfo implements IOreInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 1.5f;
+    }
+
+    @Override
     public ResourceLocation oreBlockOverlayTextureResource()
     {
         return new ResourceLocation(

@@ -59,6 +59,12 @@ public enum CrudeOreInfo implements IOreInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 3.0f; // Vanilla ore
+    }
+
+    @Override
     public ResourceLocation oreBlockOverlayTextureResource()
     {
         return new ResourceLocation(

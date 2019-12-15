@@ -70,6 +70,12 @@ public enum StrongOreInfo implements IOreInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 4.0f; // 2x strong stone
+    }
+
+    @Override
     public ResourceLocation oreBlockOverlayTextureResource()
     {
         return new ResourceLocation(

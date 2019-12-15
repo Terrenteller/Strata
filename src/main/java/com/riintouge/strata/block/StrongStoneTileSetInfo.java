@@ -66,6 +66,12 @@ public enum StrongStoneTileSetInfo implements IGenericStoneTileSetInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 2.0f;
+    }
+
+    @Override
     public ResourceLocation baseTextureLocation()
     {
         return new ResourceLocation(

@@ -40,6 +40,12 @@ public enum CrudeGroundTileSetInfo implements IGenericTileSetInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 0.5f; // Vanilla dirt
+    }
+
+    @Override
     public String stoneName()
     {
         return this.toString().toLowerCase();

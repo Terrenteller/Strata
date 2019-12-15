@@ -12,4 +12,12 @@ public interface IOreInfo extends IGenericBlockProperties
     ResourceLocation oreBlockOverlayTextureResource();
 
     ResourceLocation oreItemTextureResource();
+
+    // IGenericBlockProperties overrides
+
+    @Override
+    default float explosionResistance()
+    {
+        return 1.7f * hardness(); // Roughly matches vanilla ore resistance
+    }
 }

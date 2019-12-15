@@ -17,8 +17,8 @@ public class GenericSandOreBlock extends BlockFalling
 
         setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
         setSoundType( oreInfo.soundType() );
-        setHardness( 3f );
-        setResistance( 5f );
+        setHardness( oreInfo.hardness() );
+        setResistance( oreInfo.explosionResistance() );
 
         setCreativeTab( Strata.ITEM_TAB );
     }

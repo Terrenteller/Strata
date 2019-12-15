@@ -40,6 +40,12 @@ public enum ClayTileSetInfo implements IGenericTileSetInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 0.6f; // Vanilla clay
+    }
+
+    @Override
     public String stoneName()
     {
         return this.toString().toLowerCase();

@@ -20,11 +20,14 @@ public class GenericStoneBlock extends Block
         super( tileSetInfo.material() );
         this.tileSetInfo = tileSetInfo;
 
+        setHardness( tileSetInfo.hardness() );
+
         String blockName = tileSetInfo.stoneName();
         switch( blockType )
         {
             case COBBLE:
                 blockName += CobbleSuffix;
+                setHardness( tileSetInfo.hardness() + 0.5f );
                 break;
             case BRICK:
                 blockName += BrickSuffix;
@@ -37,8 +40,7 @@ public class GenericStoneBlock extends Block
 
         setHarvestLevel( tileSetInfo.harvestTool() , tileSetInfo.harvestLevel() );
         setSoundType( tileSetInfo.soundType() );
-        setHardness( 3f );
-        setResistance( 5f );
+        setResistance( tileSetInfo.explosionResistance() );
 
         setCreativeTab( Strata.BLOCK_TAB );
     }

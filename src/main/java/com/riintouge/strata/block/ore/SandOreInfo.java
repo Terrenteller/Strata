@@ -64,6 +64,12 @@ public enum SandOreInfo implements IOreInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 1.0f; // 2x sand
+    }
+
+    @Override
     public ResourceLocation oreBlockOverlayTextureResource()
     {
         return new ResourceLocation(

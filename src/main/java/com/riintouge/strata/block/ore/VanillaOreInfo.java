@@ -71,6 +71,18 @@ public enum VanillaOreInfo implements IProxyOreInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 3.0f; // Vanilla ore
+    }
+
+    @Override
+    public float explosionResistance()
+    {
+        return 5.0f; // Vanilla ore
+    }
+
+    @Override
     public ResourceLocation oreBlockOverlayTextureResource()
     {
         return new ResourceLocation(

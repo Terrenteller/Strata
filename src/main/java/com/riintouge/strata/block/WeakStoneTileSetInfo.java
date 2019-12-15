@@ -55,6 +55,12 @@ public enum WeakStoneTileSetInfo implements IGenericStoneTileSetInfo
     }
 
     @Override
+    public float hardness()
+    {
+        return 1.0f;
+    }
+
+    @Override
     public String stoneName()
     {
         return this.toString().toLowerCase();

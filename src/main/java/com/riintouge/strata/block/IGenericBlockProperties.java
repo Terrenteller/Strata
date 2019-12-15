@@ -13,5 +13,10 @@ public interface IGenericBlockProperties
 
     int harvestLevel();
 
-    // TODO: resistance, hardness
+    float hardness();
+
+    default float explosionResistance()
+    {
+        return 5.0f * hardness();
+    }
 }
