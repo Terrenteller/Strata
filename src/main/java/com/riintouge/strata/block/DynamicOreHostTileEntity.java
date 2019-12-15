@@ -46,12 +46,17 @@ public class DynamicOreHostTileEntity extends TileEntity
             // adjacent stone in the neighbouring, but unloaded, chunk. Can a chunk load
             // trigger a block update?
 
+            // WARNING: getBlockType() documentation claims it's client side but is not annotated as such
             world.scheduleBlockUpdate( pos , this.getBlockType() , 20 , 10 );
             return;
         }
 
         world.markBlockRangeForRenderUpdate( pos , pos );
-        // TODO: Dig up the documentation for flags 1 and 2
+        // 1 << 0 will cause a block update
+        // 1 << 1 will send the change to clients
+        // 1 << 2 will prevent the block from being re-rendered if this is a client world
+        // 1 << 3 will force any re-renders to run on the main thread instead of the worker pool, if this is a client world and flag 3 is clear
+        // 1 << 4 will prevent observers from seeing this change
         world.notifyBlockUpdate( pos , state , state , 3 );
         markDirty();
     }
