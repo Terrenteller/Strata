@@ -1,8 +1,6 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.GenericOreRegistry;
-import com.riintouge.strata.GenericTileSetRegistry;
-import com.riintouge.strata.Strata;
+import com.riintouge.strata.*;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.property.UnlistedPropertyHostRock;
 import net.minecraft.block.Block;
@@ -24,8 +22,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
-
-import static com.riintouge.strata.property.UnlistedPropertyHostRock.DEFAULT;
 
 public class GenericOreBlock extends Block
 {
@@ -51,7 +47,7 @@ public class GenericOreBlock extends Block
         setCreativeTab( Strata.ITEM_TAB );
     }
 
-    protected String getHost( World world , BlockPos pos )
+    protected MetaResourceLocation getHost( World world , BlockPos pos )
     {
         TileEntity entity = world.getTileEntity( pos );
         return entity instanceof DynamicOreHostTileEntity
@@ -118,29 +114,18 @@ public class GenericOreBlock extends Block
     @Override
     public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
     {
-        String host = getHost( worldIn , pos );
-        IGenericTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( host );
+        MetaResourceLocation host = getHost( worldIn , pos );
+        IGenericTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( host.resourceLocation.getResourcePath() );
         return tileSet != null ? tileSet.tileSetInfo().hardness() + 1.5f : oreInfo.hardness();
     }
 
     @Override
     public void getDrops( NonNullList<ItemStack> drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
     {
-        String hostRock = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , DEFAULT );
-        // TODO: We need some kind of host registry. This will also give support for vanilla hosts.
-        IGenericTileSet hostTileSet = GenericTileSetRegistry.INSTANCE.find( hostRock );
-        if( hostTileSet instanceof GenericClayTileSet )
-        {
-            GenericClayTileSet clayTileSet = (GenericClayTileSet)hostTileSet;
-            clayTileSet.getClayBlock().getDrops( drops , world , pos , state , fortune );
-        }
-        else if( hostTileSet instanceof GenericStoneTileSet )
-        {
-            GenericStoneTileSet stoneTileSet = (GenericStoneTileSet)hostTileSet;
-            GenericBlockItemPair hostCobble = stoneTileSet.tiles.getOrDefault( StoneBlockType.COBBLE , null );
-            if( hostCobble != null )
-                drops.add( new ItemStack( hostCobble.getBlock().getItemDropped( state , RANDOM , fortune ) , 1 ) );
-        }
+        MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+        Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
+        // getStateFromMeta is deprecated. What are we meant to use?
+        hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
 
         IOreTileSet oreTileSet = GenericOreRegistry.INSTANCE.find( oreInfo.oreName() );
         IOreInfo oreInfo = oreTileSet.getInfo();
@@ -170,7 +155,7 @@ public class GenericOreBlock extends Block
         TileEntity entity = world.getTileEntity( pos );
         if( entity instanceof DynamicOreHostTileEntity )
         {
-            String cachedHost = ( (DynamicOreHostTileEntity)entity ).getCachedHost();
+            MetaResourceLocation cachedHost = ( (DynamicOreHostTileEntity)entity ).getCachedHost();
             extendedState = extendedState.withProperty( UnlistedPropertyHostRock.PROPERTY , cachedHost );
         }
 
@@ -180,18 +165,18 @@ public class GenericOreBlock extends Block
     @Override
     public int getHarvestLevel( IBlockState state )
     {
-        String host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( host );
-        return tileSet != null ? tileSet.tileSetInfo().harvestLevel() : super.getHarvestLevel( state );
+        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
+        return tileSetInfo != null ? tileSetInfo.harvestLevel() : super.getHarvestLevel( state );
     }
 
     @Nullable
     @Override
     public String getHarvestTool( IBlockState state )
     {
-        String host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( host );
-        return tileSet != null ? tileSet.tileSetInfo().harvestTool() : super.getHarvestTool( state );
+        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
+        return tileSetInfo != null ? tileSetInfo.harvestTool() : super.getHarvestTool( state );
     }
 
     @Override
@@ -204,9 +189,9 @@ public class GenericOreBlock extends Block
     @Override
     public Material getMaterial( IBlockState state )
     {
-        String host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( host );
-        return tileSet != null ? tileSet.tileSetInfo().material() : super.getMaterial( state );
+        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
+        return tileSetInfo != null ? tileSetInfo.material() : super.getMaterial( state );
     }
 
     @Deprecated
@@ -219,9 +204,9 @@ public class GenericOreBlock extends Block
     @Override
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
-        String host = getHost( world , pos );
-        IGenericTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( host );
-        return tileSet != null ? tileSet.tileSetInfo().soundType() : oreInfo.soundType();
+        MetaResourceLocation hostResource = getHost( world , pos );
+        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
+        return tileSetInfo != null ? tileSetInfo.soundType() : oreInfo.soundType();
     }
 
     @Override

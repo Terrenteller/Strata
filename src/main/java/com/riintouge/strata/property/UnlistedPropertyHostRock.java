@@ -1,18 +1,22 @@
 package com.riintouge.strata.property;
 
-import com.riintouge.strata.GenericTileSetRegistry;
+import com.riintouge.strata.GenericHostRegistry;
+import com.riintouge.strata.MetaResourceLocation;
 import com.riintouge.strata.block.StateUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
-public class UnlistedPropertyHostRock implements IUnlistedProperty< String >
+public class UnlistedPropertyHostRock implements IUnlistedProperty< MetaResourceLocation >
 {
     public static UnlistedPropertyHostRock PROPERTY = new UnlistedPropertyHostRock();
-    public static String DEFAULT = "";
+    // TODO: Default to null and handle appropriately
+    public static MetaResourceLocation DEFAULT = new MetaResourceLocation( new ResourceLocation( "minecraft" , "stone" ) , 0 );
 
     // IUnlistedProperty overrides
 
@@ -23,64 +27,48 @@ public class UnlistedPropertyHostRock implements IUnlistedProperty< String >
     }
 
     @Override
-    public boolean isValid( String value )
+    public boolean isValid( MetaResourceLocation value )
     {
         return true;
     }
 
     @Override
-    public Class< String > getType()
+    public Class< MetaResourceLocation > getType()
     {
-        return String.class;
+        return MetaResourceLocation.class;
     }
 
     @Override
-    public String valueToString( String value )
+    public String valueToString( MetaResourceLocation value )
     {
-        return value;
+        return value.toString();
     }
 
     // Statics
 
-    public static String determineHostAdjacent( IBlockAccess worldIn , BlockPos pos )
+    public static MetaResourceLocation findHost( IBlockAccess worldIn , BlockPos pos )
     {
-        String bestHost = DEFAULT;
+        MetaResourceLocation bestHost = DEFAULT;
 
         for( EnumFacing facing : EnumFacing.VALUES )
         {
+            // Prefer true hosts over ores
             BlockPos adjPos = pos.offset( facing );
             IBlockState adjState = worldIn.getBlockState( adjPos );
-
-            // TODO: Add support for vanilla blocks by prioritizing a lookup over block state.
-            // What about netherrack or clay? Or gravel?
-            // If ores "generate" in FallingBlockBase they should break when they "fall"
-            // TODO: Prioritize matching materials so clay ores try to take
-            // the form of clay and not rock, where possible
-
-            String stoneName = adjState.getBlock().getRegistryName().getResourcePath();
-            if( GenericTileSetRegistry.INSTANCE.contains( stoneName ) )
-                return stoneName;
+            Block adjBlock = adjState.getBlock();
+            ResourceLocation adjRegistryName = adjBlock.getRegistryName();
+            int adjMeta = adjBlock.getMetaFromState( adjState );
+            // TODO: Prioritize matching materials so clay ores try to take clay hosts
+            MetaResourceLocation possibleHost = new MetaResourceLocation( adjRegistryName , adjMeta );
+            if( !possibleHost.equals( DEFAULT ) && GenericHostRegistry.INSTANCE.find( adjRegistryName , adjMeta ) != null )
+                return possibleHost;
 
             if( !( adjState instanceof IExtendedBlockState ) )
                 continue;
 
-            String adjHost = StateUtil.getValue( adjState , worldIn , adjPos , UnlistedPropertyHostRock.PROPERTY , DEFAULT );
-            if( !adjHost.equalsIgnoreCase( DEFAULT ) )
-                return adjHost;
-
-            //if( adjState.getBlock() instanceof IPropertyHostProvider )
-            //{
-            //    System.out.println( "is IPropertyHostProvider" );
-            //    IPropertyHostProvider hostProvider = (IPropertyHostProvider)adjState.getBlock();
-            //    PropertyEnum propertyEnum = hostProvider.getHostProvidingProperty();
-            //    IMetaEnum hostValue = (IMetaEnum)adjState.getProperties().get( propertyEnum );
-            //    adjHost = hostValue.getName();
-            //    System.out.println( "value is " + adjHost );
-            //    if( !adjHost.equalsIgnoreCase( DEFAULT ) )
-            //        return adjHost;
-            //}
-
-            // TODO: Vanilla hosts, but prioritize our own stone
+            MetaResourceLocation adjHost = StateUtil.getValue( adjState , worldIn , adjPos , UnlistedPropertyHostRock.PROPERTY , DEFAULT );
+            if( !adjHost.equals( DEFAULT ) )
+                bestHost = adjHost;
         }
 
         return bestHost;

@@ -1,11 +1,9 @@
 package com.riintouge.strata;
 
-import com.riintouge.strata.block.DynamicOreHostManager;
 import com.riintouge.strata.block.DynamicOreHostModel;
 import com.riintouge.strata.block.ore.GenericOreBlockModelLoader;
 import com.riintouge.strata.block.ore.IOreTileSet;
 import com.riintouge.strata.item.OreItemModelLoader;
-import com.riintouge.strata.item.OreItemTextureManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -38,13 +36,6 @@ public class GenericOreRegistry
     public void register( IOreTileSet tileSet )
     {
         oreTileSetMap.put( tileSet.getInfo().oreName() , tileSet );
-
-        DynamicOreHostManager.INSTANCE.registerOre(
-            tileSet.getInfo().oreName(),
-            tileSet.getInfo().oreBlockOverlayTextureResource() );
-        OreItemTextureManager.INSTANCE.registerOre(
-            tileSet.getInfo().oreName(),
-            tileSet.getInfo().oreItemTextureResource() );
     }
 
     public IOreTileSet find( String oreName )
@@ -57,6 +48,8 @@ public class GenericOreRegistry
     {
         return oreTileSetMap.getOrDefault( oreName , null ) != null;
     }
+
+    // Statics
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerBlocks( RegistryEvent.Register< Block > event )

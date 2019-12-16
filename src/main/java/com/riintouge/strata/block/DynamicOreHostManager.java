@@ -1,9 +1,9 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
-import com.riintouge.strata.property.UnlistedPropertyHostRock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -23,40 +23,48 @@ public class DynamicOreHostManager
 
     private static final Logger LOGGER = LogManager.getLogger();
     private boolean alreadyInitializedOnce = false;
-    private Map< String , ResourceLocation > oreNameToTextureResourceMap = new HashMap<>();
-    private Map< String , ResourceLocation > hostNameToTextureResourceMap = new HashMap<>();
+    private Map< ResourceLocation , IOreInfo[] > oreInfoMap = new HashMap<>();
+    private Map< ResourceLocation , IGenericTileSetInfo[] > hostInfoMap = new HashMap<>();
     private Map< String , TextureAtlasSprite > generatedTextureMap = new HashMap<>();
 
     private DynamicOreHostManager()
     {
-        // TODO: Get a real default like vanilla stone or the missing texture
-        registerHost( UnlistedPropertyHostRock.DEFAULT , new ResourceLocation( "blocks/stone" ) );
     }
 
-    public void registerOre( String ore , ResourceLocation resourceLocation )
+    public void registerOre( ResourceLocation oreRegistryName , int meta , IOreInfo oreInfo )
     {
         if( alreadyInitializedOnce )
             LOGGER.warn( "registerOre called too late!" );
 
-        if( !oreNameToTextureResourceMap.containsKey( ore ) )
-            oreNameToTextureResourceMap.put( ore , resourceLocation );
+        IOreInfo[] infos;
+        if( !oreInfoMap.containsKey( oreRegistryName ) )
+            oreInfoMap.put( oreRegistryName , infos = new IOreInfo[ 16 ] );
+        else
+            infos = oreInfoMap.get( oreRegistryName );
+
+        infos[ meta ] = oreInfo;
     }
 
-    // Add mapping from host name to texture resource location
-    public void registerHost( String host , ResourceLocation resourceLocation )
+    public void registerHost( ResourceLocation hostRegistryName , int meta , IGenericTileSetInfo tileSetInfo )
     {
         if( alreadyInitializedOnce )
             LOGGER.warn( "registerHost called too late!" );
 
-        if( !hostNameToTextureResourceMap.containsKey( host ) )
-            hostNameToTextureResourceMap.put( host , resourceLocation );
+        IGenericTileSetInfo[] infos;
+        if( !hostInfoMap.containsKey( hostRegistryName ) )
+            hostInfoMap.put( hostRegistryName , infos = new IGenericTileSetInfo[ 16 ] );
+        else
+            infos = hostInfoMap.get( hostRegistryName );
+
+        infos[ meta ] = tileSetInfo;
     }
 
-    public TextureAtlasSprite getGeneratedTexture( String ore , String host )
+    public TextureAtlasSprite findTexture( ResourceLocation ore , int oreMeta , ResourceLocation host , int hostMeta )
     {
-        String resourcePath = getGeneratedResourceLocation( ore , host ).getResourcePath();
-        if( generatedTextureMap.containsKey( resourcePath ) )
-            return generatedTextureMap.get( resourcePath );
+        String resourcePath = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta ).getResourcePath();
+        TextureAtlasSprite texture = generatedTextureMap.getOrDefault( resourcePath , null );
+        if( texture != null )
+            return texture;
 
         System.out.println( String.format( "No texture was generated for \"%s\"!" , resourcePath ) );
 
@@ -77,44 +85,74 @@ public class DynamicOreHostManager
         int generatedTextureCount = 0 , oreCount = 0 , hostCount = 0;
         long startTime = System.nanoTime();
 
-        for( String oreName : INSTANCE.oreNameToTextureResourceMap.keySet() )
+        for( ResourceLocation ore : INSTANCE.oreInfoMap.keySet() )
         {
-            oreCount++;
-
-            for( String hostName : INSTANCE.hostNameToTextureResourceMap.keySet() )
+            for( ResourceLocation host : INSTANCE.hostInfoMap.keySet() )
             {
-                hostCount++;
+                IOreInfo[] oreTextureResources = INSTANCE.oreInfoMap.get( ore );
+                IGenericTileSetInfo[] hostTextureResources = INSTANCE.hostInfoMap.get( host );
 
-                ResourceLocation ore = INSTANCE.oreNameToTextureResourceMap.get( oreName );
-                ResourceLocation host = INSTANCE.hostNameToTextureResourceMap.get( hostName );
-                ResourceLocation generatedResourceLocation = getGeneratedResourceLocation( oreName , hostName );
-                //System.out.println( "Generating " + generatedResourceLocation.toString() );
+                for( int oreMeta = 0 ; oreMeta < oreTextureResources.length ; oreMeta++ )
+                {
+                    IOreInfo oreInfo = oreTextureResources[ oreMeta ];
+                    if( oreInfo == null )
+                        continue;
+                    else
+                        oreCount++;
 
-                LayeredTextureLayer oreLayer = new LayeredTextureLayer( ore );
-                LayeredTextureLayer hostLayer = new LayeredTextureLayer( host );
-                TextureAtlasSprite generatedTexture = new LayeredTexture(
-                    generatedResourceLocation,
-                    new LayeredTextureLayer[] { oreLayer , hostLayer } );
+                    ResourceLocation oreTextureResource = oreInfo.oreBlockOverlayTextureResource();
 
-                textureMap.setTextureEntry( generatedTexture );
-                INSTANCE.generatedTextureMap.put( generatedResourceLocation.getResourcePath() , generatedTexture );
-                generatedTextureCount++;
+                    for( int hostMeta = 0 ; hostMeta < hostTextureResources.length ; hostMeta++ )
+                    {
+                        IGenericTileSetInfo hostInfo = hostTextureResources[ hostMeta ];
+                        if( hostInfo == null )
+                            continue;
+
+                        ResourceLocation hostTextureResource = hostInfo.baseTextureLocation();
+                        ResourceLocation generatedResource = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta );
+                        //System.out.println( "Generating " + generatedResource.toString() );
+
+                        LayeredTextureLayer oreLayer = new LayeredTextureLayer( oreTextureResource );
+                        LayeredTextureLayer hostLayer = new LayeredTextureLayer( hostTextureResource );
+                        TextureAtlasSprite generatedTexture = new LayeredTexture(
+                            generatedResource,
+                            new LayeredTextureLayer[] { oreLayer , hostLayer } );
+
+                        textureMap.setTextureEntry( generatedTexture );
+                        INSTANCE.generatedTextureMap.put( generatedResource.getResourcePath() , generatedTexture );
+                        generatedTextureCount++;
+                    }
+                }
             }
         }
 
         long endTime = System.nanoTime();
+        oreCount /= INSTANCE.hostInfoMap.keySet().size();
         LOGGER.info( String.format(
             "Generated %d texture(s) from %d hosts and %d ores in %d millisecond(s)",
             generatedTextureCount,
-            hostCount / oreCount,
+            generatedTextureCount / oreCount,
             oreCount,
             ( endTime - startTime ) / 1000000 ) );
 
         INSTANCE.alreadyInitializedOnce = true;
     }
 
-    private static ResourceLocation getGeneratedResourceLocation( String ore , String host )
+    private static ResourceLocation getGeneratedResourceLocation(
+        ResourceLocation ore,
+        int oreMeta,
+        ResourceLocation host,
+        int hostMeta )
     {
-        return new ResourceLocation( Strata.modid , String.format( "ore_%s_host_%s" , ore , host ) );
+        // Ex: ore_strata_cinnabar_0_host_minecraft_stone_3
+        String texturePath = String.format(
+            "ore_%s_%s_%d_host_%s_%s_%d",
+            ore.getResourceDomain(),
+            ore.getResourcePath(),
+            oreMeta,
+            host.getResourceDomain(),
+            host.getResourcePath(),
+            hostMeta );
+        return new ResourceLocation( Strata.modid , texturePath );
     }
 }

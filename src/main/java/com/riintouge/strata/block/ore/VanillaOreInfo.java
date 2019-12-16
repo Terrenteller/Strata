@@ -43,6 +43,7 @@ public enum VanillaOreInfo implements IProxyOreInfo
     @Override
     public String oreDictionaryName()
     {
+        // TODO: This should report the ore it proxies so the block can be detected as such
         return null;
     }
 

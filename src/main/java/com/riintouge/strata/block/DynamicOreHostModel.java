@@ -1,13 +1,16 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.GenericOreRegistry;
+import com.riintouge.strata.MetaResourceLocation;
 import com.riintouge.strata.property.UnlistedPropertyHostRock;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
@@ -31,12 +34,18 @@ public class DynamicOreHostModel implements IBakedModel
         if( side == null || !( state instanceof IExtendedBlockState ) )
             return originalModel.getQuads( state , side , rand );
 
-        String oreName = state.getBlock().getRegistryName().getResourcePath();
+        Block block = state.getBlock();
+        ResourceLocation registryName = block.getRegistryName();
+        String oreName = registryName.getResourcePath();
         if( !GenericOreRegistry.INSTANCE.contains( oreName ) )
             return originalModel.getQuads( state , side , rand );
 
-        String host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        TextureAtlasSprite hostTexture = DynamicOreHostManager.INSTANCE.getGeneratedTexture( oreName , host );
+        MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+        TextureAtlasSprite hostTexture = DynamicOreHostManager.INSTANCE.findTexture(
+            registryName,
+            block.getMetaFromState( state ),
+            host.resourceLocation,
+            host.meta );
         List< BakedQuad > newQuads = new Vector<>();
         newQuads.add( BakedQuadUtil.createBakedQuadForFace( 0 , hostTexture , side ) );
 

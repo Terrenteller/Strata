@@ -1,5 +1,6 @@
 package com.riintouge.strata.block;
 
+import com.riintouge.strata.MetaResourceLocation;
 import com.riintouge.strata.property.UnlistedPropertyHostRock;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,14 +13,14 @@ import javax.annotation.Nullable;
 
 public class DynamicOreHostTileEntity extends TileEntity
 {
-    private String cachedHost = UnlistedPropertyHostRock.DEFAULT;
+    private MetaResourceLocation cachedHost = UnlistedPropertyHostRock.DEFAULT;
 
     public DynamicOreHostTileEntity()
     {
         // Nothing to do
     }
 
-    public String getCachedHost()
+    public MetaResourceLocation getCachedHost()
     {
         return cachedHost;
     }
@@ -33,18 +34,17 @@ public class DynamicOreHostTileEntity extends TileEntity
         if( !( state instanceof IExtendedBlockState ) )
             return;
 
-        if( !cachedHost.equalsIgnoreCase( UnlistedPropertyHostRock.DEFAULT ) )
+        if( !cachedHost.equals( UnlistedPropertyHostRock.DEFAULT ) )
             return; // Host has been determined. Stop polling
 
-        cachedHost = UnlistedPropertyHostRock.determineHostAdjacent( world , pos );
-        if( cachedHost.equalsIgnoreCase( UnlistedPropertyHostRock.DEFAULT ) )
+        cachedHost = UnlistedPropertyHostRock.findHost( world , pos );
+        if( cachedHost.equals( UnlistedPropertyHostRock.DEFAULT ) )
         {
-            // Unable to determine host. Try again later
             //System.out.println( "Unable to determine host" );
 
             // FIXME: We can't exactly "timeout". Consider an ore block that has a single,
             // adjacent stone in the neighbouring, but unloaded, chunk. Can a chunk load
-            // trigger a block update?
+            // trigger a block update? Should we remove the block and pretend like it never existed?
 
             // WARNING: getBlockType() documentation claims it's client side but is not annotated as such
             world.scheduleBlockUpdate( pos , this.getBlockType() , 20 , 10 );
@@ -87,8 +87,8 @@ public class DynamicOreHostTileEntity extends TileEntity
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        if( !cachedHost.equalsIgnoreCase( UnlistedPropertyHostRock.DEFAULT ) )
-            tag.setString( UnlistedPropertyHostRock.PROPERTY.getName() , cachedHost );
+        if( !cachedHost.equals( UnlistedPropertyHostRock.DEFAULT ) )
+            tag.setString( UnlistedPropertyHostRock.PROPERTY.getName() , cachedHost.toString() );
 
         return this.writeToNBT( tag );
     }
@@ -111,11 +111,15 @@ public class DynamicOreHostTileEntity extends TileEntity
             return;
 
         IBlockState state = world.getBlockState( pos );
-        String host = tag.getString( UnlistedPropertyHostRock.PROPERTY.getName() );
-        if( host.equalsIgnoreCase( UnlistedPropertyHostRock.DEFAULT ) )
-            return; // The server doesn't know either
+        String hostString = tag.getString( UnlistedPropertyHostRock.PROPERTY.getName() );
+        if( !hostString.isEmpty() )
+        {
+            MetaResourceLocation host = new MetaResourceLocation( hostString );
+            if( host.equals( UnlistedPropertyHostRock.DEFAULT ) )
+                return; // The server doesn't know either
 
-        cachedHost = host;
-        world.notifyBlockUpdate( pos , state , state , 3 );
+            cachedHost = host;
+            world.notifyBlockUpdate( pos , state , state , 3 );
+        }
     }
 }

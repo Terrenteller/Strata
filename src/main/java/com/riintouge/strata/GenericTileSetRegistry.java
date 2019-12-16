@@ -27,12 +27,7 @@ public class GenericTileSetRegistry
 
     public void register( IGenericTileSet tileSet )
     {
-        IGenericTileSetInfo tileSetInfo = tileSet.tileSetInfo();
-        tileSetMap.put( tileSetInfo.stoneName() , tileSet );
-
-        DynamicOreHostManager.INSTANCE.registerHost(
-            tileSetInfo.stoneName(),
-            tileSetInfo.baseTextureLocation() );
+        tileSetMap.put( tileSet.tileSetInfo().stoneName() , tileSet );
     }
 
     public IGenericTileSet find( String tileSetName )
