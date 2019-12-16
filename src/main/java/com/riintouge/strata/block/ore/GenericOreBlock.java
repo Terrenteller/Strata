@@ -114,9 +114,9 @@ public class GenericOreBlock extends Block
     @Override
     public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
     {
-        MetaResourceLocation host = getHost( worldIn , pos );
-        IGenericTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( host.resourceLocation.getResourcePath() );
-        return tileSet != null ? tileSet.tileSetInfo().hardness() + 1.5f : oreInfo.hardness();
+        MetaResourceLocation hostResource = getHost( worldIn , pos );
+        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
+        return tileSetInfo != null ? tileSetInfo.hardness() + 1.5f : oreInfo.hardness();
     }
 
     @Override

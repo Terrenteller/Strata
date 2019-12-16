@@ -18,8 +18,8 @@ public class GenericGroundBlock extends Block
 
         setHarvestLevel( tileSetInfo.harvestTool() , tileSetInfo.harvestLevel() );
         setSoundType( tileSetInfo.soundType() );
-        setHardness( 3f );
-        setResistance( 5f );
+        setHardness( tileSetInfo.hardness() );
+        setResistance( tileSetInfo.explosionResistance() );
 
         setCreativeTab( Strata.BLOCK_TAB );
     }
