@@ -9,19 +9,21 @@ import net.minecraft.util.ResourceLocation;
 
 public enum VanillaOreInfo implements IProxyOreInfo
 {
-    COAL( Blocks.COAL_ORE ),
-    DIAMOND( Blocks.DIAMOND_ORE ),
-    EMERALD( Blocks.EMERALD_ORE ),
-    GOLD( Blocks.GOLD_ORE ),
-    IRON( Blocks.IRON_ORE ),
-    LAPIS( Blocks.LAPIS_ORE ),
-    REDSTONE( Blocks.REDSTONE_ORE ); // TODO: Make glowy-glowy. See BlockRedstoneOre for details.
+    COAL( Blocks.COAL_ORE , "oreCoal" ),
+    DIAMOND( Blocks.DIAMOND_ORE , "oreDiamond" ),
+    EMERALD( Blocks.EMERALD_ORE , "oreEmerald" ),
+    GOLD( Blocks.GOLD_ORE , "oreGold" ),
+    IRON( Blocks.IRON_ORE , "oreIron" ),
+    LAPIS( Blocks.LAPIS_ORE , "oreLapis" ),
+    REDSTONE( Blocks.REDSTONE_ORE , "oreRedstone" ); // TODO: Make glowy-glowy. See BlockRedstoneOre for details.
 
     private Block vanillaBlock;
+    private String oreDictionaryName;
 
-    VanillaOreInfo( Block vanillaBlock )
+    VanillaOreInfo( Block vanillaBlock , String oreDictionaryName )
     {
         this.vanillaBlock = vanillaBlock;
+        this.oreDictionaryName = oreDictionaryName;
     }
 
     // IProxyOreInfo overrides
@@ -43,8 +45,7 @@ public enum VanillaOreInfo implements IProxyOreInfo
     @Override
     public String oreDictionaryName()
     {
-        // TODO: This should report the ore it proxies so the block can be detected as such
-        return null;
+        return oreDictionaryName;
     }
 
     @Override
