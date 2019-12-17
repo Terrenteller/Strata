@@ -1,8 +1,8 @@
 package com.riintouge.strata.proxy;
 
-import com.riintouge.strata.GenericOreRegistry;
-import com.riintouge.strata.GenericTileSetRegistry;
-import com.riintouge.strata.init.Blocks;
+import com.riintouge.strata.block.ore.GenericOreRegistry;
+import com.riintouge.strata.block.GenericTileSetRegistry;
+import com.riintouge.strata.block.Blocks;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

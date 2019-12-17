@@ -1,7 +1,8 @@
 package com.riintouge.strata;
 
-import com.riintouge.strata.block.GenericStoneTileSet;
-import com.riintouge.strata.block.StoneBlockType;
+import com.riintouge.strata.block.GenericTileSetRegistry;
+import com.riintouge.strata.block.geo.tileset.GenericStoneTileSet;
+import com.riintouge.strata.block.geo.StoneBlockType;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 

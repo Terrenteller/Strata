@@ -1,7 +1,7 @@
 package com.riintouge.strata.proxy;
 
-import com.riintouge.strata.block.DynamicOreHostManager;
-import com.riintouge.strata.item.OreItemTextureManager;
+import com.riintouge.strata.block.ore.DynamicOreHostManager;
+import com.riintouge.strata.block.ore.OreItemTextureManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
