@@ -69,7 +69,7 @@ public enum CrudeOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/crude/%s" , oreName() ) );
+            String.format( "blocks/ore/crude/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

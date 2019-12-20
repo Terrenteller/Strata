@@ -89,7 +89,7 @@ public enum VanillaOreInfo implements IProxyOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/vanilla/%s" , oreName() ) );
+            String.format( "blocks/ore/vanilla/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

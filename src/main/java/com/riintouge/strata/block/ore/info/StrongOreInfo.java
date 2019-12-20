@@ -80,7 +80,7 @@ public enum StrongOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/strong/%s" , oreName() ) );
+            String.format( "blocks/ore/strong/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

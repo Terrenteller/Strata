@@ -71,7 +71,7 @@ public enum ClayOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid ,
-            String.format( "blocks/ore/clay/%s" , oreName() ) );
+            String.format( "blocks/ore/clay/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

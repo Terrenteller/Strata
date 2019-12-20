@@ -81,7 +81,7 @@ public enum WeakOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/weak/%s" , oreName() ) );
+            String.format( "blocks/ore/weak/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

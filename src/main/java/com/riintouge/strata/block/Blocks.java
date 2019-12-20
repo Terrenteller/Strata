@@ -11,7 +11,6 @@ import com.riintouge.strata.block.ore.GenericOreRegistry;
 import com.riintouge.strata.block.ore.OreItemTextureManager;
 import com.riintouge.strata.block.ore.info.*;
 import com.riintouge.strata.block.ore.tileset.GenericOreTileSet;
-import com.riintouge.strata.block.ore.tileset.VanillaOreTileSet;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -34,37 +33,37 @@ public class Blocks
 
         for( IGenericTileSetInfo info : CrudeGroundTileSetInfo.values() )
         {
-            hostRegistry.register( info.registryName() , 0 , info );
+            hostRegistry.register( info.registryName() , info.meta() , info );
             tileSetRegistry.register( new GenericGroundTileSet( info ) );
         }
 
         for( IGenericTileSetInfo info : ClayTileSetInfo.values() )
         {
-            hostRegistry.register( info.registryName() , 0 , info );
+            hostRegistry.register( info.registryName() , info.meta() , info );
             tileSetRegistry.register( new GenericClayTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : WeakStoneTileSetInfo.values() )
         {
-            hostRegistry.register( info.registryName() , 0 , info );
+            hostRegistry.register( info.registryName() , info.meta() , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : MediumStoneTileSetInfo.values() )
         {
-            hostRegistry.register( info.registryName() , 0 , info );
+            hostRegistry.register( info.registryName() , info.meta() , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : StrongStoneTileSetInfo.values() )
         {
-            hostRegistry.register( info.registryName() , 0 , info );
+            hostRegistry.register( info.registryName() , info.meta() , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : VeryStrongStoneTileSetInfo.values() )
         {
-            hostRegistry.register( info.registryName() , 0 , info );
+            hostRegistry.register( info.registryName() , info.meta() , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
@@ -72,9 +71,9 @@ public class Blocks
         OreItemTextureManager oreItemRegistry = OreItemTextureManager.INSTANCE;
         DynamicOreHostManager oreHostManager = DynamicOreHostManager.INSTANCE;
 
-        for( IProxyOreInfo info : VanillaOreInfo.values() )
+        for( IOreInfo info : VanillaOreInfo.values() )
         {
-            oreRegistry.register( new VanillaOreTileSet( info ) );
+            oreRegistry.register( new GenericOreTileSet( info ) );
             oreItemRegistry.registerOre( info.oreName() , info.oreItemTextureResource() );
             oreHostManager.registerOre( new ResourceLocation( Strata.modid , info.oreName() ) , 0 , info );
         }

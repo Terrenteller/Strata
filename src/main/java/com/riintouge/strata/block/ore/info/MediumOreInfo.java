@@ -80,7 +80,7 @@ public enum MediumOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/medium/%s" , oreName() ) );
+            String.format( "blocks/ore/medium/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

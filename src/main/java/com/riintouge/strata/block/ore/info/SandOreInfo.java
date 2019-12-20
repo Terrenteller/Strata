@@ -74,7 +74,7 @@ public enum SandOreInfo implements IOreInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ore/sand/%s" , oreName() ) );
+            String.format( "blocks/ore/sand/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

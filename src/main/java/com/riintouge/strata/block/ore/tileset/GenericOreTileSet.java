@@ -8,9 +8,9 @@ import net.minecraft.item.Item;
 
 public class GenericOreTileSet implements IOreTileSet
 {
-    public IOreInfo oreInfo;
-    public Block block;
-    public Item item;
+    protected IOreInfo oreInfo;
+    protected Block block;
+    protected Item item;
 
     public GenericOreTileSet( IOreInfo oreInfo )
     {
