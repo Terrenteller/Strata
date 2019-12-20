@@ -1,8 +1,9 @@
 package com.riintouge.strata.block;
 
-import com.riintouge.strata.block.geo.IGenericBlockProperties;
+import com.riintouge.strata.block.geo.IHostInfo;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,31 +11,36 @@ public class GenericHostRegistry
 {
     public static final GenericHostRegistry INSTANCE = new GenericHostRegistry();
 
-    private Map< ResourceLocation , IGenericBlockProperties[] > hostProps = new HashMap<>();
+    private Map< ResourceLocation , IHostInfo[] > hostInfos = new HashMap<>();
 
     private GenericHostRegistry()
     {
     }
 
-    public void register( ResourceLocation registryName , int meta , IGenericBlockProperties props )
+    public void register( ResourceLocation registryName , int meta , IHostInfo info )
     {
-        IGenericBlockProperties[] metaProps = hostProps.getOrDefault( registryName , null );
+        IHostInfo[] metaInfos = hostInfos.getOrDefault( registryName , null );
 
-        if( metaProps == null )
-            hostProps.put( registryName , metaProps = new IGenericBlockProperties[ 16 ] );
+        if( metaInfos == null )
+            hostInfos.put( registryName , metaInfos = new IHostInfo[ 16 ] );
 
-        metaProps[ meta ] = props;
+        metaInfos[ meta ] = info;
     }
 
-    public IGenericBlockProperties find( ResourceLocation registryName , int meta )
+    public IHostInfo find( ResourceLocation registryName , int meta )
     {
-        IGenericBlockProperties[] metaProps = hostProps.getOrDefault( registryName , null );
-        return metaProps != null ? metaProps[ meta ] : null;
+        IHostInfo[] metaInfos = hostInfos.getOrDefault( registryName , null );
+        return metaInfos != null ? metaInfos[ meta ] : null;
     }
 
-    public IGenericBlockProperties find( MetaResourceLocation registryNameVariant )
+    public IHostInfo find( MetaResourceLocation registryNameMeta )
     {
-        IGenericBlockProperties[] metaProps = hostProps.getOrDefault( registryNameVariant.resourceLocation , null );
-        return metaProps != null ? metaProps[ registryNameVariant.meta ] : null;
+        IHostInfo[] metaInfos = hostInfos.getOrDefault( registryNameMeta.resourceLocation , null );
+        return metaInfos != null ? metaInfos[ registryNameMeta.meta ] : null;
+    }
+
+    public Map< ResourceLocation , IHostInfo[] > allHosts()
+    {
+        return Collections.unmodifiableMap( hostInfos );
     }
 }

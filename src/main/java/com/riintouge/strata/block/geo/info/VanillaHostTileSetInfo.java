@@ -46,17 +46,18 @@ public enum VanillaHostTileSetInfo implements IGenericTileSetInfo
         this.explosionResistance = explosionResistance;
     }
 
-    public int getMeta()
-    {
-        return meta;
-    }
-
     // IGenericTileSetInfo overrides
 
     @Override
     public ResourceLocation registryName()
     {
         return hostRegistryName;
+    }
+
+    @Override
+    public int meta()
+    {
+        return meta;
     }
 
     @Override

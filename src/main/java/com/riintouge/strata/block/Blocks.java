@@ -26,61 +26,51 @@ public class Blocks
         System.out.println( "Blocks::registerBlocks()" );
 
         GenericHostRegistry hostRegistry = GenericHostRegistry.INSTANCE;
-        // TODO: This should process the contents of host and ore registries
-        DynamicOreHostManager oreHostManager = DynamicOreHostManager.INSTANCE;
 
         for( VanillaHostTileSetInfo info : VanillaHostTileSetInfo.values() )
-        {
-            hostRegistry.register( info.registryName() , info.getMeta() , info );
-            oreHostManager.registerHost( info.registryName() , info.getMeta() , info );
-        }
+            hostRegistry.register( info.registryName() , info.meta() , info );
 
         GenericTileSetRegistry tileSetRegistry = GenericTileSetRegistry.INSTANCE;
 
         for( IGenericTileSetInfo info : CrudeGroundTileSetInfo.values() )
         {
             hostRegistry.register( info.registryName() , 0 , info );
-            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericGroundTileSet( info ) );
         }
 
         for( IGenericTileSetInfo info : ClayTileSetInfo.values() )
         {
             hostRegistry.register( info.registryName() , 0 , info );
-            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericClayTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : WeakStoneTileSetInfo.values() )
         {
             hostRegistry.register( info.registryName() , 0 , info );
-            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : MediumStoneTileSetInfo.values() )
         {
             hostRegistry.register( info.registryName() , 0 , info );
-            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : StrongStoneTileSetInfo.values() )
         {
             hostRegistry.register( info.registryName() , 0 , info );
-            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : VeryStrongStoneTileSetInfo.values() )
         {
             hostRegistry.register( info.registryName() , 0 , info );
-            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         GenericOreRegistry oreRegistry = GenericOreRegistry.INSTANCE;
         OreItemTextureManager oreItemRegistry = OreItemTextureManager.INSTANCE;
+        DynamicOreHostManager oreHostManager = DynamicOreHostManager.INSTANCE;
 
         for( IProxyOreInfo info : VanillaOreInfo.values() )
         {

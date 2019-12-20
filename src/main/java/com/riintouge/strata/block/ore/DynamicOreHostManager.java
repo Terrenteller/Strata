@@ -1,7 +1,8 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.geo.info.IGenericTileSetInfo;
+import com.riintouge.strata.block.GenericHostRegistry;
+import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.block.ore.info.IOreInfo;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
@@ -25,7 +26,6 @@ public class DynamicOreHostManager
     private static final Logger LOGGER = LogManager.getLogger();
     private boolean alreadyInitializedOnce = false;
     private Map< ResourceLocation , IOreInfo[] > oreInfoMap = new HashMap<>();
-    private Map< ResourceLocation , IGenericTileSetInfo[] > hostInfoMap = new HashMap<>();
     private Map< String , TextureAtlasSprite > generatedTextureMap = new HashMap<>();
 
     private DynamicOreHostManager()
@@ -42,18 +42,6 @@ public class DynamicOreHostManager
             oreInfoMap.put( oreRegistryName , infos = new IOreInfo[ 16 ] );
 
         infos[ meta ] = oreInfo;
-    }
-
-    public void registerHost( ResourceLocation hostRegistryName , int meta , IGenericTileSetInfo tileSetInfo )
-    {
-        if( alreadyInitializedOnce )
-            LOGGER.warn( "registerHost called too late!" );
-
-        IGenericTileSetInfo[] infos = hostInfoMap.getOrDefault( hostRegistryName , null );
-        if( infos == null )
-            hostInfoMap.put( hostRegistryName , infos = new IGenericTileSetInfo[ 16 ] );
-
-        infos[ meta ] = tileSetInfo;
     }
 
     public TextureAtlasSprite findTexture( ResourceLocation ore , int oreMeta , ResourceLocation host , int hostMeta )
@@ -80,26 +68,27 @@ public class DynamicOreHostManager
 
         TextureMap textureMap = event.getMap();
         int generatedTextureCount = 0 , oreCount = 0;
+        Map< ResourceLocation , IHostInfo[] > hostInfoMap = GenericHostRegistry.INSTANCE.allHosts();
         long startTime = System.nanoTime();
 
         for( ResourceLocation ore : INSTANCE.oreInfoMap.keySet() )
         {
-            for( ResourceLocation host : INSTANCE.hostInfoMap.keySet() )
+            for( ResourceLocation host : hostInfoMap.keySet() )
             {
-                IOreInfo[] oreTextureResources = INSTANCE.oreInfoMap.get( ore );
-                IGenericTileSetInfo[] hostTextureResources = INSTANCE.hostInfoMap.get( host );
+                IOreInfo[] oreMetaInfos = INSTANCE.oreInfoMap.get( ore );
+                IHostInfo[] hostMetaInfos = hostInfoMap.get( host );
 
-                for( int oreMeta = 0 ; oreMeta < oreTextureResources.length ; oreMeta++ )
+                for( int oreMeta = 0 ; oreMeta < oreMetaInfos.length ; oreMeta++ )
                 {
-                    IOreInfo oreInfo = oreTextureResources[ oreMeta ];
+                    IOreInfo oreInfo = oreMetaInfos[ oreMeta ];
                     if( oreInfo == null )
                         continue;
                     else
                         oreCount++;
 
-                    for( int hostMeta = 0 ; hostMeta < hostTextureResources.length ; hostMeta++ )
+                    for( int hostMeta = 0 ; hostMeta < hostMetaInfos.length ; hostMeta++ )
                     {
-                        IGenericTileSetInfo hostInfo = hostTextureResources[ hostMeta ];
+                        IHostInfo hostInfo = hostMetaInfos[ hostMeta ];
                         if( hostInfo == null )
                             continue;
 
@@ -123,7 +112,7 @@ public class DynamicOreHostManager
         }
 
         long endTime = System.nanoTime();
-        oreCount /= INSTANCE.hostInfoMap.keySet().size();
+        oreCount /= hostInfoMap.keySet().size();
         LOGGER.info( String.format(
             "Generated %d texture(s) from %d hosts and %d ores in %d millisecond(s)",
             generatedTextureCount,
