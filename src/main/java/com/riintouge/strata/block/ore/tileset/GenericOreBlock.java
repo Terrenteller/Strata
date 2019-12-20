@@ -2,7 +2,7 @@ package com.riintouge.strata.block.ore.tileset;
 
 import com.riintouge.strata.*;
 import com.riintouge.strata.block.*;
-import com.riintouge.strata.block.geo.info.IGenericTileSetInfo;
+import com.riintouge.strata.block.geo.IGenericBlockProperties;
 import com.riintouge.strata.block.ore.DynamicOreHostTileEntity;
 import com.riintouge.strata.block.ore.GenericOreRegistry;
 import com.riintouge.strata.block.ore.info.IOreInfo;
@@ -121,8 +121,8 @@ public class GenericOreBlock extends Block
     public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
     {
         MetaResourceLocation hostResource = getHost( worldIn , pos );
-        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
-        return tileSetInfo != null ? tileSetInfo.hardness() + 1.5f : oreInfo.hardness();
+        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        return hostProperties != null ? hostProperties.hardness() + 1.5f : oreInfo.hardness();
     }
 
     @Override
@@ -172,8 +172,8 @@ public class GenericOreBlock extends Block
     public int getHarvestLevel( IBlockState state )
     {
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
-        return tileSetInfo != null ? tileSetInfo.harvestLevel() : super.getHarvestLevel( state );
+        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        return hostProperties != null ? hostProperties.harvestLevel() : super.getHarvestLevel( state );
     }
 
     @Nullable
@@ -181,8 +181,8 @@ public class GenericOreBlock extends Block
     public String getHarvestTool( IBlockState state )
     {
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
-        return tileSetInfo != null ? tileSetInfo.harvestTool() : super.getHarvestTool( state );
+        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        return hostProperties != null ? hostProperties.harvestTool() : super.getHarvestTool( state );
     }
 
     @Override
@@ -196,8 +196,8 @@ public class GenericOreBlock extends Block
     public Material getMaterial( IBlockState state )
     {
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
-        return tileSetInfo != null ? tileSetInfo.material() : super.getMaterial( state );
+        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        return hostProperties != null ? hostProperties.material() : super.getMaterial( state );
     }
 
     @Deprecated
@@ -211,8 +211,8 @@ public class GenericOreBlock extends Block
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
         MetaResourceLocation hostResource = getHost( world , pos );
-        IGenericTileSetInfo tileSetInfo = GenericHostRegistry.INSTANCE.find( hostResource );
-        return tileSetInfo != null ? tileSetInfo.soundType() : oreInfo.soundType();
+        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        return hostProperties != null ? hostProperties.soundType() : oreInfo.soundType();
     }
 
     @Override

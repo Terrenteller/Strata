@@ -1,6 +1,6 @@
 package com.riintouge.strata.block;
 
-import com.riintouge.strata.block.geo.info.IGenericTileSetInfo;
+import com.riintouge.strata.block.geo.IGenericBlockProperties;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
@@ -10,38 +10,31 @@ public class GenericHostRegistry
 {
     public static final GenericHostRegistry INSTANCE = new GenericHostRegistry();
 
-    private Map< ResourceLocation , IGenericTileSetInfo[] > hostInfos = new HashMap<>();
+    private Map< ResourceLocation , IGenericBlockProperties[] > hostProps = new HashMap<>();
 
     private GenericHostRegistry()
     {
     }
 
-    public void register( ResourceLocation registryName , int meta , IGenericTileSetInfo info )
+    public void register( ResourceLocation registryName , int meta , IGenericBlockProperties props )
     {
-        IGenericTileSetInfo[] infos;
+        IGenericBlockProperties[] metaProps = hostProps.getOrDefault( registryName , null );
 
-        if( !hostInfos.containsKey( registryName ) )
-            hostInfos.put( registryName , infos = new IGenericTileSetInfo[ 16 ] );
-        else
-            infos = hostInfos.get( registryName );
+        if( metaProps == null )
+            hostProps.put( registryName , metaProps = new IGenericBlockProperties[ 16 ] );
 
-        infos[ meta ] = info;
+        metaProps[ meta ] = props;
     }
 
-    public IGenericTileSetInfo find( ResourceLocation registryName , int meta )
+    public IGenericBlockProperties find( ResourceLocation registryName , int meta )
     {
-        IGenericTileSetInfo[] infos = hostInfos.getOrDefault( registryName , null );
-        return infos != null ? infos[ meta ] : null;
+        IGenericBlockProperties[] metaProps = hostProps.getOrDefault( registryName , null );
+        return metaProps != null ? metaProps[ meta ] : null;
     }
 
-    public IGenericTileSetInfo find( MetaResourceLocation registryNameVariant )
+    public IGenericBlockProperties find( MetaResourceLocation registryNameVariant )
     {
-        IGenericTileSetInfo[] infos = hostInfos.getOrDefault( registryNameVariant.resourceLocation , null );
-        return infos != null ? infos[ registryNameVariant.meta ] : null;
-    }
-
-    public boolean contains( ResourceLocation registryName , int meta )
-    {
-        return find( registryName , meta ) != null;
+        IGenericBlockProperties[] metaProps = hostProps.getOrDefault( registryNameVariant.resourceLocation , null );
+        return metaProps != null ? metaProps[ registryNameVariant.meta ] : null;
     }
 }

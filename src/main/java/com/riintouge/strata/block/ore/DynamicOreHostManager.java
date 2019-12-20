@@ -37,11 +37,9 @@ public class DynamicOreHostManager
         if( alreadyInitializedOnce )
             LOGGER.warn( "registerOre called too late!" );
 
-        IOreInfo[] infos;
-        if( !oreInfoMap.containsKey( oreRegistryName ) )
+        IOreInfo[] infos = oreInfoMap.getOrDefault( oreRegistryName , null );
+        if( infos == null )
             oreInfoMap.put( oreRegistryName , infos = new IOreInfo[ 16 ] );
-        else
-            infos = oreInfoMap.get( oreRegistryName );
 
         infos[ meta ] = oreInfo;
     }
@@ -51,11 +49,9 @@ public class DynamicOreHostManager
         if( alreadyInitializedOnce )
             LOGGER.warn( "registerHost called too late!" );
 
-        IGenericTileSetInfo[] infos;
-        if( !hostInfoMap.containsKey( hostRegistryName ) )
+        IGenericTileSetInfo[] infos = hostInfoMap.getOrDefault( hostRegistryName , null );
+        if( infos == null )
             hostInfoMap.put( hostRegistryName , infos = new IGenericTileSetInfo[ 16 ] );
-        else
-            infos = hostInfoMap.get( hostRegistryName );
 
         infos[ meta ] = tileSetInfo;
     }
@@ -83,7 +79,7 @@ public class DynamicOreHostManager
         System.out.println( "DynamicOreHostManager::onEvent( TextureStitchEvent.Pre )" );
 
         TextureMap textureMap = event.getMap();
-        int generatedTextureCount = 0 , oreCount = 0 , hostCount = 0;
+        int generatedTextureCount = 0 , oreCount = 0;
         long startTime = System.nanoTime();
 
         for( ResourceLocation ore : INSTANCE.oreInfoMap.keySet() )
@@ -101,14 +97,13 @@ public class DynamicOreHostManager
                     else
                         oreCount++;
 
-                    ResourceLocation oreTextureResource = oreInfo.oreBlockOverlayTextureResource();
-
                     for( int hostMeta = 0 ; hostMeta < hostTextureResources.length ; hostMeta++ )
                     {
                         IGenericTileSetInfo hostInfo = hostTextureResources[ hostMeta ];
                         if( hostInfo == null )
                             continue;
 
+                        ResourceLocation oreTextureResource = oreInfo.oreBlockOverlayTextureResource();
                         ResourceLocation hostTextureResource = hostInfo.baseTextureLocation();
                         ResourceLocation generatedResource = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta );
                         //System.out.println( "Generating " + generatedResource.toString() );
