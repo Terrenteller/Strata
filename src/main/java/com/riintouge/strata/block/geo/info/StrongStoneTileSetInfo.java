@@ -36,9 +36,9 @@ public enum StrongStoneTileSetInfo implements IGenericStoneTileSetInfo
     // IGenericStoneTileSetInfo overrides
 
     @Override
-    public String stoneName()
+    public ResourceLocation registryName()
     {
-        return this.toString().toLowerCase();
+        return new ResourceLocation( Strata.modid , this.toString().toLowerCase() );
     }
 
     @Override
@@ -76,7 +76,7 @@ public enum StrongStoneTileSetInfo implements IGenericStoneTileSetInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/stone/strong/%s" , this.toString() ) );
+            String.format( "blocks/stone/strong/%s" , this.toString().toLowerCase() ) );
     }
 
     @Override

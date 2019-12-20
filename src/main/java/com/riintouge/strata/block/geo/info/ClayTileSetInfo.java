@@ -46,9 +46,9 @@ public enum ClayTileSetInfo implements IGenericTileSetInfo
     }
 
     @Override
-    public String stoneName()
+    public ResourceLocation registryName()
     {
-        return this.toString().toLowerCase();
+        return new ResourceLocation( Strata.modid , this.toString().toLowerCase() );
     }
 
     @Override
@@ -56,6 +56,6 @@ public enum ClayTileSetInfo implements IGenericTileSetInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/clay/%s" , stoneName() ) );
+            String.format( "blocks/clay/%s" , this.toString().toLowerCase() ) );
     }
 }

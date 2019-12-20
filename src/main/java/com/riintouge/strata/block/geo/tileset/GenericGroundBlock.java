@@ -3,6 +3,7 @@ package com.riintouge.strata.block.geo.tileset;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.geo.info.IGenericTileSetInfo;
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 
 public class GenericGroundBlock extends Block
 {
@@ -13,9 +14,9 @@ public class GenericGroundBlock extends Block
         super( tileSetInfo.material() );
         this.tileSetInfo = tileSetInfo;
 
-        String blockName = tileSetInfo.stoneName();
-        setRegistryName( Strata.modid + ":" + blockName );
-        setUnlocalizedName( Strata.modid + ":" + blockName );
+        ResourceLocation registryName = tileSetInfo.registryName();
+        setRegistryName( registryName );
+        setUnlocalizedName( registryName.toString() );
 
         setHarvestLevel( tileSetInfo.harvestTool() , tileSetInfo.harvestLevel() );
         setSoundType( tileSetInfo.soundType() );

@@ -6,6 +6,7 @@ import com.riintouge.strata.block.geo.info.IGenericTileSetInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
 
@@ -18,9 +19,9 @@ public class GenericClayBlock extends Block
         super( tileSetInfo.material() );
         this.tileSetInfo = tileSetInfo;
 
-        String blockName = tileSetInfo.stoneName();
-        setRegistryName( Strata.modid + ":" + blockName );
-        setUnlocalizedName( Strata.modid + ":" + blockName );
+        ResourceLocation registryName = tileSetInfo.registryName();
+        setRegistryName( registryName );
+        setUnlocalizedName( registryName.toString() );
 
         setHarvestLevel( tileSetInfo.harvestTool() , tileSetInfo.harvestLevel() );
         setSoundType( tileSetInfo.soundType() );

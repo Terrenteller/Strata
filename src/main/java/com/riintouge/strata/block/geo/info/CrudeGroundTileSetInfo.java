@@ -46,9 +46,9 @@ public enum CrudeGroundTileSetInfo implements IGenericTileSetInfo
     }
 
     @Override
-    public String stoneName()
+    public ResourceLocation registryName()
     {
-        return this.toString().toLowerCase();
+        return new ResourceLocation( Strata.modid , this.toString().toLowerCase() );
     }
 
     @Override
@@ -56,6 +56,6 @@ public enum CrudeGroundTileSetInfo implements IGenericTileSetInfo
     {
         return new ResourceLocation(
             Strata.modid,
-            String.format( "blocks/ground/%s" , stoneName() ) );
+            String.format( "blocks/ground/%s" , this.toString().toLowerCase() ) );
     }
 }

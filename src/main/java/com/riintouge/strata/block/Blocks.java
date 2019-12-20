@@ -31,65 +31,51 @@ public class Blocks
 
         for( VanillaHostTileSetInfo info : VanillaHostTileSetInfo.values() )
         {
-            ResourceLocation registryName = new ResourceLocation( info.stoneName() );
-
-            hostRegistry.register( registryName , info.getMeta() , info );
-            oreHostManager.registerHost( registryName , info.getMeta() , info );
+            hostRegistry.register( info.registryName() , info.getMeta() , info );
+            oreHostManager.registerHost( info.registryName() , info.getMeta() , info );
         }
 
         GenericTileSetRegistry tileSetRegistry = GenericTileSetRegistry.INSTANCE;
 
         for( IGenericTileSetInfo info : CrudeGroundTileSetInfo.values() )
         {
-            ResourceLocation resource = new ResourceLocation( Strata.modid , info.stoneName() );
-
-            hostRegistry.register( resource , 0 , info );
-            oreHostManager.registerHost( resource , 0 , info );
+            hostRegistry.register( info.registryName() , 0 , info );
+            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericGroundTileSet( info ) );
         }
 
         for( IGenericTileSetInfo info : ClayTileSetInfo.values() )
         {
-            ResourceLocation resource = new ResourceLocation( Strata.modid , info.stoneName() );
-
-            hostRegistry.register( resource , 0 , info );
-            oreHostManager.registerHost( resource , 0 , info );
+            hostRegistry.register( info.registryName() , 0 , info );
+            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericClayTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : WeakStoneTileSetInfo.values() )
         {
-            ResourceLocation resource = new ResourceLocation( Strata.modid , info.stoneName() );
-
-            hostRegistry.register( resource , 0 , info );
-            oreHostManager.registerHost( resource , 0 , info );
+            hostRegistry.register( info.registryName() , 0 , info );
+            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : MediumStoneTileSetInfo.values() )
         {
-            ResourceLocation resource = new ResourceLocation( Strata.modid , info.stoneName() );
-
-            hostRegistry.register( resource , 0 , info );
-            oreHostManager.registerHost( resource , 0 , info );
+            hostRegistry.register( info.registryName() , 0 , info );
+            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : StrongStoneTileSetInfo.values() )
         {
-            ResourceLocation resource = new ResourceLocation( Strata.modid , info.stoneName() );
-
-            hostRegistry.register( resource , 0 , info );
-            oreHostManager.registerHost( resource , 0 , info );
+            hostRegistry.register( info.registryName() , 0 , info );
+            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 
         for( IGenericStoneTileSetInfo info : VeryStrongStoneTileSetInfo.values() )
         {
-            ResourceLocation resource = new ResourceLocation( Strata.modid , info.stoneName() );
-
-            hostRegistry.register( resource , 0 , info );
-            oreHostManager.registerHost( resource , 0 , info );
+            hostRegistry.register( info.registryName() , 0 , info );
+            oreHostManager.registerHost( info.registryName() , 0 , info );
             tileSetRegistry.register( new GenericStoneTileSet( info ) );
         }
 

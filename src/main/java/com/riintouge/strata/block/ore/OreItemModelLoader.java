@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.riintouge.strata.Strata;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelBlock;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -57,12 +56,5 @@ public class OreItemModelLoader implements ICustomModelLoader
     public void onResourceManagerReload( IResourceManager resourceManager )
     {
         // Nothing to do
-    }
-
-    // Statics
-
-    public static ModelResourceLocation getModelResourceLocation( String oreName )
-    {
-        return new ModelResourceLocation( new ResourceLocation( Strata.modid , ItemNamePrefix + oreName ) , "inventory" );
     }
 }

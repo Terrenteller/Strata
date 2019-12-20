@@ -7,6 +7,7 @@ import com.riintouge.strata.block.geo.info.IGenericStoneTileSetInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
 
@@ -24,7 +25,8 @@ public class GenericStoneBlock extends Block
 
         setHardness( tileSetInfo.hardness() );
 
-        String blockName = tileSetInfo.stoneName();
+        ResourceLocation registryName = tileSetInfo.registryName();
+        String blockName = registryName.getResourcePath();
         switch( blockType )
         {
             case COBBLE:
@@ -37,8 +39,9 @@ public class GenericStoneBlock extends Block
             default: { }
         }
 
-        setRegistryName( Strata.modid + ":" + blockName );
-        setUnlocalizedName( Strata.modid + ":" + blockName );
+        ResourceLocation targetRegistryName = new ResourceLocation( registryName.getResourceDomain() , blockName );
+        setRegistryName( targetRegistryName );
+        setUnlocalizedName( targetRegistryName.toString() );
 
         setHarvestLevel( tileSetInfo.harvestTool() , tileSetInfo.harvestLevel() );
         setSoundType( tileSetInfo.soundType() );

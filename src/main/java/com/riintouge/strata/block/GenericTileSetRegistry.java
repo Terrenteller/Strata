@@ -28,7 +28,7 @@ public class GenericTileSetRegistry
 
     public void register( IGenericTileSet tileSet )
     {
-        tileSetMap.put( tileSet.tileSetInfo().stoneName() , tileSet );
+        tileSetMap.put( tileSet.tileSetInfo().registryName().getResourcePath() , tileSet );
     }
 
     public IGenericTileSet find( String tileSetName )
