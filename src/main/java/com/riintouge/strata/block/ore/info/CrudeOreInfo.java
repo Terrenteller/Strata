@@ -8,9 +8,9 @@ import net.minecraft.util.ResourceLocation;
 public enum CrudeOreInfo implements IOreInfo
 {
     OIL_SHALE( null ),
-    BITUMINOUS_COAL( null ),
-    LIGNITE( null ),
-    ANTHRACITE( null ),
+    BITUMINOUS_COAL( "oreCoal" ),
+    LIGNITE( "oreCoal" ),
+    ANTHRACITE( "oreCoal" ),
     COKE( null );
 
     private String oreDictionaryName;

@@ -12,38 +12,41 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.riintouge.strata.block.geo.info.StrongStoneTileSetInfo.ANDESITE;
+import static com.riintouge.strata.block.geo.info.StrongStoneTileSetInfo.GRANITE;
+import static com.riintouge.strata.block.geo.info.VeryStrongStoneTileSetInfo.DIORITE;
+
 public class GenericStoneTileSet implements IGenericTileSet
 {
     // TODO: Add getters
     private IGenericStoneTileSetInfo tileSetInfo;
-    public Map< StoneBlockType, GenericBlockItemPair > tiles;
+    public Map< StoneBlockType, GenericBlockItemPair > tiles = new HashMap<>();
 
     public GenericStoneTileSet( IGenericStoneTileSetInfo tileSetInfo )
     {
         this.tileSetInfo = tileSetInfo;
 
         GenericStoneBlock stoneBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.STONE );
-        GenericBlockItemPair stone = new GenericBlockItemPair( stoneBlock , new GenericItemBlock( stoneBlock ) );
+        tiles.put( StoneBlockType.STONE , new GenericBlockItemPair( stoneBlock , new GenericItemBlock( stoneBlock ) ) );
 
         GenericStoneBlock cobbleBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.COBBLE );
-        GenericBlockItemPair cobble = new GenericBlockItemPair( cobbleBlock , new GenericItemBlock( cobbleBlock ) );
+        tiles.put( StoneBlockType.COBBLE , new GenericBlockItemPair( cobbleBlock , new GenericItemBlock( cobbleBlock ) ) );
 
         GenericStoneBlock brickBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.BRICK );
-        GenericBlockItemPair brick = new GenericBlockItemPair( brickBlock , new GenericItemBlock( brickBlock ) );
-
-        tiles = new HashMap<>();
-        tiles.put( StoneBlockType.STONE , stone );
-        tiles.put( StoneBlockType.COBBLE , cobble );
-        tiles.put( StoneBlockType.BRICK , brick );
+        tiles.put( StoneBlockType.BRICK , new GenericBlockItemPair( brickBlock , new GenericItemBlock( brickBlock ) ) );
     }
 
     // IGenericTileSet overrides
@@ -64,8 +67,52 @@ public class GenericStoneTileSet implements IGenericTileSet
     @Override
     public void registerItems( IForgeRegistry< Item > itemRegistry )
     {
-        for( GenericBlockItemPair pair : tiles.values() )
-            itemRegistry.register( pair.getItem() );
+        for( StoneBlockType type : tiles.keySet() )
+        {
+            Item item = tiles.get( type ).getItem();
+            itemRegistry.register( item );
+            ResourceLocation registryName = item.getRegistryName();
+            ItemStack vanillaItem = null;
+
+            switch( type )
+            {
+                case STONE:
+                    // TODO: This is pretty terrible
+                    if( tileSetInfo.equals( GRANITE ) )
+                        vanillaItem = new ItemStack( Blocks.STONE , 1 , 1 );
+                    else if( tileSetInfo.equals( DIORITE ) )
+                        vanillaItem = new ItemStack( Blocks.STONE , 1 , 3 );
+                    else if( tileSetInfo.equals( ANDESITE ) )
+                        vanillaItem = new ItemStack( Blocks.STONE , 1 , 5 );
+                    else
+                        vanillaItem = new ItemStack( Blocks.STONE );
+
+                    GameRegistry.addShapedRecipe(
+                        new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_brick" ),
+                        null,
+                        new ItemStack( tiles.get( StoneBlockType.BRICK ).getItem() ),
+                        "SS" , "SS" , 'S' , item );
+
+                    break;
+                case COBBLE:
+                    vanillaItem = new ItemStack( Blocks.COBBLESTONE );
+                    GameRegistry.addSmelting( item , new ItemStack( tiles.get( StoneBlockType.STONE ).getItem() ) , 0.1f ); // Vanilla exp
+                    break;
+                case BRICK:
+                    vanillaItem = new ItemStack( Blocks.STONEBRICK );
+                    break;
+                default: {}
+            }
+
+            if( vanillaItem != null )
+            {
+                GameRegistry.addShapelessRecipe(
+                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_vanilla" ),
+                    null,
+                    vanillaItem,
+                    Ingredient.fromItem( item ) );
+            }
+        }
     }
 
     @Override

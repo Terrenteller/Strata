@@ -9,11 +9,15 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class GenericClayTileSet implements IGenericTileSet
@@ -57,7 +61,15 @@ public class GenericClayTileSet implements IGenericTileSet
     @Override
     public void registerItems( IForgeRegistry< Item > itemRegistry )
     {
-        itemRegistry.register( blockItemPair.getItem() );
+        Item item = blockItemPair.getItem();
+        itemRegistry.register( item );
+
+        ResourceLocation registryName = item.getRegistryName();
+        GameRegistry.addShapelessRecipe(
+            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_vanilla" ),
+            null,
+            new ItemStack( Blocks.CLAY ),
+            Ingredient.fromItem( item ) );
     }
 
     @Override

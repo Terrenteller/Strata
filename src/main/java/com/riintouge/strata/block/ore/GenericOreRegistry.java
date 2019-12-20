@@ -1,11 +1,16 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.ore.info.IOreInfo;
 import com.riintouge.strata.block.ore.tileset.IOreTileSet;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -15,6 +20,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -71,7 +77,47 @@ public class GenericOreRegistry
 
             String oreDictionaryName = tileSet.getInfo().oreDictionaryName();
             if( oreDictionaryName != null )
+            {
                 OreDictionary.registerOre( oreDictionaryName , tileSet.getItem() );
+
+                IOreInfo oreInfo = tileSet.getInfo();
+                ItemStack vanillaItem = null;
+
+                switch( oreInfo.oreDictionaryName() )
+                {
+                    case "oreCoal":
+                        vanillaItem = new ItemStack( Items.COAL , 1 );
+                        break;
+                    case "oreDiamond":
+                        vanillaItem = new ItemStack( Items.DIAMOND , 1 );
+                        break;
+                    case "oreEmerald":
+                        vanillaItem = new ItemStack( Items.EMERALD , 1 );
+                        break;
+                    case "oreGold":
+                        vanillaItem = new ItemStack( Blocks.GOLD_ORE , 1 );
+                        break;
+                    case "oreIron":
+                        vanillaItem = new ItemStack( Blocks.IRON_ORE , 1 );
+                        break;
+                    case "oreLapis":
+                        vanillaItem = new ItemStack( Items.DYE , 1 , 4 );
+                        break;
+                    case "oreRedstone":
+                        vanillaItem = new ItemStack( Items.REDSTONE , 1 );
+                        break;
+                    default: {}
+                }
+
+                if( vanillaItem != null )
+                {
+                    GameRegistry.addShapelessRecipe(
+                        new ResourceLocation( Strata.modid , oreInfo + "_vanilla" ),
+                        null,
+                        vanillaItem,
+                        Ingredient.fromItem( tileSet.getItem() ) );
+                }
+            }
         }
     }
 
