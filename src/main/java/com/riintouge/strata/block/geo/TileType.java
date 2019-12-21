@@ -1,6 +1,6 @@
 package com.riintouge.strata.block.geo;
 
-public enum StoneBlockType
+public enum TileType
 {
     STONE,
     COBBLE,

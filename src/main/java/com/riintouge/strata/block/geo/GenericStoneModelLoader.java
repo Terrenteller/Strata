@@ -61,7 +61,7 @@ public class GenericStoneModelLoader implements ICustomModelLoader
     private Pair< String , String > getStoneAndTypePairFromFoundMatch( Matcher match )
     {
         // We don't have the case insensitive version of isValidEnum
-        return match.group( 3 ) != null && EnumUtils.isValidEnum( StoneBlockType.class , match.group( 3 ).toUpperCase() )
+        return match.group( 3 ) != null && EnumUtils.isValidEnum( TileType.class , match.group( 3 ).toUpperCase() )
             ? new ImmutablePair<>( match.group( 2 ) , match.group( 3 ) )
             : new ImmutablePair<>( match.group( 1 ) , "stone" );
     }

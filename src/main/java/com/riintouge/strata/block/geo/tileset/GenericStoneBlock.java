@@ -2,7 +2,7 @@ package com.riintouge.strata.block.geo.tileset;
 
 import com.riintouge.strata.block.GenericTileSetRegistry;
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.geo.StoneBlockType;
+import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.block.geo.info.IGenericStoneTileSetInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -18,7 +18,7 @@ public class GenericStoneBlock extends Block
 
     protected IGenericStoneTileSetInfo tileSetInfo;
 
-    public GenericStoneBlock( IGenericStoneTileSetInfo tileSetInfo , StoneBlockType blockType )
+    public GenericStoneBlock( IGenericStoneTileSetInfo tileSetInfo , TileType blockType )
     {
         super( tileSetInfo.material() );
         this.tileSetInfo = tileSetInfo;
@@ -59,7 +59,7 @@ public class GenericStoneBlock extends Block
         {
             String tileSetName = getRegistryName().getResourcePath();
             GenericStoneTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( tileSetName , GenericStoneTileSet.class );
-            return tileSet.tiles.get( StoneBlockType.COBBLE ).getItem();
+            return tileSet.tiles.get( TileType.COBBLE ).getItem();
         }
         catch( NullPointerException e )
         {

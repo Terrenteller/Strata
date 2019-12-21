@@ -2,7 +2,7 @@ package com.riintouge.strata.block.geo.tileset;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.geo.GenericBlockItemPair;
-import com.riintouge.strata.block.geo.StoneBlockType;
+import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.block.geo.info.IGenericStoneTileSetInfo;
 import com.riintouge.strata.block.geo.info.IGenericTileSetInfo;
 import com.riintouge.strata.image.LayeredTexture;
@@ -33,20 +33,20 @@ public class GenericStoneTileSet implements IGenericTileSet
 {
     // TODO: Add getters
     private IGenericStoneTileSetInfo tileSetInfo;
-    public Map< StoneBlockType, GenericBlockItemPair > tiles = new HashMap<>();
+    public Map< TileType, GenericBlockItemPair > tiles = new HashMap<>();
 
     public GenericStoneTileSet( IGenericStoneTileSetInfo tileSetInfo )
     {
         this.tileSetInfo = tileSetInfo;
 
-        GenericStoneBlock stoneBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.STONE );
-        tiles.put( StoneBlockType.STONE , new GenericBlockItemPair( stoneBlock , new GenericItemBlock( stoneBlock ) ) );
+        GenericStoneBlock stoneBlock = new GenericStoneBlock( tileSetInfo , TileType.STONE );
+        tiles.put( TileType.STONE , new GenericBlockItemPair( stoneBlock , new GenericItemBlock( stoneBlock ) ) );
 
-        GenericStoneBlock cobbleBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.COBBLE );
-        tiles.put( StoneBlockType.COBBLE , new GenericBlockItemPair( cobbleBlock , new GenericItemBlock( cobbleBlock ) ) );
+        GenericStoneBlock cobbleBlock = new GenericStoneBlock( tileSetInfo , TileType.COBBLE );
+        tiles.put( TileType.COBBLE , new GenericBlockItemPair( cobbleBlock , new GenericItemBlock( cobbleBlock ) ) );
 
-        GenericStoneBlock brickBlock = new GenericStoneBlock( tileSetInfo , StoneBlockType.BRICK );
-        tiles.put( StoneBlockType.BRICK , new GenericBlockItemPair( brickBlock , new GenericItemBlock( brickBlock ) ) );
+        GenericStoneBlock brickBlock = new GenericStoneBlock( tileSetInfo , TileType.BRICK );
+        tiles.put( TileType.BRICK , new GenericBlockItemPair( brickBlock , new GenericItemBlock( brickBlock ) ) );
     }
 
     // IGenericTileSet overrides
@@ -67,7 +67,7 @@ public class GenericStoneTileSet implements IGenericTileSet
     @Override
     public void registerItems( IForgeRegistry< Item > itemRegistry )
     {
-        for( StoneBlockType type : tiles.keySet() )
+        for( TileType type : tiles.keySet() )
         {
             Item item = tiles.get( type ).getItem();
             itemRegistry.register( item );
@@ -90,13 +90,13 @@ public class GenericStoneTileSet implements IGenericTileSet
                     GameRegistry.addShapedRecipe(
                         new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_brick" ),
                         null,
-                        new ItemStack( tiles.get( StoneBlockType.BRICK ).getItem() ),
+                        new ItemStack( tiles.get( TileType.BRICK ).getItem() ),
                         "SS" , "SS" , 'S' , item );
 
                     break;
                 case COBBLE:
                     vanillaItem = new ItemStack( Blocks.COBBLESTONE );
-                    GameRegistry.addSmelting( item , new ItemStack( tiles.get( StoneBlockType.STONE ).getItem() ) , 0.1f ); // Vanilla exp
+                    GameRegistry.addSmelting( item , new ItemStack( tiles.get( TileType.STONE ).getItem() ) , 0.1f ); // Vanilla exp
                     break;
                 case BRICK:
                     vanillaItem = new ItemStack( Blocks.STONEBRICK );
@@ -136,7 +136,7 @@ public class GenericStoneTileSet implements IGenericTileSet
         ResourceLocation baseTextureLocation = tileSetInfo.baseTextureLocation();
 
         {
-            GenericBlockItemPair stone = tiles.getOrDefault( StoneBlockType.STONE , null );
+            GenericBlockItemPair stone = tiles.getOrDefault( TileType.STONE , null );
 
             LayeredTextureLayer baseLayer = new LayeredTextureLayer( baseTextureLocation );
             TextureAtlasSprite stoneTexture = new LayeredTexture(
@@ -147,7 +147,7 @@ public class GenericStoneTileSet implements IGenericTileSet
         }
 
         {
-            GenericBlockItemPair cobble = tiles.getOrDefault( StoneBlockType.COBBLE , null );
+            GenericBlockItemPair cobble = tiles.getOrDefault( TileType.COBBLE , null );
 
             LayeredTextureLayer cobbleLayer = new LayeredTextureLayer(
                 new ResourceLocation( Strata.modid , "overlays/cobble" ),
@@ -162,7 +162,7 @@ public class GenericStoneTileSet implements IGenericTileSet
         }
 
         {
-            GenericBlockItemPair brick = tiles.getOrDefault( StoneBlockType.BRICK , null );
+            GenericBlockItemPair brick = tiles.getOrDefault( TileType.BRICK , null );
 
             LayeredTextureLayer brickHighlightLayer = new LayeredTextureLayer(
                 new ResourceLocation( Strata.modid , "overlays/brick_highlight" ),
