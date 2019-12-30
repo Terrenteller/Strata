@@ -1,7 +1,6 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.block.geo.GenericStoneModelLoader;
-import com.riintouge.strata.block.geo.tileset.IGenericTileSet;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
@@ -20,43 +19,21 @@ public class GenericTileSetRegistry
 {
     public static final GenericTileSetRegistry INSTANCE = new GenericTileSetRegistry();
 
-    private Map< String , IGenericTileSet > tileSetMap = new HashMap<>();
+    private Map< String , IForgeRegistrable > tileSets = new HashMap<>();
 
     private GenericTileSetRegistry()
     {
+        ModelLoaderRegistry.registerLoader( new GenericStoneModelLoader() );
     }
 
-    public void register( IGenericTileSet tileSet )
+    public void register( IForgeRegistrable tileSet , String tileSetName )
     {
-        tileSetMap.put( tileSet.tileSetInfo().registryName().getResourcePath() , tileSet );
-    }
-
-    public IGenericTileSet find( String tileSetName )
-    {
-        return tileSetMap.getOrDefault( tileSetName , null );
-    }
-
-    @SuppressWarnings( "unchecked" )
-    public < T > T find( String tileSetName , Class< T > clazz )
-    {
-        try
-        {
-            return clazz.cast( tileSetMap.getOrDefault( tileSetName , null ) );
-        }
-        catch( ClassCastException e )
-        {
-            return null;
-        }
+        tileSets.put( tileSetName , tileSet );
     }
 
     public boolean contains( String tileSetName )
     {
-        return tileSetMap.getOrDefault( tileSetName , null ) != null;
-    }
-
-    public < T > boolean containsType( String tileSetName , Class< T > clazz )
-    {
-        return find( tileSetName , clazz ) != null;
+        return tileSets.getOrDefault( tileSetName , null ) != null;
     }
 
     // Statics
@@ -67,7 +44,7 @@ public class GenericTileSetRegistry
         System.out.println( "GenericTileSetRegistry::registerBlocks()" );
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
-        for( IGenericTileSet tileSet : INSTANCE.tileSetMap.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.registerBlocks( blockRegistry );
     }
 
@@ -77,7 +54,7 @@ public class GenericTileSetRegistry
         System.out.println( "GenericTileSetRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
-        for( IGenericTileSet tileSet : INSTANCE.tileSetMap.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.registerItems( itemRegistry );
     }
 
@@ -86,9 +63,7 @@ public class GenericTileSetRegistry
     {
         System.out.println( "GenericTileSetRegistry::registerModels()" );
 
-        ModelLoaderRegistry.registerLoader( new GenericStoneModelLoader() );
-
-        for( IGenericTileSet tileSet : INSTANCE.tileSetMap.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.registerModels( event );
     }
 
@@ -98,7 +73,7 @@ public class GenericTileSetRegistry
         System.out.println( "GenericTileSetRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
-        for( IGenericTileSet tileSet : INSTANCE.tileSetMap.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.stitchTextures( textureMap );
     }
 }

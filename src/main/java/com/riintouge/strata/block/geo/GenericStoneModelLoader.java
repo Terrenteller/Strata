@@ -30,7 +30,7 @@ public class GenericStoneModelLoader implements ICustomModelLoader
             return false;
 
         Pair< String , String > stoneAndType = getStoneAndTypePairFromFoundMatch( matcher );
-        return GenericTileSetRegistry.INSTANCE.find( stoneAndType.getLeft() ) != null;
+        return GenericTileSetRegistry.INSTANCE.contains( stoneAndType.getLeft() );
     }
 
     @Override

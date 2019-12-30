@@ -77,35 +77,35 @@ strata:quartzite_cobble.name=Quartzite Cobblestone
 
 # Brick
 
-strata:breccia_brick.name=Breccia Bricks
-strata:claystone_brick.name=Claystone Bricks
-strata:carbonatite_brick.name=Carbonatite Bricks
-strata:conglomerate_brick.name=Conglomerate Bricks
-strata:mudstone_brick.name=Mudstone Bricks
+strata:breccia_stonebrick.name=Breccia Bricks
+strata:claystone_stonebrick.name=Claystone Bricks
+strata:carbonatite_stonebrick.name=Carbonatite Bricks
+strata:conglomerate_stonebrick.name=Conglomerate Bricks
+strata:mudstone_stonebrick.name=Mudstone Bricks
 
-strata:limestone_brick.name=Limestone Bricks
-strata:schist_brick.name=Schist Bricks
-strata:serpentinite_brick.name=Serpentinite Bricks
-strata:slate_brick.name=Slate Bricks
-strata:skarn_brick.name=Skarn Bricks
-strata:chalk_brick.name=Chalk Bricks
+strata:limestone_stonebrick.name=Limestone Bricks
+strata:schist_stonebrick.name=Schist Bricks
+strata:serpentinite_stonebrick.name=Serpentinite Bricks
+strata:slate_stonebrick.name=Slate Bricks
+strata:skarn_stonebrick.name=Skarn Bricks
+strata:chalk_stonebrick.name=Chalk Bricks
 
-strata:andesite_brick.name=Andesite Bricks
-strata:basalt_brick.name=Basalt Bricks
-strata:gneiss_brick.name=Gneiss Bricks
-strata:granite_brick.name=Granite Bricks
-strata:greenschist_brick.name=Greenschist Bricks
-strata:marble_brick.name=Marble Bricks
-strata:pegmatite_brick.name=Pegmatite Bricks
-strata:rhyolite_brick.name=Rhyolite Bricks
-strata:sandstone_brick.name=Sandstone Bricks
-strata:red_sandstone_brick.name=Red Sandstone Bricks
+strata:andesite_stonebrick.name=Andesite Bricks
+strata:basalt_stonebrick.name=Basalt Bricks
+strata:gneiss_stonebrick.name=Gneiss Bricks
+strata:granite_stonebrick.name=Granite Bricks
+strata:greenschist_stonebrick.name=Greenschist Bricks
+strata:marble_stonebrick.name=Marble Bricks
+strata:pegmatite_stonebrick.name=Pegmatite Bricks
+strata:rhyolite_stonebrick.name=Rhyolite Bricks
+strata:sandstone_stonebrick.name=Sandstone Bricks
+strata:red_sandstone_stonebrick.name=Red Sandstone Bricks
 
-strata:diorite_brick.name=Diorite Bricks
-strata:gabbro_brick.name=Gabbro Bricks
-strata:hornfels_brick.name=Hornfels Bricks
-strata:peridotite_brick.name=Peridotite Bricks
-strata:quartzite_brick.name=Quartzite Bricks
+strata:diorite_stonebrick.name=Diorite Bricks
+strata:gabbro_stonebrick.name=Gabbro Bricks
+strata:hornfels_stonebrick.name=Hornfels Bricks
+strata:peridotite_stonebrick.name=Peridotite Bricks
+strata:quartzite_stonebrick.name=Quartzite Bricks
 
 # Ore
 

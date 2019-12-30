@@ -1,10 +1,6 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.geo.info.*;
-import com.riintouge.strata.block.geo.tileset.GenericClayTileSet;
-import com.riintouge.strata.block.geo.tileset.GenericGroundTileSet;
-import com.riintouge.strata.block.geo.tileset.GenericStoneTileSet;
 import com.riintouge.strata.block.ore.DynamicOreHostManager;
 import com.riintouge.strata.block.ore.DynamicOreHostTileEntity;
 import com.riintouge.strata.block.ore.GenericOreRegistry;
@@ -17,55 +13,19 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.io.IOException;
+
 public class Blocks
 {
     @SubscribeEvent
-    public static void onEvent( RegistryEvent.Register< Block > event )
+    public static void onEvent( RegistryEvent.Register< Block > event ) throws IOException
     {
         System.out.println( "Blocks::registerBlocks()" );
 
-        GenericHostRegistry hostRegistry = GenericHostRegistry.INSTANCE;
-
-        for( VanillaHostTileSetInfo info : VanillaHostTileSetInfo.values() )
-            hostRegistry.register( info.registryName() , info.meta() , info );
-
-        GenericTileSetRegistry tileSetRegistry = GenericTileSetRegistry.INSTANCE;
-
-        for( IGenericTileSetInfo info : CrudeGroundTileSetInfo.values() )
-        {
-            hostRegistry.register( info.registryName() , info.meta() , info );
-            tileSetRegistry.register( new GenericGroundTileSet( info ) );
-        }
-
-        for( IGenericTileSetInfo info : ClayTileSetInfo.values() )
-        {
-            hostRegistry.register( info.registryName() , info.meta() , info );
-            tileSetRegistry.register( new GenericClayTileSet( info ) );
-        }
-
-        for( IGenericStoneTileSetInfo info : WeakStoneTileSetInfo.values() )
-        {
-            hostRegistry.register( info.registryName() , info.meta() , info );
-            tileSetRegistry.register( new GenericStoneTileSet( info ) );
-        }
-
-        for( IGenericStoneTileSetInfo info : MediumStoneTileSetInfo.values() )
-        {
-            hostRegistry.register( info.registryName() , info.meta() , info );
-            tileSetRegistry.register( new GenericStoneTileSet( info ) );
-        }
-
-        for( IGenericStoneTileSetInfo info : StrongStoneTileSetInfo.values() )
-        {
-            hostRegistry.register( info.registryName() , info.meta() , info );
-            tileSetRegistry.register( new GenericStoneTileSet( info ) );
-        }
-
-        for( IGenericStoneTileSetInfo info : VeryStrongStoneTileSetInfo.values() )
-        {
-            hostRegistry.register( info.registryName() , info.meta() , info );
-            tileSetRegistry.register( new GenericStoneTileSet( info ) );
-        }
+        TileLoader loader = new TileLoader();
+        loader.load( "assets/strata/tiledata/vanillaHosts.txt" );
+        loader.load( "assets/strata/tiledata/geo.txt" );
+        // TODO: Read from on-disk config directory
 
         GenericOreRegistry oreRegistry = GenericOreRegistry.INSTANCE;
         OreItemTextureManager oreItemRegistry = OreItemTextureManager.INSTANCE;

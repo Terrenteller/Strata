@@ -1,10 +1,9 @@
 package com.riintouge.strata;
 
-import com.riintouge.strata.block.GenericTileSetRegistry;
-import com.riintouge.strata.block.geo.tileset.GenericStoneTileSet;
-import com.riintouge.strata.block.geo.TileType;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 public class StrataBlockTab extends CreativeTabs
 {
@@ -16,7 +15,6 @@ public class StrataBlockTab extends CreativeTabs
     @Override
     public ItemStack getTabIconItem()
     {
-        GenericStoneTileSet tileSet = GenericTileSetRegistry.INSTANCE.find( "schist" , GenericStoneTileSet.class );
-        return new ItemStack( tileSet.tiles.get( TileType.STONE ).getBlock() );
+        return new ItemStack( Item.REGISTRY.getObject( new ResourceLocation( Strata.modid , "schist" ) ) );
     }
 }
