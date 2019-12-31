@@ -1,7 +1,6 @@
-package com.riintouge.strata.block.ore.tileset;
+package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.ore.info.IOreInfo;
 import net.minecraft.block.BlockFalling;
 
 public class GenericSandOreBlock extends BlockFalling

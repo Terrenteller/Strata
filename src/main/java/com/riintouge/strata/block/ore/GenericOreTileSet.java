@@ -1,7 +1,5 @@
-package com.riintouge.strata.block.ore.tileset;
+package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.ore.info.IOreInfo;
-import com.riintouge.strata.block.ore.GenericStoneOreItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;

@@ -3,7 +3,6 @@ package com.riintouge.strata.block.ore;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.GenericHostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
-import com.riintouge.strata.block.ore.info.IOreInfo;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.client.Minecraft;

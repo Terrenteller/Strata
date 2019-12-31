@@ -1,11 +1,18 @@
 package com.riintouge.strata.block;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.block.geo.CustomHost;
 import com.riintouge.strata.block.geo.GenericTileSet;
 import com.riintouge.strata.block.geo.GenericTile;
+import com.riintouge.strata.block.ore.CustomOre;
+import com.riintouge.strata.block.ore.DynamicOreHostManager;
+import com.riintouge.strata.block.ore.GenericOreRegistry;
+import com.riintouge.strata.block.ore.OreItemTextureManager;
+import com.riintouge.strata.block.ore.GenericOreTileSet;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -20,14 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TileLoader
 {
-    private static final String KVPattern = "^(\\S+)(?: (.+))?";
-    private static final Pattern KVRegex = Pattern.compile( KVPattern );
-
     private Map< String , GenericTileSet > tileSetMap = new HashMap<>();
     private boolean isHost = false;
     private ResourceLocation registryName;
@@ -43,6 +45,9 @@ public class TileLoader
     private float explosionResistance;
     private ItemStack vanillaEquivalent;
     private List< LayeredTextureLayer > layers;
+    private String oreName;
+    private String oreDictionaryName;
+    private ResourceLocation proxyOre;
 
     public TileLoader()
     {
@@ -66,17 +71,12 @@ public class TileLoader
                     createTileAndReset();
                     meaningfulLineProcessed = false;
                 }
-
-                continue;
             }
-
-            // Cheaper than failing on a regex
-            if( line.charAt( 0 ) == '#' )
-                continue;
-
-            Matcher matcher = KVRegex.matcher( line );
-            if( matcher.find() )
-                meaningfulLineProcessed = processKeyValue( matcher.group( 1 ) , matcher.groupCount() > 1 ? matcher.group( 2 ) : "" );
+            else if( line.charAt( 0 ) != '#' )
+            {
+                String[] kv = Util.splitKV( line );
+                meaningfulLineProcessed = processKeyValue( kv[ 0 ] , kv[ 1 ] );
+            }
         }
         buffer.close();
 
@@ -107,10 +107,19 @@ public class TileLoader
                 switch( type )
                 {
                     case CLAY:
+                        harvestTool = "shovel";
+                        material = Material.CLAY;
+                        soundType = SoundType.GROUND;
+                        break;
                     case GROUND:
                         harvestTool = "shovel";
                         material = Material.GROUND;
                         soundType = SoundType.GROUND;
+                        break;
+                    case SAND:
+                        harvestTool = "shovel";
+                        material = Material.SAND;
+                        soundType = SoundType.SAND;
                         break;
                     case STONE:
                     case COBBLE:
@@ -141,11 +150,24 @@ public class TileLoader
                 layers = parseTextureLayers( value );
                 break;
             case "vanillaItem":
+            {
                 String[] values = value.split( " " );
                 vanillaEquivalent = new ItemStack(
                     Item.getByNameOrId( values[ 0 ] ),
                     1,
                     values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0 );
+                break;
+            }
+            case "ore":
+            {
+                String[] values = value.split( " " );
+                oreName = values[ 0 ];
+                if( values.length > 1 )
+                    oreDictionaryName = values[ 1 ];
+                break;
+            }
+            case "proxy":
+                proxyOre = new ResourceLocation( value );
                 break;
             default:
                 return false;
@@ -194,7 +216,7 @@ public class TileLoader
             layers.toArray( layerArray );
 
             GenericTile tile = new GenericTile(
-                tileSetName ,
+                tileSetName,
                 meta,
                 type,
                 material,
@@ -227,6 +249,24 @@ public class TileLoader
 
             GenericHostRegistry.INSTANCE.register( host.registryName() , host.meta() , host );
         }
+        else if( !oreName.isEmpty() )
+        {
+            CustomOre ore = new CustomOre(
+                oreName,
+                oreDictionaryName,
+                textureResource,
+                proxyOre,
+                material,
+                soundType,
+                harvestTool,
+                harvestLevel,
+                hardness,
+                explosionResistance );
+
+            GenericOreRegistry.INSTANCE.register( new GenericOreTileSet( ore ) );
+            OreItemTextureManager.INSTANCE.registerOre( ore.oreName() , ore.oreItemTextureResource() );
+            DynamicOreHostManager.INSTANCE.registerOre( new ResourceLocation( Strata.modid , ore.oreName() ) , 0 , ore );
+        }
 
         reset();
     }
@@ -247,5 +287,8 @@ public class TileLoader
         explosionResistance = 0.0f;
         vanillaEquivalent = null;
         layers = null;
+        oreName = null;
+        oreDictionaryName = null;
+        proxyOre = null;
     }
 }

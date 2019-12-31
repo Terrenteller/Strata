@@ -1,6 +1,7 @@
-package com.riintouge.strata.block.ore.info;
+package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.geo.IGenericBlockProperties;
+import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
 public interface IOreInfo extends IGenericBlockProperties
@@ -12,6 +13,11 @@ public interface IOreInfo extends IGenericBlockProperties
     ResourceLocation oreBlockOverlayTextureResource();
 
     ResourceLocation oreItemTextureResource();
+
+    default Block proxyBlock()
+    {
+        return null;
+    }
 
     // IGenericBlockProperties overrides
 

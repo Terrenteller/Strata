@@ -4,10 +4,14 @@ import net.minecraft.util.ResourceLocation;
 
 public enum TileType
 {
+    // Primaries
     CLAY( "%s:%s" ),
-    //BRICK( "%s:%s_brick" ),
     GROUND( "%s:%s" ),
+    SAND( "%s:%s" ),
     STONE( "%s:%s" ),
+
+    // Secondaries
+    BRICK( "%s:%s_brick" ),
     COBBLE( "%s:%s_cobble" ),
     STONEBRICK( "%s:%s_stonebrick" );
 

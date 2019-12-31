@@ -1,13 +1,8 @@
-package com.riintouge.strata.block.ore.tileset;
+package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.*;
 import com.riintouge.strata.block.*;
 import com.riintouge.strata.block.geo.IGenericBlockProperties;
-import com.riintouge.strata.block.ore.DynamicOreHostTileEntity;
-import com.riintouge.strata.block.ore.GenericOreRegistry;
-import com.riintouge.strata.block.ore.info.IOreInfo;
-import com.riintouge.strata.block.ore.info.IProxyOreInfo;
-import com.riintouge.strata.block.ore.UnlistedPropertyHostRock;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -40,8 +35,8 @@ public class GenericOreBlock extends Block
 
         // TODO: Do NOT set the registry name here because it cannot then be set by derivations or new instances!
         setRegistryName( Strata.modid + ":" + oreInfo.oreName() );
-        if( oreInfo instanceof IProxyOreInfo )
-            setUnlocalizedName( ( (IProxyOreInfo)oreInfo ).getProxyBlock().getUnlocalizedName() );
+        if( oreInfo.proxyBlock() != null )
+            setUnlocalizedName( oreInfo.proxyBlock().getUnlocalizedName() );
         else
             setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
 
@@ -135,9 +130,9 @@ public class GenericOreBlock extends Block
 
         IOreTileSet oreTileSet = GenericOreRegistry.INSTANCE.find( oreInfo.oreName() );
         IOreInfo oreInfo = oreTileSet.getInfo();
-        if( oreInfo instanceof IProxyOreInfo )
+        if( oreInfo.proxyBlock() != null )
         {
-            ( (IProxyOreInfo)oreInfo ).getProxyBlock().getDrops( drops , world , pos , state , fortune );
+            oreInfo.proxyBlock().getDrops( drops , world , pos , state , fortune );
         }
         else
         {
@@ -149,8 +144,8 @@ public class GenericOreBlock extends Block
     @Override
     public int getExpDrop( IBlockState state , IBlockAccess world , BlockPos pos , int fortune )
     {
-        return oreInfo instanceof IProxyOreInfo
-            ? ( (IProxyOreInfo)oreInfo ).getProxyBlock().getExpDrop( state , world , pos , fortune )
+        return oreInfo.proxyBlock() != null
+            ? oreInfo.proxyBlock().getExpDrop( state , world , pos , fortune )
             : 0;
     }
 
@@ -257,7 +252,7 @@ public class GenericOreBlock extends Block
     // cache miss in BlockModelShapes.getModelForState. Making minor tweaks in copied code seemed less of a hack
     // than basing the returned state on the caller of getActualState. This should be re-examined and cleaned up
     // in a future version. getActualState is deprecated now and removed in 1.13.
-    // Modifications to these two methods are kept to a minimum.
+    // Modifications to these two methods are kept to a minimum for diff purposes.
 
     private static boolean canHarvestBlock( @Nonnull IBlockState state, @Nonnull EntityPlayer player, @Nonnull IBlockAccess world, @Nonnull BlockPos pos)
     {
