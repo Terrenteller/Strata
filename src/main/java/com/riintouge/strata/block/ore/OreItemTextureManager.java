@@ -28,10 +28,10 @@ public class OreItemTextureManager
         // Nothing to do
     }
 
-    public void registerOre( String ore , ResourceLocation resourceLocation )
+    public void register( String ore , ResourceLocation resourceLocation )
     {
         if( alreadyInitializedOnce )
-            LOGGER.warn( "registerOre called too late!" );
+            LOGGER.warn( "register called too late!" );
 
         if( !oreNameToTextureResourceMap.containsKey( ore ) )
             oreNameToTextureResourceMap.put( ore , resourceLocation );

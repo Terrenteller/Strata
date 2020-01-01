@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.GenericHostRegistry;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
@@ -18,23 +18,23 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DynamicOreHostManager
+public class OreBlockTextureManager
 {
-    public static final DynamicOreHostManager INSTANCE = new DynamicOreHostManager();
+    public static final OreBlockTextureManager INSTANCE = new OreBlockTextureManager();
 
     private static final Logger LOGGER = LogManager.getLogger();
     private boolean alreadyInitializedOnce = false;
     private Map< ResourceLocation , IOreInfo[] > oreInfoMap = new HashMap<>();
     private Map< String , TextureAtlasSprite > generatedTextureMap = new HashMap<>();
 
-    private DynamicOreHostManager()
+    private OreBlockTextureManager()
     {
     }
 
     public void registerOre( ResourceLocation oreRegistryName , int meta , IOreInfo oreInfo )
     {
         if( alreadyInitializedOnce )
-            LOGGER.warn( "registerOre called too late!" );
+            LOGGER.warn( "register called too late!" );
 
         IOreInfo[] infos = oreInfoMap.getOrDefault( oreRegistryName , null );
         if( infos == null )
@@ -63,11 +63,11 @@ public class DynamicOreHostManager
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
-        System.out.println( "DynamicOreHostManager::onEvent( TextureStitchEvent.Pre )" );
+        System.out.println( "OreBlockTextureManager::onEvent( TextureStitchEvent.Pre )" );
 
         TextureMap textureMap = event.getMap();
         int generatedTextureCount = 0 , oreCount = 0;
-        Map< ResourceLocation , IHostInfo[] > hostInfoMap = GenericHostRegistry.INSTANCE.allHosts();
+        Map< ResourceLocation , IHostInfo[] > hostInfoMap = HostRegistry.INSTANCE.allHosts();
         long startTime = System.nanoTime();
 
         for( ResourceLocation ore : INSTANCE.oreInfoMap.keySet() )

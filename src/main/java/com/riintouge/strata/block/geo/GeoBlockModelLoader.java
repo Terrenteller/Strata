@@ -2,7 +2,6 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.RetexturableModel;
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.GenericTileSetRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GenericStoneModelLoader implements ICustomModelLoader
+public class GeoBlockModelLoader implements ICustomModelLoader
 {
     private static final String ResourcePattern = String.format( "^%s:(([a-z_]+?)(?:_([a-z]+))?)(?:#.+)$" , Strata.modid );
     private static final Pattern ResourceRegex = Pattern.compile( ResourcePattern );
@@ -30,13 +29,13 @@ public class GenericStoneModelLoader implements ICustomModelLoader
             return false;
 
         Pair< String , String > stoneAndType = getStoneAndTypePairFromFoundMatch( matcher );
-        return GenericTileSetRegistry.INSTANCE.contains( stoneAndType.getLeft() );
+        return GeoTileSetRegistry.INSTANCE.contains( stoneAndType.getLeft() );
     }
 
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        System.out.println( String.format( "GenericStoneModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        System.out.println( String.format( "GeoBlockModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
         matcher.find();

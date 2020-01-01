@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 // GenericModel? We aren't required to retexture it and instead use it to duplicate block states...
-public final class RetexturableModel implements IModel
+public class RetexturableModel implements IModel
 {
     private final ModelResourceLocation templateModelResource;
     private final ResourceLocation textureResource;
@@ -27,13 +27,13 @@ public final class RetexturableModel implements IModel
     }
 
     @Override
-    public Collection<ResourceLocation> getDependencies()
+    public Collection< ResourceLocation > getDependencies()
     {
         return ImmutableList.of( templateModelResource );
     }
 
     @Override
-    public Collection<ResourceLocation> getTextures()
+    public Collection< ResourceLocation > getTextures()
     {
         return ImmutableList.of( textureResource );
     }

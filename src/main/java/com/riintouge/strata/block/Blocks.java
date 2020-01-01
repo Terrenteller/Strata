@@ -1,6 +1,7 @@
 package com.riintouge.strata.block;
 
-import com.riintouge.strata.block.ore.DynamicOreHostTileEntity;
+import com.riintouge.strata.block.loader.TileLoader;
+import com.riintouge.strata.block.ore.OreBlockTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -23,7 +24,7 @@ public class Blocks
         // TODO: Read from on-disk config directory
 
         GameRegistry.registerTileEntity(
-            DynamicOreHostTileEntity.class,
+            OreBlockTileEntity.class,
             new ResourceLocation( "strata:ore_tile_entity" ) );
     }
 }

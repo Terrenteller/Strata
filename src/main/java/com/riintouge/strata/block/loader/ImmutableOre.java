@@ -1,11 +1,12 @@
-package com.riintouge.strata.block.ore;
+package com.riintouge.strata.block.loader;
 
+import com.riintouge.strata.block.ore.IOreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
-public class CustomOre implements IOreInfo
+public final class ImmutableOre implements IOreInfo
 {
     private String oreName;
     private String oreDictionaryName;
@@ -19,7 +20,7 @@ public class CustomOre implements IOreInfo
     private ResourceLocation proxyBlockResource;
     private Block proxyBlock;
 
-    public CustomOre(
+    public ImmutableOre(
         String oreName,
         String oreDictionaryName,
         ResourceLocation textureResource,
@@ -79,6 +80,8 @@ public class CustomOre implements IOreInfo
 
         return proxyBlock;
     }
+
+    // IGenericBlockProperties overrides
 
     @Override
     public Material material()

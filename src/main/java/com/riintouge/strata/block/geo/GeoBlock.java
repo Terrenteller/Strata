@@ -8,24 +8,24 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
 
-public class GenericBlock extends Block
+public class GeoBlock extends Block
 {
-    protected IGenericTile tile;
+    protected IGeoTileInfo info;
 
-    public GenericBlock( IGenericTile tile )
+    public GeoBlock( IGeoTileInfo info )
     {
-        super( tile.material() );
-        this.tile = tile;
+        super( info.material() );
+        this.info = info;
 
-        ResourceLocation registryName = tile.registryName();
+        ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BLOCK_TAB );
 
-        setHarvestLevel( tile.harvestTool() , tile.harvestLevel() );
-        setSoundType( tile.soundType() );
-        setHardness( tile.hardness() );
-        setResistance( tile.explosionResistance() );
+        setHarvestLevel( info.harvestTool() , info.harvestLevel() );
+        setSoundType( info.soundType() );
+        setHardness( info.hardness() );
+        setResistance( info.explosionResistance() );
     }
 
     // Block overrides
@@ -35,10 +35,10 @@ public class GenericBlock extends Block
     {
         try
         {
-            switch( tile.type() )
+            switch( info.type() )
             {
                 case STONE:
-                    return Item.REGISTRY.getObject( TileType.COBBLE.registryName( tile.registryName() ) );
+                    return Item.REGISTRY.getObject( TileType.COBBLE.registryName( info.registryName() ) );
                 case CLAY:
                     // TODO: Drop clay globs
                 default: { }

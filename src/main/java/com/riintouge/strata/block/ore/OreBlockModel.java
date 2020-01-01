@@ -17,11 +17,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Vector;
 
-public class DynamicOreHostModel implements IBakedModel
+public class OreBlockModel implements IBakedModel
 {
     private IBakedModel originalModel;
 
-    public DynamicOreHostModel( IBakedModel originalModel )
+    public OreBlockModel( IBakedModel originalModel )
     {
         this.originalModel = originalModel;
     }
@@ -37,11 +37,11 @@ public class DynamicOreHostModel implements IBakedModel
         Block block = state.getBlock();
         ResourceLocation registryName = block.getRegistryName();
         String oreName = registryName.getResourcePath();
-        if( !GenericOreRegistry.INSTANCE.contains( oreName ) )
+        if( !OreRegistry.INSTANCE.contains( oreName ) )
             return originalModel.getQuads( state , side , rand );
 
         MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        TextureAtlasSprite hostTexture = DynamicOreHostManager.INSTANCE.findTexture(
+        TextureAtlasSprite hostTexture = OreBlockTextureManager.INSTANCE.findTexture(
             registryName,
             block.getMetaFromState( state ),
             host.resourceLocation,

@@ -2,6 +2,7 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.*;
 import com.riintouge.strata.block.*;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGenericBlockProperties;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
@@ -24,11 +25,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class GenericOreBlock extends Block
+public class OreBlock extends Block
 {
     protected IOreInfo oreInfo;
 
-    public GenericOreBlock( IOreInfo oreInfo )
+    public OreBlock( IOreInfo oreInfo )
     {
         super( oreInfo.material() );
         this.oreInfo = oreInfo;
@@ -51,8 +52,8 @@ public class GenericOreBlock extends Block
     protected MetaResourceLocation getHost( World world , BlockPos pos )
     {
         TileEntity entity = world.getTileEntity( pos );
-        return entity instanceof DynamicOreHostTileEntity
-            ? ( (DynamicOreHostTileEntity)entity ).getCachedHost()
+        return entity instanceof OreBlockTileEntity
+            ? ( (OreBlockTileEntity)entity ).getCachedHost()
             : UnlistedPropertyHostRock.DEFAULT;
     }
 
@@ -89,7 +90,7 @@ public class GenericOreBlock extends Block
     @Override
     public TileEntity createTileEntity( World world , IBlockState state )
     {
-        return new DynamicOreHostTileEntity();
+        return new OreBlockTileEntity();
     }
 
     // This is passed to getHarvestLevel and getHarvestTool by ForgeHooks.canHarvestBlock
@@ -116,7 +117,7 @@ public class GenericOreBlock extends Block
     public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
     {
         MetaResourceLocation hostResource = getHost( worldIn , pos );
-        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.hardness() + 1.5f : oreInfo.hardness();
     }
 
@@ -128,7 +129,7 @@ public class GenericOreBlock extends Block
         // getStateFromMeta is deprecated. What are we meant to use?
         hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
 
-        IOreTileSet oreTileSet = GenericOreRegistry.INSTANCE.find( oreInfo.oreName() );
+        IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
         IOreInfo oreInfo = oreTileSet.getInfo();
         if( oreInfo.proxyBlock() != null )
         {
@@ -154,9 +155,9 @@ public class GenericOreBlock extends Block
     {
         IExtendedBlockState extendedState = (IExtendedBlockState)state;
         TileEntity entity = world.getTileEntity( pos );
-        if( entity instanceof DynamicOreHostTileEntity )
+        if( entity instanceof OreBlockTileEntity )
         {
-            MetaResourceLocation cachedHost = ( (DynamicOreHostTileEntity)entity ).getCachedHost();
+            MetaResourceLocation cachedHost = ( (OreBlockTileEntity)entity ).getCachedHost();
             extendedState = extendedState.withProperty( UnlistedPropertyHostRock.PROPERTY , cachedHost );
         }
 
@@ -167,7 +168,7 @@ public class GenericOreBlock extends Block
     public int getHarvestLevel( IBlockState state )
     {
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.harvestLevel() : super.getHarvestLevel( state );
     }
 
@@ -176,7 +177,7 @@ public class GenericOreBlock extends Block
     public String getHarvestTool( IBlockState state )
     {
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.harvestTool() : super.getHarvestTool( state );
     }
 
@@ -191,7 +192,7 @@ public class GenericOreBlock extends Block
     public Material getMaterial( IBlockState state )
     {
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.material() : super.getMaterial( state );
     }
 
@@ -206,7 +207,7 @@ public class GenericOreBlock extends Block
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
         MetaResourceLocation hostResource = getHost( world , pos );
-        IGenericBlockProperties hostProperties = GenericHostRegistry.INSTANCE.find( hostResource );
+        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.soundType() : oreInfo.soundType();
     }
 
@@ -240,7 +241,7 @@ public class GenericOreBlock extends Block
 
         // Only the server should poll
         if( !world.isRemote )
-            ( (DynamicOreHostTileEntity)world.getTileEntity( pos ) ).pollHost();
+            ( (OreBlockTileEntity)world.getTileEntity( pos ) ).pollHost();
     }
 
     // Statics

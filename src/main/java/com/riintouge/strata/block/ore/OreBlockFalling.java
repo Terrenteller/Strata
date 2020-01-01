@@ -3,11 +3,11 @@ package com.riintouge.strata.block.ore;
 import com.riintouge.strata.Strata;
 import net.minecraft.block.BlockFalling;
 
-public class GenericSandOreBlock extends BlockFalling
+public class OreBlockFalling extends BlockFalling
 {
     protected IOreInfo oreInfo;
 
-    public GenericSandOreBlock( IOreInfo oreInfo )
+    public OreBlockFalling( IOreInfo oreInfo )
     {
         super( oreInfo.material() );
         this.oreInfo = oreInfo;

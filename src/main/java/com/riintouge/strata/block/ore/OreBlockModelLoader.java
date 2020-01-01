@@ -11,7 +11,7 @@ import net.minecraftforge.client.model.IModel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GenericOreBlockModelLoader implements ICustomModelLoader
+public class OreBlockModelLoader implements ICustomModelLoader
 {
     private static final String ResourcePattern = String.format( "^%s:(.+)#" , Strata.modid );
     private static final int ResourcePatternOreNameGroup = 1;
@@ -27,13 +27,13 @@ public class GenericOreBlockModelLoader implements ICustomModelLoader
             return false;
 
         String oreName = matcher.group( ResourcePatternOreNameGroup );
-        return GenericOreRegistry.INSTANCE.contains( oreName );
+        return OreRegistry.INSTANCE.contains( oreName );
     }
 
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        System.out.println( String.format( "GenericOreBlockModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        System.out.println( String.format( "OreBlockModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
         matcher.find();
@@ -41,7 +41,7 @@ public class GenericOreBlockModelLoader implements ICustomModelLoader
         ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_stone" );
         ModelResourceLocation templateModelResource = new ModelResourceLocation( blockState , null );
         String oreName = matcher.group( ResourcePatternOreNameGroup );
-        ResourceLocation textureResource = GenericOreRegistry.INSTANCE.find( oreName ).getInfo().oreItemTextureResource();
+        ResourceLocation textureResource = OreRegistry.INSTANCE.find( oreName ).getInfo().oreItemTextureResource();
         return new RetexturableModel( templateModelResource , textureResource );
     }
 

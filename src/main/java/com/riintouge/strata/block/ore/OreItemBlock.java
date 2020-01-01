@@ -11,9 +11,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class GenericStoneOreItemBlock extends ItemBlock
+public class OreItemBlock extends ItemBlock
 {
-    public GenericStoneOreItemBlock( Block block )
+    public OreItemBlock( Block block )
     {
         super( block );
 

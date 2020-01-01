@@ -10,11 +10,11 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
 
-public class DynamicOreHostTileEntity extends TileEntity
+public class OreBlockTileEntity extends TileEntity
 {
     private MetaResourceLocation cachedHost = UnlistedPropertyHostRock.DEFAULT;
 
-    public DynamicOreHostTileEntity()
+    public OreBlockTileEntity()
     {
         // Nothing to do
     }

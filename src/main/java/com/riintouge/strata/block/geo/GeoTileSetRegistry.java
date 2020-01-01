@@ -1,6 +1,6 @@
-package com.riintouge.strata.block;
+package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.geo.GenericStoneModelLoader;
+import com.riintouge.strata.block.IForgeRegistrable;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
@@ -15,15 +15,15 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenericTileSetRegistry
+public class GeoTileSetRegistry
 {
-    public static final GenericTileSetRegistry INSTANCE = new GenericTileSetRegistry();
+    public static final GeoTileSetRegistry INSTANCE = new GeoTileSetRegistry();
 
     private Map< String , IForgeRegistrable > tileSets = new HashMap<>();
 
-    private GenericTileSetRegistry()
+    private GeoTileSetRegistry()
     {
-        ModelLoaderRegistry.registerLoader( new GenericStoneModelLoader() );
+        ModelLoaderRegistry.registerLoader( new GeoBlockModelLoader() );
     }
 
     public void register( IForgeRegistrable tileSet , String tileSetName )
@@ -41,7 +41,7 @@ public class GenericTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerBlocks( RegistryEvent.Register< Block > event )
     {
-        System.out.println( "GenericTileSetRegistry::registerBlocks()" );
+        System.out.println( "GeoTileSetRegistry::registerBlocks()" );
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
@@ -51,7 +51,7 @@ public class GenericTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerItems( RegistryEvent.Register< Item > event )
     {
-        System.out.println( "GenericTileSetRegistry::registerItems()" );
+        System.out.println( "GeoTileSetRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
@@ -61,7 +61,7 @@ public class GenericTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerModels( ModelRegistryEvent event )
     {
-        System.out.println( "GenericTileSetRegistry::registerModels()" );
+        System.out.println( "GeoTileSetRegistry::registerModels()" );
 
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.registerModels( event );
@@ -70,7 +70,7 @@ public class GenericTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
-        System.out.println( "GenericTileSetRegistry::stitchTextures()" );
+        System.out.println( "GeoTileSetRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )

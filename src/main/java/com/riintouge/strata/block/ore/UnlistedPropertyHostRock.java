@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.GenericHostRegistry;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -60,7 +60,7 @@ public class UnlistedPropertyHostRock implements IUnlistedProperty< MetaResource
             int adjMeta = adjBlock.getMetaFromState( adjState );
             // TODO: Prioritize matching materials so clay ores try to take clay hosts
             MetaResourceLocation possibleHost = new MetaResourceLocation( adjRegistryName , adjMeta );
-            if( !possibleHost.equals( DEFAULT ) && GenericHostRegistry.INSTANCE.find( adjRegistryName , adjMeta ) != null )
+            if( !possibleHost.equals( DEFAULT ) && HostRegistry.INSTANCE.find( adjRegistryName , adjMeta ) != null )
                 return possibleHost;
 
             if( !( adjState instanceof IExtendedBlockState ) )

@@ -5,9 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public class GenericItemBlock extends ItemBlock
+public class GeoItemBlock extends ItemBlock
 {
-    public GenericItemBlock( Block block )
+    public GeoItemBlock( Block block )
     {
         super( block );
 

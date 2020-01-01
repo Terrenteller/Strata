@@ -1,10 +1,11 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.block.loader;
 
+import com.riintouge.strata.block.geo.IHostInfo;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
-public class CustomHost implements IHostInfo
+public final class ImmutableHost implements IHostInfo
 {
     private ResourceLocation registryName;
     private int meta;
@@ -16,7 +17,7 @@ public class CustomHost implements IHostInfo
     private float hardness;
     private float explosionResistance;
 
-    public CustomHost(
+    public ImmutableHost(
         ResourceLocation registryName,
         int meta,
         ResourceLocation textureResource,

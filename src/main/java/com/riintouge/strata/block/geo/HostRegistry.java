@@ -1,19 +1,19 @@
-package com.riintouge.strata.block;
+package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.block.MetaResourceLocation;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenericHostRegistry
+public class HostRegistry
 {
-    public static final GenericHostRegistry INSTANCE = new GenericHostRegistry();
+    public static final HostRegistry INSTANCE = new HostRegistry();
 
     private Map< ResourceLocation , IHostInfo[] > hostInfos = new HashMap<>();
 
-    private GenericHostRegistry()
+    private HostRegistry()
     {
     }
 

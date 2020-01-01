@@ -1,15 +1,8 @@
-package com.riintouge.strata.block;
+package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.geo.TileType;
-import com.riintouge.strata.block.geo.CustomHost;
-import com.riintouge.strata.block.geo.GenericTileSet;
-import com.riintouge.strata.block.geo.GenericTile;
-import com.riintouge.strata.block.ore.CustomOre;
-import com.riintouge.strata.block.ore.DynamicOreHostManager;
-import com.riintouge.strata.block.ore.GenericOreRegistry;
-import com.riintouge.strata.block.ore.OreItemTextureManager;
-import com.riintouge.strata.block.ore.GenericOreTileSet;
+import com.riintouge.strata.block.geo.*;
+import com.riintouge.strata.block.ore.*;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.util.Util;
@@ -30,24 +23,34 @@ import java.util.Vector;
 
 public class TileLoader
 {
-    private Map< String , GenericTileSet > tileSetMap = new HashMap<>();
+    private Map< String , GeoTileSet > tileSetMap = new HashMap<>();
     private boolean isHost = false;
-    private ResourceLocation registryName;
-    private ResourceLocation textureResource;
-    private String tileSetName;
-    private int meta;
-    private TileType type;
+
+    // IGenericBlockProperties
     private Material material;
     private SoundType soundType;
     private String harvestTool;
     private int harvestLevel;
     private float hardness;
     private float explosionResistance;
-    private ItemStack vanillaEquivalent;
+
+    // IHostInfo
+    private ResourceLocation registryName;
+    private int meta;
+
+    // IGeoTileInfo
+    private String tileSetName;
+    private TileType type;
     private List< LayeredTextureLayer > layers;
+    private ItemStack vanillaEquivalent;
+
+    // IOreInfo
     private String oreName;
     private String oreDictionaryName;
     private ResourceLocation proxyOre;
+
+    // Shared
+    private ResourceLocation textureResource;
 
     public TileLoader()
     {
@@ -84,7 +87,7 @@ public class TileLoader
             createTileAndReset();
 
         for( String key : tileSetMap.keySet() )
-            GenericTileSetRegistry.INSTANCE.register( tileSetMap.get( key ) , key );
+            GeoTileSetRegistry.INSTANCE.register( tileSetMap.get( key ) , key );
     }
 
     private boolean processKeyValue( String key , String value )
@@ -103,33 +106,10 @@ public class TileLoader
             case "type":
                 type = TileType.valueOf( value.toUpperCase() );
                 // Obsfucation unfortunately prevents us from using reflection
-                // to easily get material and soundType from distinct KVs
-                switch( type )
-                {
-                    case CLAY:
-                        harvestTool = "shovel";
-                        material = Material.CLAY;
-                        soundType = SoundType.GROUND;
-                        break;
-                    case GROUND:
-                        harvestTool = "shovel";
-                        material = Material.GROUND;
-                        soundType = SoundType.GROUND;
-                        break;
-                    case SAND:
-                        harvestTool = "shovel";
-                        material = Material.SAND;
-                        soundType = SoundType.SAND;
-                        break;
-                    case STONE:
-                    case COBBLE:
-                    case STONEBRICK:
-                        harvestTool = "pickaxe";
-                        material = Material.ROCK;
-                        soundType = SoundType.STONE;
-                        break;
-                    default: { }
-                }
+                // to get non-enum Material and SoundType values from distinct KVs
+                harvestTool = type.harvestTool;
+                material = type.material;
+                soundType = type.soundType;
                 break;
             case "host":
                 isHost = true;
@@ -199,11 +179,11 @@ public class TileLoader
         return layers;
     }
 
-    private GenericTileSet getOrCreateTileSet( String name )
+    private GeoTileSet getOrCreateTileSet( String name )
     {
-        GenericTileSet tileSet = tileSetMap.getOrDefault( name , null );
+        GeoTileSet tileSet = tileSetMap.getOrDefault( name , null );
         if( tileSet == null )
-            tileSetMap.put( name , tileSet = new GenericTileSet() );
+            tileSetMap.put( name , tileSet = new GeoTileSet() );
 
         return tileSet;
     }
@@ -215,7 +195,7 @@ public class TileLoader
             LayeredTextureLayer[] layerArray = new LayeredTextureLayer[ layers.size() ];
             layers.toArray( layerArray );
 
-            GenericTile tile = new GenericTile(
+            ImmutableTile tile = new ImmutableTile(
                 tileSetName,
                 meta,
                 type,
@@ -228,15 +208,15 @@ public class TileLoader
                 layerArray,
                 vanillaEquivalent );
 
-            GenericTileSet tileSet = getOrCreateTileSet( tileSetName );
+            GeoTileSet tileSet = getOrCreateTileSet( tileSetName );
             tileSet.addTile( tile );
 
             if( isHost )
-                GenericHostRegistry.INSTANCE.register( tile.registryName() , tile.meta() , tile );
+                HostRegistry.INSTANCE.register( tile.registryName() , tile.meta() , tile );
         }
         else if( registryName != null && isHost )
         {
-            CustomHost host = new CustomHost(
+            ImmutableHost host = new ImmutableHost(
                 registryName,
                 meta,
                 textureResource,
@@ -247,11 +227,11 @@ public class TileLoader
                 hardness,
                 explosionResistance );
 
-            GenericHostRegistry.INSTANCE.register( host.registryName() , host.meta() , host );
+            HostRegistry.INSTANCE.register( host.registryName() , host.meta() , host );
         }
         else if( !oreName.isEmpty() )
         {
-            CustomOre ore = new CustomOre(
+            ImmutableOre ore = new ImmutableOre(
                 oreName,
                 oreDictionaryName,
                 textureResource,
@@ -263,9 +243,9 @@ public class TileLoader
                 hardness,
                 explosionResistance );
 
-            GenericOreRegistry.INSTANCE.register( new GenericOreTileSet( ore ) );
-            OreItemTextureManager.INSTANCE.registerOre( ore.oreName() , ore.oreItemTextureResource() );
-            DynamicOreHostManager.INSTANCE.registerOre( new ResourceLocation( Strata.modid , ore.oreName() ) , 0 , ore );
+            OreRegistry.INSTANCE.register( new OreTileSet( ore ) );
+            OreBlockTextureManager.INSTANCE.registerOre( new ResourceLocation( Strata.modid , ore.oreName() ) , 0 , ore );
+            OreItemTextureManager.INSTANCE.register( ore.oreName() , ore.oreItemTextureResource() );
         }
 
         reset();
@@ -274,21 +254,31 @@ public class TileLoader
     private void reset()
     {
         isHost = false;
-        registryName = null;
-        textureResource = null;
-        tileSetName = "";
-        meta = 0;
-        type = null;
+
+        // IGenericBlockProperties
         material = null;
         soundType = null;
         harvestTool = "";
         harvestLevel = 0;
         hardness = 0.0f;
         explosionResistance = 0.0f;
-        vanillaEquivalent = null;
+
+        // IHostInfo
+        registryName = null;
+        meta = 0;
+
+        // IGeoTileInfo
+        tileSetName = "";
+        type = null;
         layers = null;
+        vanillaEquivalent = null;
+
+        // IOreInfo
         oreName = null;
         oreDictionaryName = null;
         proxyOre = null;
+
+        // Shared
+        textureResource = null;
     }
 }

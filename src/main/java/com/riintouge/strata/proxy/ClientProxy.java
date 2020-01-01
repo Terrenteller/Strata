@@ -1,6 +1,6 @@
 package com.riintouge.strata.proxy;
 
-import com.riintouge.strata.block.ore.DynamicOreHostManager;
+import com.riintouge.strata.block.ore.OreBlockTextureManager;
 import com.riintouge.strata.block.ore.OreItemTextureManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -15,7 +15,7 @@ public class ClientProxy extends CommonProxy
         super.preInit( event );
         System.out.println( "ClientProxy::preInit()" );
 
-        MinecraftForge.EVENT_BUS.register( DynamicOreHostManager.class );
+        MinecraftForge.EVENT_BUS.register( OreBlockTextureManager.class );
         MinecraftForge.EVENT_BUS.register( OreItemTextureManager.class );
     }
 

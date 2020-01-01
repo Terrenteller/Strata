@@ -17,16 +17,16 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenericTileSet implements IForgeRegistrable
+public class GeoTileSet implements IForgeRegistrable
 {
-    protected Map< TileType , IGenericTile > tiles = new HashMap<>();
+    protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
 
-    public GenericTileSet()
+    public GeoTileSet()
     {
         // Nothing to do
     }
 
-    public void addTile( IGenericTile tile )
+    public void addTile( IGeoTileInfo tile )
     {
         tiles.put( tile.type() , tile );
     }
@@ -37,7 +37,7 @@ public class GenericTileSet implements IForgeRegistrable
     public void registerBlocks( IForgeRegistry< Block > blockRegistry )
     {
         for( TileType type : tiles.keySet() )
-            blockRegistry.register( new GenericBlock( tiles.get( type ) ) );
+            blockRegistry.register( new GeoBlock( tiles.get( type ) ) );
     }
 
     @Override
@@ -48,9 +48,9 @@ public class GenericTileSet implements IForgeRegistrable
         // Create the items...
         for( TileType type : tiles.keySet() )
         {
-            IGenericTile tile = tiles.get( type );
+            IGeoTileInfo tile = tiles.get( type );
             Block block = Block.REGISTRY.getObject( tile.registryName() );
-            Item item = new GenericItemBlock( block );
+            Item item = new GeoItemBlock( block );
 
             itemMap.put( type , item );
             itemRegistry.register( item );
@@ -59,7 +59,7 @@ public class GenericTileSet implements IForgeRegistrable
         // ...and then the recipes
         for( TileType type : tiles.keySet() )
         {
-            IGenericTile tile = tiles.get( type );
+            IGeoTileInfo tile = tiles.get( type );
             ResourceLocation registryName = tile.registryName();
             Item item = itemMap.get( type );
             ItemStack vanillaItem = null;
@@ -110,7 +110,7 @@ public class GenericTileSet implements IForgeRegistrable
     @Override
     public void registerModels( ModelRegistryEvent event )
     {
-        for( IGenericTile tile : tiles.values() )
+        for( IGeoTileInfo tile : tiles.values() )
         {
             ModelLoader.setCustomModelResourceLocation(
                 Item.REGISTRY.getObject( tile.registryName() ),
@@ -125,7 +125,7 @@ public class GenericTileSet implements IForgeRegistrable
         // TODO: Don't generate a texture if a texture already exists, such as from a texture pack.
         // I think ModelDynBucket has example code for this...
 
-        for( IGenericTile tile : tiles.values() )
+        for( IGeoTileInfo tile : tiles.values() )
             tile.stitchTextures( textureMap );
     }
 }

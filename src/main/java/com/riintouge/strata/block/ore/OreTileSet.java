@@ -4,24 +4,24 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 
-public class GenericOreTileSet implements IOreTileSet
+public class OreTileSet implements IOreTileSet
 {
     protected IOreInfo oreInfo;
     protected Block block;
     protected Item item;
 
-    public GenericOreTileSet( IOreInfo oreInfo )
+    public OreTileSet( IOreInfo oreInfo )
     {
         this.oreInfo = oreInfo;
 
         // Material values aren't constant so can't use switch
-        // TODO: If GenericOreBlock takes on a host affected by gravity, it should replace itself
+        // TODO: If OreBlock takes on a host affected by gravity, it should replace itself
         if( oreInfo.material() == Material.SAND )
-            block = new GenericSandOreBlock( oreInfo );
+            block = new OreBlockFalling( oreInfo );
         else
-            block = new GenericOreBlock( oreInfo );
+            block = new OreBlock( oreInfo );
 
-        item = new GenericStoneOreItemBlock( block );
+        item = new OreItemBlock( block );
     }
 
     // IOreTileSet overrides
