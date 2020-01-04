@@ -11,7 +11,7 @@ public class Util
     {
         int index = line.indexOf( ' ' );
         return index == -1
-            ? new String[]{ line , "" }
-            : new String[]{ index == 0 ? "" : line.substring( 0 , index ) , line.substring( index + 1 ) };
+            ? new String[] { line , "" }
+            : new String[] { index == 0 ? "" : line.substring( 0 , index ) , line.substring( index + 1 ) };
     }
 }

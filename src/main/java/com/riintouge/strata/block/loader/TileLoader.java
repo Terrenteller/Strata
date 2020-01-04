@@ -12,10 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,10 +54,20 @@ public class TileLoader
         reset();
     }
 
-    public void load( String path ) throws IOException
+    public void loadResource( String path ) throws IOException
     {
         InputStream stream = getClass().getClassLoader().getResourceAsStream( path );
-        BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );
+        load( new BufferedReader( new InputStreamReader( stream , "UTF-8" ) ) );
+    }
+
+    public void loadFile( String path ) throws IOException
+    {
+        InputStream stream = new FileInputStream( path );
+        load( new BufferedReader( new InputStreamReader( stream , "UTF-8" ) ) );
+    }
+
+    public void load( BufferedReader buffer ) throws IOException
+    {
         boolean meaningfulLineProcessed = false;
 
         while( buffer.ready() )

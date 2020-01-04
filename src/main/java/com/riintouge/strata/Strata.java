@@ -18,8 +18,6 @@ public class Strata
     public static final StrataBlockTab BLOCK_TAB = new StrataBlockTab();
     public static final StrataItemTab ITEM_TAB = new StrataItemTab();
 
-    //private Configuration config;
-
     @Mod.Instance( modid )
     public static Strata instance = new Strata();
 

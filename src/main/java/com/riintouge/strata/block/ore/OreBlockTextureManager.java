@@ -68,6 +68,10 @@ public class OreBlockTextureManager
         TextureMap textureMap = event.getMap();
         int generatedTextureCount = 0 , oreCount = 0;
         Map< ResourceLocation , IHostInfo[] > hostInfoMap = HostRegistry.INSTANCE.allHosts();
+
+        if( hostInfoMap.size() == 0 )
+            return;
+
         long startTime = System.nanoTime();
 
         for( ResourceLocation ore : INSTANCE.oreInfoMap.keySet() )
@@ -109,6 +113,9 @@ public class OreBlockTextureManager
                 }
             }
         }
+
+        if( oreCount == 0 )
+            return;
 
         long endTime = System.nanoTime();
         oreCount /= hostInfoMap.keySet().size();
