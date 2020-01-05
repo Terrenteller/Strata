@@ -1,0 +1,68 @@
+==== Tile Data ===
+
+Information about each tile consists of a contiguous block of non-empty lines
+in any file directly under `config/strata/tiledata`. Each line works like a
+keyvalue and order does not matter.
+
+--- Keyvalues ---
+
+Key: generate
+Value: <name> <TileType>
+Description:
+	Register a block of type to be generated.
+	Drops and recipes are determined using types that share a name.
+
+Key: host
+Value: <RegistryName> [meta]
+Description:
+	Register the block as one from which ores may acquire various properties.
+	Value is ignored with generate.
+
+Key: type
+Value: <TileType>
+Description:
+	Controls block properties such as preferred harvest tool and interaction sounds.
+	Value is redundant with generate.
+
+Key: harvestLevel
+Value: <int>
+Default: 0
+Description:
+	Level of tool required for harvest.
+
+Key: hardness
+Value: <float>
+Default: 0.0
+Description:
+	Harvest difficulty.
+
+Key: resistance
+Value: <float>
+Default: 1.7 * hardness if ore, 5.0 * hardness otherwise
+Description:
+	Explosion resistance.
+
+Key: texture
+Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
+Description:
+	Generate a texture using an optional array of layers atop a required base.
+
+Key: vanillaItem
+Value: <ResourceLocation> [meta]
+Description:
+	One-way, one-to-one conversion of a generated block to vanilla equivalent.
+
+Key: textureResource
+Value: <ResourceLocation>
+Description:
+	Location of an existing texture.
+
+Key: ore
+Value: <name> [oreDictionaryName]
+Description:
+	Register an ore to be generated.
+
+Key: proxy
+Value: <ResourceLocation>
+Description:
+    Drop the drops of the specified block instead.

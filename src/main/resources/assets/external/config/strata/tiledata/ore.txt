@@ -1,0 +1,372 @@
+# Weak
+
+ore borax
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/borax
+
+ore cinnabar oreCinnabar
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/cinnabar
+
+ore galena oreLead
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/galena
+
+# This was referred to oreMolydenum in the original PFAA COG XML
+ore molybdenite oreMolybdenum
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/molybdenite
+
+ore pyrolusite oreManganese
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/pyrolusite
+
+ore salt oreSalt
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/salt
+
+ore stibnite
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/stibnite
+
+ore chrysotile
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/chrysotile
+
+ore salitre
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/salitre
+
+ore realgar oreArsenic
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/realgar
+
+ore graphite
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/graphite
+
+ore gypsum
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/gypsum
+
+ore mirabilite
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/mirabilite
+
+ore mica
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/mica
+
+ore soapstone
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/soapstone
+
+ore trona
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/trona
+
+ore bog_iron oreIron
+type stone
+hardness 2.0
+textureResource strata:blocks/ore/weak/bog_iron
+
+# Medium
+
+ore barite oreBarium
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/barite
+
+ore bastnasite
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/bastnasite
+
+# PFAA COG XML mentions malachite but cannot be found
+ore chalcopyrite oreCopper
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/chalcopyrite
+
+ore garnierite oreNickel
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/garnierite
+
+ore lepidolite oreLithium
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/lepidolite
+
+ore magnesite oreMagnesium
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/magnesite
+
+ore pentlandite
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/pentlandite
+
+ore scheelite oreTungsten
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/scheelite
+
+ore sphalerite oreZinc
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/sphalerite
+
+ore wolframite oreTungsten
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/wolframite
+
+# Regardless of IUPAC naming, oreBauxite came first
+ore alunite oreBauxite
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/alunite
+
+ore celestine oreStrontium
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/celestine
+
+ore dolomite oreMagnesium
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/dolomite
+
+ore fluorite
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/fluorite
+
+ore wollastonite
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/wollastonite
+
+ore zeolite
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/medium/zeolite
+
+# Strong
+
+ore banded_iron oreIron
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/banded_iron
+
+ore quartz
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/quartz
+
+ore cassiterite oreTin
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/cassiterite
+
+ore chromite oreChromium
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/chromite
+
+ore ilmenite oreTitanium
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/ilmenite
+
+ore magnetite oreIron
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/magnetite
+
+# Caesium is the IUPAC name. Beware of oreCesium
+ore pollucite oreCaesium
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/pollucite
+
+ore spodumene oreLithium
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/spodumene
+
+ore tantalite oreTantalum
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/tantalite
+
+# orePitchblende? Do other mods use this as an ACTUAL ore or uranium itself?
+ore pitchblende oreUranium
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/pitchblende
+
+ore vanadium_magnetite oreVanadium
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/vanadium_magnetite
+
+# orePhosphate or orePhosphorus? PFAA COG XML uses oreApatite
+ore apatite oreApatite
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/apatite
+
+ore kyanite
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/kyanite
+
+ore perlite
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/perlite
+
+ore pumice
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/pumice
+
+ore pyrite
+type stone
+hardness 4.0
+textureResource strata:blocks/ore/strong/pyrite
+
+# Crude
+
+ore oil_shale
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/crude/oil_shale
+
+ore bituminous_coal oreCoal
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/crude/bituminous_coal
+
+ore lignite oreCoal
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/crude/lignite
+
+ore anthracite oreCoal
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/crude/anthracite
+
+ore coke
+type stone
+hardness 3.0
+textureResource strata:blocks/ore/crude/coke
+
+# Clay
+
+ore bauxite oreBauxite
+type clay
+hardness 1.5
+textureResource strata:blocks/ore/clay/bauxite
+
+ore sodium_bentonite
+type clay
+hardness 1.5
+textureResource strata:blocks/ore/clay/sodium_bentonite
+
+ore calcium_bentonite
+type clay
+hardness 1.5
+textureResource strata:blocks/ore/clay/calcium_bentonite
+
+ore kaolinite
+type clay
+hardness 1.5
+textureResource strata:blocks/ore/clay/kaolinite
+
+ore brown_limonite oreIron
+type clay
+hardness 1.5
+textureResource strata:blocks/ore/clay/brown_limonite
+
+ore yellow_limonite oreIron
+type clay
+hardness 1.5
+textureResource strata:blocks/ore/clay/yellow_limonite
+
+ore vermiculite
+type clay
+hardness 1.5
+textureResource strata:blocks/ore/clay/vermiculite
+
+# Sand
+
+ore basaltic_mineral_sand
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/basaltic_mineral_sand
+
+ore cassiterite_sand
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/cassiterite_sand
+
+ore garnet_sand
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/garnet_sand
+
+ore granitic_mineral_sand
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/granitic_mineral_sand
+
+ore quartz_sand
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/quartz_sand
+
+ore volcanic_ash
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/volcanic_ash
+
+ore glauconite
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/glauconite
+
+ore diatomite
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/diatomite
+
+ore sulfur
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/sulfur
+
+ore oil_sand
+type sand
+hardness 1.0
+textureResource strata:blocks/ore/sand/oil_sand

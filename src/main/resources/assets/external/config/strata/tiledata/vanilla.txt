@@ -1,0 +1,92 @@
+# Hosts
+
+host minecraft:stone
+type stone
+hardness 1.5
+resistance 10
+textureResource minecraft:blocks/stone
+
+host minecraft:stone 1
+type stone
+hardness 1.5
+resistance 10
+textureResource minecraft:blocks/stone_granite
+
+host minecraft:stone 3
+type stone
+hardness 1.5
+resistance 10
+textureResource minecraft:blocks/stone_diorite
+
+host minecraft:stone 5
+type stone
+hardness 1.5
+resistance 10
+textureResource minecraft:blocks/stone_andesite
+
+host minecraft:dirt
+type ground
+hardness 0.5
+textureResource minecraft:blocks/dirt
+
+host minecraft:grass
+type ground
+hardness 0.6
+textureResource minecraft:blocks/dirt
+
+host minecraft:clay
+type ground
+hardness 0.6
+textureResource minecraft:blocks/clay
+
+# Ores
+
+ore coal oreCoal
+type stone
+hardness 3.0
+resistance 5.0
+textureResource strata:blocks/ore/vanilla/coal
+proxy minecraft:coal_ore
+
+ore diamond oreDiamond
+type stone
+hardness 3.0
+resistance 5.0
+textureResource strata:blocks/ore/vanilla/diamond
+proxy minecraft:diamond_ore
+
+ore emerald oreEmerald
+type stone
+hardness 3.0
+resistance 5.0
+textureResource strata:blocks/ore/vanilla/emerald
+proxy minecraft:emerald_ore
+
+ore gold oreGold
+type stone
+hardness 3.0
+resistance 5.0
+textureResource strata:blocks/ore/vanilla/gold
+proxy minecraft:gold_ore
+
+ore iron oreIron
+type stone
+hardness 3.0
+resistance 5.0
+textureResource strata:blocks/ore/vanilla/iron
+proxy minecraft:iron_ore
+
+ore lapis oreLapis
+type stone
+hardness 3.0
+resistance 5.0
+textureResource strata:blocks/ore/vanilla/lapis
+proxy minecraft:lapis_ore
+
+# Can we make this glowy-glowy like BlockRedstoneOre?
+ore redstone oreRedstone
+type stone
+hardness 3.0
+resistance 5.0
+textureResource strata:blocks/ore/vanilla/redstone
+proxy minecraft:redstone_ore
