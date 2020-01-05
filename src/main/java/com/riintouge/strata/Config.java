@@ -38,6 +38,7 @@ public class Config
     {
         FileSelector fileSelector = new FileSelector( predicate , recursive );
         Files.walkFileTree( instConfigPath , fileSelector );
+
         return fileSelector.selectedFiles();
     }
 
@@ -46,6 +47,7 @@ public class Config
         System.out.println( instConfigPath.resolve( subDirPath ).toString() );
         FileSelector fileSelector = new FileSelector( s -> true , recursive );
         Files.walkFileTree( instConfigPath.resolve( subDirPath ) , fileSelector );
+
         return fileSelector.selectedFiles();
     }
 

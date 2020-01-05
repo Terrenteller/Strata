@@ -101,28 +101,33 @@ public class TileLoader
     {
         switch( key )
         {
-            case "registryName":
-                registryName = new ResourceLocation( value );
-                break;
             case "textureResource":
                 textureResource = new ResourceLocation( value );
                 break;
-            case "tileset":
-                tileSetName = value;
+            case "generate":
+            {
+                String[] values = value.split( " " );
+                tileSetName = values[ 0 ];
+                processKeyValue( "type" , values[ 1 ] );
                 break;
+            }
             case "type":
                 type = TileType.valueOf( value.toUpperCase() );
-                // Obsfucation unfortunately prevents us from using reflection
-                // to get non-enum Material and SoundType values from distinct KVs
                 harvestTool = type.harvestTool;
+                // Obsfucation prevents us from using reflection
+                // to get non-enum Material and SoundType values from distinct KVs
                 material = type.material;
                 soundType = type.soundType;
                 break;
             case "host":
                 isHost = true;
-                break;
-            case "meta":
-                meta = Integer.parseInt( value );
+                if( !value.isEmpty() )
+                {
+                    String[] values = value.split( " " );
+                    registryName = new ResourceLocation( values[ 0 ] );
+                    if( values.length > 1 )
+                        meta = Integer.parseInt( values[ 1 ] );
+                }
                 break;
             case "harvestLevel":
                 harvestLevel = Integer.parseInt( value );
@@ -204,7 +209,7 @@ public class TileLoader
 
             ImmutableTile tile = new ImmutableTile(
                 tileSetName,
-                meta,
+                0,
                 type,
                 material,
                 soundType,
