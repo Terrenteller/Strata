@@ -10,7 +10,6 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 
 import java.util.Optional;
 
-// Boilerplate code for working with block states and friends
 public class StateUtil
 {
     public static IExtendedBlockState getCompleteBlockState( IBlockState state , IBlockAccess blockAccess , BlockPos pos )

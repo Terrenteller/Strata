@@ -57,7 +57,7 @@ public class GeoBlockModelLoader implements ICustomModelLoader
 
     // Statics
 
-    private Pair< String , String > getStoneAndTypePairFromFoundMatch( Matcher match )
+    private static Pair< String , String > getStoneAndTypePairFromFoundMatch( Matcher match )
     {
         // We don't have the case insensitive version of isValidEnum
         return match.group( 3 ) != null && EnumUtils.isValidEnum( TileType.class , match.group( 3 ).toUpperCase() )

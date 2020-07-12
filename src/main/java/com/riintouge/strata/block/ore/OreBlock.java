@@ -59,7 +59,6 @@ public class OreBlock extends Block
 
     // Block overrides
 
-
     @Override
     public boolean canHarvestBlock( IBlockAccess world , BlockPos pos , EntityPlayer player )
     {
@@ -122,11 +121,11 @@ public class OreBlock extends Block
     }
 
     @Override
-    public void getDrops( NonNullList<ItemStack> drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
+    public void getDrops( NonNullList< ItemStack > drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
     {
         MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
         Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
-        // getStateFromMeta is deprecated. What are we meant to use?
+        // FIXME: getStateFromMeta is deprecated. What are we meant to use?
         hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
 
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );

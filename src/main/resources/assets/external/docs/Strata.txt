@@ -2,7 +2,8 @@
 
 Information about each tile consists of a contiguous block of non-empty lines
 in any file directly under `config/strata/tiledata`. Each line works like a
-keyvalue and order does not matter.
+keyvalue or a key with multiple values. Line order within a block does not
+matter.
 
 --- Keyvalues ---
 

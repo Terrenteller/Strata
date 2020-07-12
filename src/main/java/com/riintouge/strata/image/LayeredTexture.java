@@ -83,7 +83,7 @@ public class LayeredTexture extends TextureAtlasSprite
                 {
                     blendPixel = layers[ layer ].blendMode.blend(
                         rawLayers[ layer ][ 0 ][ pixel ],
-                        layers[ layer ].opacity ,
+                        layers[ layer ].opacity,
                         blendPixel );
                 }
 

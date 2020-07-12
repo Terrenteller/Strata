@@ -41,6 +41,7 @@ public class OreBlockModelLoader implements ICustomModelLoader
         ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_stone" );
         ModelResourceLocation templateModelResource = new ModelResourceLocation( blockState , null );
         String oreName = matcher.group( ResourcePatternOreNameGroup );
+        // oreItem...? Should this be the overlay?
         ResourceLocation textureResource = OreRegistry.INSTANCE.find( oreName ).getInfo().oreItemTextureResource();
         return new RetexturableModel( templateModelResource , textureResource );
     }

@@ -34,7 +34,7 @@ public class OreBlockTileEntity extends TileEntity
             return;
 
         if( !cachedHost.equals( UnlistedPropertyHostRock.DEFAULT ) )
-            return; // Host has been determined. Stop polling
+            return; // Host has been determined
 
         cachedHost = UnlistedPropertyHostRock.findHost( world , pos );
         if( cachedHost.equals( UnlistedPropertyHostRock.DEFAULT ) )
@@ -42,7 +42,7 @@ public class OreBlockTileEntity extends TileEntity
             //System.out.println( "Unable to determine host" );
 
             // FIXME: We can't exactly "timeout". Consider an ore block that has a single,
-            // adjacent stone in the neighbouring, but unloaded, chunk. Can a chunk load
+            // adjacent stone in a neighbouring, but unloaded, chunk. Can a chunk load
             // trigger a block update? Should we remove the block and pretend like it never existed?
 
             // WARNING: getBlockType() documentation claims it's client side but is not annotated as such

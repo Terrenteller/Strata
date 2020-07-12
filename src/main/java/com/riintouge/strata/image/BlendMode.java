@@ -48,12 +48,11 @@ public enum BlendMode
         final int targetGreen = clamp( ( topGreen * topAlpha + bottomGreen * commonBottomAlphaDivisor ) / commonAlphaDivisor );
         final int targetBlue  = clamp( ( topBlue  * topAlpha + bottomBlue  * commonBottomAlphaDivisor ) / commonAlphaDivisor );
 
-        int pixel = 0;
-        pixel |= ( targetAlpha << 24 ) & 0xFF000000;
-        pixel |= ( targetRed   << 16 ) & 0x00FF0000;
-        pixel |= ( targetGreen <<  8 ) & 0x0000FF00;
-        pixel |=   targetBlue          & 0x000000FF;
-        return pixel;
+        return 0
+            | ( targetAlpha << 24 ) & 0xFF000000
+            | ( targetRed   << 16 ) & 0x00FF0000
+            | ( targetGreen <<  8 ) & 0x0000FF00
+            |   targetBlue          & 0x000000FF;
     }
 
     // c = ( topAlpha * max( topC , bottomC ) + ( 1.0 - topAlpha ) * bottomC )
@@ -75,12 +74,11 @@ public enum BlendMode
         final int targetGreen = clamp( 255.0f * ( topAlpha * ( Math.max( topGreen , bottomGreen ) ) + ( 1.0f - topAlpha ) * bottomGreen ) );
         final int targetBlue  = clamp( 255.0f * ( topAlpha * ( Math.max( topBlue  , bottomBlue  ) ) + ( 1.0f - topAlpha ) * bottomBlue  ) );
 
-        int pixel = 0;
-        pixel |= ( targetAlpha << 24 ) & 0xFF000000;
-        pixel |= ( targetRed   << 16 ) & 0x00FF0000;
-        pixel |= ( targetGreen <<  8 ) & 0x0000FF00;
-        pixel |=   targetBlue          & 0x000000FF;
-        return pixel;
+        return 0
+            | ( targetAlpha << 24 ) & 0xFF000000
+            | ( targetRed   << 16 ) & 0x00FF0000
+            | ( targetGreen <<  8 ) & 0x0000FF00
+            |   targetBlue          & 0x000000FF;
     }
 
     // c = ( topAlpha * min( topC , bottomC ) + ( 1.0 - topAlpha ) * bottomC )
@@ -102,12 +100,11 @@ public enum BlendMode
         final int targetGreen = clamp( 255.0f * ( topAlpha * ( Math.min( topGreen , bottomGreen ) ) + ( 1.0f - topAlpha ) * bottomGreen ) );
         final int targetBlue  = clamp( 255.0f * ( topAlpha * ( Math.min( topBlue  , bottomBlue  ) ) + ( 1.0f - topAlpha ) * bottomBlue  ) );
 
-        int pixel = 0;
-        pixel |= ( targetAlpha << 24 ) & 0xFF000000;
-        pixel |= ( targetRed   << 16 ) & 0x00FF0000;
-        pixel |= ( targetGreen <<  8 ) & 0x0000FF00;
-        pixel |=   targetBlue          & 0x000000FF;
-        return pixel;
+        return 0
+            | ( targetAlpha << 24 ) & 0xFF000000
+            | ( targetRed   << 16 ) & 0x00FF0000
+            | ( targetGreen <<  8 ) & 0x0000FF00
+            |   targetBlue          & 0x000000FF;
     }
 
     private static int clamp( float value )
