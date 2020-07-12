@@ -1,0 +1,2989 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+************************** CustomOreGen Strata Config **************************
+
+    This file contains options, presets, and distributions for
+    rocks and minerals as defined by Strata.
+
+    We simply replace vanilla stone with our rock, then our rock with our
+    minerals. Since we generate many common ores, the user should probably
+    override vanilla and other mod ore generation.
+
+********************************************************************************
+-->
+
+<IfModInstalled name="strata">
+
+  <!-- TODO / WIP Notes
+
+  Many ores are still generated with mod ores turned off via formation presets.
+  See cassiterite on how to limit this.
+
+  Brine and petroleum options are hidden and disabled by default. Strata does
+  not generate these resources.
+
+  Ore distribution needs serious balancing.
+
+  // Strata
+  [13:12:35] [main/INFO]: [CHAT] §c !§r Warning: §cCoal§r has multiple variants generated:
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:anthracite@0
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:bituminous_coal@0
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:lignite@0
+  [13:12:35] [main/INFO]: [CHAT] §c !§r Warning: §cIron§r has multiple variants generated:
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:banded_iron@0
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:magnetite@0
+  [13:12:35] [main/INFO]: [CHAT] §c !§r Warning: §cLithium§r has multiple variants generated:
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:spodumene@0
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:lepidolite@0
+  [13:12:35] [main/INFO]: [CHAT] §c !§r Warning: §cMagnesium§r has multiple variants generated:
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:dolomite@0
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:magnesite@0
+  [13:12:35] [main/INFO]: [CHAT] §c !§r Warning: §cTungsten§r has multiple variants generated:
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:scheelite@0
+  [13:12:35] [main/INFO]: [CHAT] §c - §rstrata:wolframite@0
+  [13:12:35] [main/INFO]: [CHAT]  * §eCopper§r - 11,416 (20%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eMagnesium§r - 10,118 (17%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eCoal§r - 9,077 (16%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eIron§r - 5,800 (9.9%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eZinc§r - 5,793 (9.9%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eMolybdenum§r - 3,557 (6.1%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eLead§r - 3,100 (5.3%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eLithium§r - 2,936 (5.0%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eTungsten§r - 1,731 (3.0%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eBarium§r - 1,397 (2.4%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eTin§r - 987 (1.7%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eTantalum§r - 656 (1.1%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eApatite§r - 645 (1.1%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eEmerald§r - 313 (0.54%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eArsenic§r - 268 (0.46%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eTitanium§r - 214 (0.37%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eChromium§r - 196 (0.34%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eGold§r - 49 (0.08%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eCaesium§r - 29 (0.05%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eLapis§r - 11 (0.02%)
+  [13:12:35] [main/INFO]: [CHAT]  * §eUranium§r - 3 (0.01%)
+
+  // Vanilla
+  [13:16:41] [main/INFO]: [CHAT]  * §eCoal§r - 53,691 (56%)
+  [13:16:41] [main/INFO]: [CHAT]  * §eIron§r - 29,002 (30%)
+  [13:16:41] [main/INFO]: [CHAT]  * §eRedstone§r - 7,856 (8.2%)
+  [13:16:41] [main/INFO]: [CHAT]  * §eGold§r - 2,700 (2.8%)
+  [13:16:41] [main/INFO]: [CHAT]  * §eLapis§r - 1,115 (1.2%)
+  [13:16:41] [main/INFO]: [CHAT]  * §eDiamond§r - 873 (0.91%)
+  [13:16:41] [main/INFO]: [CHAT]  * §eEmerald§r - 280 (0.29%)
+
+  -->
+
+  <!-- COG world-gen configuration settings -->
+  <ConfigSection>
+
+    <!-- TODO: Add/restore other dimension generators -->
+    <OptionChoice name="StrataActive" default=":= dimension=&quot;overworld&quot;" displayGroup="groupInternal">
+      <Choice value="true" displayValue="On" />
+      <Choice value="false" displayValue="Off" />
+      <Comment>Controls whether Strata is active in the current dimension. By default, it is only active in the overworld. To disable for a specific dimension, set this to false in the CustomOreGen_Options.txt found in the dimension directory (preferably before visiting it).</Comment>
+    </OptionChoice>
+
+    <OptionDisplayGroup name="groupStrata" displayName="Strata" displayState="shown">
+      <Description>Enable/disable Strata rock formations, ore deposits, and other substances.</Description>
+    </OptionDisplayGroup>
+
+    <OptionChoice name="StrataGenRocks" default="true" displayState="shown_dynamic" displayGroup="groupStrata">
+      <Description>Generate Strata rock distributions in the default pattern.</Description>
+      <DisplayName>Strata rocks</DisplayName>
+      <Choice value="true" displayValue="On" />
+      <Choice value="false" displayValue="Off" />
+    </OptionChoice>
+
+    <!-- Formation options -->
+    <ConfigSection>
+
+      <OptionChoice name="StrataGenSandOres" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata placer deposits (iron, tin, garnet). This is recommended if you disable vanilla iron.</Description>
+        <DisplayName>Placer deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenVolcanic" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata volcanic ore deposits including alunite, ash, perlite, pumice, and zeolite, as well as fumaroles (volcanic pipes) with gypsum, halite, and realgar.</Description>
+        <DisplayName>Volcanic deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenSerpVeins" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata serpentinite veins that are rich in soapstone, magnesite, chromite, and chrysotile.</Description>
+        <DisplayName>Serpentinite veins</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenLaterites" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata ore deposits in bogs and tropical lateritic soils (bauxite, limonite, garnierite).</Description>
+        <DisplayName>Bog/lateritic ores</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenIgVeins" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata ore veins in igneous rock (ilmenite, chromite, vermiculite, magnetite, chalcopyrite, ...).</Description>
+        <DisplayName>Ore veins in igneous rock</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenIgIntrusion" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata igneous intrusions where mafic rock has penetrated the upper reaches of the crust. These contain large deposits of magnetite, magnesite, pentlandite, ilmenite, chromite, and vermiculite.</Description>
+        <DisplayName>Igneous intrusions</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenEvaporite" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata marine evaporite deposits rich in gypsum and rock salt.</Description>
+        <DisplayName>Evaporite deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <!-- TODO: Brine
+      PFAAGeologica:brine is minecraft:stained_glass:0
+      PFAAGeologica:spring:7 minecraft:stained_glass:6
+      <OptionChoice name="StrataGenBrines" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown_dynamic&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+      <OptionChoice name="StrataGenBrineWells" default=":=?StrataGenBrines" displayState=":=if(?StrataGenRocks &amp; ?StrataGenBrines, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+      -->
+
+      <OptionChoice name="StrataGenBrines" default=":=false" displayState=":=if(?StrataGenRocks, &quot;shown_dynamic&quot;, &quot;hidden&quot;)" displayGroup="groupInternal">
+        <Description>Generate pools of water concentrated with salts.</Description>
+        <DisplayName>Brines (+)</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenBrineWells" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataGenBrines, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupInternal">
+        <Description>Generate renewing wells of brine.</Description>
+        <DisplayName>Brine wells</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenVMS" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata Volcagenic Massive Sulfide deposits, rich in sulfide ores like sphalerite, galena, and chalcopyrite.</Description>
+        <DisplayName>VMS deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenSEDEX" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate SEDimentary EXhalative deposits rich in sphalerite, galena, scheelite, and chalcopyrite.</Description>
+        <DisplayName>SEDEX deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenPegmatite" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata pegmatite veins with a rich assortment of minerals.</Description>
+        <DisplayName>Pegmatite veins</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenCarbonate" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata carbonate deposits with minerals like magnesite, soapstone, wollastonite, sphalerite, and galena.</Description>
+        <DisplayName>Carbonate ore deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenBarite" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata barite deposits.</Description>
+        <DisplayName>Barite deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenMarine" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata marine-related deposits.</Description>
+        <DisplayName>Marine-related deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenGraphite" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata graphite deposits in various patterns.</Description>
+        <DisplayName>Graphite deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+      <OptionChoice name="StrataGenClay" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <Description>Generate Strata mineral clay deposits, including bentonite, palygorskite, and kaolinite.</Description>
+        <DisplayName>Mineral clay deposits</DisplayName>
+        <Choice value="true" displayValue="On" />
+        <Choice value="false" displayValue="Off" />
+      </OptionChoice>
+
+    </ConfigSection>
+
+    <!-- Ore options -->
+    <ConfigSection>
+
+      <!-- Vanilla ores -->
+      <ConfigSection>
+
+        <OptionChoice name="StrataVanillaOverride" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown_dynamic&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>If Strata generates a vanilla ore, override the corresponding generation from vanilla or other mods. It is most efficient, but not necessary, to also (or alternatively) disable the COG generation of these ores, as well as generation options in mod configurations.</Description>
+          <DisplayName>Override vanilla ores (+)</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="No" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenCoal" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of coal.</Description>
+          <DisplayName>Coal</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="Static replacement" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenDiamond" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of diamonds.</Description>
+          <DisplayName>Diamonds</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="Static replacement" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenEmerald" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of emeralds.</Description>
+          <DisplayName>Emeralds</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="Static replacement" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenGold" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of gold.</Description>
+          <DisplayName>Gold</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="Static replacement" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenIron" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride, &quot;shown_dynamic&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of iron (hematite, magnetite).</Description>
+          <DisplayName>Iron (+)</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="Static replacement" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenBIF" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride &amp; ?StrataGenIron" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride &amp; ?StrataGenIron, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate sedimentary banded iron formations, primarily of hematite, with some recoverable magnetite.</Description>
+          <DisplayName>Banded Iron Formations</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenLapis" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of lapis lazuli.</Description>
+          <DisplayName>Lapis Lazuli</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="Static replacement" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenRedstone" default=":=?StrataGenRocks &amp; ?StrataVanillaOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of redstone.</Description>
+          <DisplayName>Redstone</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="Static replacement" />
+        </OptionChoice>
+
+      </ConfigSection>
+
+      <!-- Mod ores -->
+      <ConfigSection>
+
+        <OptionChoice name="StrataOverride" default=":=?StrataGenRocks" displayState=":=if(?StrataGenRocks, &quot;shown_dynamic&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>If Strata generates a non-vanilla ore, override the corresponding generation from other mods. It is most efficient, but not necessary, to also (or alternatively) disable the COG generation of these ores, as well as generation options in mod configurations.</Description>
+          <DisplayName>Override mod ores (+)</DisplayName>
+          <Choice value="true" displayValue="Yes" />
+          <Choice value="false" displayValue="No" />
+        </OptionChoice>
+
+        <!-- TOOD: Malachite is missing from PFAA Geologica and therefore Strata at this point -->
+        <OptionChoice name="StrataGenCopper" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of copper ore (chalcopyrite, malachite).</Description>
+          <DisplayName>Copper (Chalcopyrite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenTin" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of tin ore (cassiterite).</Description>
+          <DisplayName>Tin (Cassiterite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenAluminum" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of aluminium ore (bauxite).</Description>
+          <DisplayName>Aluminium (Bauxite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenMercury" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of mercury ore (cinnabar).</Description>
+          <DisplayName>Mercury (Cinnabar)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenLeadZinc" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of zinc and lead ore (sphalerite, galena).</Description>
+          <DisplayName>Lead/Zinc</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenTungsten" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of tungsten ore (scheelite, wolframite).</Description>
+          <DisplayName>Tungsten</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenNickel" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of nickel ore (pentlandite, garnierite).</Description>
+          <DisplayName>Nickel (Pentlandite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenChromium" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of chromium ore (chromite).</Description>
+          <DisplayName>Chromium (Chromite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenTitanium" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of titanium ore (ilmenite).</Description>
+          <DisplayName>Titanium (Ilmenite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenMolybdenum" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of molybdenum ore (molybdenite).</Description>
+          <DisplayName>Molybdenum (Molybdenite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenManganese" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of manganese ore (pyrolusite).</Description>
+          <DisplayName>Manganese (Pyrolusite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenMagnesium" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of magnesium ore (dolomite, magnesite).</Description>
+          <DisplayName>Magnesium</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenUranium" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of uranium ore (uraninite).</Description>
+          <DisplayName>Uranium (Uraninite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenApatite" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of apatite (phosphate ore).</Description>
+          <DisplayName>Phosphate (Apatite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenSalt" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of salt ore (halite).</Description>
+          <DisplayName>Salt (Halite)</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <OptionChoice name="StrataGenQuartz" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Generate Strata distributions of quartz and associated minerals.</Description>
+          <DisplayName>Quartz</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+        <!-- TODO: Petroleum
+        PFAAGeologica:extraHeavyOil minecraft:stained_glass:1
+        PFAAGeologica:heavyOil minecraft:stained_glass:2
+        PFAAGeologica:lightOil minecraft:stained_glass:3
+        PFAAGeologica:mediumOil minecraft:stained_glass:4
+        PFAAGeologica:naturalGas minecraft:stained_glass:5
+        <OptionChoice name="StrataGenPetroleum" default=":=?StrataGenRocks &amp; ?StrataOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        -->
+
+        <OptionChoice name="StrataGenPetroleum" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupInternal">
+          <Description>Generate petroleum resources, including crude oil (four types), oil sand, oil shale, and natural gas.</Description>
+          <DisplayName>Petroleum</DisplayName>
+          <Choice value="true" displayValue="On" />
+          <Choice value="false" displayValue="Off" />
+        </OptionChoice>
+
+      </ConfigSection>
+
+    </ConfigSection>
+
+  </ConfigSection>
+
+  <!-- Biome sets -->
+  <ConfigSection>
+
+    <!-- BOP -->
+    <BiomeSet name="shieldVolcano">
+      <Biome name="Volcano" />
+      <Biome name="Deadlands" />
+    </BiomeSet>
+    <BiomeSet name="stratovolcano">
+      <Biome name="Extreme\s*Hills.*" />
+    </BiomeSet>
+    <!-- BOP -->
+    <BiomeSet name="caldera">
+      <Biome name="Hot Springs" />
+    </BiomeSet>
+    <BiomeSet name="felsic">
+      <BiomeSet inherits="stratovolcano" />
+      <BiomeSet inherits="caldera" />
+    </BiomeSet>
+    <BiomeSet name="volcanic">
+      <BiomeSet inherits="felsic" />
+      <BiomeSet inherits="shieldVolcano" />
+    </BiomeSet>
+    <!-- BOP -->
+    <BiomeSet name="dome">
+      <Biome name="glacier" />
+    </BiomeSet>
+    <BiomeSet name="folded">
+      <!-- BOP -->
+      <Biome name="alps" />
+      <Biome name="highlands" />
+      <Biome name="crag" />
+      <Biome name="ice mountains" />
+    </BiomeSet>
+    <BiomeSet name="island">
+      <BiomeType name="mushroom" />
+    </BiomeSet>
+    <BiomeSet name="oceanic">
+      <BiomeType name="ocean" />
+      <BiomeSet inherits="island" />
+    </BiomeSet>
+    <BiomeSet name="sedocean">
+      <BiomeType name="ocean" />
+      <Biome name="deep ocean" weight="-1" />
+    </BiomeSet>
+    <BiomeSet name="continental">
+      <Biome name=".*" />
+      <BiomeSet inherits="oceanic" weight="-1" />
+      <BiomeSet inherits="volcanic" weight="-1" />
+    </BiomeSet>
+    <BiomeSet name="inland" inherits="continental">
+      <BiomeType name="beach" weight="-1" />
+    </BiomeSet>
+    <BiomeSet name="frozen-continental">
+      <BiomeType name="cold" />
+      <BiomeType name="ocean" weight="-1" />
+    </BiomeSet>
+    <BiomeSet name="mesa">
+      <BiomeType name="mesa" />
+      <!-- Forge misses the mutated mesas -->
+      <Biome name="Mesa .*M" />
+    </BiomeSet>
+
+  </ConfigSection>
+
+  <!-- Common presets -->
+  <ConfigSection>
+
+    <SubstitutePreset name="PresetPrimaryStratum">
+      <!-- 1.12*: Should we worry about polished stones generating as part of structures? -->
+      <!-- 1.13+: https://minecraft.gamepedia.com/Java_Edition_1.13/Flattening -->
+      <Replaces block="minecraft:stone" />
+      <IfCondition condition=":=?StrataVanillaOverride &amp; ?StrataActive">
+        <IfCondition condition=":=?StrataGenCoal">
+          <ReplacesOre block="oreCoal" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenDiamond">
+          <ReplacesOre block="oreDiamond" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenEmerald">
+          <ReplacesOre block="oreEmerald" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenGold">
+          <ReplacesOre block="oreGold" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenIron">
+          <ReplacesOre block="oreIron" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenLapis">
+          <ReplacesOre block="oreLapis" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenRedstone">
+          <ReplacesOre block="oreRedstone" />
+        </IfCondition>
+      </IfCondition>
+      <IfCondition condition=":=?StrataOverride &amp; ?StrataActive">
+        <IfCondition condition=":=?StrataGenCopper">
+          <ReplacesOre block="oreCopper" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenTin">
+          <ReplacesOre block="oreTin" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenAluminum">
+          <ReplacesOre block="oreBauxite" />
+          <ReplacesOre block="oreAluminum" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenMercury">
+          <ReplacesOre block="oreCinnabar" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenLeadZinc">
+          <ReplacesOre block="oreLead" />
+          <ReplacesOre block="oreZinc" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenNickel">
+          <ReplacesOre block="oreNickel" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenChromium">
+          <ReplacesOre block="oreChromium" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenTitanium">
+          <ReplacesOre block="oreTitanium" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenMolybdenum">
+          <ReplacesOre block="oreMolybdenum" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenMagnesium">
+          <ReplacesOre block="oreMagnesium" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenManganese">
+          <ReplacesOre block="oreManganese" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenSalt">
+          <ReplacesOre block="oreSalt" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenUranium">
+          <ReplacesOre block="oreUranium" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenApatite">
+          <ReplacesOre block="oreApatite" />
+        </IfCondition>
+        <!-- TODO: oreCaesium/oreCesium, oreLithium, oreTantalum, oreVanadium, oreBarium, oreStrontium, oreArsenic -->
+        <IfCondition condition=":=?StrataGenRocks">
+          <ReplacesOre block="blockMarble" />
+          <ReplacesOre block="blockLimestone" />
+        </IfCondition>
+      </IfCondition>
+    </SubstitutePreset>
+
+    <SubstitutePreset name="PresetPrimaryStratumContinental" inherits="PresetPrimaryStratum">
+      <Description>The continental crust is fundamentally different from the oceanic crust, and from volcanic regions. It is formed via plate subduction, where water from the ocean is intermixed, causing partial melting and the formation of felsic igneous rock (granite). Also, there is more substantial accumulation of sediment relative to the ocean.</Description>
+      <BiomeSet inherits="continental" />
+      <BiomeSet inherits="folded" weight="-1" />
+    </SubstitutePreset>
+
+    <SubstitutePreset name="PresetPrimaryStratumOceanic" inherits="PresetPrimaryStratum">
+      <Description>The ocean crust is formed from partial melting of peridotite from the mantel. This results in gabbro intrusions and extrusions in the form of basalt. Islands are formed from accumulation of basalt.</Description>
+      <BiomeSet inherits="oceanic" />
+      <BiomeSet inherits="folded" />
+    </SubstitutePreset>
+
+    <SubstitutePreset name="PresetPrimaryStratumVolcanic" inherits="PresetPrimaryStratum">
+      <Description>Numerous igneous intrusions will be found beneath volcanoes. These volcanoes are assumed to be formed in subduction zones, so they will be layered with felsic extrusions, like rhyolite and andesite.</Description>
+      <BiomeSet inherits="felsic" />
+    </SubstitutePreset>
+
+    <CloudPreset name="PresetStratum">
+      <Description>Solid clouds that form layers of rock and minerals. Individual layer generators are expected to modify CloudHeight, CouldThickness, and DistributionFrequency settings.</Description>
+      <Setting name="DistributionFrequency" avg="1.0" />
+      <Setting name="CloudRadius" avg="16" range="0" type="normal" />
+      <Setting name="CloudThickness" range="3" type="normal" />
+      <Setting name="CloudHeight" range="2" type="uniform" />
+      <Setting name="OreDensity" avg="1.0" />
+      <Setting name="OreVolumeNoiseCutoff" avg="0" />
+      <Replaces block="minecraft:stone" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetStratumContinental" inherits="PresetStratum">
+      <BiomeSet inherits="continental" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetStratumOceanic" inherits="PresetStratum">
+      <BiomeSet inherits="oceanic" />
+      <BiomeSet inherits="folded" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetStratumVolcanic" inherits="PresetStratum">
+      <BiomeSet inherits="felsic" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetRockVeins">
+      <Description>Thick veins of rock, usually formed through hydrothermal processes.</Description>
+      <Setting name="MotherlodeRangeLimit" avg="8" range="5" />
+      <Setting name="MotherlodeSize" avg="4" />
+      <Setting name="SegmentRadius" avg="3" range="2" type="normal" />
+    </VeinsPreset>
+
+    <VeinsPreset name="PresetIntrusiveVeins" inherits="PresetRockVeins" drawWireframe="false" wireframeColor="0xFF00AA00">
+      <Setting name="MotherlodeFrequency" avg="0.02" />
+      <Setting name="MotherlodeHeight" avg="30" range="30" />
+      <BiomeSet inherits="continental" weight="0.5" />
+      <BiomeSet inherits="oceanic" />
+      <BiomeSet inherits="volcanic" />
+      <ReplacesOre block="stone" />
+    </VeinsPreset>
+
+  </ConfigSection>
+
+  <!-- Common rock presets -->
+  <ConfigSection>
+
+    <!-- Igneous -->
+    <ConfigSection>
+
+      <Description>Igneous rocks are either intrusive (from magma) or extrusive (from lava). There is a range of silicate content, denoted by the terms mafic, intermediate, and felsic in increasing order. Extrusive rocks will be limited to volcanic regions, i.e, islands and the extreme hills. Islands consist of mafic basalt, and one will find only the more felsic andesite and rhyolite in the mountains. Igneous intrusions lay deep under the surface of every biome.</Description>
+
+      <!-- Diorite -->
+      <ConfigSection>
+        <SubstitutePreset name="PresetDioriteContinental" block="strata:diorite" inherits="PresetPrimaryStratumContinental" minHeight="0" maxHeight="18" />
+        <SubstitutePreset name="PresetDioriteVolcanic" block="strata:diorite" inherits="PresetPrimaryStratumVolcanic" minHeight="15" maxHeight="38" />
+        <VeinsPreset name="PresetDioriteVeins" inherits="PresetIntrusiveVeins" drawWireframe="false" wireframeColor="0xFF222222" block="strata:diorite" />
+      </ConfigSection>
+
+      <!-- Gabbro -->
+      <ConfigSection>
+        <SubstitutePreset name="PresetGabbroVolcanic" block="strata:gabbro" inherits="PresetPrimaryStratumVolcanic" minHeight="0" maxHeight="12" />
+        <SubstitutePreset name="PresetGabbroShieldVolcano" block="strata:gabbro" inherits="PresetPrimaryStratumContinental" minHeight="0" maxHeight="37">
+          <BiomeSet inherits="shieldVolcano" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetGabbroOceanic" block="strata:gabbro" inherits="PresetPrimaryStratumOceanic" minHeight="0" maxHeight="12" />
+        <VeinsPreset name="PresetGabbroVeins" inherits="PresetIntrusiveVeins" drawWireframe="false" wireframeColor="0xFFAA5555" block="strata:gabbro" />
+      </ConfigSection>
+
+      <!-- Granite -->
+      <ConfigSection>
+        <SubstitutePreset name="PresetGraniteContinental" block="strata:granite" inherits="PresetPrimaryStratumContinental" minHeight="21" maxHeight="44" />
+        <SubstitutePreset name="PresetGraniteVolcanic" block="strata:granite" inherits="PresetPrimaryStratumVolcanic" minHeight="41" maxHeight="73" />
+        <SubstitutePreset name="PresetGraniteVolcanicCobble" block="strata:granite_cobble" inherits="PresetGraniteVolcanic" maxHeight="75">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetGraniteShield" block="strata:granite" inherits="PresetPrimaryStratum" minHeight="41" maxHeight="80">
+          <Biome name="shield" />
+          <!-- BOP -->
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetGraniteShieldCobble" block="strata:granite_cobble" inherits="PresetGraniteShield">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetGraniteDome" block="strata:granite" inherits="PresetPrimaryStratum" minHeight="77" maxHeight="130">
+          <BiomeSet inherits="dome" />
+          <Replaces block="minecraft:stone" />
+          <Replaces block="minecraft:dirt" />
+          <Replaces block="minecraft:grass" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetGraniteDomeCobble" block="strata:granite_cobble" inherits="PresetGraniteDome">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+      <!-- Andesite -->
+      <ConfigSection>
+        <SubstitutePreset name="PresetAndesite" block="strata:andesite" inherits="PresetPrimaryStratumVolcanic" minHeight="76" maxHeight="89" />
+        <SubstitutePreset name="PresetAndesiteCobble" block="strata:andesite_cobble" inherits="PresetAndesite" maxHeight="91">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+      <!-- Basalt -->
+      <ConfigSection>
+        <SubstitutePreset name="PresetBasalt" block="strata:basalt" inherits="PresetPrimaryStratumOceanic" minHeight="15" maxHeight="34" />
+        <SubstitutePreset name="PresetBasaltShieldVolcano" block="strata:basalt" inherits="PresetPrimaryStratumContinental" minHeight="40" maxHeight="255">
+          <BiomeSet inherits="shieldVolcano" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetBasaltShieldVolcanoCobble" block="strata:basalt_cobble" inherits="PresetBasaltShieldVolcano">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetBasaltIsland" block="strata:basalt" inherits="PresetPrimaryStratumOceanic" minHeight="52" maxHeight="120">
+          <BiomeSet inherits="oceanic" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetBasaltIslandCobble" block="strata:basalt_cobble" inherits="PresetBasaltIsland">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetBasaltMesa" block="strata:basalt" inherits="PresetPrimaryStratumContinental" minHeight="91" maxHeight="93">
+          <BiomeSet inherits="mesa" />
+          <Replaces block="minecraft:stone" />
+          <Replaces block="minecraft:hardened_clay" />
+          <Replaces block="minecraft:stained_hardened_clay" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetBasaltMesaCobble" block="strata:basalt_cobble" inherits="PresetBasaltMesa">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+      <!-- Rhyolite -->
+      <ConfigSection>
+        <SubstitutePreset name="PresetRhyolite" block="strata:rhyolite" inherits="PresetPrimaryStratumVolcanic" minHeight="92" />
+        <SubstitutePreset name="PresetRhyoliteCobble" block="strata:rhyolite_cobble" inherits="PresetRhyolite">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetRhyoliteCaldera" block="strata:rhyolite" inherits="PresetPrimaryStratum" minHeight="47" maxHeight="90">
+          <BiomeSet inherits="caldera" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetRhyoliteCalderaCobble" block="strata:rhyolite_cobble" inherits="PresetRhyoliteCaldera">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+    </ConfigSection>
+
+    <!-- Sedimentary -->
+    <ConfigSection>
+
+      <Description>Sedimentary rocks include mudstone, claystone, limestone, conglomerate/breccia, and sandstone, among others that we exclude for simplicity. These will be deposited everywhere except the volcanic zones.</Description>
+
+      <SubstitutePreset name="PresetPrimarySedimentaryContinental" inherits="PresetPrimaryStratumContinental">
+        <BiomeSet inherits="continental" />
+      </SubstitutePreset>
+
+      <SubstitutePreset name="PresetPrimarySedimentaryMesa" inherits="PresetPrimarySedimentaryContinental">
+        <BiomeSet inherits="mesa" />
+        <Replaces block="minecraft:stone" />
+        <Replaces block="minecraft:hardened_clay" />
+        <Replaces block="minecraft:stained_hardened_clay" />
+      </SubstitutePreset>
+
+      <CloudPreset name="PresetSedimentaryContinental" inherits="PresetStratumContinental">
+        <BiomeSet inherits="continental" />
+      </CloudPreset>
+
+      <CloudPreset name="PresetSedimentaryContinentalMinor" inherits="PresetSedimentaryContinental">
+        <Setting name="CloudThickness" avg="4" range="2" />
+        <Setting name="CloudHeight" avg=":= 75/64 * dimension.groundLevel" range="30" />
+        <Replaces block="minecraft:stone" />
+        <Replaces block="strata:mudstone" />
+        <Replaces block="strata:limestone" />
+        <Replaces block="strata:granite" />
+      </CloudPreset>
+
+      <SubstitutePreset name="PresetPrimarySedimentaryOceanic" inherits="PresetPrimaryStratum" minHeight="37" maxHeight="49">
+        <BiomeType name="ocean" />
+        <BiomeSet inherits="folded" />
+        <Replaces block="minecraft:stone" />
+        <Replaces block="minecraft:dirt" />
+      </SubstitutePreset>
+
+      <CloudPreset name="PresetSedimentaryOceanic" inherits="PresetStratumOceanic">
+        <Setting name="CloudThickness" avg="5" />
+        <Setting name="CloudHeight" avg="45" />
+        <Replaces block="minecraft:stone" />
+        <Replaces block="minecraft:dirt" />
+        <Replaces block="strata:limestone" />
+      </CloudPreset>
+
+      <!-- Breccia -->
+      <ConfigSection>
+        <CloudPreset name="PresetBreccia" block="strata:breccia" inherits="PresetSedimentaryContinentalMinor">
+          <Setting name="DistributionFrequency" avg="0.20" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Claystone -->
+      <!-- FIXME: carbonatite? Did I mess up the mapping or was this wrong originally? -->
+      <ConfigSection>
+        <CloudPreset name="PresetClaystone" block="strata:carbonatite" inherits="PresetSedimentaryContinentalMinor">
+          <Setting name="DistributionFrequency" avg="0.20" />
+        </CloudPreset>
+        <CloudPreset name="PresetClaystoneOceanic" block="strata:carbonatite" inherits="PresetSedimentaryOceanic">
+          <Setting name="DistributionFrequency" avg="0.02" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Conglomerate -->
+      <ConfigSection>
+        <CloudPreset name="PresetConglomerate" block="strata:conglomerate" inherits="PresetSedimentaryContinentalMinor">
+          <Setting name="DistributionFrequency" avg="0.20" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Mudstone -->
+      <ConfigSection>
+        <SubstitutePreset name="PresetMudstone" block="strata:mudstone" inherits="PresetPrimarySedimentaryContinental" minHeight="47" maxHeight="74" />
+        <!--
+            maxHeight=":= if(dimension.generator='ATGLevelSource', 89, 74)"
+        -->
+        <SubstitutePreset name="PresetMudstoneCobble" block="strata:mudstone_cobble" inherits="PresetMudstone" maxHeight="76">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <CloudPreset name="PresetMudstoneOceanic" block="strata:mudstone" inherits="PresetSedimentaryOceanic">
+          <Setting name="DistributionFrequency" avg="0.10" />
+        </CloudPreset>
+        <SubstitutePreset name="PresetMudstoneMesa" block="strata:mudstone" inherits="PresetPrimarySedimentaryMesa" minHeight="78" maxHeight="80" />
+        <SubstitutePreset name="PresetMudstoneMesaCobble" block="strata:mudstone_cobble" inherits="PresetMudstoneMesa">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+      <!-- Limestone -->
+      <ConfigSection>
+        <CloudPreset name="PresetLimestoneLower" block="strata:limestone" inherits="PresetSedimentaryContinentalMinor">
+          <Setting name="DistributionFrequency" avg="0.20" />
+        </CloudPreset>
+        <SubstitutePreset name="PresetLimestoneOceanic" block="strata:limestone" inherits="PresetPrimarySedimentaryOceanic" />
+        <SubstitutePreset name="PresetLimestoneHills" block="strata:limestone" inherits="PresetPrimarySedimentaryContinental" minHeight="77" maxHeight="110" />
+        <SubstitutePreset name="PresetLimestoneHillsCobble" block="strata:limestone_cobble" inherits="PresetLimestoneHills" maxHeight="112">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetLimestoneMesa" block="strata:limestone" inherits="PresetPrimarySedimentaryMesa" minHeight="73" maxHeight="77" />
+        <SubstitutePreset name="PresetLimestoneMesaCobble" block="strata:limestone_cobble" inherits="PresetLimestoneMesa">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+      <!-- Sandstone -->
+      <ConfigSection>
+        <CloudPreset name="PresetSandstone" block="strata:sandstone" inherits="PresetSedimentaryContinentalMinor">
+          <Setting name="DistributionFrequency" avg="0.40" />
+        </CloudPreset>
+        <CloudPreset name="PresetSandstoneOceanic" block="strata:sandstone" inherits="PresetSedimentaryOceanic">
+          <Setting name="DistributionFrequency" avg="0.04" />
+        </CloudPreset>
+        <SubstitutePreset name="PresetSandstoneHills" block="strata:sandstone" inherits="PresetPrimarySedimentaryContinental" minHeight="113" maxHeight="150" />
+        <SubstitutePreset name="PresetSandstoneHillsCobble" block="strata:sandstone_cobble" inherits="PresetSandstoneHills" maxHeight="152">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetSandstoneMesa" block="strata:sandstone" inherits="PresetPrimarySedimentaryMesa" minHeight="67" maxHeight="72" />
+        <SubstitutePreset name="PresetSandstoneMesaCobble" block="strata:sandstone_cobble" inherits="PresetSandstoneMesa">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetSandstoneMesa2" block="strata:sandstone" inherits="PresetPrimarySedimentaryMesa" minHeight="81" maxHeight="83" />
+        <SubstitutePreset name="PresetSandstoneMesaCobble2" block="strata:sandstone_cobble" inherits="PresetSandstoneMesa2">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetRedSandstoneMesa" block="strata:red_sandstone" inherits="PresetPrimarySedimentaryMesa" minHeight="84" maxHeight="90" />
+        <SubstitutePreset name="PresetRedSandstoneMesaCobble" block="strata:red_sandstone_cobble" inherits="PresetSandstoneMesa">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetRedSandstoneMesaTop" block="strata:red_sandstone" inherits="PresetPrimarySedimentaryMesa" minHeight="94" maxHeight="105" />
+        <SubstitutePreset name="PresetRedSandstoneMesaTopCobble" block="strata:red_sandstone_cobble" inherits="PresetRedSandstoneMesaTop">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+    </ConfigSection>
+
+    <!-- Metamorphic -->
+    <ConfigSection>
+
+      <Description>Metamorphic rock has been formed from other rock. The changes are usually brought about through high temperature and pressure. A combination of these converts sedimentary rocks to slate, then schist, and finally gneiss. Increased temperature due to magma contact forms marble, hornfel, and quartzite. Pegmatite and serpentinite are created through hydrothermal activity.</Description>
+
+      <CloudPreset name="PresetMetamorphicContinental" inherits="PresetStratumContinental">
+        <Setting name="DistributionFrequency" avg="0.02" />
+        <Setting name="CloudHeight" avg="40" range="5" />
+        <Setting name="CloudThickness" avg="3" range="1" />
+        <Replaces block="minecraft:stone" />
+        <Replaces block="strata:mudstone" />
+        <Replaces block="strata:granite" />
+        <Replaces block="strata:diorite" />
+      </CloudPreset>
+
+      <CloudPreset name="PresetMetamorphicVolcanic" inherits="PresetStratumVolcanic">
+        <Setting name="DistributionFrequency" avg="0.2" />
+        <Setting name="CloudThickness" avg="4" range="2" />
+        <Replaces block="minecraft:stone" />
+        <Replaces block="strata:diorite" />
+        <Replaces block="strata:andesite" />
+        <Replaces block="strata:granite" />
+      </CloudPreset>
+
+      <CloudPreset name="PresetMetamorphicOceanic" inherits="PresetStratumOceanic">
+        <Setting name="DistributionFrequency" avg="0.1" />
+        <Setting name="CloudThickness" avg="3" range="2" />
+        <Replaces block="minecraft:stone" />
+        <Replaces block="strata:gabbro" />
+        <Replaces block="strata:basalt" />
+      </CloudPreset>
+
+      <!-- Slate -->
+      <ConfigSection>
+        <CloudPreset name="PresetSlate" block="strata:slate" inherits="PresetMetamorphicContinental">
+          <Setting name="DistributionFrequency" avg="0.2" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Schist -->
+      <ConfigSection>
+        <CloudPreset name="PresetSchist" block="strata:schist" inherits="PresetMetamorphicContinental">
+          <Setting name="CloudHeight" avg="30" range="10" />
+          <Setting name="DistributionFrequency" avg="0.1" />
+        </CloudPreset>
+        <CloudPreset name="PresetSchistVolcanic" block="strata:schist" inherits="PresetMetamorphicVolcanic">
+          <Setting name="CloudHeight" avg="60" range="20" />
+        </CloudPreset>
+        <CloudPreset name="PresetSchistOceanic" block="strata:schist" inherits="PresetMetamorphicOceanic">
+          <Setting name="CloudHeight" avg="15" range="10" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Skarn -->
+      <ConfigSection>
+        <CloudPreset name="PresetSkarn" inherits="PresetMetamorphicContinental">
+          <Replaces block="minecraft:stone" />
+          <Replaces block="strata:mudstone" />
+          <Replaces block="strata:granite" />
+          <Replaces block="strata:limestone" />
+          <Replaces block="strata:basalt" />
+          <Setting name="DistributionFrequency" avg="0.01" />
+          <OreBlock block="strata:skarn" weight="0.9" />
+          <OreBlock block="strata:limestone" weight="0.05" />
+          <OreBlock block="strata:marble" weight="0.045" />
+        </CloudPreset>
+        <CloudPreset name="PresetSkarnOceanic" inherits="PresetSkarn">
+          <Setting name="CloudHeight" avg=":= 35/64 * dimension.groundLevel" range=":= 3/64 * dimension.groundLevel" />
+          <Setting name="DistributionFrequency" avg="0.01" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Gneiss -->
+      <ConfigSection>
+        <CloudPreset name="PresetGneiss" block="strata:gneiss" inherits="PresetMetamorphicContinental">
+          <Setting name="CloudHeight" avg="20" range="10" />
+          <Setting name="DistributionFrequency" avg="0.05" />
+        </CloudPreset>
+        <CloudPreset name="PresetGneissVolcanic" block="strata:gneiss" inherits="PresetMetamorphicVolcanic">
+          <Setting name="CloudHeight" avg="25" range="20" />
+        </CloudPreset>
+        <CloudPreset name="PresetGneissShield" block="strata:gneiss" inherits="PresetMetamorphicContinental">
+          <Setting name="CloudHeight" avg="55" range="10" />
+          <Biome name="shield" />
+        </CloudPreset>
+        <SubstitutePreset name="PresetGneissTops" block="strata:gneiss" inherits="PresetPrimarySedimentaryContinental" minHeight="153" maxHeight="255">
+          <Biome name="alps" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetGneissTopsCobble" block="strata:gneiss_cobble" inherits="PresetGneissTops">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+      <!-- Greenschist -->
+      <ConfigSection>
+        <CloudPreset name="PresetGreenschistContinental" block="strata:greenschist" inherits="PresetSchist">
+          <Setting name="DistributionFrequency" avg="0.001" />
+        </CloudPreset>
+        <CloudPreset name="PresetGreenschistVolcanic" block="strata:greenschist" inherits="PresetStratumVolcanic">
+          <Setting name="DistributionFrequency" avg="0.02" />
+          <Setting name="CloudHeight" avg="10" range="5" />
+          <Setting name="CloudThickness" avg="3" range="1" />
+          <Replaces block="minecraft:stone" />
+          <Replaces block="strata:gabbro" />
+        </CloudPreset>
+        <CloudPreset name="PresetGreenschistOceanic" block="strata:greenschist" inherits="PresetStratumOceanic">
+          <Setting name="DistributionFrequency" avg="0.05" />
+          <Setting name="CloudHeight" avg="15" range="10" />
+          <Setting name="CloudThickness" avg="3" range="1" />
+          <Replaces block="minecraft:stone" />
+          <Replaces block="strata:gabbro" />
+          <Replaces block="strata:basalt" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Marble -->
+      <ConfigSection>
+        <CloudPreset name="PresetMarble" inherits="PresetMetamorphicContinental">
+          <OreBlock block="strata:skarn" weight="0.05" />
+          <OreBlock block="strata:limestone" weight="0.05" />
+          <OreBlock block="strata:marble" weight="0.9" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Hornfels -->
+      <ConfigSection>
+        <CloudPreset name="PresetHornfels" inherits="PresetMetamorphicContinental">
+          <OreBlock block="strata:carbonatite" weight="0.10" />
+          <OreBlock block="strata:hornfels" weight="0.9" />
+        </CloudPreset>
+      </ConfigSection>
+
+      <!-- Quartzite -->
+      <ConfigSection>
+        <CloudPreset name="PresetQuartzite" block="strata:quartzite" inherits="PresetMetamorphicContinental" />
+        <SubstitutePreset name="PresetQuartziteTops" block="strata:quartzite" inherits="PresetPrimarySedimentaryContinental" minHeight="153" maxHeight="255" />
+        <SubstitutePreset name="PresetQuartziteTopsCobble" block="strata:quartzite_cobble" inherits="PresetQuartziteTops">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+        <SubstitutePreset name="PresetQuartziteMesa" block="strata:quartzite" inherits="PresetPrimarySedimentaryMesa" minHeight="64" maxHeight="66" />
+        <SubstitutePreset name="PresetQuartziteMesaCobble" block="strata:quartzite_cobble" inherits="PresetQuartziteMesa">
+          <ReplacesOre block="cobblestone" />
+        </SubstitutePreset>
+      </ConfigSection>
+
+    </ConfigSection>
+
+    <!-- Transitions -->
+    <ConfigSection>
+      <SubstitutePreset name="PresetGabbroDiorite" inherits="PresetPrimaryStratumVolcanic" minHeight="13" maxHeight="14">
+        <OreBlock block="strata:diorite" weight="0.5" />
+        <OreBlock block="strata:gabbro" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetDioriteGraniteContinental" inherits="PresetPrimaryStratumContinental" minHeight="19" maxHeight="20">
+        <OreBlock block="strata:diorite" weight="0.5" />
+        <OreBlock block="strata:granite" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetDioriteGraniteVolcanic" inherits="PresetPrimaryStratumVolcanic" minHeight="39" maxHeight="40">
+        <OreBlock block="strata:diorite" weight="0.5" />
+        <OreBlock block="strata:granite" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetGraniteAndesite" inherits="PresetPrimaryStratumVolcanic" minHeight="74" maxHeight="75">
+        <OreBlock block="strata:andesite" weight="0.5" />
+        <OreBlock block="strata:granite" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetAndesiteRhyolite" inherits="PresetPrimaryStratumVolcanic" minHeight="90" maxHeight="91">
+        <OreBlock block="strata:andesite" weight="0.5" />
+        <OreBlock block="strata:rhyolite" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetGabbroBasalt" inherits="PresetPrimaryStratumOceanic" minHeight="13" maxHeight="14">
+        <OreBlock block="strata:basalt" weight="0.5" />
+        <OreBlock block="strata:gabbro" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetGabbroBasaltShieldVolcano" inherits="PresetPrimaryStratumContinental" minHeight="38" maxHeight="39">
+        <OreBlock block="strata:basalt" weight="0.5" />
+        <OreBlock block="strata:gabbro" weight="0.5" />
+        <BiomeSet inherits="shieldVolcano" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetBasaltLimestone" inherits="PresetPrimaryStratumOceanic" minHeight="35" maxHeight="36">
+        <OreBlock block="strata:basalt" weight="0.5" />
+        <OreBlock block="strata:limestone" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetLimestoneBasaltIsland" inherits="PresetPrimaryStratumOceanic" minHeight="50" maxHeight="51">
+        <OreBlock block="strata:basalt" weight="0.5" />
+        <OreBlock block="strata:limestone" weight="0.5" />
+        <BiomeSet inherits="oceanic" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetGraniteMudstone" inherits="PresetPrimaryStratumContinental" minHeight="45" maxHeight="46">
+        <OreBlock block="strata:granite" weight="0.5" />
+        <OreBlock block="strata:mudstone" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetGraniteRhyolite" inherits="PresetPrimaryStratum" minHeight="45" maxHeight="46">
+        <OreBlock block="strata:granite" weight="0.5" />
+        <OreBlock block="strata:rhyolite" weight="0.5" />
+        <BiomeSet inherits="caldera" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetLimestoneMudstone" inherits="PresetPrimaryStratum" minHeight="45" maxHeight="46">
+        <OreBlock block="strata:mudstone" weight="0.5" />
+        <OreBlock block="strata:limestone" weight="0.5" />
+        <BiomeSet inherits="folded" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetMudstoneLimestone" inherits="PresetPrimarySedimentaryContinental" minHeight="75" maxHeight="76">
+        <OreBlock block="strata:mudstone" weight="0.5" />
+        <OreBlock block="strata:limestone" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetMudstoneGranite" inherits="PresetPrimaryStratum" minHeight="75" maxHeight="76">
+        <OreBlock block="strata:mudstone" weight="0.5" />
+        <OreBlock block="strata:granite" weight="0.5" />
+        <BiomeSet inherits="dome" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetLimestoneSandstone" inherits="PresetPrimarySedimentaryContinental" minHeight="111" maxHeight="112">
+        <OreBlock block="strata:sandstone" weight="0.5" />
+        <OreBlock block="strata:limestone" weight="0.5" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetSandstoneGneiss" inherits="PresetPrimarySedimentaryContinental" minHeight="151" maxHeight="152">
+        <OreBlock block="strata:sandstone" weight="0.5" />
+        <OreBlock block="strata:gneiss" weight="0.5" />
+        <Biome name="alps" />
+      </SubstitutePreset>
+      <SubstitutePreset name="PresetSandstoneQuartzite" inherits="PresetPrimarySedimentaryContinental" minHeight="151" maxHeight="152">
+        <OreBlock block="strata:sandstone" weight="0.5" />
+        <OreBlock block="strata:quartzite" weight="0.5" />
+      </SubstitutePreset>
+    </ConfigSection>
+
+  </ConfigSection>
+
+  <!-- Common rock -->
+  <IfCondition condition=":=?StrataGenRocks &amp; ?StrataActive">
+
+    <Substitute name="DirtSubstitute" block="minecraft:stone" minHeight="0" maxHeight=":= 40/64 * dimension.groundLevel">
+      <Replaces block="minecraft:dirt" />
+    </Substitute>
+
+    <Substitute name="DioriteContinental" inherits="PresetDioriteContinental" />
+    <Substitute name="GraniteContinental" inherits="PresetGraniteContinental" />
+    <Substitute name="DioriteGraniteContinental" inherits="PresetDioriteGraniteContinental" />
+    <Substitute name="GabbroShieldVolcano" inherits="PresetGabbroShieldVolcano" />
+    <Substitute name="GabbroBasaltShieldVolcano" inherits="PresetGabbroBasaltShieldVolcano" />
+    <Substitute name="BasaltShieldVolcano" inherits="PresetBasaltShieldVolcano" />
+    <Substitute name="GraniteMudstone" inherits="PresetGraniteMudstone" />
+    <Substitute name="Mudstone" inherits="PresetMudstone" />
+    <Substitute name="GraniteDome" inherits="PresetGraniteDome" />
+    <Substitute name="GraniteShield" inherits="PresetGraniteShield" />
+    <Substitute name="MudstoneGranite" inherits="PresetMudstoneGranite" />
+    <Substitute name="MudstoneLimestone" inherits="PresetMudstoneLimestone" />
+    <Substitute name="LimestoneHills" inherits="PresetLimestoneHills" />
+    <Substitute name="LimestoneSandstone" inherits="PresetLimestoneSandstone" />
+    <Substitute name="SandstoneHills" inherits="PresetSandstoneHills" />
+    <Substitute name="SandstoneGneiss" inherits="PresetSandstoneGneiss" />
+    <Substitute name="GneissTops" inherits="PresetGneissTops" />
+    <Substitute name="SandstoneQuartzite" inherits="PresetSandstoneQuartzite" />
+    <Substitute name="QuartziteTops" inherits="PresetQuartziteTops" />
+    <Cloud name="Breccia" inherits="PresetBreccia" />
+    <Cloud name="Claystone" inherits="PresetClaystone" />
+    <Cloud name="Conglomerate" inherits="PresetConglomerate" />
+    <Cloud name="Limestone" inherits="PresetLimestoneLower" />
+    <Cloud name="Sandstone" inherits="PresetSandstone" />
+    <Cloud name="Slate" inherits="PresetSlate" />
+    <Cloud name="Schist" inherits="PresetSchist" />
+    <Cloud name="Skarn" inherits="PresetSkarn" />
+    <Cloud name="Gneiss" inherits="PresetGneiss" />
+    <Cloud name="GreenschistContinental" inherits="PresetGreenschistContinental" />
+    <Cloud name="Marble" inherits="PresetMarble" />
+    <Cloud name="Hornfels" inherits="PresetHornfels" />
+    <Cloud name="Quartzite" inherits="PresetQuartzite" />
+    <Substitute name="GabbroVolcanic" inherits="PresetGabbroVolcanic" />
+    <Substitute name="DioriteVolcanic" inherits="PresetDioriteVolcanic" />
+    <Substitute name="GraniteRhyolite" inherits="PresetGraniteRhyolite" />
+    <Substitute name="RhyoliteCaldera" inherits="PresetRhyoliteCaldera" />
+    <Substitute name="GraniteVolcanic" inherits="PresetGraniteVolcanic" />
+    <Substitute name="Andesite" inherits="PresetAndesite" />
+    <Substitute name="Rhyolite" inherits="PresetRhyolite" />
+    <Substitute name="GabbroDiorite" inherits="PresetGabbroDiorite" />
+    <Substitute name="DioriteGraniteVolcanic" inherits="PresetDioriteGraniteVolcanic" />
+    <Substitute name="GraniteAndesite" inherits="PresetGraniteAndesite" />
+    <Substitute name="AndesiteRhyolite" inherits="PresetAndesiteRhyolite" />
+    <Cloud name="GreenschistVolcanic" inherits="PresetGreenschistVolcanic" />
+    <Cloud name="SchistVolcanic" inherits="PresetSchistVolcanic" />
+    <Cloud name="GneissVolcanic" inherits="PresetGneissVolcanic" />
+    <Cloud name="GneissShield" inherits="PresetGneissShield" />
+    <Substitute name="QuartziteMesa" inherits="PresetQuartziteMesa" />
+    <Substitute name="SandstoneMesa" inherits="PresetSandstoneMesa" />
+    <Substitute name="LimestoneMesa" inherits="PresetLimestoneMesa" />
+    <Substitute name="MudstoneMesa" inherits="PresetMudstoneMesa" />
+    <Substitute name="SandstoneMesa2" inherits="PresetSandstoneMesa2" />
+    <Substitute name="RedSandstoneMesa" inherits="PresetRedSandstoneMesa" />
+    <Substitute name="BasaltMesa" inherits="PresetBasaltMesa" />
+    <Substitute name="RedSandstoneMesaTop" inherits="PresetRedSandstoneMesaTop" />
+    <Substitute name="GabbroOceanic" inherits="PresetGabbroOceanic" />
+    <Substitute name="GabbroBasalt" inherits="PresetGabbroBasalt" />
+    <Substitute name="Basalt" inherits="PresetBasalt" />
+    <Substitute name="BasaltLimestone" inherits="PresetBasaltLimestone" />
+    <Substitute name="LimestoneMudstone" inherits="PresetLimestoneMudstone" />
+    <Substitute name="LimestoneOceanic" inherits="PresetLimestoneOceanic" />
+    <Substitute name="LimestoneBasaltIsland" inherits="PresetLimestoneBasaltIsland" />
+    <Substitute name="BasaltIsland" inherits="PresetBasaltIsland" />
+    <Cloud name="MudstoneOceanic" inherits="PresetMudstoneOceanic" />
+    <Cloud name="ClaystoneOceanic" inherits="PresetClaystoneOceanic" />
+    <Cloud name="SandstoneOceanic" inherits="PresetSandstoneOceanic" />
+    <Cloud name="GreenschistOceanic" inherits="PresetGreenschistOceanic" />
+    <Cloud name="SchistOceanic" inherits="PresetSchistOceanic" />
+    <Cloud name="SkarnOceanic" inherits="PresetSkarnOceanic" />
+    <Veins name="DioriteVeins" inherits="PresetDioriteVeins" />
+    <Veins name="GabbroVeins" inherits="PresetGabbroVeins" />
+
+    <IfCondition condition=":= world.type = &quot;RWG&quot;">
+      <Substitute name="GraniteVolcanicCobble" inherits="PresetGraniteVolcanicCobble" />
+      <Substitute name="GraniteShieldCobble" inherits="PresetGraniteShieldCobble" />
+      <Substitute name="GraniteDomeCobble" inherits="PresetGraniteDomeCobble" />
+      <Substitute name="AndesiteCobble" inherits="PresetAndesiteCobble" />
+      <Substitute name="BasaltShieldVolcanoCobble" inherits="PresetBasaltShieldVolcanoCobble" />
+      <Substitute name="BasaltIslandCobble" inherits="PresetBasaltIslandCobble" />
+      <Substitute name="BasaltMesaCobble" inherits="PresetBasaltMesaCobble" />
+      <Substitute name="RhyoliteCobble" inherits="PresetRhyoliteCobble" />
+      <Substitute name="RhyoliteCalderaCobble" inherits="PresetRhyoliteCalderaCobble" />
+      <Substitute name="MudstoneCobble" inherits="PresetMudstoneCobble" />
+      <Substitute name="MudstoneMesaCobble" inherits="PresetMudstoneMesaCobble" />
+      <Substitute name="LimestoneHillsCobble" inherits="PresetLimestoneHillsCobble" />
+      <Substitute name="LimestoneMesaCobble" inherits="PresetLimestoneMesaCobble" />
+      <Substitute name="SandstoneMesaCobble2" inherits="PresetSandstoneMesaCobble2" />
+      <Substitute name="SandstoneHillsCobble" inherits="PresetSandstoneHillsCobble" />
+      <Substitute name="SandstoneMesaCobble" inherits="PresetSandstoneMesaCobble" />
+      <Substitute name="RedSandstoneMesaCobble" inherits="PresetRedSandstoneMesaCobble" />
+      <Substitute name="RedSandstoneMesaTopCobble" inherits="PresetRedSandstoneMesaTopCobble" />
+      <Substitute name="GneissTopsCobble" inherits="PresetGneissTopsCobble" />
+      <Substitute name="QuartziteTopsCobble" inherits="PresetQuartziteTopsCobble" />
+      <Substitute name="QuartziteMesaCobble" inherits="PresetQuartziteMesaCobble" />
+    </IfCondition>
+
+    <Substitute name="CragToMudstone" block="strata:mudstone">
+      <Replaces block="BiomesOPlenty:cragRock" />
+      <Biome name="crag" />
+    </Substitute>
+
+  </IfCondition>
+
+  <!-- In-place ore replacement for overrides without generation -->
+  <IfCondition condition=":=?StrataActive">
+    <IfCondition condition=":=?StrataVanillaOverride">
+      <IfCondition condition=":=!?StrataGenCoal">
+        <Substitute name="VanillaCoalReplacement" block="strata:coal">
+          <ReplacesOre block="oreCoal" />
+        </Substitute>
+      </IfCondition>
+      <IfCondition condition=":=!?StrataGenDiamond">
+        <Substitute name="VanillaDiamondReplacement" block="strata:diamond">
+          <ReplacesOre block="oreDiamond" />
+        </Substitute>
+      </IfCondition>
+      <IfCondition condition=":=!?StrataGenGold">
+        <Substitute name="VanillaGoldReplacement" block="strata:gold">
+          <ReplacesOre block="oreGold" />
+        </Substitute>
+      </IfCondition>
+      <IfCondition condition=":=!?StrataGenIron">
+        <Substitute name="VanillaIronReplacement" block="strata:iron">
+          <Replaces block="minecraft:iron_ore" />
+        </Substitute>
+      </IfCondition>
+      <IfCondition condition=":=!?StrataGenLapis">
+        <Substitute name="VanillaLapisReplacement" block="strata:lapis">
+          <ReplacesOre block="oreLapis" />
+        </Substitute>
+      </IfCondition>
+      <IfCondition condition=":=!?StrataGenRedstone">
+        <Substitute name="VanillaRedstoneReplacement" block="strata:redstone">
+          <ReplacesOre block="oreRedstone" />
+        </Substitute>
+      </IfCondition>
+    </IfCondition>
+    <!-- TODO
+    <IfCondition condition=":=!?StrataOverride">
+    </IfCondition>
+    -->
+  </IfCondition>
+
+  <!-- Common ore presets -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetLayeredVeinsLite" inherits="PresetLayeredVeins">
+      <Setting name="OreDensity" avg=":= 0.4 * _default_" range="0.2" />
+      <Setting name="BranchLength" avg=":= 0.5 * _default_" range=":= 0.5 * _default_" />
+      <Setting name="MotherlodeSize" avg=":= 0.5 * _default_" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetLayeredVeinsContinental" inherits="PresetLayeredVeinsLite">
+      <BiomeSet inherits="continental" />
+      <BiomeSet inherits="folded" weight="-1" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetLayeredVeinsVolcanic" inherits="PresetLayeredVeinsLite">
+      <BiomeSet inherits="felsic" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetLayeredVeinsOceanic" inherits="PresetLayeredVeinsLite">
+      <BiomeSet inherits="oceanic" />
+      <BiomeSet inherits="folded" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSphaleriteGalena" inherits="PresetLayeredVeinsLite">
+      <OreBlock block="strata:sphalerite" weight="0.62" />
+      <OreBlock block="strata:galena" weight="0.33" />
+      <OreBlock block="strata:pyrite" weight="0.05" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetSedStrategicCloud" inherits="PresetStrategicCloud">
+      <Setting name="CloudThickness" avg=":=0.5 * _default_" range=":=0.5 * _default_" />
+      <Setting name="CloudHeight" avg=":=55/64 * dimension.groundLevel" range=":=10/64 * dimension.groundLevel" type="normal" />
+      <Setting name="OreVolumeNoiseCutoff" avg=":=0.6 * _default_" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="minecraft:sandstone" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="strata:red_sandstone" />
+      <Replaces block="strata:limestone" />
+      <BiomeSet inherits="continental" />
+    </CloudPreset>
+    <CloudPreset name="PresetSedStrategicCloudOceanic" inherits="PresetSedStrategicCloud">
+      <Setting name="CloudHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="normal" />
+      <BiomeSet inherits="sedocean" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetHintVeinsSed" inherits="PresetHintVeins">
+      <Setting name="MotherlodeHeight" avg=":=55/64 * dimension.groundLevel" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="strata:red_sandstone" />
+      <Replaces block="minecraft:sandstone" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetMetaStrategicCloud" inherits="PresetStrategicCloud">
+      <Setting name="CloudThickness" avg=":=0.5 * _default_" range=":=0.5 * _default_" />
+      <Setting name="CloudHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="normal" />
+      <Setting name="OreVolumeNoiseCutoff" avg=":=0.6 * _default_" />
+      <ReplacesOre block="stone" />
+    </CloudPreset>
+
+  </ConfigSection>
+
+  <!-- Coal -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetCoalBeds" inherits="PresetSedStrategicCloud" drawWireframe="true">
+      <Setting name="DistributionFrequency" avg=":=20 * _default_" />
+      <Setting name="CloudRadius" avg=":=1.4 * _default_" range=":=1.4 * _default_" />
+      <OreBlock block="strata:bituminous_coal" weight="0.78" />
+      <OreBlock block="strata:lignite" weight="0.1" />
+      <OreBlock block="strata:anthracite" weight="0.1" />
+      <OreBlock block="strata:pyrite" weight="0.02" />
+      <BiomeSet inherits="inland" weight="0.5" />
+    </CloudPreset>
+    <CloudPreset name="PresetLigniteBeds" inherits="PresetCoalBeds" drawWireframe="true">
+      <OreBlock block="strata:lignite" weight="0.8" />
+      <OreBlock block="strata:bituminous_coal" weight="0.2" />
+      <BiomeType name="swamp" />
+    </CloudPreset>
+    <CloudPreset name="PresetCoalBedsOceanic" inherits="PresetCoalBeds" drawWireframe="true">
+      <Setting name="CloudHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="normal" />
+      <BiomeSet inherits="sedocean" weight="0.5" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetCoalBedHintVeins" block="strata:bituminous_coal" inherits="PresetHintVeinsSed">
+      <Setting name="MotherlodeFrequency" avg=":=1.2 * _default_" range=":=_default_" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetLigniteBedHintVeins" inherits="PresetCoalBedHintVeins" block="strata:lignite" />
+    <VeinsPreset name="PresetCoalBedHintVeinsOceanic" inherits="PresetCoalBedHintVeins">
+      <Setting name="MotherlodeHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="normal" />
+      <BiomeSet inherits="sedocean" weight="0.5" />
+    </VeinsPreset>
+
+    <SubstitutePreset name="PresetCoalCoke" inherits="PresetPrimaryStratum" minHeight="45" maxHeight="45" block="strata:coke">
+      <BiomeSet inherits="inland" />
+      <Replaces block="strata:bituminous_coal" />
+    </SubstitutePreset>
+
+    <IfCondition condition=":=?StrataGenCoal &amp; ?StrataActive">
+      <Cloud name="CoalBeds" inherits="PresetCoalBeds">
+        <Veins name="CoalBedHintVeins" inherits="PresetCoalBedHintVeins" />
+      </Cloud>
+      <Substitute name="CoalCoke" inherits="PresetCoalCoke" />
+      <Cloud name="CoalBedsOceanic" inherits="PresetCoalBedsOceanic">
+        <Veins name="CoalBedHintVeinsOceanic" inherits="PresetCoalBedHintVeinsOceanic" />
+      </Cloud>
+      <Cloud name="LigniteBeds" inherits="PresetLigniteBeds">
+        <Veins name="LigniteBedHintVeins" inherits="PresetLigniteBedHintVeins" />
+      </Cloud>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Banded iron -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetBandedIron" inherits="PresetSedStrategicCloud" drawWireframe="true">
+      <WireframeColor>0xFF221100</WireframeColor>
+      <Setting name="DistributionFrequency" avg=":= 20 * _default_" />
+      <Setting name="OreDensity" avg=":=_default_" />
+      <OreBlock block="strata:banded_iron" weight="1.0" />
+      <BiomeSet inherits="inland" weight="0.5" />
+      <BiomeSet inherits="folded" weight="0.5" />
+      <BiomeSet inherits="frozen-continental" weight="0.5" />
+    </CloudPreset>
+    <CloudPreset name="PresetBandedIronOceanic" inherits="PresetBandedIron" drawWireframe="true">
+      <Setting name="CloudHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="normal" />
+      <BiomeSet inherits="sedocean" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="strata:basalt" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetBandedIronHintVeins" block="strata:banded_iron" inherits="PresetHintVeinsSed">
+      <Setting name="MotherlodeFrequency" avg=":=_default_" range=":=_default_" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetBandedIronHintVeinsOceanic" inherits="PresetBandedIronHintVeins">
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="strata:basalt" />
+      <Setting name="MotherlodeHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="uniform" />
+    </VeinsPreset>
+
+    <VeinsPreset name="PresetSubBIFBreccia" inherits="PresetRockVeins" drawWireframe="true" wireframeColor="0xFFFFFF00">
+      <Setting name="MotherlodeFrequency" avg="0.2" />
+      <Setting name="MotherlodeHeight" avg="35" range="2" />
+      <Setting name="BranchLength" avg=":= 0.5 * _default_" range=":= 0.5 * _default_" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:sandstone" />
+      <OreBlock block="strata:breccia" weight="0.88" />
+      <OreBlock block="strata:chalcopyrite" weight="0.10" />
+      <OreBlock block="strata:gold" weight="0.02" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSubBIFBrecciaOceanic" inherits="PresetSubBIFBreccia">
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:basalt" />
+      <Replaces block="strata:mudstone" />
+      <Setting name="MotherlodeHeight" avg=":=30/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenBIF &amp; ?StrataActive">
+      <Cloud name="BandedIron" inherits="PresetBandedIron">
+        <Veins name="BandedIronHintVeins" inherits="PresetBandedIronHintVeins" />
+        <IfCondition condition=":=?StrataGenCopper">
+          <Veins name="SubBIFBreccia" inherits="PresetSubBIFBreccia" />
+        </IfCondition>
+      </Cloud>
+      <Cloud name="BandedIronOceanic" inherits="PresetBandedIronOceanic">
+        <Veins name="BandedIronHintVeinsOceanic" inherits="PresetBandedIronHintVeinsOceanic" />
+        <IfCondition condition=":=?StrataGenCopper">
+          <Veins name="SubBIFBrecciaOceanic" inherits="PresetSubBIFBrecciaOceanic" />
+        </IfCondition>
+      </Cloud>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Mineral sands -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetPlacer" inherits="PresetStratum">
+      <Setting name="CloudThickness" avg="1" range="0" />
+      <Setting name="DistributionFrequency" avg="0.04" range="0" />
+      <Setting name="CloudHeight" avg="62" range="1" type="uniform" scaleTo="sealevel" />
+      <Replaces block="minecraft:grass" />
+      <ReplacesRegexp block=".*sand" />
+      <!-- <Replaces block='.*dirt'/> -->
+      <Replaces block="minecraft:gravel" />
+      <Replaces block="minecraft:clay" />
+    </CloudPreset>
+    <CloudPreset name="PresetBeachPlacer" inherits="PresetPlacer">
+      <BiomeType name="beach" weight="0.5" />
+      <Setting name="CloudRadius" avg="5" range="2" type="normal" />
+    </CloudPreset>
+    <CloudPreset name="PresetBasalticSandBeach" inherits="PresetBeachPlacer" block="strata:basaltic_mineral_sand" />
+    <CloudPreset name="PresetCassiteriteSandBeach" inherits="PresetBeachPlacer" block="strata:cassiterite_sand" />
+    <CloudPreset name="PresetGarnetSandBeach" inherits="PresetBeachPlacer" block="strata:garnet_sand" />
+    <CloudPreset name="PresetGraniticSandBeach" inherits="PresetBeachPlacer" block="strata:granitic_mineral_sand" />
+    <CloudPreset name="PresetAlluvialPlacer" inherits="PresetPlacer">
+      <BiomeType name="river" />
+      <Setting name="CloudThickness" avg="1" range="0" />
+      <Setting name="DistributionFrequency" avg=":= 2 * _default_" range="0" />
+      <Setting name="CloudRadius" avg="8" range="2" type="normal" />
+    </CloudPreset>
+    <CloudPreset name="PresetCassiteriteSandAlluvial" inherits="PresetAlluvialPlacer" block="strata:cassiterite_sand" />
+    <CloudPreset name="PresetGarnetSandAlluvial" inherits="PresetAlluvialPlacer" block="strata:garnet_sand" />
+    <CloudPreset name="PresetGraniticSandAlluvial" inherits="PresetAlluvialPlacer" block="strata:granitic_mineral_sand" />
+
+    <CloudPreset name="PresetQuartzSand" inherits="PresetPlacer" block="strata:quartz_sand" drawWireframe="true">
+      <Setting name="DistributionFrequency" avg=":=_default_" />
+      <Setting name="CloudRadius" avg="5" range="2" type="normal" />
+      <BiomeType name="sandy" />
+      <BiomeType name="mesa" weight="-1" />
+      <Setting name="CloudHeight" avg="62" range="2" type="uniform" scaleTo="position" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetGlauconite" inherits="PresetSedStrategicCloud" drawWireframe="true">
+      <Setting name="DistributionFrequency" avg=":= 6 * _default_" />
+      <Setting name="OreDensity" avg=":=1.5 * _default_" />
+      <Setting name="CloudHeight" avg=":= 48/64 * dimension.groundLevel" range=":= 0.25 * _default_" />
+      <BiomeSet inherits="sedocean" />
+      <Replaces block="minecraft:sand" />
+      <Replaces block="minecraft:clay" />
+      <Replaces block="minecraft:dirt" />
+      <ReplacesOre block="stone" />
+      <OreBlock block="strata:glauconite" weight="0.8" />
+      <OreBlock block="minecraft:sand" weight="0.2" />
+    </CloudPreset>
+
+    <StandardGenPreset name="PresetVolcanicAsh" block="strata:volcanic_ash" maxHeight="75">
+      <Setting name="Size" avg="16" range="8" />
+      <Setting name="Frequency" avg="0.2" range="0" />
+      <Setting name="Height" avg=":=70/64 * dimension.groundLevel" range="20" />
+      <BiomeSet inherits="volcanic" />
+      <!-- BOP -->
+      <Biome name="badlands" weight="0.5" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:andesite" />
+      <Replaces block="strata:rhyolite" />
+      <Replaces block="minecraft:dirt" />
+      <Replaces block="minecraft:sand" />
+      <Replaces block="minecraft:clay" />
+    </StandardGenPreset>
+
+    <IfCondition condition=":=?StrataGenSandOres &amp; ?StrataActive">
+      <IfCondition condition=":=?StrataGenIron">
+        <Cloud name="BasalticSandBeach" inherits="PresetBasalticSandBeach" drawWireframe="false" wireframeColor="0xFFFF2222" />
+        <Cloud name="GraniticSandBeach" inherits="PresetGraniticSandBeach" drawWireframe="false" wireframeColor="0xFFFFFF22" />
+        <Cloud name="GraniticSandAlluvial" inherits="PresetGraniticSandAlluvial" drawWireframe="true" wireframeColor="0xFFFFFF22" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenTin">
+        <Cloud name="CassiteriteSandBeach" inherits="PresetCassiteriteSandBeach" drawWireframe="false" wireframeColor="0xFFFF2222" />
+        <Cloud name="CassiteriteSandAlluvial" inherits="PresetCassiteriteSandAlluvial" drawWireframe="false" wireframeColor="0xFFFF2222" />
+      </IfCondition>
+      <Cloud name="GarnetSandBeach" inherits="PresetGarnetSandBeach" drawWireframe="false" wireframeColor="0xFF222222" />
+      <Cloud name="GarnetSandAlluvial" inherits="PresetGarnetSandAlluvial" drawWireframe="false" wireframeColor="0xFF222222" />
+      <IfCondition condition=":=?StrataGenQuartz">
+        <Cloud name="QuartzSand" inherits="PresetQuartzSand" drawWireframe="false" wireframeColor="0xFFFF9922" />
+      </IfCondition>
+      <Cloud name="Glauconite" inherits="PresetGlauconite" />
+    </IfCondition>
+    <IfCondition condition=":=?StrataGenVolcanic &amp; ?StrataActive">
+      <StandardGen name="VolcanicAsh" inherits="PresetVolcanicAsh" drawWireframe="false" wireframeColor="0xFF999922" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Serpentine and other intrusive veins -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetSerpentinite" inherits="PresetIntrusiveVeins" drawWireframe="true" wireframeColor="0xFF00AA00">
+      <OreBlock block="strata:serpentinite" weight="0.816" />
+      <OreBlock block="strata:magnesite" weight="0.01" />
+      <OreBlock weight="0.01">
+        <IfChoice name="StrataGenChromium" value="true">
+          <Then block="strata:chromite" />
+          <Else block="strata:serpentinite" />
+        </IfChoice>
+      </OreBlock>
+      <OreBlock block="strata:peridotite" weight="0.05" />
+      <OreBlock weight="0.005">
+        <IfChoice name="StrataGenNickel" value="true">
+          <Then block="strata:pentlandite" />
+          <Else block="strata:serpentinite" />
+        </IfChoice>
+      </OreBlock>
+      <OreBlock block="strata:soapstone" weight="0.10" />
+      <OreBlock block="strata:chrysotile" weight="0.009" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenSerpVeins &amp; ?StrataActive">
+      <Veins name="Serpentinite" inherits="PresetSerpentinite" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Laterite, limonite -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetRichSoil" inherits="PresetStratum">
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <Setting name="CloudThickness" avg="2" range="1" />
+      <Setting name="CloudHeight" avg=":= 60/64 * dimension.groundLevel" range="2" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="minecraft:dirt" />
+      <Replaces block="minecraft:clay" />
+    </CloudPreset>
+    <CloudPreset name="PresetLaterite" block="strata:laterite" inherits="PresetRichSoil" drawWireframe="true">
+      <WireframeColor>0xFFFF1100</WireframeColor>
+      <Biome name=".*" weight="-1" />
+      <BiomeType name="hot" />
+      <BiomeType name="wet" />
+    </CloudPreset>
+    <CloudPreset name="PresetLateriteBauxite" inherits="PresetLaterite">
+      <WireframeColor>0xFFFF11FF</WireframeColor>
+      <Setting name="DistributionFrequency" avg="0.02" />
+      <OreBlock block="strata:laterite" weight="0.5" />
+      <OreBlock block="strata:bauxite" weight="0.5" />
+    </CloudPreset>
+    <CloudPreset name="PresetLateriteLimonite" inherits="PresetLaterite">
+      <WireframeColor>0xFF1111FF</WireframeColor>
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <OreBlock block="strata:laterite" weight="0.70" />
+      <OreBlock block="strata:brown_limonite" weight="0.15" />
+      <OreBlock block="strata:yellow_limonite" weight="0.15" />
+    </CloudPreset>
+    <CloudPreset name="PresetPeat" block="strata:peat" inherits="PresetRichSoil" drawWireframe="true">
+      <WireframeColor>0xFFFF1100</WireframeColor>
+    </CloudPreset>
+    <CloudPreset name="PresetBogLimonite" inherits="PresetRichSoil" drawWireframe="true">
+      <WireframeColor>0xFF1111FF</WireframeColor>
+      <OreBlock block="strata:peat" weight="0.70" />
+      <OreBlock block="strata:bog_iron" weight="0.30" />
+      <Setting name="DistributionFrequency" avg=":= 0.5 * _default_" />
+      <BiomeType name="swamp" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetSerpentiniteUnderLimonite" inherits="PresetStratum" drawWireframe="true" wireframeColor="0xFF00AA00">
+      <Setting name="DistributionFrequency" avg="2.5" />
+      <Setting name="CloudHeight" avg="53" range="2" />
+      <Setting name="CloudThickness" avg="3" range="1" />
+      <Setting name="ParentRangeLimit" avg="5" range="2" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <OreBlock block="strata:serpentinite" weight="0.5" />
+      <OreBlock block="strata:garnierite" weight="0.5" />
+    </CloudPreset>
+
+    <IfCondition condition=":=?StrataGenLaterites &amp; ?StrataActive">
+      <Cloud name="Laterite" inherits="PresetLaterite" />
+      <IfCondition condition=":=?StrataGenAluminum">
+        <Cloud name="LateriteBauxite" inherits="PresetLateriteBauxite" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenIron">
+        <Cloud name="LateriteLimonite" inherits="PresetLateriteLimonite">
+          <Cloud name="SerpentiniteUnderLimonite" inherits="PresetSerpentiniteUnderLimonite" />
+        </Cloud>
+        <Cloud name="Peat" inherits="PresetPeat" />
+        <Cloud name="BogLimonite" inherits="PresetBogLimonite" />
+      </IfCondition>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Veins in diorite/gabbro -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetDioriteVeinsContinental" inherits="PresetLayeredVeinsContinental">
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <Setting name="MotherlodeHeight" avg=":= 10/64 * dimension.groundLevel" range=":= 3/64 * dimension.groundLevel" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:diorite" />
+      <Replaces block="strata:gabbro" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetIlmeniteDioriteContinental" inherits="PresetDioriteVeinsContinental" block="strata:ilmenite" drawWireframe="true" wireframeColor="0xFF1111FF" />
+    <VeinsPreset name="PresetChromiteDioriteContinental" inherits="PresetDioriteVeinsContinental" block="strata:chromite" drawWireframe="true" wireframeColor="0xFFFFFF11" />
+    <VeinsPreset name="PresetVermiculiteDioriteContinental" inherits="PresetDioriteVeinsContinental" block="strata:vermiculite" drawWireframe="true" wireframeColor="0xFFFF1111" />
+    <VeinsPreset name="PresetFluoriteDioriteContinental" inherits="PresetDioriteVeinsContinental" block="strata:fluorite" drawWireframe="true" wireframeColor="0xFF11FF11" />
+
+    <VeinsPreset name="PresetDioriteVeinsOther" inherits="PresetLayeredVeins">
+      <Setting name="DistributionFrequency" avg="0.02" />
+      <Setting name="MotherlodeHeight" avg=":= 20/64 * dimension.groundLevel" range=":= 20/64 * dimension.groundLevel" type="normal" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:diorite" />
+      <Replaces block="strata:gabbro" />
+      <Replaces block="strata:basalt" />
+      <BiomeSet inherits="oceanic" />
+      <BiomeSet inherits="volcanic" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetIlmeniteDioriteOther" inherits="PresetDioriteVeinsOther" block="strata:ilmenite" drawWireframe="true" wireframeColor="0xFF11FFFF" />
+    <VeinsPreset name="PresetChromiteDioriteOther" inherits="PresetDioriteVeinsOther" block="strata:chromite" drawWireframe="true" wireframeColor="0xFFFFFF11" />
+    <VeinsPreset name="PresetVermiculiteDioriteOther" inherits="PresetDioriteVeinsOther" block="strata:vermiculite" drawWireframe="true" wireframeColor="0xFFFFFF11" />
+    <VeinsPreset name="PresetFluoriteDioriteOther" inherits="PresetDioriteVeinsOther" block="strata:fluorite" drawWireframe="true" wireframeColor="0xFF88FF88" />
+
+    <IfCondition condition=":=?StrataGenIgVeins &amp; ?StrataActive">
+      <IfCondition condition=":=?StrataGenTitanium">
+        <Veins name="IlmeniteDioriteContinental" inherits="PresetIlmeniteDioriteContinental" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenChromium">
+        <Veins name="ChromiteDioriteContinental" inherits="PresetChromiteDioriteContinental" />
+      </IfCondition>
+      <Veins name="VermiculiteDioriteContinental" inherits="PresetVermiculiteDioriteContinental" />
+      <Veins name="FluoriteDioriteContinental" inherits="PresetFluoriteDioriteContinental" />
+      <IfCondition condition=":=?StrataGenTitanium">
+        <Veins name="IlmeniteDioriteOther" inherits="PresetIlmeniteDioriteOther" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenChromium">
+        <Veins name="ChromiteDioriteOther" inherits="PresetChromiteDioriteOther" />
+      </IfCondition>
+      <Veins name="VermiculiteDioriteOther" inherits="PresetVermiculiteDioriteOther" />
+      <Veins name="FluoriteDioriteOther" inherits="PresetFluoriteDioriteOther" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Layered intrusions -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetLayeredIntrusion" inherits="PresetStratum">
+      <Setting name="CloudThickness" avg="5" range="0" />
+      <Setting name="CloudRadius" avg="32" range="5" />
+      <Setting name="CloudHeight" range="0" />
+      <Setting name="ParentRangeLimit" avg="3" range="2" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:diorite" />
+      <Replaces block="strata:gabbro" />
+      <Replaces block="strata:peridotite" />
+      <Replaces block="strata:granite" />
+      <WireframeColor>0xFFFFFF00</WireframeColor>
+    </CloudPreset>
+    <CloudPreset name="PresetPeridotiteIntrusion" block="strata:peridotite" inherits="PresetLayeredIntrusion" drawWireframe="false">
+      <Setting name="CloudHeight" avg="10" range="0" />
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <Biome name=".*" weight="0.5" />
+      <BiomeSet inherits="volcanic" weight="0.5" />
+    </CloudPreset>
+    <CloudPreset name="PresetGabbroIntrusion" block="strata:gabbro" inherits="PresetLayeredIntrusion">
+      <Setting name="CloudHeight" avg="20" range="0" />
+      <Setting name="DistributionFrequency" avg="20" range="0" />
+    </CloudPreset>
+    <CloudPreset name="PresetDioriteIntrusion" block="strata:diorite" inherits="PresetLayeredIntrusion">
+      <Setting name="CloudHeight" avg="30" range="0" />
+      <Setting name="DistributionFrequency" avg="20" range="0" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetLayeredIntrusionOre" inherits="PresetStrategicCloud">
+      <Setting name="ParentRangeLimit" avg="16" range="2" />
+      <Setting name="DistributionFrequency" avg=":= 0.25" />
+      <Setting name="CloudThickness" avg=":= 0.25 * _default_" range=":= 0.25 * _default_" />
+      <Setting name="CloudRadius" avg="16" range="3" />
+      <Setting name="OreDensity" avg=":=1.5 * _default_" />
+    </CloudPreset>
+    <CloudPreset name="PresetPeridotiteLayer" inherits="PresetLayeredIntrusionOre">
+      <Setting name="CloudHeight" avg=":= 10/64 * dimension.groundLevel" range=":= 5/64 * dimension.groundLevel" type="uniform" />
+      <Replaces block="strata:gabbro" />
+      <Replaces block="strata:peridotite" />
+    </CloudPreset>
+    <CloudPreset name="PresetMagnetitePeridotite" inherits="PresetPeridotiteLayer" block="strata:vanadium_magnetite" drawWireframe="true" wireframeColor="0xFFAAFFFF" />
+    <CloudPreset name="PresetMagnesitePeridotite" inherits="PresetPeridotiteLayer" drawWireframe="true" wireframeColor="0xFF11FFFF" block="strata:magnesite" />
+    <CloudPreset name="PresetPentlanditePeridotite" inherits="PresetPeridotiteLayer" block="strata:pentlandite" drawWireframe="true" wireframeColor="0xFF11FFFF">
+      <Setting name="OreDensity" avg=":=0.75 * _default_" />
+    </CloudPreset>
+    <CloudPreset name="PresetDioriteLayer" inherits="PresetLayeredIntrusionOre">
+      <Setting name="CloudHeight" avg=":= 30/64 * dimension.groundLevel" range=":= 10/64 * dimension.groundLevel" />
+      <Replaces block="strata:diorite" />
+      <Replaces block="strata:gabbro" />
+    </CloudPreset>
+    <CloudPreset name="PresetIlmeniteDioriteLayer" inherits="PresetDioriteLayer" block="strata:ilmenite" drawWireframe="true" wireframeColor="0xFF1111FF" />
+    <CloudPreset name="PresetChromiteDioriteLayer" inherits="PresetDioriteLayer" block="strata:chromite" drawWireframe="true" wireframeColor="0xFFFF1111" />
+    <CloudPreset name="PresetVermiculiteDiorite" inherits="PresetDioriteLayer" drawWireframe="true" wireframeColor="0xFFFFFFFF" block="strata:vermiculite" />
+
+    <VeinsPreset name="PresetPeridotiteSerpentinite" inherits="PresetSerpentinite" drawWireframe="false" wireframeColor="0xFF00FF00">
+      <Setting name="MotherlodeHeight" avg=":= 10/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+      <Setting name="ParentRangeLimit" avg="16" range="8" />
+      <Setting name="DistributionFrequency" avg=":= 20.0 * _default_" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenIgIntrusion &amp; ?StrataActive">
+      <Cloud name="PeridotiteIntrusion" inherits="PresetPeridotiteIntrusion">
+        <Cloud name="GabbroIntrusion" inherits="PresetGabbroIntrusion" />
+        <Cloud name="DioriteIntrusion" inherits="PresetDioriteIntrusion" />
+        <Cloud name="MagnetitePeridotite" inherits="PresetMagnetitePeridotite" />
+        <Cloud name="MagnesitePeridotite" inherits="PresetMagnesitePeridotite" />
+        <IfCondition condition=":=?StrataGenNickel">
+          <Cloud name="PentlanditePeridotite" inherits="PresetPentlanditePeridotite" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenSerpVeins">
+          <Veins name="PeridotiteSerpentinite" inherits="PresetPeridotiteSerpentinite" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenTitanium">
+          <Cloud name="IlmeniteDioriteLayer" inherits="PresetIlmeniteDioriteLayer" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenChromium">
+          <Cloud name="ChromiteDioriteLayer" inherits="PresetChromiteDioriteLayer" />
+        </IfCondition>
+        <Cloud name="VermiculiteDiorite" inherits="PresetVermiculiteDiorite" />
+      </Cloud>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Marine evaporites -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetEvaporiteStratum" inherits="PresetStratum" drawWireframe="true">
+      <Setting name="CloudHeight" range="0" />
+      <Setting name="CloudThickness" range="0" />
+      <Setting name="ParentRangeLimit" avg="3" range="2" />
+      <Setting name="DistributionFrequency" avg="20" range="0" />
+      <BiomeType name="sandy" />
+      <BiomeType name="plains" />
+      <BiomeType name="wasteland" />
+      <BiomeType name="wet" weight="-1" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="minecraft:sandstone" />
+      <Replaces block="minecraft:hardened_clay" />
+      <Replaces block="minecraft:sand" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="minecraft:dirt" />
+      <WireframeColor>0xFF11FF00</WireframeColor>
+    </CloudPreset>
+    <CloudPreset name="PresetEvaporiteLimestone" inherits="PresetEvaporiteStratum">
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <Setting name="CloudHeight" avg="55" range="0" />
+      <Setting name="CloudThickness" avg="3" />
+      <OreBlock block="strata:limestone" weight="0.9" />
+      <OreBlock block="strata:chalk" weight="0.1" />
+    </CloudPreset>
+    <CloudPreset name="PresetEvaporiteGypsum" inherits="PresetEvaporiteStratum">
+      <OreBlock block="strata:salitre" weight="0.05" />
+      <OreBlock block="strata:celestine" weight="0.05" />
+      <OreBlock block="strata:gypsum" weight="0.90" />
+      <Setting name="CloudHeight" avg="58" range="0" />
+      <Setting name="CloudThickness" avg="2" range="0" />
+    </CloudPreset>
+    <CloudPreset name="PresetEvaporiteRockSalt" inherits="PresetEvaporiteStratum">
+      <OreBlock block="strata:salitre" weight="0.05" />
+      <OreBlock block="strata:salt" weight="0.95" />
+      <Setting name="CloudHeight" avg="60" range="0" />
+      <Setting name="CloudThickness" avg="1" range="0" />
+    </CloudPreset>
+    <CloudPreset name="PresetLakeEvaporite" inherits="PresetEvaporiteStratum">
+      <Setting name="DistributionFrequency" avg="0.013" />
+      <Setting name="CloudHeight" avg="60" range="0" />
+      <Setting name="CloudThickness" avg="3" range="0" />
+      <BiomeType name="sandy" />
+      <BiomeType name="wasteland" />
+      <BiomeType name="wet" weight="-1" />
+      <OreBlock block="strata:trona" weight="0.70" />
+      <OreBlock block="strata:mirabilite" weight="0.15" />
+      <OreBlock block="strata:borax" weight="0.15" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetEvaporiteGypsumHintVeins" block="strata:gypsum" inherits="PresetHintVeinsSed" drawWireframe="true">
+      <Setting name="MotherlodeHeight" avg="58" range="2" />
+      <Setting name="MotherlodeFrequency" avg=":= 0.05 * _default_" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetBrinePool" inherits="PresetStratum" block="minecraft:stained_glass:0">
+      <Setting name="DistributionFrequency" avg=":= 0.01" />
+      <Setting name="CloudHeight" avg="64" range="2" />
+      <Setting name="CloudThickness" avg="2" range="1" />
+      <Setting name="CloudRadius" avg="4" range="2" />
+      <Setting name="OreDensity" avg="1" range="0" />
+      <BiomeType name="sandy" />
+      <BiomeType name="wasteland" />
+      <BiomeType name="wet" weight="-1" />
+      <Replaces block="minecraft:sand" />
+      <PlacesBesideRegexp block=".*" />
+      <PlacesBeside block="minecraft:air" weight="-1" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetBrineWell" drawWireframe="true" block="minecraft:stained_glass:6">
+      <Setting name="MotherlodeHeight" avg="61" range="1" />
+      <Setting name="MotherlodeSize" avg="0.6" range="0" />
+      <Setting name="BranchFrequency" avg="0" range="0" />
+      <Setting name="OreDensity" avg="1" range="0" />
+      <Setting name="OreRadiusMult" avg="1.0" range="0" />
+      <Setting name="DistributionFrequency" avg="2" />
+      <Setting name="MotherlodeRangeLimit" avg="4" range="2" />
+      <BiomeType name="sandy" />
+      <BiomeType name="wasteland" />
+      <BiomeType name="wet" weight="-1" />
+      <ReplacesOre block="stone" />
+      <Replaces block="minecraft:sandstone" />
+      <Replaces block="minecraft:hardened_clay" />
+      <Replaces block="minecraft:sand" />
+      <Replaces block="minecraft:stained_glass:0" />
+      <PlacesAboveRegexp block=".*" />
+      <PlacesAbove block="minecraft:stained_glass:0" weight="-1" />
+      <PlacesBelow block="minecraft:sand" />
+      <PlacesBelow block="minecraft:stained_glass:0" />
+      <WireframeColor>0xFF11FF00</WireframeColor>
+    </VeinsPreset>
+
+    <SubstitutePreset name="PresetBrineWasteland" block="minecraft:stained_glass:0" minHeight=":= 50/64 * dimension.groundLevel" maxHeight=":= 80/64 * dimension.groundLevel">
+      <Replaces block="minecraft:water" />
+      <BiomeType name="wasteland" />
+    </SubstitutePreset>
+
+    <IfCondition condition=":=?StrataGenEvaporite &amp; ?StrataActive">
+      <Cloud name="EvaporiteLimestone" inherits="PresetEvaporiteLimestone">
+        <Cloud name="EvaporiteGypsum" inherits="PresetEvaporiteGypsum">
+          <Veins name="EvaporiteGypsumHintVeins" inherits="PresetEvaporiteGypsumHintVeins" />
+        </Cloud>
+        <IfCondition condition=":=?StrataGenSalt">
+          <Cloud name="EvaporiteRockSalt" inherits="PresetEvaporiteRockSalt" />
+        </IfCondition>
+      </Cloud>
+      <Cloud name="LakeEvaporite" inherits="PresetLakeEvaporite">
+        <Cloud name="LakeEvaporiteGypsum" inherits="PresetEvaporiteGypsum" />
+        <Cloud name="LakeEvaporiteRockSalt" inherits="PresetEvaporiteRockSalt" />
+      </Cloud>
+    </IfCondition>
+    <IfCondition condition=":=?StrataGenBrines &amp; ?StrataActive">
+      <Cloud name="BrinePool" inherits="PresetBrinePool">
+        <IfCondition condition=":=?StrataGenBrineWells &amp; ?StrataActive">
+          <Veins name="BrineWell" inherits="PresetBrineWell" />
+        </IfCondition>
+      </Cloud>
+      <Substitute name="BrineWasteland" inherits="PresetBrineWasteland" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Volcagenic Massive Sulfide (VMS) -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetVMSRhyolite" inherits="PresetStratum" drawWireframe="false" block="strata:rhyolite">
+      <Setting name="CloudThickness" avg="10" range="2" />
+      <Setting name="CloudRadius" avg="32" range="5" />
+      <Setting name="CloudHeight" avg=":= 25/64 * dimension.groundLevel" range=":= 5/64 * dimension.groundLevel" />
+      <Setting name="DistributionFrequency" avg="0.004" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:andesite" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="strata:basalt" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="minecraft:dirt" />
+      <Replaces block="minecraft:sand" />
+      <Replaces block="minecraft:clay" />
+      <WireframeColor>0xFFFFFF00</WireframeColor>
+      <BiomeSet inherits="folded" weight="0.5" />
+      <BiomeType name="ocean" />
+    </CloudPreset>
+
+    <!-- NOT USED -->
+    <VeinsPreset name="PresetVMSRhyoliteHintVeins" inherits="PresetHintVeins" block="strata:rhyolite">
+      <Setting name="MotherlodeHeight" avg=":=25/64 * dimension.groundLevel" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:andesite" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="minecraft:stone" />
+    </VeinsPreset>
+
+    <VeinsPreset name="PresetVMSChalcopyrite" inherits="PresetLayeredVeinsLite" block="strata:chalcopyrite" drawWireframe="true" wireframeColor="0xFFFFFF00">
+      <Setting name="DistributionFrequency" avg="1.0" />
+      <Setting name="MotherlodeHeight" avg=":= 15/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+      <Replaces block="strata:rhyolite" />
+    </VeinsPreset>
+
+    <!-- Adapted from COG GoldVeins -->
+    <VeinsPreset name="PresetVMSGold" inherits="PresetLayeredVeinsLite" drawWireframe="true" wireframeColor="0xFFFF0000" block="strata:gold">
+      <Setting name="MotherlodeFrequency" avg=":= 0.15" />
+      <Setting name="MotherlodeHeight" avg=":= 27/64 * dimension.groundLevel" range=":= 1/64 * dimension.groundLevel" />
+      <Replaces block="strata:rhyolite" />
+      <Setting name="MotherlodeSize" avg=":= 0.8 * _default_" range=":= 0.5 * _default_" />
+      <Setting name="BranchHeightLimit" avg="10" />
+      <Setting name="BranchFrequency" avg=":= 0.85 * _default_" />
+      <Setting name="BranchLength" avg=":= 0.75 * _default_" range=":= 0.66 * _default_" />
+      <Setting name="SegmentRadius" avg=":= 0.7 * _default_" range=":= 0.5 * _default_" />
+      <Setting name="SegmentAngle" avg="0.6" range="0.40" />
+    </VeinsPreset>
+
+    <VeinsPreset name="PresetVMSSphaleriteGalena" inherits="PresetSphaleriteGalena" drawWireframe="true" wireframeColor="0xFFFF0000">
+      <Setting name="DistributionFrequency" avg="1.0" />
+      <Setting name="MotherlodeHeight" avg=":= 25/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+      <Replaces block="strata:rhyolite" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenVMS &amp; ?StrataActive">
+      <Cloud name="VMSRhyolite" inherits="PresetVMSRhyolite">
+        <IfCondition condition=":=?StrataGenCopper">
+          <Veins name="VMSChalcopyrite" inherits="PresetVMSChalcopyrite" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenGold">
+          <Veins name="VMSGold" inherits="PresetVMSGold" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenLeadZinc">
+          <Veins name="VMSSphaleriteGalena" inherits="PresetVMSSphaleriteGalena" />
+        </IfCondition>
+      </Cloud>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- SEDimentary EXhalative (SEDEX) -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetSEDEX" inherits="PresetSedStrategicCloud">
+      <BiomeSet inherits="continental" />
+      <BiomeSet inherits="island" />
+      <Setting name="DistributionFrequency" avg=":= 2 * _default_" />
+      <Setting name="OreDensity" avg=":=1.5 * _default_" />
+    </CloudPreset>
+    <CloudPreset name="PresetSEDEXSphaleriteGalena" inherits="PresetSEDEX" drawWireframe="true" wireframeColor="0xFF3300FF">
+      <OreBlock block="strata:galena" weight="0.33" />
+      <OreBlock block="strata:sphalerite" weight="0.62" />
+      <OreBlock block="strata:pyrite" weight="0.05" />
+      <Setting name="DistributionFrequency" avg=":= 3 * _default_" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetSEDEXSphaleriteGalenaOceanic" inherits="PresetSEDEXSphaleriteGalena">
+      <Setting name="DistributionFrequency" avg=":= 2 * _default_" />
+      <BiomeSet inherits="sedocean" />
+      <Setting name="CloudHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="uniform" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetSEDEXSphaleriteGalenaHintVeins" inherits="PresetHintVeinsSed">
+      <OreBlock block="strata:galena" weight="0.35" />
+      <OreBlock block="strata:sphalerite" weight="0.65" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSEDEXSphaleriteGalenaHintVeinsOceanic" inherits="PresetSEDEXSphaleriteGalenaHintVeins">
+      <Setting name="MotherlodeHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="uniform" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetSEDEXScheelite" inherits="PresetSEDEX" drawWireframe="true" wireframeColor="0xFF33FF55">
+      <Setting name="OreDensity" avg=":=0.5 * _default_" />
+      <OreBlock block="strata:scheelite" weight="0.98" />
+      <OreBlock weight="0.02">
+        <IfChoice name="StrataGenEmerald" value="true">
+          <Then block="strata:emerald" />
+          <Else block="strata:scheelite" />
+        </IfChoice>
+      </OreBlock>
+    </CloudPreset>
+    <CloudPreset name="PresetSEDEXScheeliteOceanic" inherits="PresetSEDEXScheelite">
+      <Setting name="DistributionFrequency" avg=":= 2 * _default_" />
+      <BiomeSet inherits="sedocean" />
+      <Setting name="CloudHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="uniform" />
+      <Setting name="OreDensity" avg=":=0.5 * _default_" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetSEDEXScheeliteHintVeins" inherits="PresetHintVeinsSed" block="strata:scheelite" />
+    <VeinsPreset name="PresetSEDEXScheeliteHintVeinsOceanic" inherits="PresetSEDEXScheeliteHintVeins">
+      <Setting name="MotherlodeHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="uniform" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetSEDEXChalcopyrite" inherits="PresetSEDEX" drawWireframe="true" wireframeColor="0xFFFFFF00">
+      <OreBlock block="strata:chalcopyrite" weight="0.95" />
+      <OreBlock block="strata:pyrite" weight="0.05" />
+    </CloudPreset>
+    <CloudPreset name="PresetSEDEXChalcopyriteOceanic" inherits="PresetSEDEXChalcopyrite">
+      <Setting name="DistributionFrequency" avg=":= 2 * _default_" />
+      <BiomeSet inherits="sedocean" />
+      <Setting name="CloudHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="uniform" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetSEDEXChalcopyriteHintVeins" inherits="PresetHintVeinsSed" block="strata:chalcopyrite" />
+    <VeinsPreset name="PresetSEDEXChalcopyriteHintVeinsOceanic" inherits="PresetSEDEXChalcopyriteHintVeins">
+      <Setting name="MotherlodeHeight" avg=":=40/64 * dimension.groundLevel" range=":=5/64 * dimension.groundLevel" type="uniform" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenSEDEX &amp; ?StrataActive">
+      <IfCondition condition=":=?StrataGenLeadZinc">
+        <Cloud name="SEDEXSphaleriteGalena" inherits="PresetSEDEXSphaleriteGalena">
+          <Veins name="SEDEXSphaleriteGalenaHintVeins" inherits="PresetSEDEXSphaleriteGalenaHintVeins" />
+        </Cloud>
+        <Cloud name="SEDEXSphaleriteGalenaOceanic" inherits="PresetSEDEXSphaleriteGalenaOceanic">
+          <Veins name="SEDEXSphaleriteGalenaHintVeinsOceanic" inherits="PresetSEDEXSphaleriteGalenaHintVeinsOceanic" />
+        </Cloud>
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenTungsten">
+        <Cloud name="SEDEXScheelite" inherits="PresetSEDEXScheelite">
+          <Veins name="SEDEXScheeliteHintVeins" inherits="PresetSEDEXScheeliteHintVeins" />
+        </Cloud>
+        <Cloud name="SEDEXScheeliteOceanic" inherits="PresetSEDEXScheeliteOceanic">
+          <Veins name="SEDEXScheeliteHintVeinsOceanic" inherits="PresetSEDEXScheeliteHintVeinsOceanic" />
+        </Cloud>
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenCopper">
+        <Cloud name="SEDEXChalcopyrite" inherits="PresetSEDEXChalcopyrite">
+          <Veins name="SEDEXChalcopyriteHintVeins" inherits="PresetSEDEXChalcopyriteHintVeins" />
+        </Cloud>
+        <Cloud name="SEDEXChalcopyriteOceanic" inherits="PresetSEDEXChalcopyriteOceanic">
+          <Veins name="SEDEXChalcopyriteHintVeinsOceanic" inherits="PresetSEDEXChalcopyriteHintVeinsOceanic" />
+        </Cloud>
+      </IfCondition>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Porphyry -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetPorphyry" inherits="PresetRockVeins" drawWireframe="true" wireframeColor="0xFFFFFF00">
+      <Setting name="MotherlodeFrequency" avg="0.004" />
+      <Setting name="MotherlodeHeight" avg="10" range="10" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:diorite" />
+      <Replaces block="minecraft:stone" />
+      <OreBlock block="strata:breccia" weight="0.7" />
+      <OreBlock weight="0.20">
+        <IfChoice name="StrataGenCopper" value="true">
+          <Then block="strata:chalcopyrite" />
+          <Else block="strata:breccia" />
+        </IfChoice>
+      </OreBlock>
+      <OreBlock weight="0.10">
+        <IfChoice name="StrataGenMolybdenum" value="true">
+          <Then block="strata:molybdenite" />
+          <Else block="strata:breccia" />
+        </IfChoice>
+      </OreBlock>
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenIgVeins &amp; ?StrataGenCopper &amp; ?StrataActive">
+      <Veins name="Porphyry" inherits="PresetPorphyry" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Veins in granite -->
+  <!-- TODO: Should uranium generate here? It does in TerraFirmaCraft -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetGraniteVeinsContinental" inherits="PresetLayeredVeinsContinental">
+      <Setting name="DistributionFrequency" avg="0.008" />
+      <Setting name="MotherlodeHeight" avg=":= 30/64 * dimension.groundLevel" range=":= 10/64 * dimension.groundLevel" />
+      <Setting name="BranchLength" avg=":= 2 * _default_" range=":= 2 * _default_" />
+      <Setting name="MotherlodeSize" avg=":= 2 * _default_" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:gneiss" />
+      <Replaces block="strata:schist" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteChalcopyriteContinental" inherits="PresetGraniteVeinsContinental" drawWireframe="true" wireframeColor="0xFFFFFF00">
+      <OreBlock block="strata:chalcopyrite" weight="0.88" />
+      <OreBlock block="strata:gold" weight="0.10" />
+      <OreBlock block="strata:pitchblende" weight="0.01" />
+      <OreBlock block="strata:pyrite" weight="0.01" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteMagnetiteContinental" inherits="PresetGraniteVeinsContinental" drawWireframe="true" wireframeColor="0xFF221100" block="strata:magnetite" />
+    <VeinsPreset name="PresetGraniteStibniteContinental" inherits="PresetGraniteVeinsContinental" drawWireframe="true" wireframeColor="0xFFFF0055">
+      <OreBlock block="strata:chrysotile" weight="0.8" />
+      <OreBlock block="strata:realgar" weight="0.2" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteRealgarContinental" inherits="PresetGraniteVeinsContinental" drawWireframe="true" wireframeColor="0xFFFF0055">
+      <OreBlock block="strata:realgar" weight="0.8" />
+      <OreBlock block="strata:chrysotile" weight="0.2" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteCassiteriteContinental" inherits="PresetGraniteVeinsContinental" drawWireframe="true" wireframeColor="0xFF221100">
+      <Setting name="DistributionFrequency" avg="0.015" />
+      <OreBlock block="strata:cassiterite" weight="0.9" />
+      <OreBlock block="strata:scheelite" weight="0.05" />
+      <OreBlock block="strata:gold" weight="0.05" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteFluoriteContinental" inherits="PresetGraniteVeinsContinental" drawWireframe="true" wireframeColor="0xFF22AA22">
+      <OreBlock block="strata:fluorite" weight="0.92" />
+      <OreBlock block="strata:sphalerite" weight="0.06" />
+      <OreBlock block="strata:galena" weight="0.02" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteQuartzContinental" inherits="PresetGraniteVeinsContinental" drawWireframe="true" wireframeColor="0xFFFF0055">
+      <Setting name="DistributionFrequency" avg="0.015" />
+      <OreBlock block="strata:quartz" weight="0.91" />
+      <OreBlock block="strata:kyanite" weight="0.05" />
+      <OreBlock block="strata:quartzite" weight="0.02" />
+      <OreBlock block="strata:pyrite" weight="0.02" />
+    </VeinsPreset>
+
+    <VeinsPreset name="PresetGraniteVeinsVolcanic" inherits="PresetLayeredVeinsVolcanic">
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <Setting name="MotherlodeHeight" avg=":= 55/64 * dimension.groundLevel" range=":= 15/64 * dimension.groundLevel" />
+      <Setting name="BranchLength" avg=":= 2 * _default_" range=":= 2 * _default_" />
+      <Setting name="MotherlodeSize" avg=":= 2 * _default_" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:gneiss" />
+      <Replaces block="strata:schist" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteChalcopyriteVolcanic" inherits="PresetGraniteVeinsVolcanic" drawWireframe="true" wireframeColor="0xFFFFFF00">
+      <OreBlock block="strata:chalcopyrite" weight="0.88" />
+      <OreBlock block="strata:gold" weight="0.10" />
+      <OreBlock block="strata:pitchblende" weight="0.01" />
+      <OreBlock block="strata:pyrite" weight="0.01" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteMagnetiteVolcanic" inherits="PresetGraniteVeinsVolcanic" drawWireframe="true" wireframeColor="0xFF221100" block="strata:magnetite" />
+    <VeinsPreset name="PresetGraniteStibniteVolcanic" inherits="PresetGraniteVeinsVolcanic" drawWireframe="true" wireframeColor="0xFFFF0055" block="strata:chrysotile" />
+    <VeinsPreset name="PresetGraniteCassiteriteVolcanic" inherits="PresetGraniteVeinsVolcanic" drawWireframe="true" wireframeColor="0xFF221100">
+      <Setting name="DistributionFrequency" avg="0.02" />
+      <OreBlock block="strata:cassiterite" weight="0.88" />
+      <OreBlock block="strata:scheelite" weight="0.05" />
+      <OreBlock block="strata:gold" weight="0.05" />
+      <OreBlock weight="0.02">
+        <IfChoice name="StrataGenEmerald" value="true">
+          <Then block="strata:emerald" />
+          <Else block="strata:cassiterite" />
+        </IfChoice>
+      </OreBlock>
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteQuartzVolcanic" inherits="PresetGraniteVeinsVolcanic" drawWireframe="true" wireframeColor="0xFFFF0055">
+      <Setting name="DistributionFrequency" avg="0.02" />
+      <OreBlock block="strata:quartz" weight="0.91" />
+      <OreBlock block="strata:kyanite" weight="0.05" />
+      <OreBlock block="strata:quartzite" weight="0.02" />
+      <OreBlock block="strata:pyrite" weight="0.02" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteFluoriteVolcanic" inherits="PresetGraniteVeinsVolcanic" drawWireframe="true" wireframeColor="0xFF22AA22">
+      <OreBlock block="strata:fluorite" weight="0.92" />
+      <OreBlock block="strata:sphalerite" weight="0.06" />
+      <OreBlock block="strata:galena" weight="0.02" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetGraniteGoldVolcanic" inherits="PresetGraniteVeinsVolcanic" drawWireframe="true" wireframeColor="0xFFFF0055">
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <OreBlock block="strata:gold" />
+    </VeinsPreset>
+
+    <VeinsPreset name="PresetPegmatite" inherits="PresetRockVeins" drawWireframe="true" wireframeColor="0xFFFF0055">
+      <Setting name="MotherlodeFrequency" avg="0.006" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:gneiss" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:greenschist" />
+      <Replaces block="strata:diorite" />
+      <Replaces block="strata:gabbro" />
+      <OreBlock block="strata:pegmatite" weight="0.769" />
+      <OreBlock block="strata:mica" weight="0.05" />
+      <OreBlock block="strata:kyanite" weight="0.01" />
+      <OreBlock block="strata:wolframite" weight="0.01" />
+      <OreBlock block="strata:lepidolite" weight="0.025" />
+      <OreBlock block="strata:tantalite" weight="0.02" />
+      <OreBlock block="strata:pollucite" weight="0.001" />
+      <OreBlock block="strata:apatite" weight="0.02" />
+      <OreBlock block="strata:spodumene" weight="0.07" />
+      <OreBlock weight="0.015">
+        <IfChoice name="StrataGenTin" value="true">
+          <Then block="strata:cassiterite" />
+          <Else block="strata:pegmatite" />
+        </IfChoice>
+      </OreBlock>
+      <OreBlock weight="0.01">
+        <IfChoice name="StrataGenEmerald" value="true">
+          <Then block="strata:emerald" />
+          <Else block="strata:pegmatite" />
+        </IfChoice>
+      </OreBlock>
+    </VeinsPreset>
+    <VeinsPreset name="PresetPegmatiteVolcanic" inherits="PresetPegmatite" wireframeColor="0xFFFF0055">
+      <Setting name="MotherlodeFrequency" avg=":= 2 * _default_" />
+      <Setting name="MotherlodeHeight" avg=":= 50/64 * dimension.groundLevel" range=":= 20/64 * dimension.groundLevel" type="normal" />
+      <BiomeSet inherits="felsic" />
+      <BiomeSet inherits="dome" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetPegmatiteContinental" inherits="PresetPegmatite" wireframeColor="0xFFFF0055">
+      <Setting name="MotherlodeHeight" avg="20" range="10" />
+      <BiomeSet inherits="inland" />
+    </VeinsPreset>
+
+    <VeinsPreset name="PresetCarbonatite" inherits="PresetRockVeins" drawWireframe="true" wireframeColor="0xFF0000FF">
+      <Setting name="BranchLength" avg=":= 0.5 * _default_" range=":= 0.5 * _default_" />
+      <Setting name="BranchFrequency" avg="1" range="0" />
+      <Setting name="BranchInclination" avg="-1" range="0.2" />
+      <Setting name="SegmentForkFrequency" avg="0.10" />
+      <Setting name="SegmentAngle" avg="0" range="0.3" />
+      <Setting name="ParentRangeLimit" avg="10" range="2" />
+      <Setting name="MotherlodeFrequency" avg="0.01" />
+      <Setting name="MotherlodeHeight" avg="30" range="10" />
+      <Setting name="SegmentRadius" avg="1.5" range="0.5" type="normal" />
+      <OreBlock block="strata:claystone" weight="0.810" />
+      <!-- RE -->
+      <OreBlock block="strata:bastnasite" weight="0.05" />
+      <OreBlock block="strata:apatite" weight="0.05" />
+      <OreBlock block="strata:vermiculite" weight="0.04" />
+      <OreBlock block="strata:barite" weight="0.025" />
+      <OreBlock block="strata:chalcopyrite" weight="0.025" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:schist" />
+      <Replaces block="strata:slate" />
+      <Replaces block="strata:basalt" />
+      <Replaces block="strata:gneiss" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:greenschist" />
+      <Replaces block="strata:diorite" />
+      <Replaces block="strata:gabbro" />
+      <Replaces block="strata:quartzite" />
+      <BiomeSet inherits="shieldVolcano" />
+      <BiomeType name="mesa" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenIgVeins &amp; ?StrataActive">
+      <IfCondition condition=":=?StrataGenCopper">
+        <Veins name="GraniteChalcopyriteContinental" inherits="PresetGraniteChalcopyriteContinental" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenIron">
+        <Veins name="GraniteMagnetiteContinental" inherits="PresetGraniteMagnetiteContinental" />
+      </IfCondition>
+      <Veins name="GraniteStibniteContinental" inherits="PresetGraniteStibniteContinental" />
+      <Veins name="GraniteRealgarContinental" inherits="PresetGraniteRealgarContinental" />
+      <IfCondition condition=":=?StrataGenTin">
+        <Veins name="GraniteCassiteriteContinental" inherits="PresetGraniteCassiteriteContinental" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenCopper">
+        <Veins name="GraniteChalcopyriteVolcanic" inherits="PresetGraniteChalcopyriteVolcanic" />
+      </IfCondition>
+      <Veins name="GraniteFluoriteContinental" inherits="PresetGraniteFluoriteContinental" />
+      <IfCondition condition=":=?StrataGenQuartz">
+        <Veins name="GraniteQuartzContinental" inherits="PresetGraniteQuartzContinental" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenIron">
+        <Veins name="GraniteMagnetiteVolcanic" inherits="PresetGraniteMagnetiteVolcanic" />
+      </IfCondition>
+      <Veins name="GraniteStibniteVolcanic" inherits="PresetGraniteStibniteVolcanic" />
+      <IfCondition condition=":=?StrataGenTin">
+        <Veins name="GraniteCassiteriteVolcanic" inherits="PresetGraniteCassiteriteVolcanic" />
+      </IfCondition>
+      <Veins name="GraniteFluoriteVolcanic" inherits="PresetGraniteFluoriteVolcanic" />
+      <IfCondition condition=":=?StrataGenQuartz">
+        <Veins name="GraniteQuartzVolcanic" inherits="PresetGraniteQuartzVolcanic" />
+      </IfCondition>
+      <IfCondition condition=":=?StrataGenGold">
+        <Veins name="GraniteGoldVolcanic" inherits="PresetGraniteGoldVolcanic" />
+      </IfCondition>
+    </IfCondition>
+    <IfCondition condition=":=?StrataGenPegmatite &amp; ?StrataActive">
+      <Veins name="PegmatiteContinental" inherits="PresetPegmatiteContinental" />
+      <Veins name="PegmatiteVolcanic" inherits="PresetPegmatiteVolcanic" />
+      <Veins name="Carbonatite" inherits="PresetCarbonatite" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Veins in basalt -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetBasaltVeins" inherits="PresetLayeredVeins">
+      <Setting name="DistributionFrequency" avg="0.005" />
+      <Setting name="MotherlodeHeight" avg=":= 25/64 * dimension.groundLevel" range=":= 10/64 * dimension.groundLevel" />
+      <Setting name="BranchLength" avg=":= 2 * _default_" range=":= 2 * _default_" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:basalt" />
+      <BiomeSet inherits="oceanic" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetCinnabar" inherits="PresetBasaltVeins" drawWireframe="true" wireframeColor="0xFFFF0055" block="strata:cinnabar" />
+
+    <IfCondition condition=":=?StrataGenIgVeins &amp; ?StrataGenMercury &amp; ?StrataActive">
+      <Veins name="Cinnabar" inherits="PresetCinnabar" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Carbonates -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetDolomite" inherits="PresetSedimentaryContinentalMinor" drawWireframe="true" wireframeColor="0xFF00FF55">
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <Setting name="CloudHeight" avg=":= 55/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="minecraft:sandstone" />
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="strata:limestone" />
+      <OreBlock block="strata:limestone" weight="0.3" />
+      <OreBlock block="strata:dolomite" weight="0.7" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetDolomiteOceanic" inherits="PresetSedimentaryOceanic" drawWireframe="true" wireframeColor="0xFF00FF55">
+      <Setting name="DistributionFrequency" avg="0.01" />
+      <OreBlock block="strata:limestone" weight="0.3" />
+      <OreBlock block="strata:dolomite" weight="0.7" />
+      <BiomeSet inherits="sedocean" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetLayeredVeinsDolomite" inherits="PresetLayeredVeinsLite" drawWireframe="true">
+      <Replaces block="strata:breccia" />
+      <Replaces block="strata:carbonatite" />
+      <Replaces block="strata:conglomerate" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:sandstone" />
+      <Replaces block="strata:limestone" />
+      <Replaces block="strata:dolomite" />
+      <Setting name="MotherlodeRangeLimit" avg="4" range="2" />
+      <Setting name="MotherlodeHeight" avg=":= 55/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+      <Setting name="MotherlodeFrequency" avg=":= 15.0 * oreFreq" range="0" />
+      <Setting name="BranchLength" avg=":= 0.5 * _default_" range=":= 0.5 * _default_" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetMagnesiteDolomite" inherits="PresetLayeredVeinsDolomite" drawWireframe="true" wireframeColor="0xFFAA6666" block="strata:magnesite" />
+    <VeinsPreset name="PresetSoapstoneDolomite" inherits="PresetLayeredVeinsDolomite" drawWireframe="true" wireframeColor="0xFF002200" block="strata:soapstone" />
+    <VeinsPreset name="PresetWollastoniteDolomite" inherits="PresetLayeredVeinsDolomite" drawWireframe="true" wireframeColor="0xFFAAAAAA" block="strata:wollastonite">
+      <Setting name="MotherlodeFrequency" avg=":= 0.5 * _default_" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetCarbonateDeposit" inherits="PresetLimestoneLower" block="strata:chalk">
+      <Setting name="DistributionFrequency" avg="0.003" />
+      <Setting name="CloudThickness" avg="6" />
+      <Setting name="CloudHeight" avg=":= 55/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetCarbonateSphaleriteGalena" inherits="PresetSphaleriteGalena" drawWireframe="true" wireframeColor="0xFFFF00FF">
+      <Setting name="DistributionFrequency" avg=":= 1.2 * oreFreq" />
+      <Setting name="MotherlodeHeight" avg=":= 55/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+      <Setting name="ParentRangeLimit" avg="4" range="2" />
+      <Replaces block="strata:chalk" />
+      <OreBlock block="strata:sphalerite" weight="0.60" />
+      <OreBlock block="strata:galena" weight="0.20" />
+      <OreBlock block="strata:barite" weight="0.20" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetCarbonateSphaleriteGalenaOceanic" inherits="PresetCarbonateSphaleriteGalena" drawWireframe="true" wireframeColor="0xFFFF00FF">
+      <Setting name="DistributionFrequency" avg=":= 0.005" />
+      <Setting name="MotherlodeHeight" avg=":= 40/64 * dimension.groundLevel" />
+      <BiomeSet inherits="sedocean" />
+      <OreBlock block="strata:sphalerite" weight="0.60" />
+      <OreBlock block="strata:galena" weight="0.20" />
+      <OreBlock block="strata:barite" weight="0.20" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenCarbonate &amp; ?StrataActive">
+      <IfCondition condition=":=?StrataGenMagnesium">
+        <Cloud name="Dolomite" inherits="PresetDolomite">
+          <Veins name="MagnesiteDolomite" inherits="PresetMagnesiteDolomite" />
+          <Veins name="SoapstoneDolomite" inherits="PresetSoapstoneDolomite" />
+          <Veins name="WollastoniteDolomite" inherits="PresetWollastoniteDolomite" />
+        </Cloud>
+        <Cloud name="DolomiteOceanic" inherits="PresetDolomiteOceanic">
+          <Veins name="MagnesiteDolomiteOceanic" inherits="PresetMagnesiteDolomite" />
+        </Cloud>
+      </IfCondition>
+      <Cloud name="CarbonateDeposit" inherits="PresetCarbonateDeposit">
+        <IfCondition condition=":=?StrataGenLeadZinc">
+          <Veins name="CarbonateSphaleriteGalena" inherits="PresetCarbonateSphaleriteGalena" />
+        </IfCondition>
+      </Cloud>
+      <IfCondition condition=":=?StrataGenLeadZinc">
+        <Veins name="CarbonateSphaleriteGalenaOceanic" inherits="PresetCarbonateSphaleriteGalenaOceanic" />
+      </IfCondition>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Skarns -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetSkarnDeposit" inherits="PresetSkarn" drawWireframe="true" wireframeColor="0xFF88FF55">
+      <Biome name=".*" weight="1" />
+      <BiomeSet inherits="volcanic" weight="-1" />
+      <Setting name="DistributionFrequency" avg=":= 0.5 * _default_" />
+      <Setting name="CloudThickness" avg=":= 2 * _default_" />
+      <Setting name="CloudHeight" range=":= 2/64 * dimension.groundLevel" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetSkarnVeins" inherits="PresetLayeredVeinsLite" drawWireframe="true">
+      <Replaces block="strata:limestone" />
+      <Replaces block="strata:mudstone" />
+      <Replaces block="strata:skarn" />
+      <Replaces block="strata:basalt" />
+      <Replaces block="strata:granite" />
+      <Replaces block="strata:marble" />
+      <Setting name="MotherlodeHeight" avg=":= 40/64 * dimension.groundLevel" range=":= 3/64 * dimension.groundLevel" />
+      <Setting name="MotherlodeRangeLimit" avg="4" range="2" />
+      <Setting name="MotherlodeFrequency" avg=":= 5.0 * oreFreq" />
+      <Setting name="BranchLength" avg=":= 0.5 * _default_" range=":= 0.5 * _default_" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSkarnMagnesite" inherits="PresetSkarnVeins" wireframeColor="0xFF11FF00">
+      <OreBlock block="strata:magnesite" weight="0.50" />
+      <OreBlock block="strata:vermiculite" weight="0.50" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSkarnSphaleriteGalena" inherits="PresetSkarnVeins" wireframeColor="0xFFFFFF00">
+      <OreBlock block="strata:sphalerite" weight="0.65" />
+      <OreBlock block="strata:galena" weight="0.35" />
+      <Setting name="MotherlodeFrequency" avg=":= 3 * _default_" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSkarnChalcopyrite" inherits="PresetSkarnVeins" wireframeColor="0xFFFFFF00" drawWireframe="true">
+      <OreBlock block="strata:chalcopyrite" weight="1.0" />
+      <Setting name="MotherlodeFrequency" avg=":= 3 * _default_" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSkarnMagnetite" inherits="PresetSkarnVeins" wireframeColor="0xFFFF0055" block="strata:magnetite" />
+    <VeinsPreset name="PresetSkarnLapis" inherits="PresetSkarnVeins" wireframeColor="0xFFFF0055" block="strata:lapis" />
+    <VeinsPreset name="PresetSkarnWollastonite" inherits="PresetSkarnVeins" wireframeColor="0xFFFFFFFF" drawWireframe="true">
+      <OreBlock block="strata:sandstone" weight="0.25" />
+      <OreBlock block="strata:wollastonite" weight="0.75" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetSkarnScheelite" inherits="PresetSkarnVeins" wireframeColor="0xFF11FF00" block="strata:scheelite" drawWireframe="true" />
+
+    <IfCondition condition=":=?StrataGenCarbonate &amp; ?StrataActive">
+      <Cloud name="SkarnDeposit" inherits="PresetSkarnDeposit">
+        <Veins name="SkarnMagnesite" inherits="PresetSkarnMagnesite" />
+        <IfModInstalled name="gregtech">
+          <IfChoice name="GregtechGenLapis" value="true">
+            <Then>
+              <Veins name="SkarnLazurite" inherits="PresetSkarnLazurite" />
+            </Then>
+            <Else>
+              <IfCondition condition=":=?StrataGenLapis">
+                <Veins name="SkarnLapis" inherits="PresetSkarnLapis" />
+              </IfCondition>
+            </Else>
+          </IfChoice>
+        </IfModInstalled>
+        <IfNotModInstalled name="gregtech">
+          <IfCondition condition=":=?StrataGenLapis">
+            <Veins name="SkarnLapis" inherits="PresetSkarnLapis" />
+          </IfCondition>
+        </IfNotModInstalled>
+        <IfCondition condition=":=?StrataGenLeadZinc">
+          <Veins name="SkarnSphaleriteGalena" inherits="PresetSkarnSphaleriteGalena" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenCopper">
+          <Veins name="SkarnChalcopyrite" inherits="PresetSkarnChalcopyrite" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenIron">
+          <Veins name="SkarnMagnetite" inherits="PresetSkarnMagnetite" />
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenTungsten">
+          <Veins name="SkarnScheelite" inherits="PresetSkarnScheelite" />
+        </IfCondition>
+        <Veins name="SkarnWollastonite" inherits="PresetSkarnWollastonite" />
+      </Cloud>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Uranium -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetUraniumUnconformitySandstone" inherits="PresetSandstone" drawWireframe="true" wireframeColor="0xFFFFFF00">
+      <Setting name="DistributionFrequency" avg="0.005" />
+      <ReplacesRegexp block=".*Stone.*" />
+      <Setting name="CloudHeight" avg=":= 45/64 * dimension.groundLevel" range=":= 0/64 * dimension.groundLevel" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetUraniumUnconformitySlate" inherits="PresetSlate" drawWireframe="true" wireframeColor="0xFF00FF00">
+      <Setting name="DistributionFrequency" avg="1" />
+      <ReplacesOre block="stone" />
+      <Setting name="ParentRangeLimit" avg="8" range="2" />
+      <Setting name="CloudHeight" avg=":= 40/64 * dimension.groundLevel" range=":= 0/64 * dimension.groundLevel" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetUraniumUnconformity" inherits="PresetStrategicCloud" block="strata:pitchblende" drawWireframe="true" wireframeColor="0xFF0000FF">
+      <ReplacesOre block="stone" />
+      <Setting name="ParentRangeLimit" avg="8" range="2" />
+      <Setting name="DistributionFrequency" avg=":= 1" />
+      <Setting name="CloudThickness" avg=":= 0.25 * _default_" range=":= 0.25 * _default_" />
+      <Setting name="CloudRadius" avg="8" range="3" />
+      <Setting name="OreDensity" avg=":=1.5 * _default_" />
+      <Setting name="CloudHeight" avg=":= 42/64 * dimension.groundLevel" range=":= 2/64 * dimension.groundLevel" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetUraniumSandstone" inherits="PresetSandstone" drawWireframe="true" wireframeColor="0xFF555500">
+      <Setting name="DistributionFrequency" avg="0.005" />
+      <ReplacesOre block="stone" />
+      <Setting name="CloudHeight" avg=":= 50/64 * dimension.groundLevel" range=":= 5/64 * dimension.groundLevel" />
+      <OreBlock block="strata:sandstone" weight="0.95" />
+      <OreBlock block="strata:pitchblende" weight="0.05" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetUraniumConglomerate" inherits="PresetConglomerate" drawWireframe="true" wireframeColor="0xFFFFFFFF">
+      <Setting name="DistributionFrequency" avg="0.003" />
+      <ReplacesOre block="stone" />
+      <Setting name="CloudRadius" avg=":= 1.3 * _default_" range=":= 1.3 * _default_" />
+      <Setting name="CloudHeight" avg=":= 50/64 * dimension.groundLevel" range=":= 5/64 * dimension.groundLevel" />
+      <OreBlock block="strata:conglomerate" weight="0.98" />
+      <OreBlock block="strata:pitchblende" weight="0.02" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetUraniumVeins" inherits="PresetLayeredVeinsContinental" drawWireframe="true" wireframeColor="0xFFF00FFF" block="strata:pitchblende">
+      <Setting name="DistributionFrequency" avg="0.003" />
+      <Setting name="MotherlodeHeight" avg=":= 40/64 * dimension.groundLevel" range=":= 10/64 * dimension.groundLevel" />
+      <Setting name="BranchLength" avg=":= 0.5 * _default_" range=":= 0.5 * _default_" />
+      <ReplacesOre block="stone" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenUranium &amp; ?StrataActive">
+      <Cloud name="UraniumUnconformitySandstone" inherits="PresetUraniumUnconformitySandstone">
+        <Cloud name="UraniumUnconformitySlate" inherits="PresetUraniumUnconformitySlate" />
+        <Cloud name="UraniumUnconformity" inherits="PresetUraniumUnconformity" />
+      </Cloud>
+      <Cloud name="UraniumSandstone" inherits="PresetUraniumSandstone" />
+      <Cloud name="UraniumConglomerate" inherits="PresetUraniumConglomerate" />
+      <Veins name="UraniumVeins" inherits="PresetUraniumVeins" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Pyrolusite -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetPyrolusite" block="strata:pyrolusite" inherits="PresetSedStrategicCloud" drawWireframe="true">
+      <Setting name="DistributionFrequency" avg=":=10 * _default_" />
+      <Setting name="OreDensity" avg=":= 1.5 * _default_" />
+      <BiomeType name="swamp" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetPyrolusiteOceanic" block="strata:pyrolusite" inherits="PresetSedStrategicCloudOceanic" drawWireframe="true" />
+
+    <IfCondition condition=":=?StrataGenLaterites &amp; ?StrataGenManganese &amp; ?StrataActive">
+      <Cloud name="Pyrolusite" inherits="PresetPyrolusite" />
+      <Cloud name="PyrolusiteOceanic" inherits="PresetPyrolusiteOceanic" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Barite -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetBarite" inherits="PresetSedStrategicCloud" block="strata:barite" drawWireframe="true">
+      <Setting name="DistributionFrequency" avg=":= 5 * _default_" />
+    </CloudPreset>
+    <CloudPreset name="PresetBariteOceanic" inherits="PresetBarite">
+      <Setting name="CloudHeight" avg=":= 40/64 * dimension.groundLevel" range=":= 5/64 * dimension.groundLevel" />
+      <BiomeSet inherits="sedocean" />
+    </CloudPreset>
+
+    <IfCondition condition=":=?StrataGenBarite &amp; ?StrataActive">
+      <Cloud name="Barite" inherits="PresetBarite" />
+      <Cloud name="BariteOceanic" inherits="PresetBariteOceanic" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Industrial minerals -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetAlunite" inherits="PresetLayeredVeinsVolcanic" block="strata:alunite" drawWireframe="true">
+      <Setting name="MotherlodeFrequency" avg="0.1" />
+      <Setting name="MotherlodeHeight" avg="90" range="10" type="uniform" />
+      <Replaces block="minecraft:stone" />
+      <Replaces block="strata:rhyolite" />
+      <Replaces block="strata:andesite" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetDiatomite" block="strata:diatomite" inherits="PresetSedStrategicCloud" drawWireframe="true" wireframeColor="0xFFFFFFFF">
+      <Setting name="DistributionFrequency" avg=":= 5 * _default_" />
+      <BiomeSet inherits="volcanic" />
+      <BiomeType name="sandy" />
+      <ReplacesOre block="stone" />
+      <Replaces block="minecraft:sandstone" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetPerliteVeins" inherits="PresetLayeredVeinsVolcanic" drawWireframe="true" wireframeColor="0xFF000000">
+      <ReplacesOre block="stone" />
+      <OreBlock block="strata:perlite" weight="0.75" />
+      <OreBlock block="minecraft:obsidian" weight="0.25" />
+      <!-- obsidian -->
+      <Setting name="DistributionFrequency" avg="0.02" />
+      <Setting name="MotherlodeHeight" avg="15" range="10" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetApatiteBeds" inherits="PresetMetaStrategicCloud" drawWireframe="true" block="strata:apatite">
+      <Setting name="DistributionFrequency" avg=":=5 * _default_" />
+      <Setting name="OreDensity" avg=":=1.5 * _default_" />
+      <Biome name=".*" weight="1" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetApatiteHintVeins" inherits="PresetHintVeins" block="strata:apatite" drawWireframe="true">
+      <Setting name="MotherlodeFrequency" avg=":= 0.25 * _default_" />
+      <Setting name="MotherlodeHeight" avg=":=40/64 * dimension.groundLevel" range=":=10/64 * dimension.groundLevel" type="uniform" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetKyanite" inherits="PresetMetamorphicContinental" drawWireframe="true" wireframeColor="0xFF000000">
+      <ReplacesOre block="stone" />
+      <Setting name="CloudHeight" avg="45" range="5" />
+      <Setting name="DistributionFrequency" avg="0.0025" />
+      <OreBlock block="strata:kyanite" weight="0.10" />
+      <OreBlock block="strata:quartzite" weight="0.90" />
+    </CloudPreset>
+
+    <StandardGenPreset name="PresetPumice" inherits="PresetVolcanicAsh" block="strata:pumice">
+      <Setting name="Frequency" avg=":=3 * _default_" range="0" />
+    </StandardGenPreset>
+
+    <CloudPreset name="PresetZeolite" inherits="PresetMetaStrategicCloud" drawWireframe="true" block="strata:zeolite">
+      <Setting name="DistributionFrequency" avg=":=5 * _default_" />
+      <Setting name="CloudHeight" avg=":=65/64 * dimension.groundLevel" range=":=10/64 * dimension.groundLevel" />
+      <BiomeSet inherits="volcanic" />
+    </CloudPreset>
+
+    <IfCondition condition=":=?StrataGenVolcanic &amp; ?StrataActive">
+      <Veins name="Alunite" inherits="PresetAlunite" />
+      <Veins name="PerliteVeins" inherits="PresetPerliteVeins" />
+      <StandardGen name="Pumice" inherits="PresetPumice" />
+      <Cloud name="Zeolite" inherits="PresetZeolite" />
+    </IfCondition>
+    <IfCondition condition=":=?StrataGenMarine &amp; ?StrataActive">
+      <Cloud name="Diatomite" inherits="PresetDiatomite" />
+    </IfCondition>
+    <IfCondition condition=":=?StrataGenApatite &amp; ?StrataActive">
+      <Cloud name="ApatiteBeds" inherits="PresetApatiteBeds">
+        <Veins name="ApatiteHintVeins" inherits="PresetApatiteHintVeins" />
+      </Cloud>
+    </IfCondition>
+    <IfCondition condition=":=?StrataGenQuartz &amp; ?StrataActive">
+      <Cloud name="Kyanite" inherits="PresetKyanite" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Graphite -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetGraphiteCloud" inherits="PresetMetamorphicContinental" drawWireframe="true" wireframeColor="0xFF000000">
+      <ReplacesOre block="stone" />
+      <Setting name="CloudHeight" avg="45" range="5" />
+      <Setting name="DistributionFrequency" avg="0.002" />
+    </CloudPreset>
+    <CloudPreset name="PresetSchistGraphiteCloud" inherits="PresetGraphiteCloud" wireframeColor="0xFFFF5555">
+      <OreBlock weight="0.005">
+        <IfChoice name="StrataGenDiamond" value="true">
+          <Then block="strata:diamond" />
+          <Else block="strata:schist" />
+        </IfChoice>
+      </OreBlock>
+      <OreBlock block="strata:graphite" weight="0.195" />
+      <OreBlock block="strata:schist" weight="0.80" />
+    </CloudPreset>
+    <CloudPreset name="PresetGneissGraphiteCloud" inherits="PresetGraphiteCloud" wireframeColor="0xFF222222">
+      <OreBlock weight="0.01">
+        <IfChoice name="StrataGenDiamond" value="true">
+          <Then block="strata:diamond" />
+          <!-- This used to be schist. Copy paste error? -->
+          <Else block="strata:gneiss" />
+        </IfChoice>
+      </OreBlock>
+      <OreBlock block="strata:graphite" weight="0.19" />
+      <OreBlock block="strata:gneiss" weight="0.80" />
+    </CloudPreset>
+    <CloudPreset name="PresetQuartziteGraphiteCloud" inherits="PresetGraphiteCloud" wireframeColor="0xFFAAAA00">
+      <OreBlock weight="0.02">
+        <IfChoice name="StrataGenDiamond" value="true">
+          <Then block="strata:diamond" />
+          <!-- This used to be schist. Copy paste error? -->
+          <Else block="strata:quartzite" />
+        </IfChoice>
+      </OreBlock>
+      <OreBlock block="strata:graphite" weight="0.18" />
+      <OreBlock block="strata:quartzite" weight="0.80" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetGraphiteBeds" inherits="PresetCoalBeds" drawWireframe="true">
+      <Setting name="DistributionFrequency" avg=":=0.1 * _default_" />
+      <Setting name="CloudHeight" avg="50" range="5" />
+      <OreBlock block="strata:graphite" weight="0.70" />
+      <OreBlock block="strata:anthracite" weight="0.30" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetGraphiteVeins" inherits="PresetLayeredVeinsContinental" drawWireframe="true" wireframeColor="0xFF000000" block="strata:graphite">
+      <ReplacesOre block="stone" />
+      <Setting name="DistributionFrequency" avg="0.003" />
+      <Setting name="MotherlodeHeight" avg="45" range="5" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenGraphite &amp; ?StrataActive">
+      <Cloud name="SchistGraphiteCloud" inherits="PresetSchistGraphiteCloud" />
+      <Cloud name="GneissGraphiteCloud" inherits="PresetGneissGraphiteCloud" />
+      <Cloud name="QuartziteGraphiteCloud" inherits="PresetQuartziteGraphiteCloud" />
+      <Cloud name="GraphiteBeds" inherits="PresetGraphiteBeds" />
+      <Veins name="GraphiteVeins" inherits="PresetGraphiteVeins" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Mineral clays -->
+  <ConfigSection>
+
+    <StandardGenPreset name="PresetSodiumBentonite" inherits="PresetVolcanicAsh">
+      <OreBlock block="strata:volcanic_ash" weight="0.05" />
+      <OreBlock block="strata:sodium_bentonite" weight="0.95" />
+      <Setting name="Frequency" avg=":=4 * _default_" range="0" />
+    </StandardGenPreset>
+
+    <CloudPreset name="PresetCalciumBentonite" inherits="PresetSedStrategicCloud" drawWireframe="true" wireframeColor="0xFFFF00FF">
+      <Setting name="CloudHeight" avg=":=60/64 * dimension.groundLevel" range=":=2/64 * dimension.groundLevel" />
+      <ReplacesOre block="stone" />
+      <Replaces block="minecraft:sandstone" />
+      <Replaces block="minecraft:sand" />
+      <Replaces block="minecraft:hardened_clay" />
+      <Setting name="DistributionFrequency" avg=":= 6 * _default_" />
+      <Setting name="OreDensity" avg=":=1.5 * _default_" />
+      <BiomeType name="sandy" />
+      <OreBlock block="strata:calcium_bentonite" />
+      <!-- The referenced source code does not have information about this block -->
+      <!-- <OreBlock block="PFAAGeologica:weakOreClay:7" weight="0.20" /> -->
+    </CloudPreset>
+
+    <CloudPreset name="PresetKaolinite" inherits="PresetSedStrategicCloud" block="strata:kaolinite" drawWireframe="true" wireframeColor="0xFF0000FF">
+      <Setting name="CloudHeight" avg=":=60/64 * dimension.groundLevel" range=":=2/64 * dimension.groundLevel" />
+      <ReplacesOre block="stone" />
+      <Replaces block="minecraft:dirt" />
+      <Setting name="DistributionFrequency" avg=":= 12 * _default_" />
+      <Setting name="OreDensity" avg=":=1.5 * _default_" />
+      <Biome name=".*" weight="-1" />
+      <BiomeType name="hot" />
+      <BiomeType name="wet" />
+    </CloudPreset>
+
+    <IfCondition condition=":=?StrataGenClay &amp; ?StrataActive">
+      <StandardGen name="SodiumBentonite" inherits="PresetSodiumBentonite" />
+      <Cloud name="CalciumBentonite" inherits="PresetCalciumBentonite" />
+      <Cloud name="Kaolinite" inherits="PresetKaolinite" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Volcanic -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetFumarole" inherits="PresetPipeVeins" seed="0xE222" drawWireframe="true">
+      <WireframeColor>0x40336699</WireframeColor>
+      <Setting name="MotherlodeFrequency" avg=":= 0.5 * _default_" />
+      <Setting name="MotherlodeHeight" avg=":= 40/64 * dimension.groundLevel" range="5" />
+      <OreBlock block="strata:realgar" weight="0.1" />
+      <OreBlock block="strata:sulfur" weight="0.2" />
+      <OreBlock block="strata:gypsum" weight="0.5" />
+      <OreBlock block="strata:salt" weight="0.2" />
+      <BiomeSet inherits="felsic" />
+      <ReplacesOre block="stone" />
+      <Replaces block="minecraft:dirt" />
+      <Replaces block="minecraft:gravel" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetFumaroleLava" block="minecraft:lava" inherits="PresetFumarole" seed="0xE222" drawWireframe="false">
+      <Setting name="MotherlodeSize" avg=":= 0.5 * _default_" />
+      <Setting name="SegmentRadius" avg=":= 0.5 * _default_" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenVolcanic &amp; ?StrataActive">
+      <Veins name="Fumarole" inherits="PresetFumarole">
+        <Veins name="FumaroleLava" inherits="PresetFumaroleLava" />
+      </Veins>
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Petroleum -->
+  <ConfigSection>
+
+    <CloudPreset name="PresetCrudeOil" inherits="PresetStratum">
+      <Setting name="CloudHeight" avg="40" range="10" />
+      <Setting name="CloudThickness" avg="3" range="1" />
+      <Setting name="DistributionFrequency" avg="0.001" />
+      <Setting name="CloudRadius" avg="8" range="2" type="normal" />
+      <ReplacesOre block="stone" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetCrudeOilContinental" inherits="PresetCrudeOil">
+      <BiomeSet inherits="inland" />
+    </CloudPreset>
+    <CloudPreset name="PresetCrudeOilLightContinental" inherits="PresetCrudeOilContinental" wireframeColor="0xFFAAAAAA">
+      <OreBlock block="minecraft:stained_glass:3" weight="0.5" />
+      <OreBlock block="minecraft:stained_glass:5" weight="0.5" />
+      <Setting name="DistributionFrequency" avg=":=2*_default_" />
+    </CloudPreset>
+    <CloudPreset name="PresetCrudeOilMediumContinental" inherits="PresetCrudeOilContinental" wireframeColor="0xFF888888">
+      <OreBlock block="minecraft:stained_glass:4" weight="0.7" />
+      <OreBlock block="minecraft:stained_glass:5" weight="0.3" />
+      <Setting name="DistributionFrequency" avg=":=3.5*_default_" />
+    </CloudPreset>
+    <CloudPreset name="PresetCrudeOilHeavyContinental" inherits="PresetCrudeOilContinental" wireframeColor="0xFF444444">
+      <OreBlock block="minecraft:stained_glass:4" weight="0.9" />
+      <OreBlock block="minecraft:stained_glass:5" weight="0.1" />
+      <Setting name="DistributionFrequency" avg=":=2*_default_" />
+    </CloudPreset>
+    <CloudPreset name="PresetCrudeOilExtraHeavyContinental" inherits="PresetCrudeOilContinental" block="minecraft:stained_glass:1" wireframeColor="0xFF000000">
+      <Setting name="DistributionFrequency" avg=":=3*_default_" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetCrudeOilOceanic" inherits="PresetCrudeOil">
+      <BiomeSet inherits="oceanic" />
+      <Setting name="CloudHeight" avg="25" range="5" />
+      <Setting name="CloudRadius" avg="16" range="4" type="normal" />
+    </CloudPreset>
+    <CloudPreset name="PresetCrudeOilLightOceanic" inherits="PresetCrudeOilOceanic" block="minecraft:stained_glass:3" />
+    <CloudPreset name="PresetCrudeOilMediumOceanic" inherits="PresetCrudeOilOceanic" block="minecraft:stained_glass:4" />
+    <CloudPreset name="PresetCrudeOilHeavyOceanic" inherits="PresetCrudeOilOceanic" block="minecraft:stained_glass:2" />
+    <CloudPreset name="PresetCrudeOilExtraHeavyOceanic" inherits="PresetCrudeOilOceanic" block="minecraft:stained_glass:1" />
+
+    <CloudPreset name="PresetOilShale" inherits="PresetStratum" wireframeColor="0xFF8E6500">
+      <Setting name="CloudHeight" avg="50" range="5" />
+      <Setting name="DistributionFrequency" avg="0.005" />
+      <Setting name="CloudThickness" avg="3" range="1" />
+      <OreBlock block="strata:oil_shale" weight="0.3" />
+      <OreBlock block="strata:mudstone" weight="0.7" />
+      <ReplacesOre block="stone" />
+    </CloudPreset>
+    <CloudPreset name="PresetOilShaleOceanic" inherits="PresetOilShale">
+      <BiomeSet inherits="oceanic" />
+      <Setting name="CloudHeight" avg="40" range="5" />
+    </CloudPreset>
+    <CloudPreset name="PresetOilShaleContinental" inherits="PresetOilShale">
+      <BiomeSet inherits="inland" />
+    </CloudPreset>
+
+    <VeinsPreset name="PresetTightVeins" inherits="PresetLayeredVeinsLite">
+      <Setting name="MotherlodeHeight" avg="50" range="2" />
+      <Setting name="ParentRangeLimit" avg="4" range="2" />
+      <ReplacesOre block="stone" />
+      <Replaces block="strata:oil_shale" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetTightOil" wireframeColor="0xFF00FFFF" inherits="PresetTightVeins" block="minecraft:stained_glass:3">
+      <Setting name="MotherlodeFrequency" avg="2" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetTightGas" wireframeColor="0xFF00FFFF" inherits="PresetTightVeins" block="minecraft:stained_glass:5">
+      <Setting name="MotherlodeFrequency" avg="3" />
+    </VeinsPreset>
+
+    <CloudPreset name="PresetNaturalGas" inherits="PresetStratum" wireframeColor="0xFF0000AA" block="minecraft:stained_glass:5" drawWireframe="true">
+      <Setting name="CloudHeight" avg="40" range="10" />
+      <Setting name="DistributionFrequency" avg="0.004" />
+      <Setting name="CloudRadius" avg="8" range="2" type="normal" />
+      <Setting name="CloudThickness" avg="3" range="1" />
+      <ReplacesOre block="stone" />
+    </CloudPreset>
+    <CloudPreset name="PresetNaturalGasContinental" inherits="PresetNaturalGas">
+      <BiomeSet inherits="continental" />
+    </CloudPreset>
+    <CloudPreset name="PresetNaturalGasOceanic" inherits="PresetNaturalGas">
+      <BiomeSet inherits="oceanic" />
+      <Setting name="CloudHeight" avg="25" range="5" />
+      <Setting name="CloudRadius" avg="16" range="4" type="normal" />
+    </CloudPreset>
+
+    <CloudPreset name="PresetOilSand" inherits="PresetStratum" block="strata:oil_sand">
+      <Setting name="DistributionFrequency" avg="0.001" range="0" />
+      <Setting name="CloudHeight" avg="62" range="1" />
+      <Replaces block="minecraft:dirt" />
+      <BiomeType name="plains" />
+    </CloudPreset>
+
+    <IfCondition condition=":=?StrataGenPetroleum &amp; ?StrataActive">
+      <Cloud name="CrudeOilLightContinental" inherits="PresetCrudeOilLightContinental" />
+      <Cloud name="CrudeOilMediumContinental" inherits="PresetCrudeOilMediumContinental" />
+      <Cloud name="CrudeOilHeavyContinental" inherits="PresetCrudeOilHeavyContinental" />
+      <Cloud name="CrudeOilExtraHeavyContinental" inherits="PresetCrudeOilExtraHeavyContinental" />
+      <Cloud name="OilShaleContinental" inherits="PresetOilShaleContinental">
+        <Veins name="TightOil" inherits="PresetTightOil" />
+        <Veins name="TightGas" inherits="PresetTightGas" />
+      </Cloud>
+      <Cloud name="NaturalGasContinental" inherits="PresetNaturalGasContinental" />
+      <Cloud name="CrudeOilLightOceanic" inherits="PresetCrudeOilLightOceanic" />
+      <Cloud name="CrudeOilMediumOceanic" inherits="PresetCrudeOilMediumOceanic" />
+      <Cloud name="CrudeOilHeavyOceanic" inherits="PresetCrudeOilHeavyOceanic" />
+      <Cloud name="CrudeOilExtraHeavyOceanic" inherits="PresetCrudeOilExtraHeavyOceanic" />
+      <Cloud name="OilShaleOceanic" inherits="PresetOilShaleOceanic" />
+      <Cloud name="NaturalGasOceanic" inherits="PresetNaturalGasOceanic" />
+      <Cloud name="OilSand" inherits="PresetOilSand" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Diamond -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetKimberlitePipes" inherits="PresetPipeVeins" drawWireframe="true">
+      <WireframeColor>0x40336699</WireframeColor>
+      <Setting name="MotherlodeFrequency" avg=":= 0.5 * _default_" />
+      <Setting name="MotherlodeHeight" avg=":= 3/64 * dimension.groundLevel" range="0" />
+      <Setting name="BranchInclination" avg="1.2" range="0.3" type="normal" />
+      <OreBlock block="strata:diamond" weight="0.6" />
+      <OreBlock block="strata:peridotite" weight="0.4" />
+    </VeinsPreset>
+    <VeinsPreset name="PresetKimberlitePipesLava" block="minecraft:lava" inherits="PresetKimberlitePipes">
+      <Setting name="MotherlodeSize" avg=":= 0.5 * _default_" />
+      <Setting name="SegmentRadius" avg=":= 0.5 * _default_" />
+      <ReplacesOre block="stone" />
+      <Replaces block="minecraft:dirt" />
+      <Replaces block="minecraft:gravel" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenDiamond &amp; ?StrataActive">
+      <Veins name="KimberlitePipes" inherits="PresetKimberlitePipes" seed="0xF186" />
+      <Veins name="KimberlitePipesLava" inherits="PresetKimberlitePipesLava" seed="0xF186" />
+    </IfCondition>
+
+  </ConfigSection>
+
+  <!-- Redstone -->
+  <ConfigSection>
+
+    <VeinsPreset name="PresetRedstoneVeins" inherits="PresetVerticalVeins" drawWireframe="true">
+      <WireframeColor>0x40550000</WireframeColor>
+      <Setting name="MotherlodeFrequency" avg=":= 1.8 * _default_" />
+      <OreBlock block="strata:redstone" weight="0.8" />
+      <OreBlock block="strata:chalcopyrite" weight="0.2" />
+    </VeinsPreset>
+
+    <IfCondition condition=":=?StrataGenRedstone &amp; ?StrataActive">
+      <Veins name="RedstoneVeins" inherits="PresetRedstoneVeins" />
+    </IfCondition>
+
+  </ConfigSection>
+
+</IfModInstalled>
