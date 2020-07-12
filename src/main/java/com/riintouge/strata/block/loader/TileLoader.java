@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.geo.*;
 import com.riintouge.strata.block.ore.*;
 import com.riintouge.strata.image.BlendMode;
@@ -11,6 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.EnumUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -38,7 +40,6 @@ public class TileLoader
     // IGeoTileInfo
     private String tileSetName;
     private TileType type;
-    private List< LayeredTextureLayer > layers;
     private ItemStack vanillaEquivalent;
 
     // IOreInfo
@@ -48,6 +49,7 @@ public class TileLoader
 
     // Shared
     private ResourceLocation textureResource;
+    GenericCubeTextureMap textureMap;
 
     public TileLoader()
     {
@@ -103,13 +105,13 @@ public class TileLoader
         {
             case "textureResource":
                 textureResource = new ResourceLocation( value );
-                break;
+                return true;
             case "generate":
             {
                 String[] values = value.split( " " );
                 tileSetName = values[ 0 ];
                 processKeyValue( "type" , values[ 1 ] );
-                break;
+                return true;
             }
             case "type":
                 type = TileType.valueOf( value.toUpperCase() );
@@ -118,7 +120,7 @@ public class TileLoader
                 // to get non-enum Material and SoundType values from distinct KVs
                 material = type.material;
                 soundType = type.soundType;
-                break;
+                return true;
             case "host":
                 isHost = true;
                 if( !value.isEmpty() )
@@ -128,19 +130,16 @@ public class TileLoader
                     if( values.length > 1 )
                         meta = Integer.parseInt( values[ 1 ] );
                 }
-                break;
+                return true;
             case "harvestLevel":
                 harvestLevel = Integer.parseInt( value );
-                break;
+                return true;
             case "hardness":
                 hardness = Float.parseFloat( value );
-                break;
+                return true;
             case "resistance":
                 explosionResistance = Float.parseFloat( value );
-                break;
-            case "texture":
-                layers = parseTextureLayers( value );
-                break;
+                return true;
             case "vanillaItem":
             {
                 String[] values = value.split( " " );
@@ -148,7 +147,7 @@ public class TileLoader
                     Item.getByNameOrId( values[ 0 ] ),
                     1,
                     values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0 );
-                break;
+                return true;
             }
             case "ore":
             {
@@ -156,16 +155,35 @@ public class TileLoader
                 oreName = values[ 0 ];
                 if( values.length > 1 )
                     oreDictionaryName = values[ 1 ];
-                break;
+                return true;
             }
             case "proxy":
                 proxyOre = new ResourceLocation( value );
-                break;
-            default:
-                return false;
+                return true;
         }
 
-        return true;
+        if( key.startsWith( "texture" ) )
+        {
+            String facingString = key.substring( "texture".length() ).toUpperCase();
+            GenericCubeTextureMap.Layer facing = EnumUtils.isValidEnum( GenericCubeTextureMap.Layer.class , facingString )
+                ? GenericCubeTextureMap.Layer.valueOf( facingString )
+                : facingString.isEmpty()
+                    ? GenericCubeTextureMap.Layer.ALL
+                    : null;
+            if( facing != null )
+            {
+                List< LayeredTextureLayer > layers = parseTextureLayers( value );
+                LayeredTextureLayer[] layerArray = new LayeredTextureLayer[ layers.size() ];
+                layers.toArray( layerArray );
+                // FIXME: Using tileSetName and type here violates the assumption that lines can be in any order
+                if( textureMap == null )
+                    textureMap = new GenericCubeTextureMap( type.registryName( new ResourceLocation( Strata.modid , tileSetName ) ).getResourcePath() );
+                textureMap.set( facing , layerArray );
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private List< LayeredTextureLayer > parseTextureLayers( String value )
@@ -204,9 +222,6 @@ public class TileLoader
     {
         if( !tileSetName.isEmpty() )
         {
-            LayeredTextureLayer[] layerArray = new LayeredTextureLayer[ layers.size() ];
-            layers.toArray( layerArray );
-
             ImmutableTile tile = new ImmutableTile(
                 tileSetName,
                 0,
@@ -217,7 +232,7 @@ public class TileLoader
                 harvestLevel,
                 hardness,
                 explosionResistance,
-                layerArray,
+                textureMap,
                 vanillaEquivalent );
 
             GeoTileSet tileSet = getOrCreateTileSet( tileSetName );
@@ -282,7 +297,6 @@ public class TileLoader
         // IGeoTileInfo
         tileSetName = "";
         type = null;
-        layers = null;
         vanillaEquivalent = null;
 
         // IOreInfo
@@ -292,5 +306,6 @@ public class TileLoader
 
         // Shared
         textureResource = null;
+        textureMap = null;
     }
 }

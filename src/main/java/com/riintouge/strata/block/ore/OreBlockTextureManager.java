@@ -136,6 +136,7 @@ public class OreBlockTextureManager
         int hostMeta )
     {
         // Ex: ore_strata_cinnabar_0_host_minecraft_stone_3
+        // TODO: How to handle GenericCubeTextureMap like ore_strata_cinnabar_0_caps_host_minecraft_stone_3_caps?
         String texturePath = String.format(
             "ore_%s_%s_%d_host_%s_%s_%d",
             ore.getResourceDomain(),

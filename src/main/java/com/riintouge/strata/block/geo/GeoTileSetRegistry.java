@@ -19,14 +19,14 @@ public class GeoTileSetRegistry
 {
     public static final GeoTileSetRegistry INSTANCE = new GeoTileSetRegistry();
 
-    private Map< String , IForgeRegistrable > tileSets = new HashMap<>();
+    private Map< String , GeoTileSet > tileSets = new HashMap<>();
 
     private GeoTileSetRegistry()
     {
         ModelLoaderRegistry.registerLoader( new GeoBlockModelLoader() );
     }
 
-    public void register( IForgeRegistrable tileSet , String tileSetName )
+    public void register( GeoTileSet tileSet , String tileSetName )
     {
         tileSets.put( tileSetName , tileSet );
     }
@@ -34,6 +34,12 @@ public class GeoTileSetRegistry
     public boolean contains( String tileSetName )
     {
         return tileSets.getOrDefault( tileSetName , null ) != null;
+    }
+
+    public IGeoTileInfo findTileInfo( String tileSetName , TileType type )
+    {
+        GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
+        return tileSet != null ? tileSet.find( type ) : null;
     }
 
     // Statics

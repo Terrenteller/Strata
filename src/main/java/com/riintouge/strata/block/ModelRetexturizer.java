@@ -14,16 +14,24 @@ import net.minecraftforge.common.model.IModelState;
 import java.util.Collection;
 import java.util.function.Function;
 
-// GenericModel? We aren't required to retexture it and instead use it to duplicate block states...
-public class RetexturableModel implements IModel
+public class ModelRetexturizer implements IModel
 {
     private final ModelResourceLocation templateModelResource;
     private final ResourceLocation textureResource;
+    private final IModelRetexturizerMap textureMap;
 
-    public RetexturableModel( ModelResourceLocation templateModelResource , ResourceLocation textureResource )
+    public ModelRetexturizer( ModelResourceLocation templateModelResource , ResourceLocation textureResource )
     {
         this.templateModelResource = templateModelResource;
+        this.textureMap = null;
         this.textureResource = textureResource;
+    }
+
+    public ModelRetexturizer( ModelResourceLocation templateModelResource , IModelRetexturizerMap textureMap )
+    {
+        this.templateModelResource = templateModelResource;
+        this.textureMap = textureMap;
+        this.textureResource = null;
     }
 
     @Override
@@ -35,7 +43,10 @@ public class RetexturableModel implements IModel
     @Override
     public Collection< ResourceLocation > getTextures()
     {
-        return ImmutableList.of( textureResource );
+        if( textureResource != null )
+            return ImmutableList.of( textureResource );
+
+        return textureMap.getAll();
     }
 
     @Override
@@ -50,8 +61,8 @@ public class RetexturableModel implements IModel
         return model.bake(
             new ModelStateComposition( state , model.getDefaultState() ),
             format,
-            textureResource == null
-                ? bakedTextureGetter
-                : ( resourceLocation ) -> bakedTextureGetter.apply( textureResource ) );
+            textureResource != null
+                ? ( resourceLocation ) -> bakedTextureGetter.apply( textureResource )
+                : ( resourceLocation ) -> bakedTextureGetter.apply( textureMap.getOrDefault( resourceLocation ) ) );
     }
 }

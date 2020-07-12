@@ -1,6 +1,8 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.IModelRetexturizerMap;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTexture;
@@ -13,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 
 public final class ImmutableTile implements IGeoTileInfo
 {
+    private String tileSetName;
     private ResourceLocation registryName;
     private int meta;
     private TileType type;
@@ -23,7 +26,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private float hardness;
     private float explosionResistance;
     private ItemStack vanillaEquivalent;
-    private LayeredTextureLayer[] layers;
+    private GenericCubeTextureMap genericCubeTextureMap;
 
     public ImmutableTile(
         String tileSetName,
@@ -35,9 +38,10 @@ public final class ImmutableTile implements IGeoTileInfo
         int harvestLevel,
         float hardness,
         float explosionResistance,
-        LayeredTextureLayer[] layers,
+        GenericCubeTextureMap genericCubeTextureMap ,
         ItemStack vanillaEquivalent )
     {
+        this.tileSetName = tileSetName;
         this.registryName = type.registryName( new ResourceLocation( Strata.modid , tileSetName ) );
         this.meta = meta;
         this.type = type;
@@ -47,7 +51,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.harvestLevel = harvestLevel;
         this.hardness = hardness;
         this.explosionResistance = explosionResistance;
-        this.layers = layers;
+        this.genericCubeTextureMap = genericCubeTextureMap;
         this.vanillaEquivalent = vanillaEquivalent;
     }
 
@@ -121,11 +125,17 @@ public final class ImmutableTile implements IGeoTileInfo
         return explosionResistance;
     }
 
+    @Override
+    public IModelRetexturizerMap textureMap()
+    {
+        return genericCubeTextureMap;
+    }
+
     // IForgeRegistrable overrides
 
     @Override
     public void stitchTextures( TextureMap textureMap )
     {
-        textureMap.setTextureEntry( new LayeredTexture( registryName , layers ) );
+        genericCubeTextureMap.stitchTextures( registryName.getResourcePath() , textureMap );
     }
 }

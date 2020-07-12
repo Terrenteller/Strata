@@ -31,6 +31,11 @@ public class GeoTileSet implements IForgeRegistrable
         tiles.put( tile.type() , tile );
     }
 
+    public IGeoTileInfo find( TileType type )
+    {
+        return tiles.getOrDefault( type , null );
+    }
+
     // IForgeRegistrable overrides
 
     @Override

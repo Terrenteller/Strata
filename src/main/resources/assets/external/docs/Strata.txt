@@ -3,7 +3,7 @@
 Information about each tile consists of a contiguous block of non-empty lines
 in any file directly under `config/strata/tiledata`. Each line works like a
 keyvalue or a key with multiple values. Line order within a block does not
-matter.
+matter unless otherwise noted.
 
 --- Keyvalues ---
 
@@ -43,10 +43,11 @@ Default: 1.7 * hardness if ore, 5.0 * hardness otherwise
 Description:
 	Explosion resistance.
 
-Key: texture
+Key: texture[Caps|Sides|Up|Down|North|South|East|West]
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:
-	Generate a texture using an optional array of layers atop a required base.
+	Generate a texture for the block model using an optional array of layers blended onto a required base.
+	Must come after a required "generate" line.
 
 Key: vanillaItem
 Value: <ResourceLocation> [meta]

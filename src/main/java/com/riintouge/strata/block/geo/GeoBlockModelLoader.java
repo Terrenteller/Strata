@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.RetexturableModel;
+import com.riintouge.strata.block.IModelRetexturizerMap;
+import com.riintouge.strata.block.ModelRetexturizer;
 import com.riintouge.strata.Strata;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
@@ -29,7 +30,7 @@ public class GeoBlockModelLoader implements ICustomModelLoader
             return false;
 
         Pair< String , String > stoneAndType = getStoneAndTypePairFromFoundMatch( matcher );
-        return GeoTileSetRegistry.INSTANCE.contains( stoneAndType.getLeft() );
+        return findTextureMap( stoneAndType.getLeft() , stoneAndType.getRight() ) != null;
     }
 
     @Override
@@ -41,10 +42,12 @@ public class GeoBlockModelLoader implements ICustomModelLoader
         matcher.find();
 
         Pair< String , String > stoneAndType = getStoneAndTypePairFromFoundMatch( matcher );
-        ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_" + stoneAndType.getRight() );
+        // Rename blockstate and model to geo_block? strata_block? What if ores were done with an additional layer?
+        // Should IGeoTileInfo provide the blockState resource to synchronize the model and texture map?
+        ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_cube" );
         ModelResourceLocation templateModelResource = new ModelResourceLocation( blockState , null );
-        ResourceLocation generatedTextureResource = new ResourceLocation( Strata.modid , matcher.group( 1 ) );
-        return new RetexturableModel( templateModelResource , generatedTextureResource );
+        IModelRetexturizerMap textureMap = findTextureMap( stoneAndType.getLeft() , stoneAndType.getRight() );
+        return new ModelRetexturizer( templateModelResource , textureMap );
     }
 
     // IResourceManagerReloadListener overrides
@@ -57,11 +60,48 @@ public class GeoBlockModelLoader implements ICustomModelLoader
 
     // Statics
 
+    private static IModelRetexturizerMap findTextureMap( String tileSetName , String type )
+    {
+        if( type != null )
+        {
+            try
+            {
+                return GeoTileSetRegistry.INSTANCE
+                    .findTileInfo( tileSetName , Enum.valueOf( TileType.class , type.toUpperCase() ) )
+                    .textureMap();
+            }
+            catch( NullPointerException ex )
+            {
+                return null;
+            }
+        }
+
+        // We can't tell primary types apart here
+        for( TileType tileType : TileType.values() )
+        {
+            if( tileType.isPrimary )
+            {
+                try
+                {
+                    return GeoTileSetRegistry.INSTANCE
+                        .findTileInfo( tileSetName , tileType )
+                        .textureMap();
+                }
+                catch( NullPointerException ex )
+                {
+                    // This one must not exist in the registry, so try another
+                }
+            }
+        }
+
+        return null;
+    }
+
     private static Pair< String , String > getStoneAndTypePairFromFoundMatch( Matcher match )
     {
         // We don't have the case insensitive version of isValidEnum
         return match.group( 3 ) != null && EnumUtils.isValidEnum( TileType.class , match.group( 3 ).toUpperCase() )
             ? new ImmutablePair<>( match.group( 2 ) , match.group( 3 ) )
-            : new ImmutablePair<>( match.group( 1 ) , "stone" );
+            : new ImmutablePair<>( match.group( 1 ) , null );
     }
 }
