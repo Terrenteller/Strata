@@ -110,7 +110,7 @@ public class OreBlockTextureManager
                         // all the work?
                         for( EnumFacing facing : EnumFacing.values() )
                         {
-                            ResourceLocation oreTextureResource = oreInfo.oreBlockOverlayTextureResource();
+                            ResourceLocation oreTextureResource = oreInfo.modelTextureMap().getOrDefault( facing );
                             ResourceLocation hostTextureResource = hostInfo.facingTextureMap().getOrDefault( facing );
                             ResourceLocation generatedResource = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta , facing );
                             //System.out.println( "Generating " + generatedResource.toString() );

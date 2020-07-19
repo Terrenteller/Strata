@@ -45,42 +45,42 @@ ore coal oreCoal
 type stone
 hardness 3.0
 resistance 5.0
-textureResource strata:blocks/ore/vanilla/coal
+texture strata:blocks/ore/vanilla/coal
 proxy minecraft:coal_ore
 
 ore diamond oreDiamond
 type stone
 hardness 3.0
 resistance 5.0
-textureResource strata:blocks/ore/vanilla/diamond
+texture strata:blocks/ore/vanilla/diamond
 proxy minecraft:diamond_ore
 
 ore emerald oreEmerald
 type stone
 hardness 3.0
 resistance 5.0
-textureResource strata:blocks/ore/vanilla/emerald
+texture strata:blocks/ore/vanilla/emerald
 proxy minecraft:emerald_ore
 
 ore gold oreGold
 type stone
 hardness 3.0
 resistance 5.0
-textureResource strata:blocks/ore/vanilla/gold
+texture strata:blocks/ore/vanilla/gold
 proxy minecraft:gold_ore
 
 ore iron oreIron
 type stone
 hardness 3.0
 resistance 5.0
-textureResource strata:blocks/ore/vanilla/iron
+texture strata:blocks/ore/vanilla/iron
 proxy minecraft:iron_ore
 
 ore lapis oreLapis
 type stone
 hardness 3.0
 resistance 5.0
-textureResource strata:blocks/ore/vanilla/lapis
+texture strata:blocks/ore/vanilla/lapis
 proxy minecraft:lapis_ore
 
 # Can we make this glowy-glowy like BlockRedstoneOre?
@@ -88,5 +88,5 @@ ore redstone oreRedstone
 type stone
 hardness 3.0
 resistance 5.0
-textureResource strata:blocks/ore/vanilla/redstone
+texture strata:blocks/ore/vanilla/redstone
 proxy minecraft:redstone_ore

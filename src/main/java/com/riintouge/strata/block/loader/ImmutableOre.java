@@ -1,16 +1,20 @@
 package com.riintouge.strata.block.loader;
 
+import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.ore.IOreInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
-public final class ImmutableOre implements IOreInfo
+public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
     private String oreName;
     private String oreDictionaryName;
-    private ResourceLocation textureResource;
+    private GenericCubeTextureMap genericCubeTextureMap;
     private Material material;
     private SoundType soundType;
     private String harvestTool;
@@ -23,7 +27,7 @@ public final class ImmutableOre implements IOreInfo
     public ImmutableOre(
         String oreName,
         String oreDictionaryName,
-        ResourceLocation textureResource,
+        GenericCubeTextureMap textureMap,
         ResourceLocation proxyBlockResource,
         Material material,
         SoundType soundType,
@@ -34,7 +38,7 @@ public final class ImmutableOre implements IOreInfo
     {
         this.oreName = oreName;
         this.oreDictionaryName = oreDictionaryName;
-        this.textureResource = textureResource;
+        this.genericCubeTextureMap = textureMap;
         this.material = material;
         this.soundType = soundType;
         this.harvestTool = harvestTool;
@@ -43,6 +47,8 @@ public final class ImmutableOre implements IOreInfo
         this.explosionResistance = explosionResistance == 0.0f ? 1.7f * hardness : explosionResistance;
         this.proxyBlockResource = proxyBlockResource;
     }
+
+    // IOreInfo overrides
 
     @Override
     public String oreName()
@@ -57,15 +63,15 @@ public final class ImmutableOre implements IOreInfo
     }
 
     @Override
-    public ResourceLocation oreBlockOverlayTextureResource()
+    public GenericCubeTextureMap modelTextureMap()
     {
-        return textureResource;
+        return genericCubeTextureMap;
     }
 
     @Override
     public ResourceLocation oreItemTextureResource()
     {
-        return oreBlockOverlayTextureResource();
+        return genericCubeTextureMap.getOrDefault( (EnumFacing)null );
     }
 
     @Override
@@ -117,5 +123,13 @@ public final class ImmutableOre implements IOreInfo
     public float explosionResistance()
     {
         return explosionResistance;
+    }
+
+    // IForgeRegistrable overrides
+
+    @Override
+    public void stitchTextures( TextureMap textureMap )
+    {
+        genericCubeTextureMap.stitchTextures( oreName , textureMap );
     }
 }

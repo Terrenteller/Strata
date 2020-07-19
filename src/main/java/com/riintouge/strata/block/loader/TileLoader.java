@@ -175,9 +175,11 @@ public class TileLoader
                 List< LayeredTextureLayer > layers = parseTextureLayers( value );
                 LayeredTextureLayer[] layerArray = new LayeredTextureLayer[ layers.size() ];
                 layers.toArray( layerArray );
-                // FIXME: Using tileSetName and type here violates the assumption that lines can be in any order
+                // FIXME: Using tileSetName, oreName, and type here violates the assumption that lines can be in any order
                 if( textureMap == null )
-                    textureMap = new GenericCubeTextureMap( type.registryName( new ResourceLocation( Strata.modid , tileSetName ) ).getResourcePath() );
+                    textureMap = tileSetName.isEmpty()
+                        ? new GenericCubeTextureMap( type.registryName( new ResourceLocation( Strata.modid , oreName ) ).getResourcePath() )
+                        : new GenericCubeTextureMap( type.registryName( new ResourceLocation( Strata.modid , tileSetName ) ).getResourcePath() );
                 textureMap.set( facing , layerArray );
                 return true;
             }
@@ -261,7 +263,7 @@ public class TileLoader
             ImmutableOre ore = new ImmutableOre(
                 oreName,
                 oreDictionaryName,
-                textureResource,
+                textureMap,
                 proxyOre,
                 material,
                 soundType,

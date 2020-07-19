@@ -31,8 +31,9 @@ public class OreItemTextureManager
     public void register( String ore , ResourceLocation resourceLocation )
     {
         if( alreadyInitializedOnce )
-            LOGGER.warn( "register called too late!" );
+            LOGGER.warn( "OreItemTextureManager::Register() called too late!" );
 
+        System.out.println( String.format( "OreItemTextureManager::register( \"%s\" , \"%s\" )" , ore , resourceLocation.toString() ) );
         if( !oreNameToTextureResourceMap.containsKey( ore ) )
             oreNameToTextureResourceMap.put( ore , resourceLocation );
     }

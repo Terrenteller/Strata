@@ -63,7 +63,15 @@ public class LayeredTexture extends TextureAtlasSprite
             {
                 ResourceLocation layerResource = layers[ index ].resource;
                 TextureAtlasSprite layerTexture = textureGetter.apply( layerResource );
-                rawLayers[ index ] = layerTexture.getFrameTextureData( 0 );
+                try
+                {
+                    rawLayers[ index ] = layerTexture.getFrameTextureData( 0 );
+                }
+                catch( IndexOutOfBoundsException ex )
+                {
+                    System.out.println( String.format( "Missing layered texture resource \"%s\"" , layerResource.toString() ) );
+                    throw ex;
+                }
 
                 if( index == layers.length - 1 )
                 {

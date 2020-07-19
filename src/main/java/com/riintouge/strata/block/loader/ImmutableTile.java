@@ -37,7 +37,7 @@ public final class ImmutableTile implements IGeoTileInfo
         int harvestLevel,
         float hardness,
         float explosionResistance,
-        GenericCubeTextureMap genericCubeTextureMap ,
+        GenericCubeTextureMap textureMap,
         ItemStack vanillaEquivalent )
     {
         this.tileSetName = tileSetName;
@@ -50,7 +50,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.harvestLevel = harvestLevel;
         this.hardness = hardness;
         this.explosionResistance = explosionResistance;
-        this.genericCubeTextureMap = genericCubeTextureMap;
+        this.genericCubeTextureMap = textureMap;
         this.vanillaEquivalent = vanillaEquivalent;
     }
 

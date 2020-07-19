@@ -4,6 +4,7 @@ import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -148,7 +149,10 @@ public class OreRegistry
     {
         System.out.println( "OreRegistry::stitchTextures()" );
 
-        // TODO: Move logic out of OreBlockTextureManager
+        // TODO: Move logic out of OreBlockTextureManager?
+        TextureMap textureMap = event.getMap();
+        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+            tileSet.getInfo().stitchTextures( textureMap );
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
