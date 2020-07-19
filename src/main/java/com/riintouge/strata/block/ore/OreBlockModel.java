@@ -45,7 +45,8 @@ public class OreBlockModel implements IBakedModel
             registryName,
             block.getMetaFromState( state ),
             host.resourceLocation,
-            host.meta );
+            host.meta,
+            side );
         List< BakedQuad > newQuads = new Vector<>();
         newQuads.add( BakedQuadUtil.createBakedQuadForFace( 0 , hostTexture , side ) );
 

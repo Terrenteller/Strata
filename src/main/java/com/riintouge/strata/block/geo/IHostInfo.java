@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.block.IFacingTextureMap;
 import net.minecraft.util.ResourceLocation;
 
 public interface IHostInfo extends IGenericBlockProperties
@@ -11,6 +12,5 @@ public interface IHostInfo extends IGenericBlockProperties
         return 0;
     }
 
-    // TODO: Can't assume a single texture on all sides
-    ResourceLocation baseTextureLocation();
+    IFacingTextureMap facingTextureMap();
 }

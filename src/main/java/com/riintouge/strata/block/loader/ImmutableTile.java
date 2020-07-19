@@ -2,11 +2,10 @@ package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.IFacingTextureMap;
 import com.riintouge.strata.block.IModelRetexturizerMap;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
-import com.riintouge.strata.image.LayeredTexture;
-import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -70,12 +69,6 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public ResourceLocation baseTextureLocation()
-    {
-        return registryName;
-    }
-
-    @Override
     public TileType type()
     {
         return type;
@@ -85,6 +78,14 @@ public final class ImmutableTile implements IGeoTileInfo
     public ItemStack vanillaEquivalent()
     {
         return vanillaEquivalent;
+    }
+
+    // IHostInfo overrides
+
+    @Override
+    public IFacingTextureMap facingTextureMap()
+    {
+        return genericCubeTextureMap;
     }
 
     // IGenericBlockProperties overrides
@@ -126,7 +127,7 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public IModelRetexturizerMap textureMap()
+    public IModelRetexturizerMap modelTextureMap()
     {
         return genericCubeTextureMap;
     }

@@ -10,5 +10,5 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 
     ItemStack vanillaEquivalent();
 
-    IModelRetexturizerMap textureMap();
+    IModelRetexturizerMap modelTextureMap();
 }

@@ -68,7 +68,7 @@ public class GeoBlockModelLoader implements ICustomModelLoader
             {
                 return GeoTileSetRegistry.INSTANCE
                     .findTileInfo( tileSetName , Enum.valueOf( TileType.class , type.toUpperCase() ) )
-                    .textureMap();
+                    .modelTextureMap();
             }
             catch( NullPointerException ex )
             {
@@ -85,7 +85,7 @@ public class GeoBlockModelLoader implements ICustomModelLoader
                 {
                     return GeoTileSetRegistry.INSTANCE
                         .findTileInfo( tileSetName , tileType )
-                        .textureMap();
+                        .modelTextureMap();
                 }
                 catch( NullPointerException ex )
                 {

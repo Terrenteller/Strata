@@ -4,6 +4,7 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -11,30 +12,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GenericCubeTextureMap implements IModelRetexturizerMap
+public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTextureMap
 {
     private final String registryName;
     private final LayeredTextureLayer[][] layerLayers = new LayeredTextureLayer[ Layer.values().length ][];
 
     public enum Layer
     {
-        ALL   ( null ),
-        CAPS  ( ALL ),
-        SIDES ( ALL ),
-        UP    ( CAPS ),
-        DOWN  ( CAPS ),
-        NORTH ( SIDES ),
-        SOUTH ( SIDES ),
-        EAST  ( SIDES ),
-        WEST  ( SIDES );
+        ALL   ( null  , null             ),
+        CAPS  ( ALL   , null             ),
+        SIDES ( ALL   , null             ),
+        UP    ( CAPS  , EnumFacing.UP    ),
+        DOWN  ( CAPS  , EnumFacing.DOWN  ),
+        NORTH ( SIDES , EnumFacing.NORTH ),
+        SOUTH ( SIDES , EnumFacing.SOUTH ),
+        EAST  ( SIDES , EnumFacing.EAST  ),
+        WEST  ( SIDES , EnumFacing.WEST  );
 
         public final Layer parentLayer;
         public final ResourceLocation resourceLocation;
+        public final EnumFacing facing;
 
-        Layer( Layer parentLayer )
+        Layer( Layer parentLayer , EnumFacing facing )
         {
             this.parentLayer = parentLayer;
             this.resourceLocation = new ResourceLocation( Strata.modid , String.format( "meta/%s" , this.toString().toLowerCase() ) );
+            this.facing = facing;
         }
 
         public String resourceLocationSuffix()
@@ -95,7 +98,7 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap
             if( modelTextureLocationIn.equals( layer.resourceLocation ) )
                 return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() );
 
-        return Layer.ALL.resourceLocation;
+        return GenericCubeTextureMap.Layer.ALL.resourceLocation;
     }
 
     @Nonnull
@@ -108,5 +111,19 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap
                 resourceLocations.add( new ResourceLocation( Strata.modid , registryName + layer.resourceLocationSuffix() ) );
 
         return resourceLocations;
+    }
+
+    // IFacingTextureMap overrides
+
+    @Nonnull
+    @Override
+    public ResourceLocation getOrDefault( EnumFacing facing )
+    {
+        if( facing != null )
+            for( Layer layer : Layer.values() )
+                if( layer.facing == facing )
+                    return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() );
+
+        return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( GenericCubeTextureMap.Layer.ALL ).resourceLocationSuffix() );
     }
 }
