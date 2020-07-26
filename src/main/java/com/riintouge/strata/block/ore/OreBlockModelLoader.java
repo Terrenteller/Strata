@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.ore;
 
+import com.riintouge.strata.block.IModelRetexturizerMap;
 import com.riintouge.strata.block.ModelRetexturizer;
 import com.riintouge.strata.Strata;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -41,9 +42,8 @@ public class OreBlockModelLoader implements ICustomModelLoader
         ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_cube" );
         ModelResourceLocation templateModelResource = new ModelResourceLocation( blockState , null );
         String oreName = matcher.group( ResourcePatternOreNameGroup );
-        // oreItem...? Should this be the overlay?
-        ResourceLocation textureResource = OreRegistry.INSTANCE.find( oreName ).getInfo().oreItemTextureResource();
-        return new ModelRetexturizer( templateModelResource , textureResource );
+        IModelRetexturizerMap textureMap = OreRegistry.INSTANCE.find( oreName ).getInfo().modelTextureMap();
+        return new ModelRetexturizer( templateModelResource , textureMap );
     }
 
     // IResourceManagerReloadListener overrides
