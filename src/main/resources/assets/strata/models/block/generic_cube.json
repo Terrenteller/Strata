@@ -1,9 +1,6 @@
 {
     "parent": "block/block",
     "textures": {
-        "all": "strata:meta/all",
-        "caps": "strata:meta/caps",
-        "sides": "strata:meta/sides",
         "up": "strata:meta/up",
         "down": "strata:meta/down",
         "north": "strata:meta/north",
@@ -13,33 +10,6 @@
     },
     "elements": [
         {
-            "__comment": "Base/default/all layer",
-            "from": [ 0, 0, 0 ],
-            "to": [ 16, 16, 16 ],
-            "faces": {
-                "up":    { "uv": [ 0, 0, 16, 16 ] , "texture": "#all" , "cullface": "up"    },
-                "down":  { "uv": [ 0, 0, 16, 16 ] , "texture": "#all" , "cullface": "down"  },
-                "north": { "uv": [ 0, 0, 16, 16 ] , "texture": "#all" , "cullface": "north" },
-                "south": { "uv": [ 0, 0, 16, 16 ] , "texture": "#all" , "cullface": "south" },
-                "east":  { "uv": [ 0, 0, 16, 16 ] , "texture": "#all" , "cullface": "east"  },
-                "west":  { "uv": [ 0, 0, 16, 16 ] , "texture": "#all" , "cullface": "west"  }
-            }
-        },
-        {
-            "__comment": "Side groups",
-            "from": [ 0, 0, 0 ],
-            "to": [ 16, 16, 16 ],
-            "faces": {
-                "up":    { "uv": [ 0, 0, 16, 16 ] , "texture": "#caps"  , "cullface": "up"    },
-                "down":  { "uv": [ 0, 0, 16, 16 ] , "texture": "#caps"  , "cullface": "down"  },
-                "north": { "uv": [ 0, 0, 16, 16 ] , "texture": "#sides" , "cullface": "north" },
-                "south": { "uv": [ 0, 0, 16, 16 ] , "texture": "#sides" , "cullface": "south" },
-                "east":  { "uv": [ 0, 0, 16, 16 ] , "texture": "#sides" , "cullface": "east"  },
-                "west":  { "uv": [ 0, 0, 16, 16 ] , "texture": "#sides" , "cullface": "west"  }
-            }
-        },
-        {
-            "__comment": "Specific sides",
             "from": [ 0, 0, 0 ],
             "to": [ 16, 16, 16 ],
             "faces": {

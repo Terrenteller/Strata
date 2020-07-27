@@ -70,6 +70,7 @@ ore mica
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/mica
+textureCaps strata:blocks/ore/weak/mica_caps
 
 ore soapstone
 type stone
@@ -80,6 +81,7 @@ ore trona
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/trona
+textureCaps strata:blocks/ore/weak/trona_caps
 
 ore bog_iron oreIron
 type stone
@@ -176,6 +178,7 @@ ore banded_iron oreIron
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/banded_iron
+textureCaps strata:blocks/ore/strong/banded_iron_caps
 
 ore quartz
 type stone
@@ -244,6 +247,7 @@ ore perlite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/perlite
+textureCaps strata:blocks/ore/strong/perlite_caps
 
 ore pumice
 type stone
@@ -325,11 +329,13 @@ ore basaltic_mineral_sand
 type sand
 hardness 1.0
 texture strata:blocks/ore/sand/basaltic_mineral_sand
+textureCaps strata:blocks/ore/sand/basaltic_mineral_sand_caps
 
 ore cassiterite_sand
 type sand
 hardness 1.0
 texture strata:blocks/ore/sand/cassiterite_sand
+textureCaps strata:blocks/ore/sand/cassiterite_sand_caps
 
 ore garnet_sand
 type sand
@@ -340,6 +346,7 @@ ore granitic_mineral_sand
 type sand
 hardness 1.0
 texture strata:blocks/ore/sand/granitic_mineral_sand
+textureCaps strata:blocks/ore/sand/granitic_mineral_sand_caps
 
 ore quartz_sand
 type sand
@@ -355,11 +362,13 @@ ore glauconite
 type sand
 hardness 1.0
 texture strata:blocks/ore/sand/glauconite
+textureCaps strata:blocks/ore/sand/glauconite_caps
 
 ore diatomite
 type sand
 hardness 1.0
 texture strata:blocks/ore/sand/diatomite
+textureCaps strata:blocks/ore/sand/diatomite_caps
 
 ore sulfur
 type sand
