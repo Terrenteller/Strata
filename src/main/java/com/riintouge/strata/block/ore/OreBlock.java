@@ -46,7 +46,7 @@ public class OreBlock extends Block
         setHardness( oreInfo.hardness() );
         setResistance( oreInfo.explosionResistance() );
 
-        setCreativeTab( Strata.ITEM_TAB );
+        setCreativeTab( Strata.ORE_TAB );
     }
 
     protected MetaResourceLocation getHost( World world , BlockPos pos )

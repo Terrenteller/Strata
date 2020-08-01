@@ -1,6 +1,5 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -14,8 +13,6 @@ public class GeoItemBlock extends ItemBlock
         String blockRegistryName = block.getRegistryName().toString();
         setRegistryName( blockRegistryName );
         setUnlocalizedName( blockRegistryName );
-
-        setCreativeTab( Strata.ITEM_TAB );
     }
 
     // ItemBlock overrides

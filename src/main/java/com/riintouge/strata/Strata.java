@@ -13,10 +13,12 @@ public class Strata
 {
     public static final String modid = "strata";
     public static final String name = "Strata";
+    // TODO: Can we modify this value at build time?
     public static final String version = "1.12.2-19.12.08";
 
-    public static final StrataBlockTab BLOCK_TAB = new StrataBlockTab();
-    public static final StrataItemTab ITEM_TAB = new StrataItemTab();
+    public static final StrataBlocksTab BLOCK_TAB = new StrataBlocksTab();
+    public static final StrataBuildingBlocksTab BUILDING_BLOCK_TAB = new StrataBuildingBlocksTab();
+    public static final StrataOresTab ORE_TAB = new StrataOresTab();
 
     @Mod.Instance( modid )
     public static Strata instance = new Strata();

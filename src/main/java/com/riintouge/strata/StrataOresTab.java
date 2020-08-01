@@ -4,11 +4,11 @@ import com.riintouge.strata.block.ore.OreRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
-public class StrataItemTab extends CreativeTabs
+public class StrataOresTab extends CreativeTabs
 {
-    public StrataItemTab()
+    public StrataOresTab()
     {
-        super( "strataItemsTab" );
+        super( "strataOresTab" );
     }
 
     @Override

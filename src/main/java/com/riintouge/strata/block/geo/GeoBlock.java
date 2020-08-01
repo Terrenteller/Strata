@@ -20,7 +20,10 @@ public class GeoBlock extends Block
         ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        setCreativeTab( Strata.BLOCK_TAB );
+        if( info.type().isPrimary || info.type() == TileType.COBBLE )
+            setCreativeTab( Strata.BLOCK_TAB );
+        else
+            setCreativeTab( Strata.BUILDING_BLOCK_TAB );
 
         setHarvestLevel( info.harvestTool() , info.harvestLevel() );
         setSoundType( info.soundType() );

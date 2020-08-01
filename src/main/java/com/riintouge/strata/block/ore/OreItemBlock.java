@@ -20,8 +20,6 @@ public class OreItemBlock extends ItemBlock
         String blockRegistryName = block.getRegistryName().toString();
         setRegistryName( blockRegistryName );
         setUnlocalizedName( blockRegistryName );
-
-        setCreativeTab( Strata.ITEM_TAB );
     }
 
     // ItemBlock overrides

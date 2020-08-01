@@ -16,7 +16,6 @@ public class GeoBlockStairs extends BlockStairs
         ResourceLocation registryName = info.type().stairType().registryName( info.tileSetName() );
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        // TODO: Move to new tab
-        setCreativeTab( Strata.BLOCK_TAB );
+        setCreativeTab( Strata.BUILDING_BLOCK_TAB );
     }
 }

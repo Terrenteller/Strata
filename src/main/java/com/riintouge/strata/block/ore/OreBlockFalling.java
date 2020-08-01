@@ -20,6 +20,6 @@ public class OreBlockFalling extends BlockFalling
         setHardness( oreInfo.hardness() );
         setResistance( oreInfo.explosionResistance() );
 
-        setCreativeTab( Strata.ITEM_TAB );
+        setCreativeTab( Strata.ORE_TAB );
     }
 }

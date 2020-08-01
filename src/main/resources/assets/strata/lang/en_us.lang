@@ -1,7 +1,8 @@
 # General
 
 itemGroup.strataBlocksTab=Strata Blocks
-itemGroup.strataItemsTab=Strata Ores
+itemGroup.strataBuildingBlocksTab=Strata Building Blocks
+itemGroup.strataOresTab=Strata Ores
 
 # Ground
 
