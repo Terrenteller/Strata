@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,35 @@ public class GeoTileSetRegistry
     {
         GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
         return tileSet != null ? tileSet.find( type ) : null;
+    }
+
+    @Nullable
+    public IGeoTileInfo findTileInfo( String tileSetName , @Nullable String type )
+    {
+        if( type != null && !type.isEmpty() )
+        {
+            try
+            {
+                return INSTANCE.findTileInfo( tileSetName , Enum.valueOf( TileType.class , type.toUpperCase() ) );
+            }
+            catch( IllegalArgumentException ex )
+            {
+                return null;
+            }
+        }
+
+        // We can't tell primary types apart here
+        for( TileType tileType : TileType.values() )
+        {
+            if( tileType.isPrimary )
+            {
+                IGeoTileInfo info = INSTANCE.findTileInfo( tileSetName , tileType );
+                if( info != null )
+                    return info;
+            }
+        }
+
+        return null;
     }
 
     // Statics

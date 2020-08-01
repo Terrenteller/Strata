@@ -49,7 +49,7 @@ public class TileLoader
 
     // Shared
     private ResourceLocation textureResource;
-    GenericCubeTextureMap textureMap;
+    private GenericCubeTextureMap textureMap;
 
     public TileLoader()
     {
@@ -177,10 +177,7 @@ public class TileLoader
                 layers.toArray( layerArray );
                 // FIXME: Using tileSetName, oreName, and type here violates the assumption that lines can be in any order
                 if( textureMap == null )
-                {
-                    ResourceLocation baseRegistryName = new ResourceLocation( Strata.modid , tileSetName.isEmpty() ? oreName : tileSetName );
-                    textureMap = new GenericCubeTextureMap( type.registryName( baseRegistryName ).getResourcePath() );
-                }
+                    textureMap = new GenericCubeTextureMap( type.registryName( tileSetName.isEmpty() ? oreName : tileSetName ).getResourcePath() );
                 textureMap.set( facing , layerArray );
                 return true;
             }

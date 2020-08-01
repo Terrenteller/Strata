@@ -41,7 +41,7 @@ public final class ImmutableTile implements IGeoTileInfo
         ItemStack vanillaEquivalent )
     {
         this.tileSetName = tileSetName;
-        this.registryName = type.registryName( new ResourceLocation( Strata.modid , tileSetName ) );
+        this.registryName = type.registryName( tileSetName );
         this.meta = meta;
         this.type = type;
         this.material = material;
@@ -55,6 +55,12 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     // IGeoTileInfo overrides
+
+    @Override
+    public String tileSetName()
+    {
+        return tileSetName;
+    }
 
     @Override
     public ResourceLocation registryName()

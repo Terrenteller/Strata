@@ -25,28 +25,22 @@ public class GeoBlockModelLoader implements ICustomModelLoader
     @Override
     public boolean accepts( ResourceLocation modelLocation )
     {
-        Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
-        if( !matcher.find() )
-            return false;
-
-        Pair< String , String > stoneAndType = getStoneAndTypePairFromFoundMatch( matcher );
-        return findTextureMap( stoneAndType.getLeft() , stoneAndType.getRight() ) != null;
+        Pair< String , String > stoneAndType = getStoneAndTypePairFromLocation( modelLocation );
+        return stoneAndType != null && findTileType( stoneAndType.getLeft() , stoneAndType.getRight() ) != null;
     }
 
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        System.out.println( String.format( "GeoBlockModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        ModelResourceLocation modelResourceLocation = (ModelResourceLocation)modelLocation;
+        System.out.println( String.format( "GeoBlockModelLoader::loadModel( \"%s\" )" , modelResourceLocation.toString() ) );
 
-        Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
-        matcher.find();
-
-        Pair< String , String > stoneAndType = getStoneAndTypePairFromFoundMatch( matcher );
-        // Rename blockstate and model to geo_block? strata_block? What if ores were done with an additional layer?
-        // Should IGeoTileInfo provide the blockState resource to synchronize the model and texture map?
-        ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_cube" );
-        ModelResourceLocation templateModelResource = new ModelResourceLocation( blockState , null );
-        IModelRetexturizerMap textureMap = findTextureMap( stoneAndType.getLeft() , stoneAndType.getRight() );
+        Pair< String , String > stoneAndType = getStoneAndTypePairFromLocation( modelLocation );
+        TileType tileType = findTileType( stoneAndType.getLeft() , stoneAndType.getRight() );
+        ModelResourceLocation templateModelResource = new ModelResourceLocation( tileType.modelName , modelResourceLocation.getVariant() );
+        TileType primaryOrSecondaryType = tileType.parentType != null ? tileType.parentType : tileType;
+        IGeoTileInfo tileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( stoneAndType.getLeft() , primaryOrSecondaryType );
+        IModelRetexturizerMap textureMap = tileInfo.modelTextureMap();
         return new ModelRetexturizer( templateModelResource , textureMap );
     }
 
@@ -60,48 +54,34 @@ public class GeoBlockModelLoader implements ICustomModelLoader
 
     // Statics
 
-    private static IModelRetexturizerMap findTextureMap( String tileSetName , String type )
+    private static TileType findTileType( String tileSetName , String type )
     {
-        if( type != null )
+        if( type != null && !type.isEmpty() )
         {
             try
             {
-                return GeoTileSetRegistry.INSTANCE
-                    .findTileInfo( tileSetName , Enum.valueOf( TileType.class , type.toUpperCase() ) )
-                    .modelTextureMap();
+                return Enum.valueOf( TileType.class , type.toUpperCase() );
             }
-            catch( NullPointerException ex )
+            catch( IllegalArgumentException ex )
             {
                 return null;
             }
         }
 
-        // We can't tell primary types apart here
-        for( TileType tileType : TileType.values() )
-        {
-            if( tileType.isPrimary )
-            {
-                try
-                {
-                    return GeoTileSetRegistry.INSTANCE
-                        .findTileInfo( tileSetName , tileType )
-                        .modelTextureMap();
-                }
-                catch( NullPointerException ex )
-                {
-                    // This one must not exist in the registry, so try another
-                }
-            }
-        }
-
-        return null;
+        // No type, so must be a primary. Let GeoTileSetRegistry figure out which one.
+        IGeoTileInfo tileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , type );
+        return tileInfo != null ? tileInfo.type() : null;
     }
 
-    private static Pair< String , String > getStoneAndTypePairFromFoundMatch( Matcher match )
+    private static Pair< String , String > getStoneAndTypePairFromLocation( ResourceLocation modelLocation )
     {
+        Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
+        if( !matcher.find() )
+            return null;
+
         // We don't have the case insensitive version of isValidEnum
-        return match.group( 3 ) != null && EnumUtils.isValidEnum( TileType.class , match.group( 3 ).toUpperCase() )
-            ? new ImmutablePair<>( match.group( 2 ) , match.group( 3 ) )
-            : new ImmutablePair<>( match.group( 1 ) , null );
+        return matcher.group( 3 ) != null && EnumUtils.isValidEnum( TileType.class , matcher.group( 3 ).toUpperCase() )
+            ? new ImmutablePair<>( matcher.group( 2 ) , matcher.group( 3 ) )
+            : new ImmutablePair<>( matcher.group( 1 ) , null );
     }
 }

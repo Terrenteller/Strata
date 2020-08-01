@@ -75,7 +75,7 @@ strata:hornfels_cobble.name=Hornfels Cobblestone
 strata:peridotite_cobble.name=Peridotite Cobblestone
 strata:quartzite_cobble.name=Quartzite Cobblestone
 
-# Brick
+# Stone Brick
 
 strata:breccia_stonebrick.name=Breccia Bricks
 strata:claystone_stonebrick.name=Claystone Bricks
@@ -106,6 +106,102 @@ strata:gabbro_stonebrick.name=Gabbro Bricks
 strata:hornfels_stonebrick.name=Hornfels Bricks
 strata:peridotite_stonebrick.name=Peridotite Bricks
 strata:quartzite_stonebrick.name=Quartzite Bricks
+
+# Cobble Stairs
+
+strata:breccia_cobblestairs.name=Breccia Cobblestone Stairs
+strata:claystone_cobblestairs.name=Claystone Cobblestone Stairs
+strata:carbonatite_cobblestairs.name=Carbonatite Cobblestone Stairs
+strata:conglomerate_cobblestairs.name=Conglomerate Cobblestone Stairs
+strata:mudstone_cobblestairs.name=Mudstone Cobblestone Stairs
+
+strata:limestone_cobblestairs.name=Limestone Cobblestone Stairs
+strata:schist_cobblestairs.name=Schist Cobblestone Stairs
+strata:serpentinite_cobblestairs.name=Serpentinite Cobblestone Stairs
+strata:slate_cobblestairs.name=Slate Cobblestone Stairs
+strata:skarn_cobblestairs.name=Skarn Cobblestone Stairs
+strata:chalk_cobblestairs.name=Chalk Cobblestone Stairs
+
+strata:andesite_cobblestairs.name=Andesite Cobblestone Stairs
+strata:basalt_cobblestairs.name=Basalt Cobblestone Stairs
+strata:gneiss_cobblestairs.name=Gneiss Cobblestone Stairs
+strata:granite_cobblestairs.name=Granite Cobblestone Stairs
+strata:greenschist_cobblestairs.name=Greenschist Cobblestone Stairs
+strata:marble_cobblestairs.name=Marble Cobblestone Stairs
+strata:pegmatite_cobblestairs.name=Pegmatite Cobblestone Stairs
+strata:rhyolite_cobblestairs.name=Rhyolite Cobblestone Stairs
+strata:sandstone_cobblestairs.name=Sandstone Cobblestone Stairs
+strata:red_sandstone_cobblestairs.name=Red Sandstone Cobblestone Stairs
+
+strata:diorite_cobblestairs.name=Diorite Cobblestone Stairs
+strata:gabbro_cobblestairs.name=Gabbro Cobblestone Stairs
+strata:hornfels_cobblestairs.name=Hornfels Cobblestone Stairs
+strata:peridotite_cobblestairs.name=Peridotite Cobblestone Stairs
+strata:quartzite_cobblestairs.name=Quartzite Cobblestone Stairs
+
+# Stone Stairs
+
+strata:breccia_stonestairs.name=Breccia Stairs
+strata:claystone_stonestairs.name=Claystone Stairs
+strata:carbonatite_stonestairs.name=Carbonatite Stairs
+strata:conglomerate_stonestairs.name=Conglomerate Stairs
+strata:mudstone_stonestairs.name=Mudstone Stairs
+
+strata:limestone_stonestairs.name=Limestone Stairs
+strata:schist_stonestairs.name=Schist Stairs
+strata:serpentinite_stonestairs.name=Serpentinite Stairs
+strata:slate_stonestairs.name=Slate Stairs
+strata:skarn_stonestairs.name=Skarn Stairs
+strata:chalk_stonestairs.name=Chalk Stairs
+
+strata:andesite_stonestairs.name=Andesite Stairs
+strata:basalt_stonestairs.name=Basalt Stairs
+strata:gneiss_stonestairs.name=Gneiss Stairs
+strata:granite_stonestairs.name=Granite Stairs
+strata:greenschist_stonestairs.name=Greenschist Stairs
+strata:marble_stonestairs.name=Marble Stairs
+strata:pegmatite_stonestairs.name=Pegmatite Stairs
+strata:rhyolite_stonestairs.name=Rhyolite Stairs
+strata:sandstone_stonestairs.name=Sandstone Stairs
+strata:red_sandstone_stonestairs.name=Red Sandstone Stairs
+
+strata:diorite_stonestairs.name=Diorite Stairs
+strata:gabbro_stonestairs.name=Gabbro Stairs
+strata:hornfels_stonestairs.name=Hornfels Stairs
+strata:peridotite_stonestairs.name=Peridotite Stairs
+strata:quartzite_stonestairs.name=Quartzite Stairs
+
+# Stone Brick Stairs
+
+strata:breccia_stonebrickstairs.name=Breccia Brick Stairs
+strata:claystone_stonebrickstairs.name=Claystone Brick Stairs
+strata:carbonatite_stonebrickstairs.name=Carbonatite Brick Stairs
+strata:conglomerate_stonebrickstairs.name=Conglomerate Brick Stairs
+strata:mudstone_stonebrickstairs.name=Mudstone Brick Stairs
+
+strata:limestone_stonebrickstairs.name=Limestone Brick Stairs
+strata:schist_stonebrickstairs.name=Schist Brick Stairs
+strata:serpentinite_stonebrickstairs.name=Serpentinite Brick Stairs
+strata:slate_stonebrickstairs.name=Slate Brick Stairs
+strata:skarn_stonebrickstairs.name=Skarn Brick Stairs
+strata:chalk_stonebrickstairs.name=Chalk Brick Stairs
+
+strata:andesite_stonebrickstairs.name=Andesite Brick Stairs
+strata:basalt_stonebrickstairs.name=Basalt Brick Stairs
+strata:gneiss_stonebrickstairs.name=Gneiss Brick Stairs
+strata:granite_stonebrickstairs.name=Granite Brick Stairs
+strata:greenschist_stonebrickstairs.name=Greenschist Brick Stairs
+strata:marble_stonebrickstairs.name=Marble Brick Stairs
+strata:pegmatite_stonebrickstairs.name=Pegmatite Brick Stairs
+strata:rhyolite_stonebrickstairs.name=Rhyolite Brick Stairs
+strata:sandstone_stonebrickstairs.name=Sandstone Brick Stairs
+strata:red_sandstone_stonebrickstairs.name=Red Sandstone Brick Stairs
+
+strata:diorite_stonebrickstairs.name=Diorite Brick Stairs
+strata:gabbro_stonebrickstairs.name=Gabbro Brick Stairs
+strata:hornfels_stonebrickstairs.name=Hornfels Brick Stairs
+strata:peridotite_stonebrickstairs.name=Peridotite Brick Stairs
+strata:quartzite_stonebrickstairs.name=Quartzite Brick Stairs
 
 # Ore
 

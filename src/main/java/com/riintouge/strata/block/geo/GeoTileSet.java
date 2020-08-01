@@ -19,6 +19,9 @@ import java.util.Map;
 
 public class GeoTileSet implements IForgeRegistrable
 {
+    private String DefaultModelVariant = null;
+    // Should we try to get properties from the default block state instead?
+    private String DefaultStairModelVariant = "facing=east,half=bottom,shape=straight";
     protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
 
     public GeoTileSet()
@@ -42,7 +45,17 @@ public class GeoTileSet implements IForgeRegistrable
     public void registerBlocks( IForgeRegistry< Block > blockRegistry )
     {
         for( TileType type : tiles.keySet() )
-            blockRegistry.register( new GeoBlock( tiles.get( type ) ) );
+        {
+            IGeoTileInfo tile = tiles.get( type );
+            GeoBlock geoBlock = new GeoBlock( tile );
+            blockRegistry.register( geoBlock );
+
+            if( tile.type().stairType() != null )
+            {
+                GeoBlockStairs geoBlockStairs = new GeoBlockStairs( tile , geoBlock.getDefaultState() );
+                blockRegistry.register( geoBlockStairs );
+            }
+        }
     }
 
     @Override
@@ -56,9 +69,17 @@ public class GeoTileSet implements IForgeRegistrable
             IGeoTileInfo tile = tiles.get( type );
             Block block = Block.REGISTRY.getObject( tile.registryName() );
             Item item = new GeoItemBlock( block );
-
             itemMap.put( type , item );
             itemRegistry.register( item );
+
+            TileType stairType = tile.type().stairType();
+            if( stairType != null )
+            {
+                Block stairBlock = Block.REGISTRY.getObject( stairType.registryName( tile.tileSetName() ) );
+                GeoItemBlock geoItemBlockStairs = new GeoItemBlock( stairBlock );
+                itemMap.put( stairType , geoItemBlockStairs );
+                itemRegistry.register( geoItemBlockStairs );
+            }
         }
 
         // ...and then the recipes
@@ -95,7 +116,6 @@ public class GeoTileSet implements IForgeRegistrable
                 case STONEBRICK:
                     vanillaItem = new ItemStack( Blocks.STONEBRICK );
                     break;
-                default: {}
             }
 
             if( tile.vanillaEquivalent() != null )
@@ -120,7 +140,17 @@ public class GeoTileSet implements IForgeRegistrable
             ModelLoader.setCustomModelResourceLocation(
                 Item.REGISTRY.getObject( tile.registryName() ),
                 tile.meta(),
-                new ModelResourceLocation( tile.registryName() , null ) );
+                new ModelResourceLocation( tile.registryName() , DefaultModelVariant ) );
+
+            TileType stairType = tile.type().stairType();
+            if( stairType != null )
+            {
+                ResourceLocation stairsRegistryName = stairType.registryName( tile.tileSetName() );
+                ModelLoader.setCustomModelResourceLocation(
+                    Item.REGISTRY.getObject( stairsRegistryName ),
+                    tile.meta(),
+                    new ModelResourceLocation( stairsRegistryName , DefaultStairModelVariant ) );
+            }
         }
     }
 

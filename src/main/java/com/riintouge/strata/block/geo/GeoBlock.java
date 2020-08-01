@@ -38,7 +38,7 @@ public class GeoBlock extends Block
             switch( info.type() )
             {
                 case STONE:
-                    return Item.REGISTRY.getObject( TileType.COBBLE.registryName( info.registryName() ) );
+                    return Item.REGISTRY.getObject( TileType.COBBLE.registryName( info.tileSetName() ) );
                 case CLAY:
                     // TODO: Drop clay globs
                 default: { }

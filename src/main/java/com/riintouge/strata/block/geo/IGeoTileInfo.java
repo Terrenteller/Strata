@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 
 public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 {
+    String tileSetName();
+
     TileType type();
 
     ItemStack vanillaEquivalent();
