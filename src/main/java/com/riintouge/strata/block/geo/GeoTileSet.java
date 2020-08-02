@@ -19,10 +19,14 @@ import java.util.Map;
 
 public class GeoTileSet implements IForgeRegistrable
 {
-    private String DefaultModelVariant = null;
+    private final String DefaultModelVariant = null;
     // Should we try to get properties from the default block state instead?
-    private String DefaultStairModelVariant = "facing=east,half=bottom,shape=straight";
+    private final String DefaultStairModelVariant = "facing=east,half=bottom,shape=straight";
+    private final String DefaultSlabModelVariant = "half=bottom,variant=default";
     protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
+    protected Map< TileType , GeoBlockStairs > stairsMap = new HashMap<>();
+    protected Map< TileType , GeoBlockSlab > slabMap = new HashMap<>();
+    protected Map< TileType , GeoBlockSlab > slabsMap = new HashMap<>();
 
     public GeoTileSet()
     {
@@ -47,13 +51,25 @@ public class GeoTileSet implements IForgeRegistrable
         for( TileType type : tiles.keySet() )
         {
             IGeoTileInfo tile = tiles.get( type );
-            GeoBlock geoBlock = new GeoBlock( tile );
-            blockRegistry.register( geoBlock );
+            GeoBlock block = new GeoBlock( tile );
+            blockRegistry.register( block );
 
             if( tile.type().stairType() != null )
             {
-                GeoBlockStairs geoBlockStairs = new GeoBlockStairs( tile , geoBlock.getDefaultState() );
-                blockRegistry.register( geoBlockStairs );
+                GeoBlockStairs stairs = new GeoBlockStairs( tile , block.getDefaultState() );
+                stairsMap.put( type , stairs );
+                blockRegistry.register( stairs );
+            }
+
+            if( tile.type().slabType() != null && tile.type().slabsType() != null )
+            {
+                GeoBlockSlab slab = new GeoBlockSlab( tile );
+                slabMap.put( type , slab );
+                blockRegistry.register( slab );
+
+                GeoBlockSlab slabs = new GeoBlockSlabs( tile , slab );
+                slabsMap.put( type , slabs );
+                blockRegistry.register( slabs );
             }
         }
     }
@@ -75,10 +91,17 @@ public class GeoTileSet implements IForgeRegistrable
             TileType stairType = tile.type().stairType();
             if( stairType != null )
             {
-                Block stairBlock = Block.REGISTRY.getObject( stairType.registryName( tile.tileSetName() ) );
-                GeoItemBlock geoItemBlockStairs = new GeoItemBlock( stairBlock );
-                itemMap.put( stairType , geoItemBlockStairs );
-                itemRegistry.register( geoItemBlockStairs );
+                GeoItemBlock stairs = new GeoItemBlock( stairsMap.get( type ) );
+                itemMap.put( stairType , stairs );
+                itemRegistry.register( stairs );
+            }
+
+            TileType slabType = tile.type().slabType();
+            if( slabType != null && tile.type().slabsType() != null )
+            {
+                GeoItemBlockSlab slab = new GeoItemBlockSlab( slabMap.get( type ) , slabsMap.get( type ) );
+                itemMap.put( slabType , slab );
+                itemRegistry.register( slab );
             }
         }
 
@@ -150,6 +173,16 @@ public class GeoTileSet implements IForgeRegistrable
                     Item.REGISTRY.getObject( stairsRegistryName ),
                     tile.meta(),
                     new ModelResourceLocation( stairsRegistryName , DefaultStairModelVariant ) );
+            }
+
+            TileType slabType = tile.type().slabType();
+            if( slabType != null && tile.type().slabsType() != null )
+            {
+                ResourceLocation slabRegistryName = slabType.registryName( tile.tileSetName() );
+                ModelLoader.setCustomModelResourceLocation(
+                    Item.REGISTRY.getObject( slabRegistryName ),
+                    tile.meta(),
+                    new ModelResourceLocation( slabRegistryName , DefaultSlabModelVariant ) );
             }
         }
     }

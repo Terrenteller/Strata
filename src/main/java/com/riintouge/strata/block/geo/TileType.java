@@ -20,7 +20,14 @@ public enum TileType
     // Ternaries - internally auto-generated from a primary or secondary
     COBBLESTAIRS     ( false , "%s:%s_cobblestairs"     , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_stairs" ),
     STONESTAIRS      ( false , "%s:%s_stonestairs"      , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_stairs" ),
-    STONEBRICKSTAIRS ( false , "%s:%s_stonebrickstairs" , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_stairs" );
+    STONEBRICKSTAIRS ( false , "%s:%s_stonebrickstairs" , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_stairs" ),
+    COBBLESLAB       ( false , "%s:%s_cobbleslab"       , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_slab"   ),
+    COBBLESLABS      ( false , "%s:%s_cobbleslabs"      , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_slab"   ),
+    STONESLAB        ( false , "%s:%s_stoneslab"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"   ),
+    STONESLABS       ( false , "%s:%s_stoneslabs"       , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"   ),
+    STONEBRICKSLAB   ( false , "%s:%s_stonebrickslab"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"   ),
+    STONEBRICKSLABS  ( false , "%s:%s_stonebrickslabs"  , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"   );
+    // TODO: Walls
 
     public final Boolean isPrimary; // This could stand to be improved. Perhaps TileTypeTier?
     public final Material material;
@@ -73,5 +80,33 @@ public enum TileType
         return null;
     }
 
-    // TODO: slabs (cobble, stone, brick), walls (cobble, stone, brick), stairs (cobble, stone, brick), etc.
+    public TileType slabType()
+    {
+        switch( this )
+        {
+            case STONE:
+                return STONESLAB;
+            case COBBLE:
+                return COBBLESLAB;
+            case STONEBRICK:
+                return STONEBRICKSLAB;
+        }
+
+        return null;
+    }
+
+    public TileType slabsType()
+    {
+        switch( this )
+        {
+            case STONE:
+                return STONESLABS;
+            case COBBLE:
+                return COBBLESLABS;
+            case STONEBRICK:
+                return STONEBRICKSLABS;
+        }
+
+        return null;
+    }
 }

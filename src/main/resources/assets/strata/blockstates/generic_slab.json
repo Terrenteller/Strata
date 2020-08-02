@@ -1,0 +1,20 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "up": "strata:meta/up",
+            "down": "strata:meta/down",
+            "north": "strata:meta/north",
+            "south": "strata:meta/south",
+            "east": "strata:meta/east",
+            "west": "strata:meta/west",
+            "particle": "strata:meta/all"
+        },
+        "uvlock": true
+    },
+    "variants": {
+        "variant=default": { "model": "strata:generic_cube" },
+        "half=bottom,variant=default": { "model": "strata:generic_slab" },
+        "half=top,variant=default": { "model": "strata:generic_upper_slab" }
+    }
+}

@@ -204,6 +204,102 @@ strata:hornfels_stonebrickstairs.name=Hornfels Brick Stairs
 strata:peridotite_stonebrickstairs.name=Peridotite Brick Stairs
 strata:quartzite_stonebrickstairs.name=Quartzite Brick Stairs
 
+# Cobble Slab
+
+strata:breccia_cobbleslab.name=Breccia Cobblestone Slab
+strata:claystone_cobbleslab.name=Claystone Cobblestone Slab
+strata:carbonatite_cobbleslab.name=Carbonatite Cobblestone Slab
+strata:conglomerate_cobbleslab.name=Conglomerate Cobblestone Slab
+strata:mudstone_cobbleslab.name=Mudstone Cobblestone Slab
+
+strata:limestone_cobbleslab.name=Limestone Cobblestone Slab
+strata:schist_cobbleslab.name=Schist Cobblestone Slab
+strata:serpentinite_cobbleslab.name=Serpentinite Cobblestone Slab
+strata:slate_cobbleslab.name=Slate Cobblestone Slab
+strata:skarn_cobbleslab.name=Skarn Cobblestone Slab
+strata:chalk_cobbleslab.name=Chalk Cobblestone Slab
+
+strata:andesite_cobbleslab.name=Andesite Cobblestone Slab
+strata:basalt_cobbleslab.name=Basalt Cobblestone Slab
+strata:gneiss_cobbleslab.name=Gneiss Cobblestone Slab
+strata:granite_cobbleslab.name=Granite Cobblestone Slab
+strata:greenschist_cobbleslab.name=Greenschist Cobblestone Slab
+strata:marble_cobbleslab.name=Marble Cobblestone Slab
+strata:pegmatite_cobbleslab.name=Pegmatite Cobblestone Slab
+strata:rhyolite_cobbleslab.name=Rhyolite Cobblestone Slab
+strata:sandstone_cobbleslab.name=Sandstone Cobblestone Slab
+strata:red_sandstone_cobbleslab.name=Red Sandstone Cobblestone Slab
+
+strata:diorite_cobbleslab.name=Diorite Cobblestone Slab
+strata:gabbro_cobbleslab.name=Gabbro Cobblestone Slab
+strata:hornfels_cobbleslab.name=Hornfels Cobblestone Slab
+strata:peridotite_cobbleslab.name=Peridotite Cobblestone Slab
+strata:quartzite_cobbleslab.name=Quartzite Cobblestone Slab
+
+# Stone Slab
+
+strata:breccia_stoneslab.name=Breccia Slab
+strata:claystone_stoneslab.name=Claystone Slab
+strata:carbonatite_stoneslab.name=Carbonatite Slab
+strata:conglomerate_stoneslab.name=Conglomerate Slab
+strata:mudstone_stoneslab.name=Mudstone Slab
+
+strata:limestone_stoneslab.name=Limestone Slab
+strata:schist_stoneslab.name=Schist Slab
+strata:serpentinite_stoneslab.name=Serpentinite Slab
+strata:slate_stoneslab.name=Slate Slab
+strata:skarn_stoneslab.name=Skarn Slab
+strata:chalk_stoneslab.name=Chalk Slab
+
+strata:andesite_stoneslab.name=Andesite Slab
+strata:basalt_stoneslab.name=Basalt Slab
+strata:gneiss_stoneslab.name=Gneiss Slab
+strata:granite_stoneslab.name=Granite Slab
+strata:greenschist_stoneslab.name=Greenschist Slab
+strata:marble_stoneslab.name=Marble Slab
+strata:pegmatite_stoneslab.name=Pegmatite Slab
+strata:rhyolite_stoneslab.name=Rhyolite Slab
+strata:sandstone_stoneslab.name=Sandstone Slab
+strata:red_sandstone_stoneslab.name=Red Sandstone Slab
+
+strata:diorite_stoneslab.name=Diorite Slab
+strata:gabbro_stoneslab.name=Gabbro Slab
+strata:hornfels_stoneslab.name=Hornfels Slab
+strata:peridotite_stoneslab.name=Peridotite Slab
+strata:quartzite_stoneslab.name=Quartzite Slab
+
+# Stone Brick Slab
+
+strata:breccia_stonebrickslab.name=Breccia Brick Slab
+strata:claystone_stonebrickslab.name=Claystone Brick Slab
+strata:carbonatite_stonebrickslab.name=Carbonatite Brick Slab
+strata:conglomerate_stonebrickslab.name=Conglomerate Brick Slab
+strata:mudstone_stonebrickslab.name=Mudstone Brick Slab
+
+strata:limestone_stonebrickslab.name=Limestone Brick Slab
+strata:schist_stonebrickslab.name=Schist Brick Slab
+strata:serpentinite_stonebrickslab.name=Serpentinite Brick Slab
+strata:slate_stonebrickslab.name=Slate Brick Slab
+strata:skarn_stonebrickslab.name=Skarn Brick Slab
+strata:chalk_stonebrickslab.name=Chalk Brick Slab
+
+strata:andesite_stonebrickslab.name=Andesite Brick Slab
+strata:basalt_stonebrickslab.name=Basalt Brick Slab
+strata:gneiss_stonebrickslab.name=Gneiss Brick Slab
+strata:granite_stonebrickslab.name=Granite Brick Slab
+strata:greenschist_stonebrickslab.name=Greenschist Brick Slab
+strata:marble_stonebrickslab.name=Marble Brick Slab
+strata:pegmatite_stonebrickslab.name=Pegmatite Brick Slab
+strata:rhyolite_stonebrickslab.name=Rhyolite Brick Slab
+strata:sandstone_stonebrickslab.name=Sandstone Brick Slab
+strata:red_sandstone_stonebrickslab.name=Red Sandstone Brick Slab
+
+strata:diorite_stonebrickslab.name=Diorite Brick Slab
+strata:gabbro_stonebrickslab.name=Gabbro Brick Slab
+strata:hornfels_stonebrickslab.name=Hornfels Brick Slab
+strata:peridotite_stonebrickslab.name=Peridotite Brick Slab
+strata:quartzite_stonebrickslab.name=Quartzite Brick Slab
+
 # Ore
 
 strata:basaltic_mineral_sand.name=Basaltic Mineral Sand
