@@ -300,6 +300,102 @@ strata:hornfels_stonebrickslab.name=Hornfels Brick Slab
 strata:peridotite_stonebrickslab.name=Peridotite Brick Slab
 strata:quartzite_stonebrickslab.name=Quartzite Brick Slab
 
+# Stone Wall
+
+strata:breccia_stonewall.name=Breccia Wall
+strata:claystone_stonewall.name=Claystone Wall
+strata:carbonatite_stonewall.name=Carbonatite Wall
+strata:conglomerate_stonewall.name=Conglomerate Wall
+strata:mudstone_stonewall.name=Mudstone Wall
+
+strata:limestone_stonewall.name=Limestone Wall
+strata:schist_stonewall.name=Schist Wall
+strata:serpentinite_stonewall.name=Serpentinite Wall
+strata:slate_stonewall.name=Slate Wall
+strata:skarn_stonewall.name=Skarn Wall
+strata:chalk_stonewall.name=Chalk Wall
+
+strata:andesite_stonewall.name=Andesite Wall
+strata:basalt_stonewall.name=Basalt Wall
+strata:gneiss_stonewall.name=Gneiss Wall
+strata:granite_stonewall.name=Granite Wall
+strata:greenschist_stonewall.name=Greenschist Wall
+strata:marble_stonewall.name=Marble Wall
+strata:pegmatite_stonewall.name=Pegmatite Wall
+strata:rhyolite_stonewall.name=Rhyolite Wall
+strata:sandstone_stonewall.name=Sandstone Wall
+strata:red_sandstone_stonewall.name=Red Sandstone Wall
+
+strata:diorite_stonewall.name=Diorite Wall
+strata:gabbro_stonewall.name=Gabbro Wall
+strata:hornfels_stonewall.name=Hornfels Wall
+strata:peridotite_stonewall.name=Peridotite Wall
+strata:quartzite_stonewall.name=Quartzite Wall
+
+# Cobble Wall
+
+strata:breccia_cobblewall.name=Breccia Cobblestone Wall
+strata:claystone_cobblewall.name=Claystone Cobblestone Wall
+strata:carbonatite_cobblewall.name=Carbonatite Cobblestone Wall
+strata:conglomerate_cobblewall.name=Conglomerate Cobblestone Wall
+strata:mudstone_cobblewall.name=Mudstone Cobblestone Wall
+
+strata:limestone_cobblewall.name=Limestone Cobblestone Wall
+strata:schist_cobblewall.name=Schist Cobblestone Wall
+strata:serpentinite_cobblewall.name=Serpentinite Cobblestone Wall
+strata:slate_cobblewall.name=Slate Cobblestone Wall
+strata:skarn_cobblewall.name=Skarn Cobblestone Wall
+strata:chalk_cobblewall.name=Chalk Cobblestone Wall
+
+strata:andesite_cobblewall.name=Andesite Cobblestone Wall
+strata:basalt_cobblewall.name=Basalt Cobblestone Wall
+strata:gneiss_cobblewall.name=Gneiss Cobblestone Wall
+strata:granite_cobblewall.name=Granite Cobblestone Wall
+strata:greenschist_cobblewall.name=Greenschist Cobblestone Wall
+strata:marble_cobblewall.name=Marble Cobblestone Wall
+strata:pegmatite_cobblewall.name=Pegmatite Cobblestone Wall
+strata:rhyolite_cobblewall.name=Rhyolite Cobblestone Wall
+strata:sandstone_cobblewall.name=Sandstone Cobblestone Wall
+strata:red_sandstone_cobblewall.name=Red Sandstone Cobblestone Wall
+
+strata:diorite_cobblewall.name=Diorite Cobblestone Wall
+strata:gabbro_cobblewall.name=Gabbro Cobblestone Wall
+strata:hornfels_cobblewall.name=Hornfels Cobblestone Wall
+strata:peridotite_cobblewall.name=Peridotite Cobblestone Wall
+strata:quartzite_cobblewall.name=Quartzite Cobblestone Wall
+
+# Stone Brick Wall
+
+strata:breccia_stonebrickwall.name=Breccia Brick Wall
+strata:claystone_stonebrickwall.name=Claystone Brick Wall
+strata:carbonatite_stonebrickwall.name=Carbonatite Brick Wall
+strata:conglomerate_stonebrickwall.name=Conglomerate Brick Wall
+strata:mudstone_stonebrickwall.name=Mudstone Brick Wall
+
+strata:limestone_stonebrickwall.name=Limestone Brick Wall
+strata:schist_stonebrickwall.name=Schist Brick Wall
+strata:serpentinite_stonebrickwall.name=Serpentinite Brick Wall
+strata:slate_stonebrickwall.name=Slate Brick Wall
+strata:skarn_stonebrickwall.name=Skarn Brick Wall
+strata:chalk_stonebrickwall.name=Chalk Brick Wall
+
+strata:andesite_stonebrickwall.name=Andesite Brick Wall
+strata:basalt_stonebrickwall.name=Basalt Brick Wall
+strata:gneiss_stonebrickwall.name=Gneiss Brick Wall
+strata:granite_stonebrickwall.name=Granite Brick Wall
+strata:greenschist_stonebrickwall.name=Greenschist Brick Wall
+strata:marble_stonebrickwall.name=Marble Brick Wall
+strata:pegmatite_stonebrickwall.name=Pegmatite Brick Wall
+strata:rhyolite_stonebrickwall.name=Rhyolite Brick Wall
+strata:sandstone_stonebrickwall.name=Sandstone Brick Wall
+strata:red_sandstone_stonebrickwall.name=Red Sandstone Brick Wall
+
+strata:diorite_stonebrickwall.name=Diorite Brick Wall
+strata:gabbro_stonebrickwall.name=Gabbro Brick Wall
+strata:hornfels_stonebrickwall.name=Hornfels Brick Wall
+strata:peridotite_stonebrickwall.name=Peridotite Brick Wall
+strata:quartzite_stonebrickwall.name=Quartzite Brick Wall
+
 # Ore
 
 strata:basaltic_mineral_sand.name=Basaltic Mineral Sand

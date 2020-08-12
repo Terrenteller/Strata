@@ -26,8 +26,10 @@ public enum TileType
     STONESLAB        ( false , "%s:%s_stoneslab"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"   ),
     STONESLABS       ( false , "%s:%s_stoneslabs"       , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"   ),
     STONEBRICKSLAB   ( false , "%s:%s_stonebrickslab"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"   ),
-    STONEBRICKSLABS  ( false , "%s:%s_stonebrickslabs"  , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"   );
-    // TODO: Walls
+    STONEBRICKSLABS  ( false , "%s:%s_stonebrickslabs"  , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"   ),
+    COBBLEWALL       ( false , "%s:%s_cobblewall"       , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_wall"   ),
+    STONEWALL        ( false , "%s:%s_stonewall"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_wall"   ),
+    STONEBRICKWALL   ( false , "%s:%s_stonebrickwall"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_wall"   );
 
     public final Boolean isPrimary; // This could stand to be improved. Perhaps TileTypeTier?
     public final Material material;
@@ -105,6 +107,21 @@ public enum TileType
                 return COBBLESLABS;
             case STONEBRICK:
                 return STONEBRICKSLABS;
+        }
+
+        return null;
+    }
+
+    public TileType wallType()
+    {
+        switch( this )
+        {
+            case STONE:
+                return STONEWALL;
+            case COBBLE:
+                return COBBLEWALL;
+            case STONEBRICK:
+                return STONEBRICKWALL;
         }
 
         return null;

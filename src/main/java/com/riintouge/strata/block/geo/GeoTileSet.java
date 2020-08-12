@@ -23,10 +23,12 @@ public class GeoTileSet implements IForgeRegistrable
     // Should we try to get properties from the default block state instead?
     private final String DefaultStairModelVariant = "facing=east,half=bottom,shape=straight";
     private final String DefaultSlabModelVariant = "half=bottom,variant=default";
+    private final String DefaultWallModelVariant = "inventory";
     protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
     protected Map< TileType , GeoBlockStairs > stairsMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabsMap = new HashMap<>();
+    protected Map< TileType , GeoBlockWall > wallMap = new HashMap<>();
 
     public GeoTileSet()
     {
@@ -71,6 +73,13 @@ public class GeoTileSet implements IForgeRegistrable
                 slabsMap.put( type , slabs );
                 blockRegistry.register( slabs );
             }
+
+            if( tile.type().wallType() != null )
+            {
+                GeoBlockWall wall = new GeoBlockWall( tile , block );
+                wallMap.put( type , wall );
+                blockRegistry.register( wall );
+            }
         }
     }
 
@@ -102,6 +111,14 @@ public class GeoTileSet implements IForgeRegistrable
                 GeoItemBlockSlab slab = new GeoItemBlockSlab( slabMap.get( type ) , slabsMap.get( type ) );
                 itemMap.put( slabType , slab );
                 itemRegistry.register( slab );
+            }
+
+            TileType wallType = tile.type().wallType();
+            if( wallType != null )
+            {
+                GeoItemBlock wall = new GeoItemBlock( wallMap.get( type ) );
+                itemMap.put( wallType , wall );
+                itemRegistry.register( wall );
             }
         }
 
@@ -183,6 +200,16 @@ public class GeoTileSet implements IForgeRegistrable
                     Item.REGISTRY.getObject( slabRegistryName ),
                     tile.meta(),
                     new ModelResourceLocation( slabRegistryName , DefaultSlabModelVariant ) );
+            }
+
+            TileType wallType = tile.type().wallType();
+            if( wallType != null )
+            {
+                ResourceLocation wallRegistryName = wallType.registryName( tile.tileSetName() );
+                ModelLoader.setCustomModelResourceLocation(
+                    Item.REGISTRY.getObject( wallRegistryName ),
+                    tile.meta(),
+                    new ModelResourceLocation( wallRegistryName , DefaultWallModelVariant ) );
             }
         }
     }
