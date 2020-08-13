@@ -2,6 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.IForgeRegistrable;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
@@ -43,6 +44,18 @@ public class GeoTileSet implements IForgeRegistrable
     public IGeoTileInfo find( TileType type )
     {
         return tiles.getOrDefault( type , null );
+    }
+
+    protected void registerVanillaItem( ResourceLocation registryName , Item item , ItemStack vanillaItem )
+    {
+        if( vanillaItem != null )
+        {
+            GameRegistry.addShapelessRecipe(
+                new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_vanilla" ),
+                null,
+                vanillaItem,
+                Ingredient.fromItem( item ) );
+        }
     }
 
     // IForgeRegistrable overrides
@@ -136,20 +149,24 @@ public class GeoTileSet implements IForgeRegistrable
                     // TODO: Clay ball to block
                     break;
                 case STONE:
-                    if( itemMap.containsKey( TileType.STONEBRICK ) )
+                    Item stoneBrickItem = itemMap.getOrDefault( TileType.STONEBRICK , null );
+                    if( stoneBrickItem != null )
                     {
                         GameRegistry.addShapedRecipe(
                             new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_brick" ),
                             null,
                             new ItemStack( itemMap.get( TileType.STONEBRICK ) ),
-                            "SS" , "SS" , 'S' , item );
+                            "XX",
+                            "XX",
+                            'X' , item );
                     }
 
                     vanillaItem = new ItemStack( Blocks.STONE );
                     break;
                 case COBBLE:
-                    if( itemMap.containsKey( TileType.STONE ) )
-                        GameRegistry.addSmelting( item , new ItemStack( itemMap.get( TileType.STONE ) ) , 0.1f ); // Vanilla exp
+                    Item stoneItem = itemMap.getOrDefault( TileType.STONE , null );
+                    if( stoneItem != null )
+                        GameRegistry.addSmelting( item , new ItemStack( stoneItem ) , 0.1f ); // Vanilla exp
 
                     vanillaItem = new ItemStack( Blocks.COBBLESTONE );
                     break;
@@ -160,14 +177,78 @@ public class GeoTileSet implements IForgeRegistrable
 
             if( tile.vanillaEquivalent() != null )
                 vanillaItem = tile.vanillaEquivalent();
+            registerVanillaItem( registryName , item , vanillaItem );
 
-            if( vanillaItem != null )
+            TileType stairType = tile.type().stairType();
+            if( stairType != null )
             {
-                GameRegistry.addShapelessRecipe(
-                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_vanilla" ),
+                Item stairItem = itemMap.getOrDefault( stairType , null );
+                GameRegistry.addShapedRecipe(
+                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_stairs" ),
                     null,
-                    vanillaItem,
-                    Ingredient.fromItem( item ) );
+                    new ItemStack( stairItem , 4 ),
+                    "X  ",
+                    "XX ",
+                    "XXX",
+                    'X' , item );
+
+                switch( stairType )
+                {
+                    case COBBLESTAIRS:
+                        registerVanillaItem( stairItem.getRegistryName() , stairItem , new ItemStack( Blocks.STONE_STAIRS ) );
+                        break;
+                    case STONEBRICKSTAIRS:
+                        registerVanillaItem( stairItem.getRegistryName() , stairItem , new ItemStack( Blocks.STONE_BRICK_STAIRS ) );
+                        break;
+                }
+            }
+
+            TileType slabType = tile.type().slabType();
+            if( slabType != null )
+            {
+                Item slabItem = itemMap.getOrDefault( slabType , null );
+                GameRegistry.addShapedRecipe(
+                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_slab" ),
+                    null,
+                    new ItemStack( slabItem , 6 ),
+                    "   ",
+                    "   ",
+                    "XXX",
+                    'X' , item );
+
+                switch( slabType )
+                {
+                    case COBBLESLAB:
+                        registerVanillaItem( slabItem.getRegistryName() , slabItem , new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.COBBLESTONE.getMetadata() ) );
+                        break;
+                    case STONESLAB:
+                        registerVanillaItem( slabItem.getRegistryName() , slabItem , new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.STONE.getMetadata() ) );
+                        break;
+                    case STONEBRICKSLAB:
+                        registerVanillaItem( slabItem.getRegistryName() , slabItem , new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.SMOOTHBRICK.getMetadata() ) );
+                        break;
+                }
+            }
+
+            TileType wallType = tile.type().wallType();
+            if( wallType != null )
+            {
+                Item wallItem = itemMap.getOrDefault( wallType , null );
+                GameRegistry.addShapedRecipe(
+                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_wall" ),
+                    null,
+                    new ItemStack( wallItem , 6 ),
+                    "   ",
+                    "XXX",
+                    "XXX",
+                    'X' , item );
+
+                switch( wallType )
+                {
+                    case COBBLEWALL:
+                        registerVanillaItem( wallItem.getRegistryName() , wallItem , new ItemStack( Blocks.COBBLESTONE_WALL ) );
+                        break;
+                }
             }
         }
     }
