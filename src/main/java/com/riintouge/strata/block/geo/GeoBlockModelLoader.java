@@ -60,7 +60,11 @@ public class GeoBlockModelLoader implements ICustomModelLoader
         {
             try
             {
-                return Enum.valueOf( TileType.class , type.toUpperCase() );
+                TileType tileType = Enum.valueOf( TileType.class , type.toUpperCase() );
+                // Tertiary types cannot be validated to exist in the registry
+                return tileType.parentType != null
+                    ? tileType
+                    : GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , tileType ) != null ? tileType : null;
             }
             catch( IllegalArgumentException ex )
             {

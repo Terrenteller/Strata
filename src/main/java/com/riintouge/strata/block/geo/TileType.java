@@ -17,7 +17,7 @@ public enum TileType
     COBBLE     ( false , "%s:%s_cobble"     , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
     STONEBRICK ( false , "%s:%s_stonebrick" , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
 
-    // Ternaries - internally auto-generated from a primary or secondary
+    // Tertiaries - internally auto-generated from a primary or secondary
     COBBLESTAIRS     ( false , "%s:%s_cobblestairs"     , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_stairs" ),
     STONESTAIRS      ( false , "%s:%s_stonestairs"      , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_stairs" ),
     STONEBRICKSTAIRS ( false , "%s:%s_stonebrickstairs" , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_stairs" ),
