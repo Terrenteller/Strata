@@ -2,7 +2,9 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockWall;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -70,15 +72,36 @@ public class GeoBlockWall extends BlockWall
         }
     }
 
+    // private in BlockWall and required for overriding behaviour
+    protected boolean canConnectTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
+    {
+        IBlockState otherBlockState = world.getBlockState( pos );
+        Block otherBlock = otherBlockState.getBlock();
+        // Strata walls should only connect to their own type for visual quality
+        if( otherBlock instanceof BlockWall )
+            return getRegistryName().equals( otherBlock.getRegistryName() );
+
+        BlockFaceShape blockFaceShape = otherBlockState.getBlockFaceShape( world , pos , facing );
+        return blockFaceShape == BlockFaceShape.MIDDLE_POLE_THICK
+            || ( blockFaceShape == BlockFaceShape.MIDDLE_POLE && otherBlock instanceof BlockFenceGate )
+            || ( !isExcepBlockForAttachWithPiston( otherBlock ) && blockFaceShape == BlockFaceShape.SOLID );
+    }
+
+    // private in BlockWall and required for overriding behaviour
+    protected boolean canWallConnectTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
+    {
+        BlockPos otherPos = pos.offset( facing );
+        Block otherBlock = world.getBlockState( otherPos ).getBlock();
+        // Vanilla ORs instead of ANDs not respecting a mutual connection
+        return otherBlock.canBeConnectedTo( world , otherPos , facing.getOpposite() ) && canConnectTo( world , otherPos , facing.getOpposite() );
+    }
+
     // BlockWall overrides
 
     @Override
     public boolean canBeConnectedTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
     {
-        // Consider making Strata walls only connect to their own type,
-        // such as gneiss cobble not connecting to gneiss brick or skarn cobble.
-        // Also consider marking UP as true if the block below is a wall so the top block will have a post to match.
-        return super.canBeConnectedTo( world , pos, facing );
+        return canConnectTo( world , pos.offset( facing ), facing.getOpposite() );
     }
 
     // Block overrides
@@ -103,6 +126,25 @@ public class GeoBlockWall extends BlockWall
     public int damageDropped( IBlockState state )
     {
         return 0;
+    }
+
+    @Override
+    public IBlockState getActualState( IBlockState state , IBlockAccess worldIn , BlockPos pos )
+    {
+        boolean north = canWallConnectTo( worldIn , pos , EnumFacing.NORTH );
+        boolean east = canWallConnectTo( worldIn , pos , EnumFacing.EAST );
+        boolean south = canWallConnectTo( worldIn , pos , EnumFacing.SOUTH );
+        boolean west = canWallConnectTo( worldIn , pos , EnumFacing.WEST );
+        boolean up = !( ( north && !east && south && !west ) || ( !north && east && !south && west ) )
+            || !worldIn.isAirBlock( pos.up() )
+            || worldIn.getBlockState( pos.offset( EnumFacing.DOWN ) ).getBlock() instanceof BlockWall;
+
+        return state
+            .withProperty( UP , Boolean.valueOf( up ) )
+            .withProperty( NORTH , Boolean.valueOf( north ) )
+            .withProperty( EAST , Boolean.valueOf( east ) )
+            .withProperty( SOUTH , Boolean.valueOf( south ) )
+            .withProperty( WEST , Boolean.valueOf( west ) );
     }
 
     @Override

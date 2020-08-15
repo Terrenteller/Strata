@@ -29,6 +29,7 @@
             "faces": {
                 "up":    { "texture": "#up" },
                 "down":  { "texture": "#down", "cullface": "down" },
+                "north": { "texture": "#north" },
                 "east":  { "texture": "#east" },
                 "west":  { "texture": "#west" }
             }

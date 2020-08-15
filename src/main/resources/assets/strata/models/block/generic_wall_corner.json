@@ -29,19 +29,21 @@
             "faces": {
                 "up":    { "texture": "#up" },
                 "down":  { "texture": "#down", "cullface": "down" },
+                "north": { "texture": "#north" },
                 "east":  { "texture": "#east" },
                 "west":  { "texture": "#west" }
             }
         },
         {
-            "__comment": "West",
+            "__comment": "East",
             "from": [ 8, 0, 5 ],
             "to": [ 16, 14, 11 ],
             "faces": {
                 "up":    { "texture": "#up" },
                 "down":  { "texture": "#down", "cullface": "down" },
                 "north": { "texture": "#north" },
-                "south": { "texture": "#south" }
+                "south": { "texture": "#south" },
+                "east":  { "texture": "#east" }
             }
         }
     ]
