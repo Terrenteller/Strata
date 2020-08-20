@@ -79,6 +79,10 @@ public class GeoTileSetRegistry
     {
         System.out.println( "GeoTileSetRegistry::registerBlocks()" );
 
+        // NOTE: Multipart models used as dependencies do not seem to get loaded by the
+        // recursive model loading. In the future if necessary, create a new block using
+        // the multipart model and register it here before anything else.
+
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.registerBlocks( blockRegistry );
