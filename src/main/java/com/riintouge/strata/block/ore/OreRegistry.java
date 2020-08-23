@@ -5,10 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -78,46 +77,26 @@ public class OreRegistry
 
             String oreDictionaryName = tileSet.getInfo().oreDictionaryName();
             if( oreDictionaryName != null )
-            {
                 OreDictionary.registerOre( oreDictionaryName , tileSet.getItem() );
+        }
+    }
 
-                IOreInfo oreInfo = tileSet.getInfo();
-                ItemStack vanillaItem = null;
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
+    {
+        System.out.println( "OreRegistry::registerRecipes()" );
 
-                switch( oreInfo.oreDictionaryName() )
-                {
-                    case "oreCoal":
-                        vanillaItem = new ItemStack( Items.COAL , 1 );
-                        break;
-                    case "oreDiamond":
-                        vanillaItem = new ItemStack( Items.DIAMOND , 1 );
-                        break;
-                    case "oreEmerald":
-                        vanillaItem = new ItemStack( Items.EMERALD , 1 );
-                        break;
-                    case "oreGold":
-                        vanillaItem = new ItemStack( Blocks.GOLD_ORE , 1 );
-                        break;
-                    case "oreIron":
-                        vanillaItem = new ItemStack( Blocks.IRON_ORE , 1 );
-                        break;
-                    case "oreLapis":
-                        vanillaItem = new ItemStack( Items.DYE , 1 , 4 );
-                        break;
-                    case "oreRedstone":
-                        vanillaItem = new ItemStack( Items.REDSTONE , 1 );
-                        break;
-                    default: {}
-                }
-
-                if( vanillaItem != null )
-                {
-                    GameRegistry.addShapelessRecipe(
-                        new ResourceLocation( Strata.modid , oreInfo + "_vanilla" ),
-                        null,
-                        vanillaItem,
-                        Ingredient.fromItem( tileSet.getItem() ) );
-                }
+        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        {
+            IOreInfo oreInfo = tileSet.getInfo();
+            ItemStack vanillaItem = tileSet.getInfo().vanillaEquivalent();
+            if( vanillaItem != null )
+            {
+                GameRegistry.addShapelessRecipe(
+                    new ResourceLocation( Strata.modid , oreInfo.oreName() + "_vanilla" ),
+                    null,
+                    vanillaItem,
+                    Ingredient.fromItem( tileSet.getItem() ) );
             }
         }
     }

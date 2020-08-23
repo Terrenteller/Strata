@@ -4,6 +4,7 @@ import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.geo.IGenericBlockProperties;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
@@ -15,6 +16,8 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
     GenericCubeTextureMap modelTextureMap();
 
     ResourceLocation oreItemTextureResource();
+
+    ItemStack vanillaEquivalent();
 
     default Block proxyBlock()
     {

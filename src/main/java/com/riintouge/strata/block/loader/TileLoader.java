@@ -263,6 +263,7 @@ public class TileLoader
                 oreDictionaryName,
                 textureMap,
                 proxyOre,
+                vanillaEquivalent,
                 material,
                 soundType,
                 harvestTool,

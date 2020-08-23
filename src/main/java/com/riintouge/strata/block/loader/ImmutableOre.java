@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -23,12 +24,14 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private float explosionResistance;
     private ResourceLocation proxyBlockResource;
     private Block proxyBlock;
+    private ItemStack vanillaEquivalent;
 
     public ImmutableOre(
         String oreName,
         String oreDictionaryName,
         GenericCubeTextureMap textureMap,
         ResourceLocation proxyBlockResource,
+        ItemStack vanillaEquivalent,
         Material material,
         SoundType soundType,
         String harvestTool,
@@ -46,6 +49,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.hardness = hardness;
         this.explosionResistance = explosionResistance == 0.0f ? 1.7f * hardness : explosionResistance;
         this.proxyBlockResource = proxyBlockResource;
+        this.vanillaEquivalent = vanillaEquivalent;
     }
 
     // IOreInfo overrides
@@ -72,6 +76,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public ResourceLocation oreItemTextureResource()
     {
         return genericCubeTextureMap.getOrDefault( (EnumFacing)null );
+    }
+
+    @Override
+    public ItemStack vanillaEquivalent()
+    {
+        return vanillaEquivalent;
     }
 
     @Override

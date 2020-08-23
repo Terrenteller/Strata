@@ -86,6 +86,7 @@ textureCaps strata:blocks/ore/weak/trona_caps
 ore bog_iron oreIron
 type stone
 hardness 2.0
+vanillaItem minecraft:iron_ore
 texture strata:blocks/ore/weak/bog_iron
 
 # Medium
@@ -177,6 +178,7 @@ texture strata:blocks/ore/medium/zeolite
 ore banded_iron oreIron
 type stone
 hardness 4.0
+vanillaItem minecraft:iron_ore
 texture strata:blocks/ore/strong/banded_iron
 textureCaps strata:blocks/ore/strong/banded_iron_caps
 
@@ -203,6 +205,7 @@ texture strata:blocks/ore/strong/ilmenite
 ore magnetite oreIron
 type stone
 hardness 4.0
+vanillaItem minecraft:iron_ore
 texture strata:blocks/ore/strong/magnetite
 
 # Caesium is the IUPAC name. Beware of oreCesium
@@ -269,21 +272,25 @@ texture strata:blocks/ore/crude/oil_shale
 ore bituminous_coal oreCoal
 type stone
 hardness 3.0
+vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/bituminous_coal
 
 ore lignite oreCoal
 type stone
 hardness 3.0
+vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/lignite
 
 ore anthracite oreCoal
 type stone
 hardness 3.0
+vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/anthracite
 
-ore coke
+ore coke oreCoal
 type stone
 hardness 3.0
+vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/coke
 
 # Clay
@@ -311,11 +318,13 @@ texture strata:blocks/ore/clay/kaolinite
 ore brown_limonite oreIron
 type clay
 hardness 1.5
+vanillaItem minecraft:iron_ore
 texture strata:blocks/ore/clay/brown_limonite
 
 ore yellow_limonite oreIron
 type clay
 hardness 1.5
+vanillaItem minecraft:iron_ore
 texture strata:blocks/ore/clay/yellow_limonite
 
 ore vermiculite
