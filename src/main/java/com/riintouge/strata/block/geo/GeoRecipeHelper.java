@@ -1,6 +1,8 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.Config;
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.util.Util;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -16,11 +18,14 @@ import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.*;
 import java.util.*;
 
 public class GeoRecipeHelper
 {
     public static final GeoRecipeHelper INSTANCE = new GeoRecipeHelper();
+    private static boolean ConfigurationLoaded = false;
+    private static Set< ResourceLocation > RecipeBlacklist = new HashSet<>();
 
     private final Map< Class , IngredientReplacer > recipeReplacerMap = new HashMap<>();
     private final Map< ItemStack , Pair< List< ItemStack > , Ingredient > > megaMap = new HashMap<>();
@@ -181,25 +186,14 @@ public class GeoRecipeHelper
     {
         System.out.println( "GeoRecipeHelper::registerRecipes()" );
 
+        loadConfiguration();
+
         IForgeRegistry< IRecipe > recipeRegistry = event.getRegistry();
         List< IRecipe > copies = new ArrayList<>();
         for( Map.Entry< ResourceLocation , IRecipe > recipe : recipeRegistry.getEntries() )
         {
-            // TODO: blacklist directory
-            switch( recipe.getKey().getResourcePath() )
-            {
-                // Strata to vanilla equivalent, or conflicts with
-                case "andesite":
-                case "stone_button":
-                case "diorite":
-                // Strata provides its own recipes
-                case "cobblestone_slab":
-                case "cobblestone_wall":
-                case "stone_slab":
-                case "stone_stairs":
-                case "stonebrick":
-                    continue;
-            }
+            if( RecipeBlacklist.contains( recipe.getKey() ) )
+                continue;
 
             IRecipe copy = GeoRecipeHelper.INSTANCE.copy( recipe.getValue() );
             if( copy != null )
@@ -209,5 +203,42 @@ public class GeoRecipeHelper
         // Register afterwards to not invalidate the iterator
         for( IRecipe recipe : copies )
             recipeRegistry.register( recipe );
+    }
+
+    private static void loadConfiguration()
+    {
+        if( ConfigurationLoaded )
+            return;
+
+        try
+        {
+            for( String path : Config.INSTANCE.allIn( "recipe/replication" , false ) )
+            {
+                InputStream stream = new FileInputStream( path );
+                BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );
+                while( buffer.ready() )
+                {
+                    String line = buffer.readLine().trim();
+                    if( line.isEmpty() || line.charAt( 0 ) == '#' )
+                        continue;
+
+                    String[] kv = Util.splitKV( line );
+                    switch( kv[ 0 ] )
+                    {
+                        case "blacklist":
+                            RecipeBlacklist.add( new ResourceLocation( kv[ 1 ] ) );
+                            break;
+                    }
+                }
+
+                buffer.close();
+            }
+        }
+        catch( java.io.IOException ex )
+        {
+            // Ignore
+        }
+
+        ConfigurationLoaded = true;
     }
 }

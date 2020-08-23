@@ -1,0 +1,14 @@
+# Strata provides its own recipes
+blacklist minecraft:cobblestone_slab
+blacklist minecraft:cobblestone_wall
+blacklist minecraft:stone_slab
+blacklist minecraft:stone_stairs
+blacklist minecraft:stonebrick
+
+# Strata equivalent has vanillaOverride
+blacklist minecraft:andesite
+blacklist minecraft:diorite
+blacklist minecraft:granite
+
+# Conflicts with vanillaOverride
+blacklist minecraft:stone_button
