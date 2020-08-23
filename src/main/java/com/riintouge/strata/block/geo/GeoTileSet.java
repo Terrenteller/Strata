@@ -8,10 +8,12 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -26,6 +28,7 @@ public class GeoTileSet implements IForgeRegistrable
     private final String DefaultSlabModelVariant = "half=bottom,variant=default";
     private final String DefaultWallModelVariant = "inventory";
     protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
+    protected Map< TileType, Item > itemMap = new HashMap<>();
     protected Map< TileType , GeoBlockStairs > stairsMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabsMap = new HashMap<>();
@@ -99,9 +102,6 @@ public class GeoTileSet implements IForgeRegistrable
     @Override
     public void registerItems( IForgeRegistry< Item > itemRegistry )
     {
-        Map< TileType , Item > itemMap = new HashMap<>();
-
-        // Create the items...
         for( TileType type : tiles.keySet() )
         {
             IGeoTileInfo tile = tiles.get( type );
@@ -134,14 +134,20 @@ public class GeoTileSet implements IForgeRegistrable
                 itemRegistry.register( wall );
             }
         }
+    }
 
-        // ...and then the recipes
+    @Override
+    public void registerRecipes( IForgeRegistry< IRecipe > recipeRegistry )
+    {
         for( TileType type : tiles.keySet() )
         {
             IGeoTileInfo tile = tiles.get( type );
             ResourceLocation registryName = tile.registryName();
             Item item = itemMap.get( type );
             ItemStack vanillaItem = null;
+
+            GeoRecipeHelper.INSTANCE.register( type , new ItemStack( item ) );
+            // TODO: slabs, etc.
 
             switch( type )
             {

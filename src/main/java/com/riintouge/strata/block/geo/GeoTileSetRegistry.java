@@ -4,6 +4,7 @@ import com.riintouge.strata.block.IForgeRegistrable;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -96,6 +97,16 @@ public class GeoTileSetRegistry
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.registerItems( itemRegistry );
+    }
+
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
+    {
+        System.out.println( "GeoTileSetRegistry::registerRecipes()" );
+
+        IForgeRegistry< IRecipe > recipeRegistry = event.getRegistry();
+        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
+            tileSet.registerRecipes( recipeRegistry );
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )

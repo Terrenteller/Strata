@@ -1,6 +1,7 @@
 package com.riintouge.strata;
 
 import com.riintouge.strata.proxy.CommonProxy;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -42,5 +43,10 @@ public class Strata
     public void postInit( FMLPostInitializationEvent event )
     {
         proxy.postInit( event );
+    }
+
+    public static ResourceLocation resource( String resourcePath )
+    {
+        return new ResourceLocation( modid , resourcePath );
     }
 }

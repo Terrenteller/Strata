@@ -1,6 +1,7 @@
 package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.block.Blocks;
+import com.riintouge.strata.block.geo.GeoRecipeHelper;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.Config;
@@ -19,6 +20,7 @@ public class CommonProxy
 
         MinecraftForge.EVENT_BUS.register( Blocks.class );
         MinecraftForge.EVENT_BUS.register( GeoTileSetRegistry.class );
+        MinecraftForge.EVENT_BUS.register( GeoRecipeHelper.class );
         MinecraftForge.EVENT_BUS.register( OreRegistry.class );
     }
 
