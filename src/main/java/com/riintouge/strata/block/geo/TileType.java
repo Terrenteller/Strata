@@ -1,9 +1,15 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum TileType
 {
@@ -30,6 +36,9 @@ public enum TileType
     COBBLEWALL       ( false , "%s:%s_cobblewall"       , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_wall"   ),
     STONEWALL        ( false , "%s:%s_stonewall"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_wall"   ),
     STONEBRICKWALL   ( false , "%s:%s_stonebrickwall"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_wall"   );
+
+    // Cache to satisfy instance comparisons
+    private static Map< TileType , ItemStack > ItemStackMap = new HashMap<>();
 
     public final Boolean isPrimary; // This could stand to be improved. Perhaps TileTypeTier?
     public final Material material;
@@ -125,5 +134,46 @@ public enum TileType
         }
 
         return null;
+    }
+
+    public ItemStack vanillaItemStack()
+    {
+        ItemStack vanillaItem = ItemStackMap.getOrDefault( this , null );
+        if( vanillaItem != null )
+            return vanillaItem;
+
+        switch( this )
+        {
+            case STONE:
+                vanillaItem = new ItemStack( Blocks.STONE );
+                break;
+            case COBBLE:
+                vanillaItem = new ItemStack( Blocks.COBBLESTONE );
+                break;
+            case STONEBRICK:
+                vanillaItem = new ItemStack( Blocks.STONEBRICK );
+                break;
+            case COBBLESTAIRS:
+                vanillaItem = new ItemStack( Blocks.STONE_STAIRS );
+                break;
+            case STONEBRICKSTAIRS:
+                vanillaItem = new ItemStack( Blocks.STONE_BRICK_STAIRS );
+                break;
+            case COBBLESLAB:
+                vanillaItem = new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.COBBLESTONE.getMetadata() );
+                break;
+            case STONESLAB:
+                vanillaItem = new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.STONE.getMetadata() );
+                break;
+            case STONEBRICKSLAB:
+                vanillaItem = new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.SMOOTHBRICK.getMetadata() );
+                break;
+            case COBBLEWALL:
+                vanillaItem = new ItemStack( Blocks.COBBLESTONE_WALL );
+                break;
+        }
+
+        ItemStackMap.put( this , vanillaItem );
+        return vanillaItem;
     }
 }

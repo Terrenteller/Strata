@@ -3,7 +3,6 @@ package com.riintouge.strata.block.geo;
 import com.riintouge.strata.Config;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.Util;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -29,8 +28,6 @@ public class GeoRecipeHelper
 
     private final Map< Class , IngredientReplacer > recipeReplacerMap = new HashMap<>();
     private final Map< ItemStack , Pair< List< ItemStack > , Ingredient > > megaMap = new HashMap<>();
-    // Cache for fast comparison
-    private final Map< TileType , ItemStack > tileTypeToVanillaItemStackMap = new HashMap<>();
 
     private interface IngredientReplacer
     {
@@ -59,22 +56,17 @@ public class GeoRecipeHelper
         } );
     }
 
-    // TODO: Might need to take IGeoTileInfo to get at vanillaEquivalent.
-    // TODO: Re-work registries so we no longer need to register here, but instead process what is in another.
-    public void register( TileType type , ItemStack itemStack )
+    // TODO: Can we re-work registries so we no longer need to register here, but instead process what is in another?
+    public void register( ItemStack input , ItemStack alternative )
     {
-        ItemStack vanillaItemStack = tileTypeToVanillaItemStack( type );
-        if( vanillaItemStack == null )
-            return;
-
-        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.getOrDefault( vanillaItemStack , null );
+        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.getOrDefault( input , null );
         if( targetPair == null )
         {
             targetPair = new MutablePair<>( new ArrayList<>() , null );
-            megaMap.put( vanillaItemStack , targetPair );
+            megaMap.put( input , targetPair );
         }
 
-        targetPair.getKey().add( itemStack );
+        targetPair.getKey().add( alternative );
         targetPair.setValue( null );
     }
 
@@ -106,38 +98,6 @@ public class GeoRecipeHelper
             throw new IllegalArgumentException();
 
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
-    }
-
-    // TODO: Add to TileType? This class should not know about this!
-    protected ItemStack tileTypeToVanillaItemStack( TileType tileType )
-    {
-        ItemStack vanillaItemStack = tileTypeToVanillaItemStackMap.getOrDefault( tileType , null );
-        if( vanillaItemStack != null )
-            return vanillaItemStack;
-
-        switch( tileType )
-        {
-            case CLAY:
-                vanillaItemStack = new ItemStack( Blocks.CLAY );
-                break;
-            case STONE:
-                vanillaItemStack = new ItemStack( Blocks.STONE );
-                break;
-            case COBBLE:
-                vanillaItemStack = new ItemStack( Blocks.COBBLESTONE );
-                break;
-            case STONEBRICK:
-                vanillaItemStack = new ItemStack( Blocks.STONEBRICK );
-                break;
-            case STONESLAB:
-                vanillaItemStack = new ItemStack( Blocks.STONE_SLAB ); // STONE_SLAB2?
-                break;
-            default:
-                return null;
-        }
-
-        tileTypeToVanillaItemStackMap.put( tileType , vanillaItemStack );
-        return vanillaItemStack;
     }
 
     protected Ingredient getTargetIngredient( ItemStack itemStack )

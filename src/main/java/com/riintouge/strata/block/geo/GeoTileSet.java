@@ -2,10 +2,8 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.IForgeRegistrable;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -13,7 +11,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -28,7 +25,7 @@ public class GeoTileSet implements IForgeRegistrable
     private final String DefaultSlabModelVariant = "half=bottom,variant=default";
     private final String DefaultWallModelVariant = "inventory";
     protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
-    protected Map< TileType, Item > itemMap = new HashMap<>();
+    protected Map< TileType , Item > itemMap = new HashMap<>();
     protected Map< TileType , GeoBlockStairs > stairsMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabsMap = new HashMap<>();
@@ -144,9 +141,10 @@ public class GeoTileSet implements IForgeRegistrable
             IGeoTileInfo tile = tiles.get( type );
             ResourceLocation registryName = tile.registryName();
             Item item = itemMap.get( type );
-            ItemStack vanillaItem = null;
 
-            GeoRecipeHelper.INSTANCE.register( type , new ItemStack( item ) );
+            ItemStack vanillaItemStack = type.vanillaItemStack();
+            if( vanillaItemStack != null )
+                GeoRecipeHelper.INSTANCE.register( vanillaItemStack , new ItemStack( item ) );
             // TODO: slabs, etc.
 
             switch( type )
@@ -166,23 +164,17 @@ public class GeoTileSet implements IForgeRegistrable
                             "XX",
                             'X' , item );
                     }
-
-                    vanillaItem = new ItemStack( Blocks.STONE );
                     break;
                 case COBBLE:
                     Item stoneItem = itemMap.getOrDefault( TileType.STONE , null );
                     if( stoneItem != null )
                         GameRegistry.addSmelting( item , new ItemStack( stoneItem ) , 0.1f ); // Vanilla exp
-
-                    vanillaItem = new ItemStack( Blocks.COBBLESTONE );
-                    break;
-                case STONEBRICK:
-                    vanillaItem = new ItemStack( Blocks.STONEBRICK );
                     break;
             }
 
-            if( tile.vanillaEquivalent() != null )
-                vanillaItem = tile.vanillaEquivalent();
+            ItemStack vanillaItem = tile.vanillaEquivalent(); // Effectively an override
+            if( vanillaItem == null )
+                vanillaItem = type.vanillaItemStack();
             registerVanillaItem( registryName , item , vanillaItem );
 
             TileType stairType = tile.type().stairType();
@@ -198,15 +190,7 @@ public class GeoTileSet implements IForgeRegistrable
                     "XXX",
                     'X' , item );
 
-                switch( stairType )
-                {
-                    case COBBLESTAIRS:
-                        registerVanillaItem( stairItem.getRegistryName() , stairItem , new ItemStack( Blocks.STONE_STAIRS ) );
-                        break;
-                    case STONEBRICKSTAIRS:
-                        registerVanillaItem( stairItem.getRegistryName() , stairItem , new ItemStack( Blocks.STONE_BRICK_STAIRS ) );
-                        break;
-                }
+                registerVanillaItem( stairItem.getRegistryName() , stairItem , stairType.vanillaItemStack() );
             }
 
             TileType slabType = tile.type().slabType();
@@ -222,18 +206,7 @@ public class GeoTileSet implements IForgeRegistrable
                     "XXX",
                     'X' , item );
 
-                switch( slabType )
-                {
-                    case COBBLESLAB:
-                        registerVanillaItem( slabItem.getRegistryName() , slabItem , new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.COBBLESTONE.getMetadata() ) );
-                        break;
-                    case STONESLAB:
-                        registerVanillaItem( slabItem.getRegistryName() , slabItem , new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.STONE.getMetadata() ) );
-                        break;
-                    case STONEBRICKSLAB:
-                        registerVanillaItem( slabItem.getRegistryName() , slabItem , new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.SMOOTHBRICK.getMetadata() ) );
-                        break;
-                }
+                registerVanillaItem( slabItem.getRegistryName() , slabItem , slabType.vanillaItemStack() );
             }
 
             TileType wallType = tile.type().wallType();
@@ -249,12 +222,7 @@ public class GeoTileSet implements IForgeRegistrable
                     "XXX",
                     'X' , item );
 
-                switch( wallType )
-                {
-                    case COBBLEWALL:
-                        registerVanillaItem( wallItem.getRegistryName() , wallItem , new ItemStack( Blocks.COBBLESTONE_WALL ) );
-                        break;
-                }
+                registerVanillaItem( wallItem.getRegistryName() , wallItem , wallType.vanillaItemStack() );
             }
         }
     }
