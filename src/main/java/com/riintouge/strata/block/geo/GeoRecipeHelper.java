@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -32,6 +33,14 @@ public class GeoRecipeHelper
     private interface IngredientReplacer
     {
         IRecipe replace( IRecipe recipe );
+    }
+
+    private class GeoCompoundIngredient extends CompoundIngredient
+    {
+        public GeoCompoundIngredient( Collection< Ingredient > children )
+        {
+            super( children );
+        }
     }
 
     private GeoRecipeHelper()
@@ -116,27 +125,37 @@ public class GeoRecipeHelper
 
     protected NonNullList< Ingredient > replace( NonNullList< Ingredient > ings )
     {
-        NonNullList< Ingredient > freshIngredients = NonNullList.create();
+        NonNullList< Ingredient > replacedIngredients = NonNullList.create();
         Set< ItemStack > replaceableItemStacks = megaMap.keySet();
+        List< ItemStack > matchingItemStacks = new ArrayList<>();
 
         for( Ingredient ing : ings )
         {
-            Ingredient replacement = null;
-
             for( ItemStack replaceableItemStack : replaceableItemStacks )
-            {
                 if( ing.apply( replaceableItemStack ) )
-                {
-                    // TODO: Consider an input ingredient accepting multiple ItemStacks, each of which have a unique replacement
-                    replacement = getTargetIngredient( replaceableItemStack );
+                    matchingItemStacks.add( replaceableItemStack );
+
+            switch( matchingItemStacks.size() )
+            {
+                case 0:
+                    replacedIngredients.add( ing );
                     break;
+                case 1:
+                    replacedIngredients.add( getTargetIngredient( matchingItemStacks.get( 0 ) ) );
+                    break;
+                default:
+                {
+                    List< Ingredient > matchingIngredients = new ArrayList<>();
+                    for( ItemStack itemStack : matchingItemStacks )
+                        matchingIngredients.add( getTargetIngredient( itemStack ) );
+                    replacedIngredients.add( new GeoCompoundIngredient( matchingIngredients ) );
                 }
             }
 
-            freshIngredients.add( replacement != null ? replacement : ing );
+            matchingItemStacks.clear();
         }
 
-        return freshIngredients;
+        return replacedIngredients;
     }
 
     // Statics
