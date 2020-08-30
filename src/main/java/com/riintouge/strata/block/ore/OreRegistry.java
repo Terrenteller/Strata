@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.RecipeReplicator;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -92,6 +93,7 @@ public class OreRegistry
             ItemStack vanillaItem = tileSet.getInfo().vanillaEquivalent();
             if( vanillaItem != null )
             {
+                RecipeReplicator.INSTANCE.register( vanillaItem , new ItemStack( tileSet.getItem() ) );
                 GameRegistry.addShapelessRecipe(
                     new ResourceLocation( Strata.modid , oreInfo.oreName() + "_vanilla" ),
                     null,

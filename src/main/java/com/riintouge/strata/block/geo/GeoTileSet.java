@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.block.RecipeReplicator;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -144,8 +145,7 @@ public class GeoTileSet implements IForgeRegistrable
 
             ItemStack vanillaItemStack = type.vanillaItemStack();
             if( vanillaItemStack != null )
-                GeoRecipeHelper.INSTANCE.register( vanillaItemStack , new ItemStack( item ) );
-            // TODO: slabs, etc.
+                RecipeReplicator.INSTANCE.register( vanillaItemStack , new ItemStack( item ) );
 
             switch( type )
             {

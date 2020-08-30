@@ -1,4 +1,4 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.block;
 
 import com.riintouge.strata.Config;
 import com.riintouge.strata.Strata;
@@ -21,65 +21,64 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.*;
 import java.util.*;
 
-public class GeoRecipeHelper
+public class RecipeReplicator
 {
-    public static final GeoRecipeHelper INSTANCE = new GeoRecipeHelper();
+    public static final RecipeReplicator INSTANCE = new RecipeReplicator();
     private static boolean ConfigurationLoaded = false;
     private static Set< ResourceLocation > RecipeBlacklist = new HashSet<>();
 
-    private final Map< Class , IngredientReplacer > recipeReplacerMap = new HashMap<>();
+    private final Map< Class , IReplicator > recipeReplicatorMap = new HashMap<>();
     private final Map< ItemStack , Pair< List< ItemStack > , Ingredient > > megaMap = new HashMap<>();
 
-    private interface IngredientReplacer
+    private interface IReplicator
     {
-        IRecipe replace( IRecipe recipe );
+        IRecipe replicate( IRecipe recipe );
     }
 
-    private class GeoCompoundIngredient extends CompoundIngredient
+    private class ReplicatedCompoundIngredient extends CompoundIngredient
     {
-        public GeoCompoundIngredient( Collection< Ingredient > children )
+        public ReplicatedCompoundIngredient( Collection< Ingredient > children )
         {
             super( children );
         }
     }
 
-    private GeoRecipeHelper()
+    private RecipeReplicator()
     {
-        recipeReplacerMap.put( ShapedRecipes.class , recipe ->
+        recipeReplicatorMap.put( ShapedRecipes.class , recipe ->
         {
             ShapedRecipes shapedRecipe = (ShapedRecipes)recipe;
             return new ShapedRecipes(
                 shapedRecipe.getGroup(),
                 shapedRecipe.getWidth(),
                 shapedRecipe.getHeight(),
-                replace( shapedRecipe.getIngredients() ),
+                substitute( shapedRecipe.getIngredients() ),
                 shapedRecipe.getRecipeOutput() );
         } );
-        recipeReplacerMap.put( ShapelessRecipes.class , recipe ->
+        recipeReplicatorMap.put( ShapelessRecipes.class , recipe ->
         {
             ShapelessRecipes shapelessRecipe = (ShapelessRecipes)recipe;
             return new ShapelessRecipes(
                 shapelessRecipe.getGroup(),
                 shapelessRecipe.getRecipeOutput(),
-                replace( shapelessRecipe.getIngredients() ) );
+                substitute( shapelessRecipe.getIngredients() ) );
         } );
     }
 
-    // TODO: Can we re-work registries so we no longer need to register here, but instead process what is in another?
-    public void register( ItemStack input , ItemStack alternative )
+    public void register( ItemStack original , ItemStack alternative )
     {
-        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.getOrDefault( input , null );
+        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.getOrDefault( original , null );
         if( targetPair == null )
         {
             targetPair = new MutablePair<>( new ArrayList<>() , null );
-            megaMap.put( input , targetPair );
+            megaMap.put( original , targetPair );
         }
 
         targetPair.getKey().add( alternative );
         targetPair.setValue( null );
     }
 
-    public boolean shouldCopy( IRecipe recipe )
+    public boolean shouldReplicate( IRecipe recipe )
     {
         for( Ingredient ing : recipe.getIngredients() )
             for( ItemStack replaceableItemStack : megaMap.keySet() )
@@ -89,19 +88,19 @@ public class GeoRecipeHelper
         return false;
     }
 
-    public IRecipe copy( IRecipe recipe )
+    public IRecipe replicate( IRecipe recipe )
     {
-        if( !shouldCopy( recipe ) )
+        if( !shouldReplicate( recipe ) )
             return null;
 
-        IngredientReplacer replacer = recipeReplacerMap.get( recipe.getClass() );
-        if( replacer == null )
+        IReplicator replicator = recipeReplicatorMap.get( recipe.getClass() );
+        if( replicator == null )
             return null; // TODO: warn
 
-        return replacer.replace( recipe ).setRegistryName( copyResourceLocation( recipe.getRegistryName() ) );
+        return replicator.replicate( recipe ).setRegistryName( replicatedResourceLocation( recipe.getRegistryName() ) );
     }
 
-    public ResourceLocation copyResourceLocation( ResourceLocation resourceLocation )
+    public ResourceLocation replicatedResourceLocation( ResourceLocation resourceLocation )
     {
         if( resourceLocation.getResourceDomain().equalsIgnoreCase( Strata.modid ) )
             throw new IllegalArgumentException();
@@ -109,9 +108,9 @@ public class GeoRecipeHelper
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
     }
 
-    protected Ingredient getTargetIngredient( ItemStack itemStack )
+    protected Ingredient getTargetIngredient( ItemStack original )
     {
-        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.get( itemStack );
+        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.get( original );
         Ingredient ing = targetPair.getValue();
         if( ing == null )
         {
@@ -123,7 +122,7 @@ public class GeoRecipeHelper
         return ing;
     }
 
-    protected NonNullList< Ingredient > replace( NonNullList< Ingredient > ings )
+    protected NonNullList< Ingredient > substitute( NonNullList< Ingredient > ings )
     {
         NonNullList< Ingredient > replacedIngredients = NonNullList.create();
         Set< ItemStack > replaceableItemStacks = megaMap.keySet();
@@ -148,7 +147,7 @@ public class GeoRecipeHelper
                     List< Ingredient > matchingIngredients = new ArrayList<>();
                     for( ItemStack itemStack : matchingItemStacks )
                         matchingIngredients.add( getTargetIngredient( itemStack ) );
-                    replacedIngredients.add( new GeoCompoundIngredient( matchingIngredients ) );
+                    replacedIngredients.add( new ReplicatedCompoundIngredient( matchingIngredients ) );
                 }
             }
 
@@ -163,7 +162,7 @@ public class GeoRecipeHelper
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
     {
-        System.out.println( "GeoRecipeHelper::registerRecipes()" );
+        System.out.println( "RecipeReplicator::registerRecipes()" );
 
         loadConfiguration();
 
@@ -174,7 +173,7 @@ public class GeoRecipeHelper
             if( RecipeBlacklist.contains( recipe.getKey() ) )
                 continue;
 
-            IRecipe copy = GeoRecipeHelper.INSTANCE.copy( recipe.getValue() );
+            IRecipe copy = RecipeReplicator.INSTANCE.replicate( recipe.getValue() );
             if( copy != null )
                 copies.add( copy );
         }
