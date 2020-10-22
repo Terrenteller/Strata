@@ -1,6 +1,7 @@
 package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.block.Blocks;
+import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
@@ -22,6 +23,7 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register( GeoTileSetRegistry.class );
         MinecraftForge.EVENT_BUS.register( OreRegistry.class );
         MinecraftForge.EVENT_BUS.register( RecipeReplicator.class );
+        MinecraftForge.EVENT_BUS.register( FurnaceRecipeReplicator.class );
     }
 
     public void init( FMLInitializationEvent event )

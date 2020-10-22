@@ -224,7 +224,6 @@ type stone
 hardness 4.0
 texture strata:blocks/ore/strong/tantalite
 
-# orePitchblende? Do other mods use this as an ACTUAL ore or uranium itself?
 ore pitchblende oreUranium
 type stone
 hardness 4.0
