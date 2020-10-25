@@ -46,6 +46,7 @@ public class TileLoader
     private String oreName;
     private String oreDictionaryName;
     private ResourceLocation proxyOre;
+    private int burnTime;
 
     // Shared
     private ResourceLocation textureResource;
@@ -160,6 +161,9 @@ public class TileLoader
             case "proxy":
                 proxyOre = new ResourceLocation( value );
                 return true;
+            case "burnTime":
+                burnTime = Integer.parseInt( value );
+                return true;
         }
 
         if( key.startsWith( "texture" ) )
@@ -269,7 +273,8 @@ public class TileLoader
                 harvestTool,
                 harvestLevel,
                 hardness,
-                explosionResistance );
+                explosionResistance,
+                burnTime );
 
             OreRegistry.INSTANCE.register( new OreTileSet( ore ) );
             OreBlockTextureManager.INSTANCE.registerOre( new ResourceLocation( Strata.modid , ore.oreName() ) , 0 , ore );
@@ -304,6 +309,7 @@ public class TileLoader
         oreName = null;
         oreDictionaryName = null;
         proxyOre = null;
+        burnTime = 0;
 
         // Shared
         textureResource = null;

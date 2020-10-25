@@ -1,6 +1,5 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -13,9 +12,12 @@ import net.minecraft.world.World;
 
 public class OreItemBlock extends ItemBlock
 {
-    public OreItemBlock( Block block )
+    protected IOreInfo oreInfo;
+
+    public OreItemBlock( IOreInfo oreInfo , Block block )
     {
         super( block );
+        this.oreInfo = oreInfo;
 
         String blockRegistryName = block.getRegistryName().toString();
         setRegistryName( blockRegistryName );
@@ -48,5 +50,13 @@ public class OreItemBlock extends ItemBlock
         // Strata localization doesn't make a distinction between blocks and items.
         // Proxy ores need to report their wrapped block's unmodified, unlocalized name.
         return this.block.getUnlocalizedName().replaceFirst( "tile." , "" );
+    }
+
+    // Item overrides
+
+    @Override
+    public int getItemBurnTime( ItemStack itemStack )
+    {
+        return oreInfo.burnTime();
     }
 }

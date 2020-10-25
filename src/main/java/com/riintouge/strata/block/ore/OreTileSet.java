@@ -21,7 +21,7 @@ public class OreTileSet implements IOreTileSet
         else
             block = new OreBlock( oreInfo );
 
-        item = new OreItemBlock( block );
+        item = new OreItemBlock( oreInfo , block );
     }
 
     // IOreTileSet overrides

@@ -68,3 +68,10 @@ Key: proxy
 Value: <ResourceLocation>
 Description:
     Drop the drops of the specified block instead.
+
+Key: burnTime
+Value: <int>
+Default: 0
+Description:
+    Ticks the ore will burn for in a furnace.
+    For reference, there are 20 ticks per second and it takes 10 seconds to smelt an item. Standard coal is 1600.

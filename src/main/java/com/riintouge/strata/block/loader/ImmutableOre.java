@@ -25,6 +25,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private ResourceLocation proxyBlockResource;
     private Block proxyBlock;
     private ItemStack vanillaEquivalent;
+    private int burnTime;
 
     public ImmutableOre(
         String oreName,
@@ -37,7 +38,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         String harvestTool,
         int harvestLevel,
         float hardness,
-        float explosionResistance )
+        float explosionResistance,
+        int burnTime )
     {
         this.oreName = oreName;
         this.oreDictionaryName = oreDictionaryName;
@@ -50,6 +52,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.explosionResistance = explosionResistance == 0.0f ? 1.7f * hardness : explosionResistance;
         this.proxyBlockResource = proxyBlockResource;
         this.vanillaEquivalent = vanillaEquivalent;
+        this.burnTime = burnTime;
     }
 
     // IOreInfo overrides
@@ -133,6 +136,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public float explosionResistance()
     {
         return explosionResistance;
+    }
+
+    @Override
+    public int burnTime()
+    {
+        return burnTime;
     }
 
     // IForgeRegistrable overrides

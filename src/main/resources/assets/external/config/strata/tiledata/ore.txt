@@ -273,24 +273,28 @@ type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/bituminous_coal
+burnTime 1600
 
 ore lignite oreCoal
 type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/lignite
+burnTime 1600
 
 ore anthracite oreCoal
 type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/anthracite
+burnTime 1600
 
 ore coke oreCoal
 type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/coke
+burnTime 1600
 
 # Clay
 
