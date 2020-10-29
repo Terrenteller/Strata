@@ -60,9 +60,12 @@ Description:
 	Location of an existing texture.
 
 Key: ore
-Value: <name> [oreDictionaryName]
+Value: <name> [blockOreDictionaryName] [itemOreDictionaryName]
 Description:
 	Register an ore to be generated.
+	The world block and dropped item may have distinct ore dictionary entries, if specified.
+	itemOreDictionaryName defaults to blockOreDictionaryName (which may be unspecified).
+	Use a hyphen ("-") to indicate that object should not be registered with the ore dictionary.
 
 Key: proxy
 Value: <ResourceLocation>

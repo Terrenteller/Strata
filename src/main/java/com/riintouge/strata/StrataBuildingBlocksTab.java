@@ -15,6 +15,6 @@ public class StrataBuildingBlocksTab extends CreativeTabs
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( Item.REGISTRY.getObject( new ResourceLocation( Strata.modid , "schist_stonestairs" ) ) );
+        return new ItemStack( Item.REGISTRY.getObject( new ResourceLocation( Strata.modid , "gneiss_stonewall" ) ) );
     }
 }

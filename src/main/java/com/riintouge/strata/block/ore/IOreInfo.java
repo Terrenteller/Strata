@@ -11,7 +11,9 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
 {
     String oreName();
 
-    String oreDictionaryName();
+    String blockOreDictionaryName();
+
+    String itemOreDictionaryName();
 
     GenericCubeTextureMap modelTextureMap();
 

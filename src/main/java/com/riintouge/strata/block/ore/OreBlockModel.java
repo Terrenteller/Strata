@@ -36,19 +36,21 @@ public class OreBlockModel implements IBakedModel
 
         Block block = state.getBlock();
         ResourceLocation registryName = block.getRegistryName();
-        String oreName = registryName.getResourcePath();
+        String oreName = registryName.getResourcePath().replaceFirst( OreBlock.RegistryNameSuffix , "" );
         if( !OreRegistry.INSTANCE.contains( oreName ) )
             return originalModel.getQuads( state , side , rand );
 
         MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        TextureAtlasSprite hostTexture = OreBlockTextureManager.INSTANCE.findTexture(
-            registryName,
+        TextureAtlasSprite texture = OreBlockTextureManager.INSTANCE.findTexture(
+            registryName.getResourceDomain(),
+            oreName,
             block.getMetaFromState( state ),
-            host.resourceLocation,
+            host.resourceLocation.getResourceDomain(),
+            host.resourceLocation.getResourcePath(),
             host.meta,
             side );
         List< BakedQuad > newQuads = new Vector<>();
-        newQuads.add( BakedQuadUtil.createBakedQuadForFace( 0 , hostTexture , side ) );
+        newQuads.add( BakedQuadUtil.createBakedQuadForFace( 0 , texture , side ) );
 
         return newQuads;
     }

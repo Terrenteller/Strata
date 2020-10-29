@@ -268,28 +268,28 @@ type stone
 hardness 3.0
 texture strata:blocks/ore/crude/oil_shale
 
-ore bituminous_coal oreCoal
+ore bituminous_coal oreCoal bituminousCoal
 type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/bituminous_coal
 burnTime 1600
 
-ore lignite oreCoal
+ore lignite oreCoal lignite
 type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/lignite
 burnTime 1600
 
-ore anthracite oreCoal
+ore anthracite oreCoal anthracite
 type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore
 texture strata:blocks/ore/crude/anthracite
 burnTime 1600
 
-ore coke oreCoal
+ore coke oreCoal coke
 type stone
 hardness 3.0
 vanillaItem minecraft:coal_ore

@@ -45,13 +45,15 @@ public class OreBlockTextureManager
     }
 
     public TextureAtlasSprite findTexture(
-        ResourceLocation ore,
+        String oreDomain,
+        String orePath,
         int oreMeta,
-        ResourceLocation host,
+        String hostDomain,
+        String hostPath,
         int hostMeta,
         EnumFacing facing )
     {
-        String resourcePath = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta , facing ).getResourcePath();
+        String resourcePath = getGeneratedResourceLocation( oreDomain , orePath , oreMeta , hostDomain , hostPath , hostMeta , facing ).getResourcePath();
         TextureAtlasSprite texture = generatedTextureMap.getOrDefault( resourcePath , null );
         if( texture != null )
             return texture;
@@ -152,14 +154,33 @@ public class OreBlockTextureManager
         int hostMeta,
         EnumFacing facing )
     {
-        // Ex: ore_strata_cinnabar_0_host_minecraft_stone_3_north
-        String texturePath = String.format(
-            "ore_%s_%s_%d_host_%s_%s_%d_%s",
+        return getGeneratedResourceLocation(
             ore.getResourceDomain(),
             ore.getResourcePath(),
             oreMeta,
             host.getResourceDomain(),
             host.getResourcePath(),
+            hostMeta,
+            facing );
+    }
+
+    private static ResourceLocation getGeneratedResourceLocation(
+        String oreDomain,
+        String orePath,
+        int oreMeta,
+        String hostDomain,
+        String hostPath,
+        int hostMeta,
+        EnumFacing facing )
+    {
+        // Ex: ore_strata_cinnabar_0_host_minecraft_stone_3_north
+        String texturePath = String.format(
+            "ore_%s_%s_%d_host_%s_%s_%d_%s",
+            oreDomain,
+            orePath,
+            oreMeta,
+            hostDomain,
+            hostPath,
             hostMeta,
             facing.getName2() );
         return new ResourceLocation( Strata.modid , texturePath );

@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -74,11 +75,15 @@ public class OreRegistry
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
-            itemRegistry.register( tileSet.getItem() );
+            itemRegistry.register( tileSet.getItemBlock() );
+            String blockOreDictionaryName = tileSet.getInfo().blockOreDictionaryName();
+            if( blockOreDictionaryName != null )
+                OreDictionary.registerOre( blockOreDictionaryName , tileSet.getItemBlock() );
 
-            String oreDictionaryName = tileSet.getInfo().oreDictionaryName();
-            if( oreDictionaryName != null )
-                OreDictionary.registerOre( oreDictionaryName , tileSet.getItem() );
+            itemRegistry.register( tileSet.getItem() );
+            String itemOreDictionaryName = tileSet.getInfo().itemOreDictionaryName();
+            if( itemOreDictionaryName != null )
+                OreDictionary.registerOre( itemOreDictionaryName , tileSet.getItem() );
         }
     }
 
@@ -113,15 +118,20 @@ public class OreRegistry
         //new ModelResourceLocation( String.format( "%s:%s%s" , Strata.modid , ResourceUtil.ModelResourceBasePath , "ore_cinnabar" ) , "inventory" )
         //new ModelResourceLocation( tileSet.block.getRegistryName() , null )
 
-        // The process of replacing auto-generated blocks models with OreBlockModel
+        // The process of replacing auto-generated block models with OreBlockModel
         // during ModelBakeEvent trashes the would-be generated item models. Instead,
         // load them from yet another auto-generated resource.
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
             ModelLoader.setCustomModelResourceLocation(
+                tileSet.getItemBlock(),
+                0,
+                new ModelResourceLocation( Strata.resource( tileSet.getInfo().oreName() + OreBlock.RegistryNameSuffix ) , "inventory" ) );
+
+            ModelLoader.setCustomModelResourceLocation(
                 tileSet.getItem(),
                 0,
-                new ModelResourceLocation( String.format( "%s:%sore_%s" , Strata.modid , OreItemModelLoader.ModelResourceBasePath , tileSet.getInfo().oreName() ) , "inventory" ) );
+                new ModelResourceLocation( Strata.resource( tileSet.getInfo().oreName() ) , "inventory" ) );
         }
     }
 
@@ -139,18 +149,15 @@ public class OreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void bakeModels( ModelBakeEvent event )
     {
+        IRegistry< ModelResourceLocation , IBakedModel > modelRegistry = event.getModelRegistry();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
-            ResourceLocation modelResource = new ResourceLocation( Strata.modid , tileSet.getInfo().oreName() );
+            ResourceLocation modelResource = Strata.resource( tileSet.getInfo().oreName() + OreBlock.RegistryNameSuffix );
             ModelResourceLocation modelVariantResource = new ModelResourceLocation( modelResource , null );
-            IBakedModel existingModel = event.getModelRegistry().getObject( modelVariantResource );
+            IBakedModel existingModel = modelRegistry.getObject( modelVariantResource );
 
             if( existingModel != null )
-            {
-                // FIXME: Replacing the model here wrecks the ItemBlock
-                OreBlockModel customModel = new OreBlockModel( existingModel );
-                event.getModelRegistry().putObject( modelVariantResource , customModel );
-            }
+                modelRegistry.putObject( modelVariantResource , new OreBlockModel( existingModel ) );
         }
     }
 }

@@ -4,16 +4,16 @@ import com.riintouge.strata.block.ore.OreRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
-public class StrataOresTab extends CreativeTabs
+public class StrataOreBlocksTab extends CreativeTabs
 {
-    public StrataOresTab()
+    public StrataOreBlocksTab()
     {
-        super( "strataOresTab" );
+        super( "strataOreBlocksTab" );
     }
 
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( OreRegistry.INSTANCE.find( "tantalite" ).getItem() );
+        return new ItemStack( OreRegistry.INSTANCE.find( "banded_iron" ).getItemBlock() );
     }
 }

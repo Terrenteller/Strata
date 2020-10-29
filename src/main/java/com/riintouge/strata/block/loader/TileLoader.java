@@ -44,7 +44,8 @@ public class TileLoader
 
     // IOreInfo
     private String oreName;
-    private String oreDictionaryName;
+    private String blockOreDictionaryName;
+    private String itemOreDictionaryName;
     private ResourceLocation proxyOre;
     private int burnTime;
 
@@ -154,8 +155,10 @@ public class TileLoader
             {
                 String[] values = value.split( " " );
                 oreName = values[ 0 ];
-                if( values.length > 1 )
-                    oreDictionaryName = values[ 1 ];
+                blockOreDictionaryName = values.length > 1 && values[ 1 ].compareTo( "-" ) != 0 ? values[ 1 ] : null;
+                itemOreDictionaryName = values.length > 2
+                    ? values[ 2 ].compareTo( "-" ) != 0 ? values[ 2 ] : null
+                    : blockOreDictionaryName;
                 return true;
             }
             case "proxy":
@@ -264,7 +267,8 @@ public class TileLoader
         {
             ImmutableOre ore = new ImmutableOre(
                 oreName,
-                oreDictionaryName,
+                blockOreDictionaryName,
+                itemOreDictionaryName,
                 textureMap,
                 proxyOre,
                 vanillaEquivalent,
@@ -307,7 +311,8 @@ public class TileLoader
 
         // IOreInfo
         oreName = null;
-        oreDictionaryName = null;
+        blockOreDictionaryName = null;
+        itemOreDictionaryName = null;
         proxyOre = null;
         burnTime = 0;
 

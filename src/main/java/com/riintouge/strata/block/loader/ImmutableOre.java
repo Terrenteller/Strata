@@ -14,7 +14,8 @@ import net.minecraft.util.ResourceLocation;
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
     private String oreName;
-    private String oreDictionaryName;
+    private String blockOreDictionaryName;
+    private String itemOreDictionaryName;
     private GenericCubeTextureMap genericCubeTextureMap;
     private Material material;
     private SoundType soundType;
@@ -29,7 +30,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     public ImmutableOre(
         String oreName,
-        String oreDictionaryName,
+        String blockOreDictionaryName,
+        String itemOreDictionaryName,
         GenericCubeTextureMap textureMap,
         ResourceLocation proxyBlockResource,
         ItemStack vanillaEquivalent,
@@ -42,7 +44,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         int burnTime )
     {
         this.oreName = oreName;
-        this.oreDictionaryName = oreDictionaryName;
+        this.blockOreDictionaryName = blockOreDictionaryName;
+        this.itemOreDictionaryName = itemOreDictionaryName;
         this.genericCubeTextureMap = textureMap;
         this.material = material;
         this.soundType = soundType;
@@ -64,9 +67,15 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     }
 
     @Override
-    public String oreDictionaryName()
+    public String blockOreDictionaryName()
     {
-        return oreDictionaryName;
+        return blockOreDictionaryName;
+    }
+
+    @Override
+    public String itemOreDictionaryName()
+    {
+        return itemOreDictionaryName;
     }
 
     @Override

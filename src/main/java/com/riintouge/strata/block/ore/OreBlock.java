@@ -27,6 +27,10 @@ import java.util.Random;
 
 public class OreBlock extends Block
 {
+    // Ore blocks and their item blocks must have a slightly modified name
+    // so the ore items can have the name of the ore without decoration.
+    public static final String RegistryNameSuffix = "_ore";
+
     protected IOreInfo oreInfo;
 
     public OreBlock( IOreInfo oreInfo )
@@ -35,7 +39,7 @@ public class OreBlock extends Block
         this.oreInfo = oreInfo;
 
         // TODO: Do NOT set the registry name here because it cannot then be set by derivations or new instances!
-        setRegistryName( Strata.modid + ":" + oreInfo.oreName() );
+        setRegistryName( Strata.modid + ":" + oreInfo.oreName() + RegistryNameSuffix );
         if( oreInfo.proxyBlock() != null )
             setUnlocalizedName( oreInfo.proxyBlock().getUnlocalizedName() );
         else
@@ -46,7 +50,7 @@ public class OreBlock extends Block
         setHardness( oreInfo.hardness() );
         setResistance( oreInfo.explosionResistance() );
 
-        setCreativeTab( Strata.ORE_TAB );
+        setCreativeTab( Strata.ORE_BLOCK_TAB );
     }
 
     protected MetaResourceLocation getHost( World world , BlockPos pos )

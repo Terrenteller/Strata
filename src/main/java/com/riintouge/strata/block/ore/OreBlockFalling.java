@@ -12,7 +12,7 @@ public class OreBlockFalling extends BlockFalling
         super( oreInfo.material() );
         this.oreInfo = oreInfo;
 
-        setRegistryName( Strata.modid + ":" + oreInfo.oreName() );
+        setRegistryName( Strata.modid + ":" + oreInfo.oreName() + OreBlock.RegistryNameSuffix );
         setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
 
         setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
@@ -20,6 +20,6 @@ public class OreBlockFalling extends BlockFalling
         setHardness( oreInfo.hardness() );
         setResistance( oreInfo.explosionResistance() );
 
-        setCreativeTab( Strata.ORE_TAB );
+        setCreativeTab( Strata.ORE_BLOCK_TAB );
     }
 }

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class OreBlockModelLoader implements ICustomModelLoader
 {
-    private static final String ResourcePattern = String.format( "^%s:(.+)#" , Strata.modid );
+    private static final String ResourcePattern = String.format( "^%s:(.+)%s#" , Strata.modid , OreBlock.RegistryNameSuffix );
     private static final int ResourcePatternOreNameGroup = 1;
     private static final Pattern ResourceRegex = Pattern.compile( ResourcePattern );
 

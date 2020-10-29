@@ -19,7 +19,8 @@ public class Strata
 
     public static final StrataBlocksTab BLOCK_TAB = new StrataBlocksTab();
     public static final StrataBuildingBlocksTab BUILDING_BLOCK_TAB = new StrataBuildingBlocksTab();
-    public static final StrataOresTab ORE_TAB = new StrataOresTab();
+    public static final StrataOreBlocksTab ORE_BLOCK_TAB = new StrataOreBlocksTab();
+    public static final StrataOreItemsTab ORE_ITEM_TAB = new StrataOreItemsTab();
 
     @Mod.Instance( modid )
     public static Strata instance = new Strata();

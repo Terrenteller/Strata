@@ -42,7 +42,7 @@ public class OreItemTextureManager
 
     public static ResourceLocation getTextureLocation( String oreName )
     {
-        return new ResourceLocation( Strata.modid , "items/ore_" + oreName );
+        return Strata.resource( "items/" + oreName );
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )

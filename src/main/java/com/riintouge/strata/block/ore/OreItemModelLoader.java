@@ -16,18 +16,16 @@ import java.util.ArrayList;
 // e.g. fully opaque textures become blocks while anything else is rendered as a flat item.
 public class OreItemModelLoader implements ICustomModelLoader
 {
-    public static final String ModelResourceBasePath = "models/item/";
-
-    private static final String ItemNamePrefix = "ore_";
-    private static final String ResourcePrefix = ModelResourceBasePath + ItemNamePrefix;
-    private static final String DomainResourcePrefix = Strata.modid + ":" + ResourcePrefix;
+    private static final String ModelResourceBasePath = "models/item/";
+    private static final String DomainResourcePrefix = Strata.resource( ModelResourceBasePath ).toString();
 
     // ICustomModelLoader overrides
 
     @Override
     public boolean accepts( ResourceLocation modelLocation )
     {
-        return modelLocation.toString().startsWith( DomainResourcePrefix );
+        String oreName = modelLocation.toString().replaceFirst( DomainResourcePrefix , "" );
+        return OreRegistry.INSTANCE.contains( oreName );
     }
 
     @Override
@@ -36,7 +34,7 @@ public class OreItemModelLoader implements ICustomModelLoader
         System.out.println( String.format( "OreItemModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
         ImmutableMap.Builder< String , String > textures = ImmutableMap.builder();
-        String oreName = modelLocation.getResourcePath().replaceAll( ResourcePrefix , "" );
+        String oreName = modelLocation.getResourcePath().replaceFirst( ModelResourceBasePath , "" );
         textures.put( "layer0" , OreItemTextureManager.getTextureLocation( oreName ).toString() );
 
         ModelBlock blockModel = new ModelBlock(

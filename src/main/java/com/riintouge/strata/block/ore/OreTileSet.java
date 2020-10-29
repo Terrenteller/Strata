@@ -3,25 +3,23 @@ package com.riintouge.strata.block.ore;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 
 public class OreTileSet implements IOreTileSet
 {
     protected IOreInfo oreInfo;
     protected Block block;
+    protected ItemBlock itemBlock;
     protected Item item;
 
     public OreTileSet( IOreInfo oreInfo )
     {
         this.oreInfo = oreInfo;
 
-        // Material values aren't constant so can't use switch
-        // TODO: If OreBlock takes on a host affected by gravity, it should replace itself
-        if( oreInfo.material() == Material.SAND )
-            block = new OreBlockFalling( oreInfo );
-        else
-            block = new OreBlock( oreInfo );
-
-        item = new OreItemBlock( oreInfo , block );
+        // TODO: What if OreBlock takes on a host affected by gravity?
+        block = oreInfo.material() == Material.SAND ? new OreBlockFalling( oreInfo ) : new OreBlock( oreInfo );
+        itemBlock = new OreItemBlock( oreInfo , block );
+        item = oreInfo.proxyBlock() != null ? itemBlock : new OreItem( oreInfo );
     }
 
     // IOreTileSet overrides
@@ -36,6 +34,12 @@ public class OreTileSet implements IOreTileSet
     public Block getBlock()
     {
         return block;
+    }
+
+    @Override
+    public ItemBlock getItemBlock()
+    {
+        return itemBlock;
     }
 
     @Override
