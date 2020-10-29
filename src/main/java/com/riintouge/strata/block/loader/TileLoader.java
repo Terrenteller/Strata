@@ -239,6 +239,7 @@ public class TileLoader
                 harvestLevel,
                 hardness,
                 explosionResistance,
+                burnTime,
                 textureMap,
                 vanillaEquivalent );
 

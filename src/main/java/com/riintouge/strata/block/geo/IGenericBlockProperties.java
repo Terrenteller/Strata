@@ -19,4 +19,9 @@ public interface IGenericBlockProperties
     {
         return 5.0f * hardness();
     }
+
+    default int burnTime()
+    {
+        return 0;
+    }
 }

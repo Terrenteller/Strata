@@ -104,14 +104,14 @@ public class GeoTileSet implements IForgeRegistrable
         {
             IGeoTileInfo tile = tiles.get( type );
             Block block = Block.REGISTRY.getObject( tile.registryName() );
-            Item item = new GeoItemBlock( block );
+            Item item = new GeoItemBlock( tile , block );
             itemMap.put( type , item );
             itemRegistry.register( item );
 
             TileType stairType = tile.type().stairType();
             if( stairType != null )
             {
-                GeoItemBlock stairs = new GeoItemBlock( stairsMap.get( type ) );
+                GeoItemBlock stairs = new GeoItemBlock( tile , stairsMap.get( type ) );
                 itemMap.put( stairType , stairs );
                 itemRegistry.register( stairs );
             }
@@ -127,7 +127,7 @@ public class GeoTileSet implements IForgeRegistrable
             TileType wallType = tile.type().wallType();
             if( wallType != null )
             {
-                GeoItemBlock wall = new GeoItemBlock( wallMap.get( type ) );
+                GeoItemBlock wall = new GeoItemBlock( tile , wallMap.get( type ) );
                 itemMap.put( wallType , wall );
                 itemRegistry.register( wall );
             }

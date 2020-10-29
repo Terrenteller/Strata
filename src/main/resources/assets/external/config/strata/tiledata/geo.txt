@@ -12,6 +12,7 @@ generate peat ground
 host
 hardness 0.5
 texture strata:blocks/ground/peat
+burnTime 800
 
 # Weak
 

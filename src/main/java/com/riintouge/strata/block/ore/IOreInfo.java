@@ -26,11 +26,6 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
         return null;
     }
 
-    default int burnTime()
-    {
-        return 0;
-    }
-
     // IGenericBlockProperties overrides
 
     @Override

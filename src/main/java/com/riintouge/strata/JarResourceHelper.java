@@ -9,6 +9,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipException;
 
 public class JarResourceHelper
 {
@@ -47,7 +48,8 @@ public class JarResourceHelper
 
         try
         {
-            JarFile jar = new JarFile( getClassJar( clazz ) );
+            String classJar = getClassJar( clazz );
+            JarFile jar = new JarFile( classJar );
             Enumeration< JarEntry > entries = jar.entries();
 
             while( entries.hasMoreElements() )
@@ -61,6 +63,10 @@ public class JarResourceHelper
                 if( name.startsWith( "assets/" ) )
                     paths.add( name );
             }
+        }
+        catch( ZipException e )
+        {
+            // TODO: We're probably running in debug and classJar was a CLASS file
         }
         catch( IOException | NullPointerException e )
         {

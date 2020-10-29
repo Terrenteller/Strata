@@ -1,6 +1,5 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IFacingTextureMap;
 import com.riintouge.strata.block.IModelRetexturizerMap;
@@ -24,6 +23,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private int harvestLevel;
     private float hardness;
     private float explosionResistance;
+    private int burnTime;
     private ItemStack vanillaEquivalent;
     private GenericCubeTextureMap genericCubeTextureMap;
 
@@ -37,6 +37,7 @@ public final class ImmutableTile implements IGeoTileInfo
         int harvestLevel,
         float hardness,
         float explosionResistance,
+        int burnTime,
         GenericCubeTextureMap textureMap,
         ItemStack vanillaEquivalent )
     {
@@ -50,6 +51,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.harvestLevel = harvestLevel;
         this.hardness = hardness;
         this.explosionResistance = explosionResistance;
+        this.burnTime = burnTime;
         this.genericCubeTextureMap = textureMap;
         this.vanillaEquivalent = vanillaEquivalent;
     }
@@ -130,6 +132,12 @@ public final class ImmutableTile implements IGeoTileInfo
     public float explosionResistance()
     {
         return explosionResistance;
+    }
+
+    @Override
+    public int burnTime()
+    {
+        return burnTime;
     }
 
     @Override
