@@ -109,6 +109,38 @@ strata:hornfels_stonebrick.name=Hornfels Bricks
 strata:peridotite_stonebrick.name=Peridotite Bricks
 strata:quartzite_stonebrick.name=Quartzite Bricks
 
+# Mossy Stone Brick
+
+strata:breccia_stonebrickmossy.name=Mossy Breccia Bricks
+strata:claystone_stonebrickmossy.name=Mossy Claystone Bricks
+strata:carbonatite_stonebrickmossy.name=Mossy Carbonatite Bricks
+strata:conglomerate_stonebrickmossy.name=Mossy Conglomerate Bricks
+strata:mudstone_stonebrickmossy.name=Mossy Mudstone Bricks
+
+strata:limestone_stonebrickmossy.name=Mossy Limestone Bricks
+strata:schist_stonebrickmossy.name=Mossy Schist Bricks
+strata:serpentinite_stonebrickmossy.name=Mossy Serpentinite Bricks
+strata:slate_stonebrickmossy.name=Mossy Slate Bricks
+strata:skarn_stonebrickmossy.name=Mossy Skarn Bricks
+strata:chalk_stonebrickmossy.name=Mossy Chalk Bricks
+
+strata:andesite_stonebrickmossy.name=Mossy Andesite Bricks
+strata:basalt_stonebrickmossy.name=Mossy Basalt Bricks
+strata:gneiss_stonebrickmossy.name=Mossy Gneiss Bricks
+strata:granite_stonebrickmossy.name=Mossy Granite Bricks
+strata:greenschist_stonebrickmossy.name=Mossy Greenschist Bricks
+strata:marble_stonebrickmossy.name=Mossy Marble Bricks
+strata:pegmatite_stonebrickmossy.name=Mossy Pegmatite Bricks
+strata:rhyolite_stonebrickmossy.name=Mossy Rhyolite Bricks
+strata:sandstone_stonebrickmossy.name=Mossy Sandstone Bricks
+strata:red_sandstone_stonebrickmossy.name=Mossy Red Sandstone Bricks
+
+strata:diorite_stonebrickmossy.name=Mossy Diorite Bricks
+strata:gabbro_stonebrickmossy.name=Mossy Gabbro Bricks
+strata:hornfels_stonebrickmossy.name=Mossy Hornfels Bricks
+strata:peridotite_stonebrickmossy.name=Mossy Peridotite Bricks
+strata:quartzite_stonebrickmossy.name=Mossy Quartzite Bricks
+
 # Cobble Stairs
 
 strata:breccia_cobblestairs.name=Breccia Cobblestone Stairs

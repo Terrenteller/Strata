@@ -20,8 +20,9 @@ public enum TileType
     STONE  ( true , "%s:%s" , Material.ROCK   , SoundType.STONE  , "pickaxe" , null , "generic_cube" ),
 
     // Secondaries - manually specified derivatives of a primary
-    COBBLE     ( false , "%s:%s_cobble"     , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
-    STONEBRICK ( false , "%s:%s_stonebrick" , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
+    COBBLE          ( false , "%s:%s_cobble"          , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
+    STONEBRICK      ( false , "%s:%s_stonebrick"      , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
+    STONEBRICKMOSSY ( false , "%s:%s_stonebrickmossy" , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
 
     // Tertiaries - internally auto-generated from a primary or secondary
     COBBLESTAIRS     ( false , "%s:%s_cobblestairs"     , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_stairs" ),
@@ -85,6 +86,7 @@ public enum TileType
             case COBBLE:
                 return COBBLESTAIRS;
             case STONEBRICK:
+            case STONEBRICKMOSSY:
                 return STONEBRICKSTAIRS;
         }
 
@@ -100,6 +102,7 @@ public enum TileType
             case COBBLE:
                 return COBBLESLAB;
             case STONEBRICK:
+            case STONEBRICKMOSSY:
                 return STONEBRICKSLAB;
         }
 
@@ -115,6 +118,7 @@ public enum TileType
             case COBBLE:
                 return COBBLESLABS;
             case STONEBRICK:
+            case STONEBRICKMOSSY:
                 return STONEBRICKSLABS;
         }
 
@@ -130,6 +134,7 @@ public enum TileType
             case COBBLE:
                 return COBBLEWALL;
             case STONEBRICK:
+            case STONEBRICKMOSSY:
                 return STONEBRICKWALL;
         }
 
@@ -152,6 +157,9 @@ public enum TileType
                 break;
             case STONEBRICK:
                 vanillaItem = new ItemStack( Blocks.STONEBRICK );
+                break;
+            case STONEBRICKMOSSY:
+                vanillaItem = new ItemStack( Blocks.STONEBRICK , 1 , 1 );
                 break;
             case COBBLESTAIRS:
                 vanillaItem = new ItemStack( Blocks.STONE_STAIRS );

@@ -29,6 +29,10 @@ generate breccia stonebrick
 hardness 1.0
 texture strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 30 strata:blocks/stone/weak/breccia
 
+generate breccia stonebrickmossy
+hardness 1.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 30 strata:blocks/stone/weak/breccia
+
 generate claystone stone
 host
 hardness 1.0
@@ -45,6 +49,11 @@ hardness 1.0
 texture strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone
 textureCaps strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone_caps
 
+generate claystone stonebrickmossy
+hardness 1.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone_caps
+
 generate carbonatite stone
 host
 hardness 1.0
@@ -57,6 +66,10 @@ texture strata:overlays/cobble normal 85 strata:blocks/stone/weak/carbonatite
 generate carbonatite stonebrick
 hardness 1.0
 texture strata:overlays/brick_highlight lighten 22 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/carbonatite
+
+generate carbonatite stonebrickmossy
+hardness 1.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 22 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/carbonatite
 
 generate conglomerate stone
 host
@@ -71,6 +84,10 @@ generate conglomerate stonebrick
 hardness 1.0
 texture strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 39 strata:blocks/stone/weak/conglomerate
 
+generate conglomerate stonebrickmossy
+hardness 1.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 39 strata:blocks/stone/weak/conglomerate
+
 generate mudstone stone
 host
 hardness 1.0
@@ -83,6 +100,10 @@ texture strata:overlays/cobble normal 91 strata:blocks/stone/weak/mudstone
 generate mudstone stonebrick
 hardness 1.0
 texture strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/mudstone
+
+generate mudstone stonebrickmossy
+hardness 1.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/mudstone
 
 # Medium
 
@@ -102,6 +123,11 @@ hardness 1.5
 texture strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/limestone
 textureCaps strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/limestone_caps
 
+generate limestone stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/limestone
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/limestone_caps
+
 generate schist stone
 host
 hardness 1.5
@@ -114,6 +140,10 @@ texture strata:overlays/cobble normal 97 strata:blocks/stone/medium/schist
 generate schist stonebrick
 hardness 1.5
 texture strata:overlays/brick_highlight lighten 46 strata:overlays/brick_shadow darken 40 strata:blocks/stone/medium/schist
+
+generate schist stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 46 strata:overlays/brick_shadow darken 40 strata:blocks/stone/medium/schist
 
 generate serpentinite stone
 host
@@ -128,6 +158,10 @@ generate serpentinite stonebrick
 hardness 1.5
 texture strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 36 strata:blocks/stone/medium/serpentinite
 
+generate serpentinite stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 36 strata:blocks/stone/medium/serpentinite
+
 generate slate stone
 host
 hardness 1.5
@@ -140,6 +174,10 @@ texture strata:overlays/cobble normal 94 strata:blocks/stone/medium/slate
 generate slate stonebrick
 hardness 1.5
 texture strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/slate
+
+generate slate stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/slate
 
 generate skarn stone
 host
@@ -157,6 +195,11 @@ hardness 1.5
 texture strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn
 textureCaps strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn_caps
 
+generate skarn stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn_caps
+
 generate chalk stone
 host
 hardness 1.5
@@ -172,6 +215,11 @@ generate chalk stonebrick
 hardness 1.5
 texture strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk
 textureCaps strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk_caps
+
+generate chalk stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk_caps
 
 # Strong
 
@@ -192,6 +240,11 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 46 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/andesite
 
+generate andesite stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 46 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/andesite
+
 generate basalt stone
 host
 harvestLevel 1
@@ -207,6 +260,11 @@ generate basalt stonebrick
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/basalt
+
+generate basalt stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/basalt
 
 generate gneiss stone
 host
@@ -227,6 +285,12 @@ hardness 2.0
 texture strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 26 strata:blocks/stone/strong/gneiss
 textureCaps strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 26 strata:blocks/stone/strong/gneiss_caps
 
+generate gneiss stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 26 strata:blocks/stone/strong/gneiss
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 26 strata:blocks/stone/strong/gneiss_caps
+
 generate granite stone
 host
 harvestLevel 1
@@ -244,6 +308,11 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 28 strata:blocks/stone/strong/granite
 
+generate granite stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 28 strata:blocks/stone/strong/granite
+
 generate greenschist stone
 host
 harvestLevel 1
@@ -259,6 +328,11 @@ generate greenschist stonebrick
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 37 strata:blocks/stone/strong/greenschist
+
+generate greenschist stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 37 strata:blocks/stone/strong/greenschist
 
 generate marble stone
 host
@@ -276,6 +350,11 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 36 strata:blocks/stone/strong/marble
 
+generate marble stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 36 strata:blocks/stone/strong/marble
+
 generate pegmatite stone
 host
 harvestLevel 1
@@ -292,6 +371,11 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 58 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/pegmatite
 
+generate pegmatite stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 58 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/pegmatite
+
 generate rhyolite stone
 host
 harvestLevel 1
@@ -307,6 +391,11 @@ generate rhyolite stonebrick
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/rhyolite
+
+generate rhyolite stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/rhyolite
 
 generate sandstone stone
 host
@@ -328,6 +417,12 @@ hardness 2.0
 texture strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
 
+generate sandstone stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+
 generate red_sandstone stone
 host
 harvestLevel 1
@@ -348,6 +443,12 @@ hardness 2.0
 texture strata:overlays/brick_highlight lighten 13 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/red_sandstone
 textureCaps strata:overlays/brick_highlight lighten 13 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/red_sandstone_caps
 
+generate red_sandstone stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 13 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/red_sandstone
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 13 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/red_sandstone_caps
+
 # Very Strong
 
 generate diorite stone
@@ -367,6 +468,11 @@ harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 41 strata:blocks/stone/very_strong/diorite
 
+generate diorite stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 41 strata:blocks/stone/very_strong/diorite
+
 generate gabbro stone
 host
 harvestLevel 1
@@ -382,6 +488,11 @@ generate gabbro stonebrick
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 26 strata:overlays/brick_shadow darken 36 strata:blocks/stone/very_strong/gabbro
+
+generate gabbro stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 26 strata:overlays/brick_shadow darken 36 strata:blocks/stone/very_strong/gabbro
 
 generate hornfels stone
 host
@@ -399,6 +510,11 @@ harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 25 strata:overlays/brick_shadow darken 39 strata:blocks/stone/very_strong/hornfels
 
+generate hornfels stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 25 strata:overlays/brick_shadow darken 39 strata:blocks/stone/very_strong/hornfels
+
 generate peridotite stone
 host
 harvestLevel 1
@@ -415,6 +531,11 @@ harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 31 strata:blocks/stone/very_strong/peridotite
 
+generate peridotite stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 31 strata:blocks/stone/very_strong/peridotite
+
 generate quartzite stone
 host
 harvestLevel 1
@@ -430,3 +551,8 @@ generate quartzite stonebrick
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 27 strata:overlays/brick_shadow darken 34 strata:blocks/stone/very_strong/quartzite
+
+generate quartzite stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 27 strata:overlays/brick_shadow darken 34 strata:blocks/stone/very_strong/quartzite

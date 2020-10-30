@@ -5,6 +5,7 @@ import com.riintouge.strata.block.RecipeReplicator;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -70,14 +71,16 @@ public class GeoTileSet implements IForgeRegistrable
             GeoBlock block = new GeoBlock( tile );
             blockRegistry.register( block );
 
-            if( tile.type().stairType() != null )
+            TileType stairType = tile.type().stairType();
+            if( stairType != null && stairType.parentType == tile.type() )
             {
                 GeoBlockStairs stairs = new GeoBlockStairs( tile , block.getDefaultState() );
                 stairsMap.put( type , stairs );
                 blockRegistry.register( stairs );
             }
 
-            if( tile.type().slabType() != null && tile.type().slabsType() != null )
+            TileType slabType = tile.type().slabType();
+            if( slabType != null && tile.type().slabsType() != null && slabType.parentType == tile.type() )
             {
                 GeoBlockSlab slab = new GeoBlockSlab( tile );
                 slabMap.put( type , slab );
@@ -88,7 +91,8 @@ public class GeoTileSet implements IForgeRegistrable
                 blockRegistry.register( slabs );
             }
 
-            if( tile.type().wallType() != null )
+            TileType wallType = tile.type().wallType();
+            if( wallType != null && wallType.parentType == tile.type() )
             {
                 GeoBlockWall wall = new GeoBlockWall( tile , block );
                 wallMap.put( type , wall );
@@ -109,7 +113,7 @@ public class GeoTileSet implements IForgeRegistrable
             itemRegistry.register( item );
 
             TileType stairType = tile.type().stairType();
-            if( stairType != null )
+            if( stairType != null && stairType.parentType == tile.type() )
             {
                 GeoItemBlock stairs = new GeoItemBlock( tile , stairsMap.get( type ) );
                 itemMap.put( stairType , stairs );
@@ -117,7 +121,7 @@ public class GeoTileSet implements IForgeRegistrable
             }
 
             TileType slabType = tile.type().slabType();
-            if( slabType != null && tile.type().slabsType() != null )
+            if( slabType != null && tile.type().slabsType() != null && slabType.parentType == tile.type() )
             {
                 GeoItemBlockSlab slab = new GeoItemBlockSlab( slabMap.get( type ) , slabsMap.get( type ) );
                 itemMap.put( slabType , slab );
@@ -125,7 +129,7 @@ public class GeoTileSet implements IForgeRegistrable
             }
 
             TileType wallType = tile.type().wallType();
-            if( wallType != null )
+            if( wallType != null && wallType.parentType == tile.type() )
             {
                 GeoItemBlock wall = new GeoItemBlock( tile , wallMap.get( type ) );
                 itemMap.put( wallType , wall );
@@ -157,12 +161,24 @@ public class GeoTileSet implements IForgeRegistrable
                     if( stoneBrickItem != null )
                     {
                         GameRegistry.addShapedRecipe(
-                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_brick" ),
+                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_stonebrick" ),
                             null,
-                            new ItemStack( itemMap.get( TileType.STONEBRICK ) ),
+                            new ItemStack( stoneBrickItem ),
                             "XX",
                             "XX",
                             'X' , item );
+                    }
+                    break;
+                case STONEBRICK:
+                    Item stoneBrickMossyItem = itemMap.getOrDefault( TileType.STONEBRICKMOSSY , null );
+                    if( stoneBrickMossyItem != null )
+                    {
+                        GameRegistry.addShapelessRecipe(
+                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_stonebrickmossy" ),
+                            null,
+                            new ItemStack( stoneBrickMossyItem ),
+                            Ingredient.fromItem( item ),
+                            Ingredient.fromItem( Item.getItemFromBlock( Blocks.VINE ) ) );
                     }
                     break;
                 case COBBLE:
