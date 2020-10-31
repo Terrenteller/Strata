@@ -21,6 +21,7 @@ public enum TileType
 
     // Secondaries - manually specified derivatives of a primary
     COBBLE          ( false , "%s:%s_cobble"          , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
+    COBBLEMOSSY     ( false , "%s:%s_cobblemossy"     , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
     STONEBRICK      ( false , "%s:%s_stonebrick"      , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
     STONEBRICKMOSSY ( false , "%s:%s_stonebrickmossy" , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
 
@@ -84,6 +85,7 @@ public enum TileType
             case STONE:
                 return STONESTAIRS;
             case COBBLE:
+            case COBBLEMOSSY:
                 return COBBLESTAIRS;
             case STONEBRICK:
             case STONEBRICKMOSSY:
@@ -100,6 +102,7 @@ public enum TileType
             case STONE:
                 return STONESLAB;
             case COBBLE:
+            case COBBLEMOSSY:
                 return COBBLESLAB;
             case STONEBRICK:
             case STONEBRICKMOSSY:
@@ -116,6 +119,7 @@ public enum TileType
             case STONE:
                 return STONESLABS;
             case COBBLE:
+            case COBBLEMOSSY:
                 return COBBLESLABS;
             case STONEBRICK:
             case STONEBRICKMOSSY:
@@ -132,6 +136,7 @@ public enum TileType
             case STONE:
                 return STONEWALL;
             case COBBLE:
+            case COBBLEMOSSY:
                 return COBBLEWALL;
             case STONEBRICK:
             case STONEBRICKMOSSY:
@@ -154,6 +159,9 @@ public enum TileType
                 break;
             case COBBLE:
                 vanillaItem = new ItemStack( Blocks.COBBLESTONE );
+                break;
+            case COBBLEMOSSY:
+                vanillaItem = new ItemStack( Blocks.MOSSY_COBBLESTONE );
                 break;
             case STONEBRICK:
                 vanillaItem = new ItemStack( Blocks.STONEBRICK );

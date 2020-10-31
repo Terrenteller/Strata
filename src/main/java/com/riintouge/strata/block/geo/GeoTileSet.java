@@ -185,6 +185,16 @@ public class GeoTileSet implements IForgeRegistrable
                     Item stoneItem = itemMap.getOrDefault( TileType.STONE , null );
                     if( stoneItem != null )
                         GameRegistry.addSmelting( item , new ItemStack( stoneItem ) , 0.1f ); // Vanilla exp
+                    Item cobbleMossyItem = itemMap.getOrDefault( TileType.COBBLEMOSSY , null );
+                    if( cobbleMossyItem != null )
+                    {
+                        GameRegistry.addShapelessRecipe(
+                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_cobblemossy" ),
+                            null,
+                            new ItemStack( cobbleMossyItem ),
+                            Ingredient.fromItem( item ),
+                            Ingredient.fromItem( Item.getItemFromBlock( Blocks.VINE ) ) );
+                    }
                     break;
             }
 

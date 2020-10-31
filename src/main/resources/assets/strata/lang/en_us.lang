@@ -77,6 +77,38 @@ strata:hornfels_cobble.name=Hornfels Cobblestone
 strata:peridotite_cobble.name=Peridotite Cobblestone
 strata:quartzite_cobble.name=Quartzite Cobblestone
 
+# Mossy Cobblestone
+
+strata:breccia_cobblemossy.name=Moss Breccia Stone
+strata:claystone_cobblemossy.name=Moss Claystone Stone
+strata:carbonatite_cobblemossy.name=Moss Carbonatite Stone
+strata:conglomerate_cobblemossy.name=Moss Conglomerate Stone
+strata:mudstone_cobblemossy.name=Moss Mudstone Stone
+
+strata:limestone_cobblemossy.name=Moss Limestone Stone
+strata:schist_cobblemossy.name=Moss Schist Stone
+strata:serpentinite_cobblemossy.name=Moss Serpentinite Stone
+strata:slate_cobblemossy.name=Moss Slate Stone
+strata:skarn_cobblemossy.name=Moss Skarn Stone
+strata:chalk_cobblemossy.name=Moss Chalk Stone
+
+strata:andesite_cobblemossy.name=Moss Andesite Stone
+strata:basalt_cobblemossy.name=Moss Basalt Stone
+strata:gneiss_cobblemossy.name=Moss Gneiss Stone
+strata:granite_cobblemossy.name=Moss Granite Stone
+strata:greenschist_cobblemossy.name=Moss Greenschist Stone
+strata:marble_cobblemossy.name=Moss Marble Stone
+strata:pegmatite_cobblemossy.name=Moss Pegmatite Stone
+strata:rhyolite_cobblemossy.name=Moss Rhyolite Stone
+strata:sandstone_cobblemossy.name=Moss Sandstone Stone
+strata:red_sandstone_cobblemossy.name=Moss Red Sandstone Stone
+
+strata:diorite_cobblemossy.name=Moss Diorite Stone
+strata:gabbro_cobblemossy.name=Moss Gabbro Stone
+strata:hornfels_cobblemossy.name=Moss Hornfels Stone
+strata:peridotite_cobblemossy.name=Moss Peridotite Stone
+strata:quartzite_cobblemossy.name=Moss Quartzite Stone
+
 # Stone Brick
 
 strata:breccia_stonebrick.name=Breccia Bricks
