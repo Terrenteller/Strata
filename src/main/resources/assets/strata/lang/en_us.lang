@@ -1,4 +1,4 @@
-# General
+# GUI
 
 itemGroup.strataBlocksTab=Strata Blocks
 itemGroup.strataBuildingBlocksTab=Strata Building Blocks
@@ -45,7 +45,7 @@ strata:hornfels.name=Hornfels
 strata:peridotite.name=Peridotite
 strata:quartzite.name=Quartzite
 
-# Cobble
+# Cobblestone
 
 strata:breccia_cobble.name=Breccia Cobblestone
 strata:claystone_cobble.name=Claystone Cobblestone
@@ -172,6 +172,38 @@ strata:gabbro_stonebrickmossy.name=Mossy Gabbro Bricks
 strata:hornfels_stonebrickmossy.name=Mossy Hornfels Bricks
 strata:peridotite_stonebrickmossy.name=Mossy Peridotite Bricks
 strata:quartzite_stonebrickmossy.name=Mossy Quartzite Bricks
+
+# Polished Stone
+
+strata:breccia_stonepolished.name=Polished Breccia
+strata:claystone_stonepolished.name=Polished Claystone
+strata:carbonatite_stonepolished.name=Polished Carbonatite
+strata:conglomerate_stonepolished.name=Polished Conglomerate
+strata:mudstone_stonepolished.name=Polished Mudstone
+
+strata:limestone_stonepolished.name=Polished Limestone
+strata:schist_stonepolished.name=Polished Schist
+strata:serpentinite_stonepolished.name=Polished Serpentinite
+strata:slate_stonepolished.name=Polished Slate
+strata:skarn_stonepolished.name=Polished Skarn
+strata:chalk_stonepolished.name=Polished Chalk
+
+strata:andesite_stonepolished.name=Polished Andesite
+strata:basalt_stonepolished.name=Polished Basalt
+strata:gneiss_stonepolished.name=Polished Gneiss
+strata:granite_stonepolished.name=Polished Granite
+strata:greenschist_stonepolished.name=Polished Greenschist
+strata:marble_stonepolished.name=Polished Marble
+strata:pegmatite_stonepolished.name=Polished Pegmatite
+strata:rhyolite_stonepolished.name=Polished Rhyolite
+strata:sandstone_stonepolished.name=Polished Sandstone
+strata:red_sandstone_stonepolished.name=Polished Red Sandstone
+
+strata:diorite_stonepolished.name=Polished Diorite
+strata:gabbro_stonepolished.name=Polished Gabbro
+strata:hornfels_stonepolished.name=Polished Hornfels
+strata:peridotite_stonepolished.name=Polished Peridotite
+strata:quartzite_stonepolished.name=Polished Quartzite
 
 # Cobble Stairs
 

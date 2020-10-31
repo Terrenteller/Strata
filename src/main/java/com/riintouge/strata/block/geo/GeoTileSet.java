@@ -163,7 +163,18 @@ public class GeoTileSet implements IForgeRegistrable
                         GameRegistry.addShapedRecipe(
                             new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_stonebrick" ),
                             null,
-                            new ItemStack( stoneBrickItem ),
+                            new ItemStack( stoneBrickItem , 4 ),
+                            "XX ",
+                            " XX",
+                            'X' , item );
+                    }
+                    Item stonePolishedItem = itemMap.getOrDefault( TileType.STONEPOLISHED , null );
+                    if( stonePolishedItem != null )
+                    {
+                        GameRegistry.addShapedRecipe(
+                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_polished" ),
+                            null,
+                            new ItemStack( stonePolishedItem , 4 ),
                             "XX",
                             "XX",
                             'X' , item );
