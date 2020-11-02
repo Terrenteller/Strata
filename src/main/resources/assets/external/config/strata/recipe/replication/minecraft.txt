@@ -8,11 +8,11 @@ blacklist minecraft:mossy_cobblestone
 blacklist minecraft:mossy_stonebrick
 blacklist minecraft:stone_brick_stairs
 blacklist minecraft:stone_brick_slab
+blacklist minecraft:stone_button
+blacklist minecraft:lever
+blacklist minecraft:stone_pressure_plate
 
 # Strata equivalent has vanillaOverride
 blacklist minecraft:andesite
 blacklist minecraft:diorite
 blacklist minecraft:granite
-
-# Conflicts with vanillaOverride
-blacklist minecraft:stone_button

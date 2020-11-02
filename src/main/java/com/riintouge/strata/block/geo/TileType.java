@@ -27,18 +27,21 @@ public enum TileType
     STONEPOLISHED   ( false , "%s:%s_stonepolished"   , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" ),
 
     // Tertiaries - internally auto-generated from a primary or secondary
-    COBBLESTAIRS     ( false , "%s:%s_cobblestairs"     , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_stairs" ),
-    STONESTAIRS      ( false , "%s:%s_stonestairs"      , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_stairs" ),
-    STONEBRICKSTAIRS ( false , "%s:%s_stonebrickstairs" , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_stairs" ),
-    COBBLESLAB       ( false , "%s:%s_cobbleslab"       , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_slab"   ),
-    COBBLESLABS      ( false , "%s:%s_cobbleslabs"      , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_slab"   ),
-    STONESLAB        ( false , "%s:%s_stoneslab"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"   ),
-    STONESLABS       ( false , "%s:%s_stoneslabs"       , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"   ),
-    STONEBRICKSLAB   ( false , "%s:%s_stonebrickslab"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"   ),
-    STONEBRICKSLABS  ( false , "%s:%s_stonebrickslabs"  , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"   ),
-    COBBLEWALL       ( false , "%s:%s_cobblewall"       , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_wall"   ),
-    STONEWALL        ( false , "%s:%s_stonewall"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_wall"   ),
-    STONEBRICKWALL   ( false , "%s:%s_stonebrickwall"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_wall"   );
+    COBBLESTAIRS     ( false , "%s:%s_cobblestairs"     , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_stairs"         ),
+    STONESTAIRS      ( false , "%s:%s_stonestairs"      , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_stairs"         ),
+    STONEBRICKSTAIRS ( false , "%s:%s_stonebrickstairs" , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_stairs"         ),
+    COBBLESLAB       ( false , "%s:%s_cobbleslab"       , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_slab"           ),
+    COBBLESLABS      ( false , "%s:%s_cobbleslabs"      , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_slab"           ),
+    STONESLAB        ( false , "%s:%s_stoneslab"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"           ),
+    STONESLABS       ( false , "%s:%s_stoneslabs"       , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_slab"           ),
+    STONEBRICKSLAB   ( false , "%s:%s_stonebrickslab"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"           ),
+    STONEBRICKSLABS  ( false , "%s:%s_stonebrickslabs"  , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_slab"           ),
+    COBBLEWALL       ( false , "%s:%s_cobblewall"       , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_wall"           ),
+    STONEWALL        ( false , "%s:%s_stonewall"        , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_wall"           ),
+    STONEBRICKWALL   ( false , "%s:%s_stonebrickwall"   , Material.ROCK , SoundType.STONE , "pickaxe" , STONEBRICK , "generic_wall"           ),
+    BUTTON           ( false , "%s:%s_button"           , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_button"         ),
+    LEVER            ( false , "%s:%s_lever"            , Material.ROCK , SoundType.STONE , "pickaxe" , COBBLE     , "generic_lever"          ),
+    PRESSUREPLATE    ( false , "%s:%s_pressureplate"    , Material.ROCK , SoundType.STONE , "pickaxe" , STONE      , "generic_pressure_plate" );
 
     // Cache to satisfy instance comparisons
     private static Map< TileType , ItemStack > ItemStackMap = new HashMap<>();
@@ -147,6 +150,21 @@ public enum TileType
         return null;
     }
 
+    public TileType buttonType()
+    {
+        return this == STONE ? BUTTON : null;
+    }
+
+    public TileType leverType()
+    {
+        return this == COBBLE ? LEVER : null;
+    }
+
+    public TileType pressurePlateType()
+    {
+        return this == STONE ? PRESSUREPLATE : null;
+    }
+
     public ItemStack vanillaItemStack()
     {
         ItemStack vanillaItem = ItemStackMap.getOrDefault( this , null );
@@ -187,6 +205,15 @@ public enum TileType
                 break;
             case COBBLEWALL:
                 vanillaItem = new ItemStack( Blocks.COBBLESTONE_WALL );
+                break;
+            case BUTTON:
+                vanillaItem = new ItemStack( Blocks.STONE_BUTTON );
+                break;
+            case LEVER:
+                vanillaItem = new ItemStack( Blocks.LEVER );
+                break;
+            case PRESSUREPLATE:
+                vanillaItem = new ItemStack( Blocks.STONE_PRESSURE_PLATE );
                 break;
         }
 

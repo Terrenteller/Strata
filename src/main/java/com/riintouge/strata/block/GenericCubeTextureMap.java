@@ -98,7 +98,7 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
             if( modelTextureLocationIn.equals( layer.resourceLocation ) )
                 return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() );
 
-        return GenericCubeTextureMap.Layer.ALL.resourceLocation;
+        return modelTextureLocationIn;
     }
 
     @Nonnull

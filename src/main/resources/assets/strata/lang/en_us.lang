@@ -4,6 +4,7 @@ itemGroup.strataBlocksTab=Strata Blocks
 itemGroup.strataBuildingBlocksTab=Strata Building Blocks
 itemGroup.strataOreBlocksTab=Strata Ore Blocks
 itemGroup.strataOreItemsTab=Strata Ore Items
+itemGroup.strataMiscItemsTab=Strata Misc. Items
 
 # Ground
 
@@ -492,6 +493,102 @@ strata:gabbro_stonebrickwall.name=Gabbro Brick Wall
 strata:hornfels_stonebrickwall.name=Hornfels Brick Wall
 strata:peridotite_stonebrickwall.name=Peridotite Brick Wall
 strata:quartzite_stonebrickwall.name=Quartzite Brick Wall
+
+# Buttons
+
+strata:breccia_button.name=Breccia Button
+strata:claystone_button.name=Claystone Button
+strata:carbonatite_button.name=Carbonatite Button
+strata:conglomerate_button.name=Conglomerate Button
+strata:mudstone_button.name=Mudstone Button
+
+strata:limestone_button.name=Limestone Button
+strata:schist_button.name=Schist Button
+strata:serpentinite_button.name=Serpentinite Button
+strata:slate_button.name=Slate Button
+strata:skarn_button.name=Skarn Button
+strata:chalk_button.name=Chalk Button
+
+strata:andesite_button.name=Andesite Button
+strata:basalt_button.name=Basalt Button
+strata:gneiss_button.name=Gneiss Button
+strata:granite_button.name=Granite Button
+strata:greenschist_button.name=Greenschist Button
+strata:marble_button.name=Marble Button
+strata:pegmatite_button.name=Pegmatite Button
+strata:rhyolite_button.name=Rhyolite Button
+strata:sandstone_button.name=Sandstone Button
+strata:red_sandstone_button.name=Red Sandstone Button
+
+strata:diorite_button.name=Diorite Button
+strata:gabbro_button.name=Gabbro Button
+strata:hornfels_button.name=Hornfels Button
+strata:peridotite_button.name=Peridotite Button
+strata:quartzite_button.name=Quartzite Button
+
+# Levers
+
+strata:breccia_lever.name=Breccia Lever
+strata:claystone_lever.name=Claystone Lever
+strata:carbonatite_lever.name=Carbonatite Lever
+strata:conglomerate_lever.name=Conglomerate Lever
+strata:mudstone_lever.name=Mudstone Lever
+
+strata:limestone_lever.name=Limestone Lever
+strata:schist_lever.name=Schist Lever
+strata:serpentinite_lever.name=Serpentinite Lever
+strata:slate_lever.name=Slate Lever
+strata:skarn_lever.name=Skarn Lever
+strata:chalk_lever.name=Chalk Lever
+
+strata:andesite_lever.name=Andesite Lever
+strata:basalt_lever.name=Basalt Lever
+strata:gneiss_lever.name=Gneiss Lever
+strata:granite_lever.name=Granite Lever
+strata:greenschist_lever.name=Greenschist Lever
+strata:marble_lever.name=Marble Lever
+strata:pegmatite_lever.name=Pegmatite Lever
+strata:rhyolite_lever.name=Rhyolite Lever
+strata:sandstone_lever.name=Sandstone Lever
+strata:red_sandstone_lever.name=Red Sandstone Lever
+
+strata:diorite_lever.name=Diorite Lever
+strata:gabbro_lever.name=Gabbro Lever
+strata:hornfels_lever.name=Hornfels Lever
+strata:peridotite_lever.name=Peridotite Lever
+strata:quartzite_lever.name=Quartzite Lever
+
+# Buttons
+
+strata:breccia_pressureplate.name=Breccia Pressure Plate
+strata:claystone_pressureplate.name=Claystone Pressure Plate
+strata:carbonatite_pressureplate.name=Carbonatite Pressure Plate
+strata:conglomerate_pressureplate.name=Conglomerate Pressure Plate
+strata:mudstone_pressureplate.name=Mudstone Pressure Plate
+
+strata:limestone_pressureplate.name=Limestone Pressure Plate
+strata:schist_pressureplate.name=Schist Pressure Plate
+strata:serpentinite_pressureplate.name=Serpentinite Pressure Plate
+strata:slate_pressureplate.name=Slate Pressure Plate
+strata:skarn_pressureplate.name=Skarn Pressure Plate
+strata:chalk_pressureplate.name=Chalk Pressure Plate
+
+strata:andesite_pressureplate.name=Andesite Pressure Plate
+strata:basalt_pressureplate.name=Basalt Pressure Plate
+strata:gneiss_pressureplate.name=Gneiss Pressure Plate
+strata:granite_pressureplate.name=Granite Pressure Plate
+strata:greenschist_pressureplate.name=Greenschist Pressure Plate
+strata:marble_pressureplate.name=Marble Pressure Plate
+strata:pegmatite_pressureplate.name=Pegmatite Pressure Plate
+strata:rhyolite_pressureplate.name=Rhyolite Pressure Plate
+strata:sandstone_pressureplate.name=Sandstone Pressure Plate
+strata:red_sandstone_pressureplate.name=Red Sandstone Pressure Plate
+
+strata:diorite_pressureplate.name=Diorite Pressure Plate
+strata:gabbro_pressureplate.name=Gabbro Pressure Plate
+strata:hornfels_pressureplate.name=Hornfels Pressure Plate
+strata:peridotite_pressureplate.name=Peridotite Pressure Plate
+strata:quartzite_pressureplate.name=Quartzite Pressure Plate
 
 # Ore
 

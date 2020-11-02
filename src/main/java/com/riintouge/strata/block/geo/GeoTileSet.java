@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -26,12 +27,19 @@ public class GeoTileSet implements IForgeRegistrable
     private final String DefaultStairModelVariant = "facing=east,half=bottom,shape=straight";
     private final String DefaultSlabModelVariant = "half=bottom,variant=default";
     private final String DefaultWallModelVariant = "inventory";
+    private final String DefaultButtonModelVariant = "inventory";
+    private final String DefaultLeverModelVariant = "facing=up_z,powered=false";
+    private final String DefaultPressurePlateModelVariant = "powered=false";
+
     protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
     protected Map< TileType , Item > itemMap = new HashMap<>();
     protected Map< TileType , GeoBlockStairs > stairsMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabsMap = new HashMap<>();
     protected Map< TileType , GeoBlockWall > wallMap = new HashMap<>();
+    protected Map< TileType , GeoBlockButton > buttonMap = new HashMap<>();
+    protected Map< TileType , GeoBlockLever > leverMap = new HashMap<>();
+    protected Map< TileType , GeoBlockPressurePlate > pressurePlateMap = new HashMap<>();
 
     public GeoTileSet()
     {
@@ -48,7 +56,7 @@ public class GeoTileSet implements IForgeRegistrable
         return tiles.getOrDefault( type , null );
     }
 
-    protected void registerVanillaItem( ResourceLocation registryName , Item item , ItemStack vanillaItem )
+    protected void createVanillaItemConversionRecipe( ResourceLocation registryName , Item item , ItemStack vanillaItem )
     {
         if( vanillaItem != null )
         {
@@ -98,6 +106,30 @@ public class GeoTileSet implements IForgeRegistrable
                 wallMap.put( type , wall );
                 blockRegistry.register( wall );
             }
+
+            TileType buttonType = tile.type().buttonType();
+            if( buttonType != null && buttonType.parentType == tile.type() )
+            {
+                GeoBlockButton button = new GeoBlockButton( tile );
+                buttonMap.put( type , button );
+                blockRegistry.register( button );
+            }
+
+            TileType leverType = tile.type().leverType();
+            if( leverType != null && leverType.parentType == tile.type() )
+            {
+                GeoBlockLever lever = new GeoBlockLever( tile );
+                leverMap.put( type , lever );
+                blockRegistry.register( lever );
+            }
+
+            TileType pressurePlateType = tile.type().pressurePlateType();
+            if( pressurePlateType != null && pressurePlateType.parentType == tile.type() )
+            {
+                GeoBlockPressurePlate pressurePlate = new GeoBlockPressurePlate( tile );
+                pressurePlateMap.put( type , pressurePlate );
+                blockRegistry.register( pressurePlate );
+            }
         }
     }
 
@@ -134,6 +166,30 @@ public class GeoTileSet implements IForgeRegistrable
                 GeoItemBlock wall = new GeoItemBlock( tile , wallMap.get( type ) );
                 itemMap.put( wallType , wall );
                 itemRegistry.register( wall );
+            }
+
+            TileType buttonType = tile.type().buttonType();
+            if( buttonType != null && buttonType.parentType == tile.type() )
+            {
+                GeoItemBlock button = new GeoItemBlock( tile , buttonMap.get( type ) );
+                itemMap.put( buttonType , button );
+                itemRegistry.register( button );
+            }
+
+            TileType leverType = tile.type().leverType();
+            if( leverType != null && leverType.parentType == tile.type() )
+            {
+                GeoItemBlock lever = new GeoItemBlock( tile , leverMap.get( type ) );
+                itemMap.put( leverType , lever );
+                itemRegistry.register( lever );
+            }
+
+            TileType pressurePlateType = tile.type().pressurePlateType();
+            if( pressurePlateType != null && pressurePlateType.parentType == tile.type() )
+            {
+                GeoItemBlock stonePressurePlate = new GeoItemBlock( tile , pressurePlateMap.get( type ) );
+                itemMap.put( pressurePlateType , stonePressurePlate );
+                itemRegistry.register( stonePressurePlate );
             }
         }
     }
@@ -209,10 +265,14 @@ public class GeoTileSet implements IForgeRegistrable
                     break;
             }
 
-            ItemStack vanillaItem = tile.vanillaEquivalent(); // Effectively an override
-            if( vanillaItem == null )
-                vanillaItem = type.vanillaItemStack();
-            registerVanillaItem( registryName , item , vanillaItem );
+            // Stone can't have a 1:1 Strata -> vanilla shapeless recipe because it conflicts with the button recipe
+            if( type != TileType.STONE )
+            {
+                ItemStack vanillaItem = tile.vanillaEquivalent(); // Effectively an override
+                if( vanillaItem == null )
+                    vanillaItem = type.vanillaItemStack();
+                createVanillaItemConversionRecipe( registryName , item , vanillaItem );
+            }
 
             TileType stairType = tile.type().stairType();
             if( stairType != null )
@@ -227,7 +287,10 @@ public class GeoTileSet implements IForgeRegistrable
                     "XXX",
                     'X' , item );
 
-                registerVanillaItem( stairItem.getRegistryName() , stairItem , stairType.vanillaItemStack() );
+                ItemStack vanillaStairs = stairType.vanillaItemStack();
+                if( vanillaStairs != null )
+                    RecipeReplicator.INSTANCE.register( vanillaStairs , new ItemStack( stairItem ) );
+                createVanillaItemConversionRecipe( stairItem.getRegistryName() , stairItem , stairType.vanillaItemStack() );
             }
 
             TileType slabType = tile.type().slabType();
@@ -238,12 +301,13 @@ public class GeoTileSet implements IForgeRegistrable
                     new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_slab" ),
                     null,
                     new ItemStack( slabItem , 6 ),
-                    "   ",
-                    "   ",
                     "XXX",
                     'X' , item );
 
-                registerVanillaItem( slabItem.getRegistryName() , slabItem , slabType.vanillaItemStack() );
+                ItemStack vanillaSlab = slabType.vanillaItemStack();
+                if( vanillaSlab != null )
+                    RecipeReplicator.INSTANCE.register( vanillaSlab , new ItemStack( slabItem ) );
+                createVanillaItemConversionRecipe( slabItem.getRegistryName() , slabItem , slabType.vanillaItemStack() );
             }
 
             TileType wallType = tile.type().wallType();
@@ -254,12 +318,74 @@ public class GeoTileSet implements IForgeRegistrable
                     new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_wall" ),
                     null,
                     new ItemStack( wallItem , 6 ),
-                    "   ",
                     "XXX",
                     "XXX",
                     'X' , item );
 
-                registerVanillaItem( wallItem.getRegistryName() , wallItem , wallType.vanillaItemStack() );
+                ItemStack vanillaWall = wallType.vanillaItemStack();
+                if( vanillaWall != null )
+                    RecipeReplicator.INSTANCE.register( vanillaWall , new ItemStack( wallItem ) );
+                createVanillaItemConversionRecipe( wallItem.getRegistryName() , wallItem , wallType.vanillaItemStack() );
+            }
+
+            TileType buttonType = tile.type().buttonType();
+            if( buttonType != null )
+            {
+                Item buttonItem = itemMap.getOrDefault( buttonType , null );
+                if( buttonItem != null )
+                {
+                    GameRegistry.addShapelessRecipe(
+                        new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_button" ),
+                        null,
+                        new ItemStack( buttonItem ),
+                        Ingredient.fromItem( item ) );
+
+                    ItemStack vanillaButton = buttonType.vanillaItemStack();
+                    if( vanillaButton != null )
+                        RecipeReplicator.INSTANCE.register( vanillaButton , new ItemStack( buttonItem ) );
+                    createVanillaItemConversionRecipe( buttonItem.getRegistryName() , buttonItem , buttonType.vanillaItemStack() );
+                }
+            }
+
+            TileType leverType = tile.type().leverType();
+            if( leverType != null )
+            {
+                Item leverItem = itemMap.getOrDefault( leverType , null );
+                if( leverItem != null )
+                {
+                    GameRegistry.addShapedRecipe(
+                        new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_lever" ),
+                        null,
+                        new ItemStack( leverItem ),
+                        "X",
+                        "Y",
+                        'X' , Items.STICK , 'Y' , item );
+
+                    ItemStack vanillaLever = leverType.vanillaItemStack();
+                    if( vanillaLever != null )
+                        RecipeReplicator.INSTANCE.register( vanillaLever , new ItemStack( leverItem ) );
+                    createVanillaItemConversionRecipe( leverItem.getRegistryName() , leverItem , leverType.vanillaItemStack() );
+                }
+            }
+
+            TileType pressurePlateType = tile.type().pressurePlateType();
+            if( pressurePlateType != null )
+            {
+                Item pressurePlateItem = itemMap.getOrDefault( pressurePlateType , null );
+                if( pressurePlateItem != null )
+                {
+                    GameRegistry.addShapedRecipe(
+                        new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_pressureplate" ),
+                        null,
+                        new ItemStack( pressurePlateItem ),
+                        "XX",
+                        'X' , item );
+
+                    ItemStack vanillaPressurePlate = pressurePlateType.vanillaItemStack();
+                    if( vanillaPressurePlate != null )
+                        RecipeReplicator.INSTANCE.register( vanillaPressurePlate , new ItemStack( pressurePlateItem ) );
+                    createVanillaItemConversionRecipe( pressurePlateItem.getRegistryName() , pressurePlateItem , pressurePlateType.vanillaItemStack() );
+                }
             }
         }
     }
@@ -302,6 +428,36 @@ public class GeoTileSet implements IForgeRegistrable
                     Item.REGISTRY.getObject( wallRegistryName ),
                     tile.meta(),
                     new ModelResourceLocation( wallRegistryName , DefaultWallModelVariant ) );
+            }
+
+            TileType buttonType = tile.type().buttonType();
+            if( buttonType != null )
+            {
+                ResourceLocation buttonRegistryName = buttonType.registryName( tile.tileSetName() );
+                ModelLoader.setCustomModelResourceLocation(
+                    Item.REGISTRY.getObject( buttonRegistryName ),
+                    tile.meta(),
+                    new ModelResourceLocation( buttonRegistryName , DefaultButtonModelVariant ) );
+            }
+
+            TileType leverType = tile.type().leverType();
+            if( leverType != null )
+            {
+                ResourceLocation leverRegistryName = leverType.registryName( tile.tileSetName() );
+                ModelLoader.setCustomModelResourceLocation(
+                    Item.REGISTRY.getObject( leverRegistryName ),
+                    tile.meta(),
+                    new ModelResourceLocation( leverRegistryName , DefaultLeverModelVariant ) );
+            }
+
+            TileType pressurePlateType = tile.type().pressurePlateType();
+            if( pressurePlateType != null )
+            {
+                ResourceLocation pressurePlateRegistryName = pressurePlateType.registryName( tile.tileSetName() );
+                ModelLoader.setCustomModelResourceLocation(
+                    Item.REGISTRY.getObject( pressurePlateRegistryName ),
+                    tile.meta(),
+                    new ModelResourceLocation( pressurePlateRegistryName , DefaultPressurePlateModelVariant ) );
             }
         }
     }

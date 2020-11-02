@@ -56,6 +56,9 @@ public class GeoBlockModelLoader implements ICustomModelLoader
 
     private static TileType findTileType( String tileSetName , String type )
     {
+        if( !GeoTileSetRegistry.INSTANCE.contains( tileSetName ) )
+            return null;
+
         if( type != null && !type.isEmpty() )
         {
             try
