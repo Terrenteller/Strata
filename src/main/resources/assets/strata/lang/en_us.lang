@@ -398,38 +398,6 @@ strata:hornfels_stonebrickslab.name=Hornfels Brick Slab
 strata:peridotite_stonebrickslab.name=Peridotite Brick Slab
 strata:quartzite_stonebrickslab.name=Quartzite Brick Slab
 
-# Stone Wall
-
-strata:breccia_stonewall.name=Breccia Wall
-strata:claystone_stonewall.name=Claystone Wall
-strata:carbonatite_stonewall.name=Carbonatite Wall
-strata:conglomerate_stonewall.name=Conglomerate Wall
-strata:mudstone_stonewall.name=Mudstone Wall
-
-strata:limestone_stonewall.name=Limestone Wall
-strata:schist_stonewall.name=Schist Wall
-strata:serpentinite_stonewall.name=Serpentinite Wall
-strata:slate_stonewall.name=Slate Wall
-strata:skarn_stonewall.name=Skarn Wall
-strata:chalk_stonewall.name=Chalk Wall
-
-strata:andesite_stonewall.name=Andesite Wall
-strata:basalt_stonewall.name=Basalt Wall
-strata:gneiss_stonewall.name=Gneiss Wall
-strata:granite_stonewall.name=Granite Wall
-strata:greenschist_stonewall.name=Greenschist Wall
-strata:marble_stonewall.name=Marble Wall
-strata:pegmatite_stonewall.name=Pegmatite Wall
-strata:rhyolite_stonewall.name=Rhyolite Wall
-strata:sandstone_stonewall.name=Sandstone Wall
-strata:red_sandstone_stonewall.name=Red Sandstone Wall
-
-strata:diorite_stonewall.name=Diorite Wall
-strata:gabbro_stonewall.name=Gabbro Wall
-strata:hornfels_stonewall.name=Hornfels Wall
-strata:peridotite_stonewall.name=Peridotite Wall
-strata:quartzite_stonewall.name=Quartzite Wall
-
 # Cobble Wall
 
 strata:breccia_cobblewall.name=Breccia Cobblestone Wall
@@ -462,6 +430,70 @@ strata:hornfels_cobblewall.name=Hornfels Cobblestone Wall
 strata:peridotite_cobblewall.name=Peridotite Cobblestone Wall
 strata:quartzite_cobblewall.name=Quartzite Cobblestone Wall
 
+# Mossy Cobble Wall
+
+strata:breccia_cobblewallmossy.name=Mossy Breccia Cobblestone Wall
+strata:claystone_cobblewallmossy.name=Mossy Claystone Cobblestone Wall
+strata:carbonatite_cobblewallmossy.name=Mossy Carbonatite Cobblestone Wall
+strata:conglomerate_cobblewallmossy.name=Mossy Conglomerate Cobblestone Wall
+strata:mudstone_cobblewallmossy.name=Mossy Mudstone Cobblestone Wall
+
+strata:limestone_cobblewallmossy.name=Mossy Limestone Cobblestone Wall
+strata:schist_cobblewallmossy.name=Mossy Schist Cobblestone Wall
+strata:serpentinite_cobblewallmossy.name=Mossy Serpentinite Cobblestone Wall
+strata:slate_cobblewallmossy.name=Mossy Slate Cobblestone Wall
+strata:skarn_cobblewallmossy.name=Mossy Skarn Cobblestone Wall
+strata:chalk_cobblewallmossy.name=Mossy Chalk Cobblestone Wall
+
+strata:andesite_cobblewallmossy.name=Mossy Andesite Cobblestone Wall
+strata:basalt_cobblewallmossy.name=Mossy Basalt Cobblestone Wall
+strata:gneiss_cobblewallmossy.name=Mossy Gneiss Cobblestone Wall
+strata:granite_cobblewallmossy.name=Mossy Granite Cobblestone Wall
+strata:greenschist_cobblewallmossy.name=Mossy Greenschist Cobblestone Wall
+strata:marble_cobblewallmossy.name=Mossy Marble Cobblestone Wall
+strata:pegmatite_cobblewallmossy.name=Mossy Pegmatite Cobblestone Wall
+strata:rhyolite_cobblewallmossy.name=Mossy Rhyolite Cobblestone Wall
+strata:sandstone_cobblewallmossy.name=Mossy Sandstone Cobblestone Wall
+strata:red_sandstone_cobblewallmossy.name=Mossy Red Sandstone Cobblestone Wall
+
+strata:diorite_cobblewallmossy.name=Mossy Diorite Cobblestone Wall
+strata:gabbro_cobblewallmossy.name=Mossy Gabbro Cobblestone Wall
+strata:hornfels_cobblewallmossy.name=Mossy Hornfels Cobblestone Wall
+strata:peridotite_cobblewallmossy.name=Mossy Peridotite Cobblestone Wall
+strata:quartzite_cobblewallmossy.name=Mossy Quartzite Cobblestone Wall
+
+# Stone Wall
+
+strata:breccia_stonewall.name=Breccia Wall
+strata:claystone_stonewall.name=Claystone Wall
+strata:carbonatite_stonewall.name=Carbonatite Wall
+strata:conglomerate_stonewall.name=Conglomerate Wall
+strata:mudstone_stonewall.name=Mudstone Wall
+
+strata:limestone_stonewall.name=Limestone Wall
+strata:schist_stonewall.name=Schist Wall
+strata:serpentinite_stonewall.name=Serpentinite Wall
+strata:slate_stonewall.name=Slate Wall
+strata:skarn_stonewall.name=Skarn Wall
+strata:chalk_stonewall.name=Chalk Wall
+
+strata:andesite_stonewall.name=Andesite Wall
+strata:basalt_stonewall.name=Basalt Wall
+strata:gneiss_stonewall.name=Gneiss Wall
+strata:granite_stonewall.name=Granite Wall
+strata:greenschist_stonewall.name=Greenschist Wall
+strata:marble_stonewall.name=Marble Wall
+strata:pegmatite_stonewall.name=Pegmatite Wall
+strata:rhyolite_stonewall.name=Rhyolite Wall
+strata:sandstone_stonewall.name=Sandstone Wall
+strata:red_sandstone_stonewall.name=Red Sandstone Wall
+
+strata:diorite_stonewall.name=Diorite Wall
+strata:gabbro_stonewall.name=Gabbro Wall
+strata:hornfels_stonewall.name=Hornfels Wall
+strata:peridotite_stonewall.name=Peridotite Wall
+strata:quartzite_stonewall.name=Quartzite Wall
+
 # Stone Brick Wall
 
 strata:breccia_stonebrickwall.name=Breccia Brick Wall
@@ -493,6 +525,38 @@ strata:gabbro_stonebrickwall.name=Gabbro Brick Wall
 strata:hornfels_stonebrickwall.name=Hornfels Brick Wall
 strata:peridotite_stonebrickwall.name=Peridotite Brick Wall
 strata:quartzite_stonebrickwall.name=Quartzite Brick Wall
+
+# Mossy Stone Brick Wall
+
+strata:breccia_stonebrickwallmossy.name=Mossy Breccia Brick Wall
+strata:claystone_stonebrickwallmossy.name=Mossy Claystone Brick Wall
+strata:carbonatite_stonebrickwallmossy.name=Mossy Carbonatite Brick Wall
+strata:conglomerate_stonebrickwallmossy.name=Mossy Conglomerate Brick Wall
+strata:mudstone_stonebrickwallmossy.name=Mossy Mudstone Brick Wall
+
+strata:limestone_stonebrickwallmossy.name=Mossy Limestone Brick Wall
+strata:schist_stonebrickwallmossy.name=Mossy Schist Brick Wall
+strata:serpentinite_stonebrickwallmossy.name=Mossy Serpentinite Brick Wall
+strata:slate_stonebrickwallmossy.name=Mossy Slate Brick Wall
+strata:skarn_stonebrickwallmossy.name=Mossy Skarn Brick Wall
+strata:chalk_stonebrickwallmossy.name=Mossy Chalk Brick Wall
+
+strata:andesite_stonebrickwallmossy.name=Mossy Andesite Brick Wall
+strata:basalt_stonebrickwallmossy.name=Mossy Basalt Brick Wall
+strata:gneiss_stonebrickwallmossy.name=Mossy Gneiss Brick Wall
+strata:granite_stonebrickwallmossy.name=Mossy Granite Brick Wall
+strata:greenschist_stonebrickwallmossy.name=Mossy Greenschist Brick Wall
+strata:marble_stonebrickwallmossy.name=Mossy Marble Brick Wall
+strata:pegmatite_stonebrickwallmossy.name=Mossy Pegmatite Brick Wall
+strata:rhyolite_stonebrickwallmossy.name=Mossy Rhyolite Brick Wall
+strata:sandstone_stonebrickwallmossy.name=Mossy Sandstone Brick Wall
+strata:red_sandstone_stonebrickwallmossy.name=Mossy Red Sandstone Brick Wall
+
+strata:diorite_stonebrickwallmossy.name=Mossy Diorite Brick Wall
+strata:gabbro_stonebrickwallmossy.name=Mossy Gabbro Brick Wall
+strata:hornfels_stonebrickwallmossy.name=Mossy Hornfels Brick Wall
+strata:peridotite_stonebrickwallmossy.name=Mossy Peridotite Brick Wall
+strata:quartzite_stonebrickwallmossy.name=Mossy Quartzite Brick Wall
 
 # Buttons
 

@@ -23,10 +23,12 @@ public class GeoBlockWall extends BlockWall
     // The logic for this hack MUST respect the default boolean value.
     // A default of true will not be set until after it is too late.
     private boolean createRealBlockState;
+    private IGeoTileInfo info;
 
     public GeoBlockWall( IGeoTileInfo info , Block block )
     {
         super( block );
+        this.info = info;
 
         RemoveBlockWallVariantFromBlockState();
 
@@ -75,15 +77,49 @@ public class GeoBlockWall extends BlockWall
     // private in BlockWall and required for overriding behaviour
     protected boolean canConnectTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
     {
+        // Only connect to relevant types for visual quality
         IBlockState otherBlockState = world.getBlockState( pos );
         Block otherBlock = otherBlockState.getBlock();
-        // Strata walls should only connect to their own type for visual quality
-        if( otherBlock instanceof BlockWall )
-            return getRegistryName().equals( otherBlock.getRegistryName() );
+        if( otherBlock instanceof GeoBlockWall )
+        {
+            GeoBlockWall otherWall = (GeoBlockWall)otherBlock;
+            if( info.tileSetName().compareTo( otherWall.info.tileSetName() ) != 0 )
+                return false;
+
+            switch( info.type().wallType() )
+            {
+                case COBBLEWALL:
+                case COBBLEWALLMOSSY:
+                {
+                    switch( otherWall.info.type().wallType() )
+                    {
+                        case COBBLEWALL:
+                        case COBBLEWALLMOSSY:
+                            return true;
+                    }
+
+                    break;
+                }
+                case STONEBRICKWALL:
+                case STONEBRICKWALLMOSSY:
+                {
+                    switch( otherWall.info.type().wallType() )
+                    {
+                        case STONEBRICKWALL:
+                        case STONEBRICKWALLMOSSY:
+                            return true;
+                    }
+
+                    break;
+                }
+            }
+
+            return false;
+        }
 
         BlockFaceShape blockFaceShape = otherBlockState.getBlockFaceShape( world , pos , facing );
-        return blockFaceShape == BlockFaceShape.MIDDLE_POLE_THICK
-            || ( blockFaceShape == BlockFaceShape.MIDDLE_POLE && otherBlock instanceof BlockFenceGate )
+        // Do not connect to BlockFaceShape.MIDDLE_POLE_THICK so we don't connect to other walls
+        return ( blockFaceShape == BlockFaceShape.MIDDLE_POLE && otherBlock instanceof BlockFenceGate )
             || ( !isExcepBlockForAttachWithPiston( otherBlock ) && blockFaceShape == BlockFaceShape.SOLID );
     }
 
