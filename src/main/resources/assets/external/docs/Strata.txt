@@ -5,6 +5,8 @@ in any file directly under `config/strata/tiledata`. Each line works like a
 keyvalue or a key with multiple values. Line order within a block does not
 matter unless otherwise noted.
 
+<> values are required. [] values are optional.
+
 --- Keyvalues ---
 
 Key: generate
@@ -71,6 +73,7 @@ Key: proxy
 Value: <ResourceLocation>
 Description:
     Drop the drops of the specified block instead.
+    Only applies to ores.
 
 Key: burnTime
 Value: <int>
@@ -78,3 +81,26 @@ Default: 0
 Description:
     Ticks the ore will burn for in a furnace.
     For reference, there are 20 ticks per second and it takes 10 seconds to smelt an item. Standard coal is 1600.
+
+Key: drops
+Value: <baseDropAmount> [maxBonusDropExpr]
+Default: 1
+Description:
+    Controls the number of items dropped by an ore.
+    Will always drop baseDropAmount with a random bonus of zero to the result of maxBonusDropExpr, inclusive.
+    maxBonusDropExpr shall be a simple expression in Reverse Polish notation. Operators +, -, *, and / are available.
+    The value of fortune is provided as the variable 'f'.
+    The result of maxBonusDropExpr is rounded to the nearest integer.
+    For example, "drops 0 0.2 f *" will only give a 50% chance of dropping an ore with Fortune III.
+    Never drops more than a full stack.
+
+Key: exp
+Value: <baseExp> [maxBonusExpExpr]
+Default: 1
+Description:
+    Controls the amount of experience dropped by an ore.
+    Will always drop baseExp with a random bonus of zero to the result of maxBonusExpExpr, inclusive.
+    maxBonusExpExpr shall be a simple expression in Reverse Polish notation. Operators +, -, *, and / are available.
+    The value of fortune is provided as the variable 'f'.
+    The result of maxBonusExpExpr is rounded to the nearest integer.
+    For example, "exp 0 2 f +" may provide 0-5 experience upon being mined/dug with Fortune III.

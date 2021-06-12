@@ -27,6 +27,10 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private ResourceLocation proxyBlockResource;
     private Block proxyBlock;
     private ItemStack vanillaEquivalent;
+    private int baseDropAmount;
+    private String bonusDropExpr;
+    private int baseExp;
+    private String bonusExpExpr;
 
     public ImmutableOre(
         String oreName,
@@ -41,7 +45,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         int harvestLevel,
         float hardness,
         float explosionResistance,
-        int burnTime )
+        int burnTime,
+        int baseDropAmount,
+        String bonusDropExpr,
+        int baseExp,
+        String bonusExpExpr )
     {
         this.oreName = oreName;
         this.blockOreDictionaryName = blockOreDictionaryName;
@@ -56,6 +64,10 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.burnTime = burnTime;
         this.proxyBlockResource = proxyBlockResource;
         this.vanillaEquivalent = vanillaEquivalent;
+        this.baseDropAmount = baseDropAmount;
+        this.bonusDropExpr = bonusDropExpr;
+        this.baseExp = baseExp;
+        this.bonusExpExpr = bonusExpExpr;
     }
 
     // IOreInfo overrides
@@ -151,6 +163,30 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public int burnTime()
     {
         return burnTime;
+    }
+
+    @Override
+    public int baseDropAmount()
+    {
+        return baseDropAmount;
+    }
+
+    @Override
+    public String bonusDropExpr()
+    {
+        return bonusDropExpr;
+    }
+
+    @Override
+    public int baseExp()
+    {
+        return baseExp;
+    }
+
+    @Override
+    public String bonusExpExpr()
+    {
+        return bonusExpExpr;
     }
 
     // IForgeRegistrable overrides

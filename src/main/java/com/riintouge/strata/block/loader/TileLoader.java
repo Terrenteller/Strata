@@ -48,6 +48,10 @@ public class TileLoader
     private String itemOreDictionaryName;
     private ResourceLocation proxyOre;
     private int burnTime;
+    private int baseDropAmount;
+    private String bonusDropExpr;
+    private int baseExp;
+    private String bonusExpExpr;
 
     // Shared
     private ResourceLocation textureResource;
@@ -167,6 +171,22 @@ public class TileLoader
             case "burnTime":
                 burnTime = Integer.parseInt( value );
                 return true;
+            case "drops":
+            {
+                String[] values = value.split( " " , 2 );
+                baseDropAmount = Math.max( 0 , Integer.parseInt( values[ 0 ] ) );
+                if( values.length > 1 )
+                    bonusDropExpr = values[ 1 ];
+                return true;
+            }
+            case "exp":
+            {
+                String[] values = value.split( " " , 2 );
+                baseExp = Integer.parseInt( values[ 0 ] );
+                if( values.length > 1 )
+                    bonusExpExpr = values[ 1 ];
+                return true;
+            }
         }
 
         if( key.startsWith( "texture" ) )
@@ -279,7 +299,11 @@ public class TileLoader
                 harvestLevel,
                 hardness,
                 explosionResistance,
-                burnTime );
+                burnTime,
+                baseDropAmount,
+                bonusDropExpr,
+                baseExp,
+                bonusExpExpr );
 
             OreRegistry.INSTANCE.register( new OreTileSet( ore ) );
             OreBlockTextureManager.INSTANCE.registerOre( new ResourceLocation( Strata.modid , ore.oreName() ) , 0 , ore );
@@ -316,6 +340,10 @@ public class TileLoader
         itemOreDictionaryName = null;
         proxyOre = null;
         burnTime = 0;
+        baseDropAmount = 1;
+        bonusDropExpr = null;
+        baseExp = 0;
+        bonusExpExpr = null;
 
         // Shared
         textureResource = null;
