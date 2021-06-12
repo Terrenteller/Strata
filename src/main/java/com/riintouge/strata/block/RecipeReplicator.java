@@ -1,6 +1,6 @@
 package com.riintouge.strata.block;
 
-import com.riintouge.strata.Config;
+import com.riintouge.strata.resource.Config;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.Util;
 import net.minecraft.item.ItemStack;
@@ -193,7 +193,7 @@ public class RecipeReplicator
 
         try
         {
-            for( String path : Config.INSTANCE.allIn( "recipe/replication" , false ) )
+            for( String path : Config.INSTANCE.allIn( Strata.modid + "/recipe/replication" , false ) )
             {
                 InputStream stream = new FileInputStream( path );
                 BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );

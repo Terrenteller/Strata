@@ -1,4 +1,4 @@
-package com.riintouge.strata;
+package com.riintouge.strata.resource;
 
 import java.io.IOException;
 import java.util.Enumeration;

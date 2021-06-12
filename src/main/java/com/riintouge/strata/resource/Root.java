@@ -1,4 +1,4 @@
-package com.riintouge.strata;
+package com.riintouge.strata.resource;
 
 import net.minecraftforge.fml.common.Loader;
 
@@ -12,57 +12,58 @@ import java.util.List;
 import java.util.Vector;
 import java.util.function.Function;
 
-public class Config
+public class Root
 {
-    public static final Config INSTANCE = new Config( Strata.modid );
+    private static final String JarExternalDir = "assets/external";
 
-    private static final String JarConfigDir = "assets/external/config/";
-    private static Path GlobalConfigPath;
+    protected static Path GameRootDir;
+    private String rootSubdirectory;
+    private Path externalPath;
 
-    private Path instConfigPath;
-
-    public Config( @Nullable String baseConfigDir )
+    public Root( @Nullable String subdirectory )
     {
-        if( GlobalConfigPath == null )
-            GlobalConfigPath = Paths.get( Loader.instance().getConfigDir().getAbsolutePath() );
+        this.rootSubdirectory = subdirectory;
 
-        instConfigPath = baseConfigDir == null ? GlobalConfigPath : GlobalConfigPath.resolve( baseConfigDir );
+        if( GameRootDir == null )
+            GameRootDir = Paths.get( Loader.instance().getConfigDir().getParentFile().getAbsolutePath() );
+
+        externalPath = rootSubdirectory == null ? GameRootDir : GameRootDir.resolve( rootSubdirectory );
     }
 
-    public String getAbsPath( String relativePath )
+    public Path resolve( String relativePath )
     {
-        return instConfigPath.resolve( relativePath ).toString();
+        return externalPath.resolve( relativePath );
     }
 
     public List< String > find( Function< String , Boolean > predicate , boolean recursive ) throws IOException
     {
         FileSelector fileSelector = new FileSelector( predicate , recursive );
-        Files.walkFileTree( instConfigPath , fileSelector );
+        Files.walkFileTree( externalPath , fileSelector );
 
         return fileSelector.selectedFiles();
     }
 
     public List< String > allIn( String subDirPath , boolean recursive ) throws IOException
     {
-        System.out.println( instConfigPath.resolve( subDirPath ).toString() );
+        System.out.println( resolve( subDirPath ).toString() );
         FileSelector fileSelector = new FileSelector( s -> true , recursive );
-        Files.walkFileTree( instConfigPath.resolve( subDirPath ) , fileSelector );
+        Files.walkFileTree( resolve( subDirPath ) , fileSelector );
 
         return fileSelector.selectedFiles();
     }
 
-    public static void extractMissingConfigFiles()
+    public void extractMissingResourceFiles()
     {
-        for( String path : JarResourceHelper.INSTANCE.find( s -> s.startsWith( JarConfigDir ) ) )
+        String internalDirWithSlash = Paths.get( JarExternalDir , rootSubdirectory ).toString() + "/";
+        for( String path : JarResourceHelper.INSTANCE.find( s -> s.startsWith( internalDirWithSlash ) ) )
         {
-            String configPath = path.substring( JarConfigDir.length() );
-            File targetFile = new File( GlobalConfigPath.resolve( configPath ).toString() );
-
+            String resourcePath = path.substring( internalDirWithSlash.length() );
+            File targetFile = new File( externalPath.resolve( resourcePath ).toString() );
             if( targetFile.exists() )
                 continue;
 
             targetFile.getParentFile().mkdirs();
-            InputStream stream = Config.class.getClassLoader().getResourceAsStream( path );
+            InputStream stream = Root.class.getClassLoader().getResourceAsStream( path );
 
             try
             {
@@ -75,7 +76,7 @@ public class Config
         }
     }
 
-    private class FileSelector extends SimpleFileVisitor< Path >
+    protected class FileSelector extends SimpleFileVisitor< Path >
     {
         private Function< String , Boolean > predicate;
         private boolean recursive , initialDirectory = true;

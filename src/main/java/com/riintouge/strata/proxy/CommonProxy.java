@@ -1,11 +1,12 @@
 package com.riintouge.strata.proxy;
 
+import com.riintouge.strata.resource.Docs;
 import com.riintouge.strata.block.Blocks;
 import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
-import com.riintouge.strata.Config;
+import com.riintouge.strata.resource.Config;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -17,7 +18,8 @@ public class CommonProxy
     {
         System.out.println( "CommonProxy::preInit()" );
 
-        Config.extractMissingConfigFiles();
+        Config.INSTANCE.extractMissingResourceFiles();
+        Docs.INSTANCE.extractMissingResourceFiles();
 
         MinecraftForge.EVENT_BUS.register( Blocks.class );
         MinecraftForge.EVENT_BUS.register( GeoTileSetRegistry.class );
