@@ -1,16 +1,25 @@
-[
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
+    "modListVersion": 2,
+    "modList": [
+        {
+            "name": "Strata",
+            "logoFile": "",
+            "version": "${displayVersion}",
+            "mcversion": "${mcVersion}",
+            "modid": "strata",
+            "credits": "
+    lawremi (original idea & assets)
+    goppend (dev setup & testing)
+    TheGreyGhost (tutorials & sample code)
+    ...as well as many other projects on GitHub used as reference material!",
+            "authorList": ["Terrenteller"],
+            "url": "",
+            "updateUrl": "",
+            "dependencies": [],
+            "description": "procedurally
+generates items and blocks—
+pretty ores and rocks",
+            "screenshots": []
+        }
+    ]
 }
-]

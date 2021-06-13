@@ -9,13 +9,16 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod( modid = Strata.modid , name = Strata.name , version = Strata.version )
+@Mod( modid = Strata.modid , name = Strata.name , version = Strata.internalVersion )
 public class Strata
 {
+    // We're not using useMetadata so that display and internal versions remain separate.
+    // Values here MUST stay in sync with mcmod.info where not replaced by build.gradle!
     public static final String modid = "strata";
     public static final String name = "Strata";
-    // TODO: Can we modify this value at build time?
-    public static final String version = "1.12.2-19.12.08";
+    // These two are distinct in GuiModList
+    public static final String displayVersion = "DISPLAY_VERSION";
+    public static final String internalVersion = "INTERNAL_VERSION"; // Internal according to FMLModContainer
 
     public static final StrataBlocksTab BLOCK_TAB = new StrataBlocksTab();
     public static final StrataBuildingBlocksTab BUILDING_BLOCK_TAB = new StrataBuildingBlocksTab();
