@@ -13,7 +13,7 @@ public class GeoBlockLever extends BlockLever
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.MISC_ITEM_TAB );
 
-        setHarvestLevel( info.harvestTool() , info.harvestLevel() );
+        setHarvestLevel( info.harvestTool() , 0 );
         setSoundType( info.soundType() );
         setHardness( info.hardness() );
         setResistance( info.explosionResistance() );
