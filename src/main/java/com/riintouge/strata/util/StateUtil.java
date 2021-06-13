@@ -48,6 +48,11 @@ public class StateUtil
         return null;
     }
 
+    public static < T > T getValue( IBlockState blockState , IUnlistedProperty< T > property )
+    {
+        return getValue( blockState , property , null );
+    }
+
     public static < T > T getValue( IBlockState blockState , IUnlistedProperty< T > property , T defaultValue )
     {
         if( blockState instanceof IExtendedBlockState && property != null )

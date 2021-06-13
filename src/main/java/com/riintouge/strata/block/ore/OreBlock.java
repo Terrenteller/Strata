@@ -10,16 +10,20 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +35,7 @@ public class OreBlock extends Block
     // Ore blocks and their item blocks must have a slightly modified name
     // so the ore items can have the name of the ore without decoration.
     public static final String RegistryNameSuffix = "_ore";
+    protected static ThreadLocalHarvestTool harvestTool = new ThreadLocalHarvestTool();
 
     protected IOreInfo oreInfo;
 
@@ -52,14 +57,6 @@ public class OreBlock extends Block
         setResistance( oreInfo.explosionResistance() );
 
         setCreativeTab( Strata.ORE_BLOCK_TAB );
-    }
-
-    protected MetaResourceLocation getHost( World world , BlockPos pos )
-    {
-        TileEntity entity = world.getTileEntity( pos );
-        return entity instanceof OreBlockTileEntity
-            ? ( (OreBlockTileEntity)entity ).getCachedHost()
-            : UnlistedPropertyHostRock.DEFAULT;
     }
 
     protected int calculateBonusExpr( String bonusExpr , int fortune )
@@ -114,6 +111,14 @@ public class OreBlock extends Block
         return 0;
     }
 
+    protected MetaResourceLocation getHost( World world , BlockPos pos )
+    {
+        TileEntity entity = world.getTileEntity( pos );
+        return entity instanceof OreBlockTileEntity
+            ? ( (OreBlockTileEntity)entity ).getCachedHost()
+            : UnlistedPropertyHostRock.DEFAULT;
+    }
+
     // Block overrides
 
     @Override
@@ -126,13 +131,18 @@ public class OreBlock extends Block
     @Override
     protected boolean canSilkHarvest()
     {
-        return false;
+        throw new NotImplementedException( "Deprecated; should not be called" );
     }
 
     @Override
     public boolean canSilkHarvest( World world , BlockPos pos , IBlockState state , EntityPlayer player )
     {
-        return false;
+        IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
+        IOreInfo oreInfo = oreTileSet.getInfo();
+        Block proxyBlock = oreInfo.proxyBlock();
+
+        // The consequences of silk touch only applies to proxy blocks since we should never drop ourself as an item
+        return proxyBlock != null && proxyBlock.canSilkHarvest( world , pos , state , player );
     }
 
     @Override
@@ -182,19 +192,28 @@ public class OreBlock extends Block
     {
         MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
         Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
-        // FIXME: getStateFromMeta is deprecated. What are we meant to use?
-        hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
-
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
         IOreInfo oreInfo = oreTileSet.getInfo();
         Block proxyBlock = oreInfo.proxyBlock();
-        if( proxyBlock != null )
+
+        if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestTool.get() ) > 0 )
         {
-            proxyBlock.getDrops( drops , world , pos , state , fortune );
+            drops.add( new ItemStack( hostBlock ) );
+            if( proxyBlock != null )
+                drops.add( new ItemStack( proxyBlock ) );
         }
         else
         {
-            int dropCount = Math.max( 0 , oreInfo.baseDropAmount() + calculateBonusExpr( oreInfo.bonusDropExpr() , fortune ) );
+            // FIXME: getStateFromMeta is deprecated. What are we meant to use?
+            hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
+            if( proxyBlock != null )
+                proxyBlock.getDrops( drops , world , pos , state , fortune );
+        }
+
+        if( proxyBlock == null )
+        {
+            int bonus = calculateBonusExpr( oreInfo.bonusDropExpr() , fortune );
+            int dropCount = Math.max( 0 , oreInfo.baseDropAmount() + bonus );
             if( dropCount > 0 )
             {
                 Item oreItem = oreTileSet.getItem();
@@ -266,6 +285,15 @@ public class OreBlock extends Block
     }
 
     @Override
+    protected ItemStack getSilkTouchDrop( IBlockState state )
+    {
+        // 1. This block drops multiple items
+        // 2. getSilkTouchDrop() is protected on the proxy block in this scope
+        // 3. Nothing should be calling this method anyway
+        throw new NotImplementedException( "" );
+    }
+
+    @Override
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
         MetaResourceLocation hostResource = getHost( world , pos );
@@ -274,11 +302,29 @@ public class OreBlock extends Block
     }
 
     @Override
-    public void harvestBlock( World world , EntityPlayer player , BlockPos pos , IBlockState state , @Nullable TileEntity entity , ItemStack tool )
+    public void harvestBlock( World worldIn , EntityPlayer player , BlockPos pos , IBlockState state , @Nullable TileEntity te , ItemStack stack )
     {
-        super.harvestBlock( world , player , pos , state , entity , tool );
+        // Most of this method is unfortunately copied from Block.harvestBlock
+        player.addStat( StatList.getBlockStats( this ) );
+        player.addExhaustion( 0.005F );
 
-        world.setBlockToAir( pos );
+        try
+        {
+            // Silk touch involves a separate code path in Block.harvestBlock
+            // which does not support dropping multiple items. Capture the tool here
+            // and bypass that logic for getDrops to figure everything out.
+            harvestTool.set( stack );
+            harvesters.set( player );
+            int fortuneLevel = EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , stack );
+            this.dropBlockAsItem( worldIn , pos , state , fortuneLevel );
+        }
+        finally
+        {
+            harvesters.set( null );
+            harvestTool.remove();
+        }
+
+        worldIn.setBlockToAir( pos );
     }
 
     @Override
@@ -357,6 +403,15 @@ public class OreBlock extends Block
         else
         {
             return player.getDigSpeed(state, pos) / hardness / 30F;
+        }
+    }
+
+    private static class ThreadLocalHarvestTool extends ThreadLocal< ItemStack >
+    {
+        @Override
+        protected ItemStack initialValue()
+        {
+            return ItemStack.EMPTY;
         }
     }
 }
