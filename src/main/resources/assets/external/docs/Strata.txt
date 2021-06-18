@@ -51,10 +51,10 @@ Description:
 	Generate a texture for the block model using an optional array of layers blended onto a required base.
 	Must come after a required "generate" line.
 
-Key: vanillaItem
+Key: convertsTo
 Value: <ResourceLocation> [meta]
 Description:
-	One-way, one-to-one conversion of a generated block to vanilla equivalent.
+	One-way, one-to-one conversion to another item for compatibility purposes.
 
 Key: textureResource
 Value: <ResourceLocation>

@@ -26,7 +26,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private int burnTime;
     private ResourceLocation proxyBlockResource;
     private Block proxyBlock;
-    private ItemStack vanillaEquivalent;
+    private ItemStack equivalentItem;
     private int baseDropAmount;
     private String bonusDropExpr;
     private int baseExp;
@@ -38,7 +38,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         String itemOreDictionaryName,
         GenericCubeTextureMap textureMap,
         ResourceLocation proxyBlockResource,
-        ItemStack vanillaEquivalent,
+        ItemStack equivalentItem,
         Material material,
         SoundType soundType,
         String harvestTool,
@@ -63,7 +63,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.explosionResistance = explosionResistance == 0.0f ? 1.7f * hardness : explosionResistance;
         this.burnTime = burnTime;
         this.proxyBlockResource = proxyBlockResource;
-        this.vanillaEquivalent = vanillaEquivalent;
+        this.equivalentItem = equivalentItem;
         this.baseDropAmount = baseDropAmount;
         this.bonusDropExpr = bonusDropExpr;
         this.baseExp = baseExp;
@@ -103,9 +103,9 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     }
 
     @Override
-    public ItemStack vanillaEquivalent()
+    public ItemStack equivalentItem()
     {
-        return vanillaEquivalent;
+        return equivalentItem;
     }
 
     @Override

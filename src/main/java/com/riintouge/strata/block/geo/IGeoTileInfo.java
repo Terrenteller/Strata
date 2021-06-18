@@ -10,7 +10,7 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 
     TileType type();
 
-    ItemStack vanillaEquivalent();
+    ItemStack equivalentItem();
 
     IModelRetexturizerMap modelTextureMap();
 }

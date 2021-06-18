@@ -40,7 +40,7 @@ public class TileLoader
     // IGeoTileInfo
     private String tileSetName;
     private TileType type;
-    private ItemStack vanillaEquivalent;
+    private ItemStack equivalentItem;
 
     // IOreInfo
     private String oreName;
@@ -146,10 +146,10 @@ public class TileLoader
             case "resistance":
                 explosionResistance = Float.parseFloat( value );
                 return true;
-            case "vanillaItem":
+            case "convertsTo":
             {
                 String[] values = value.split( " " );
-                vanillaEquivalent = new ItemStack(
+                equivalentItem = new ItemStack(
                     Item.getByNameOrId( values[ 0 ] ),
                     1,
                     values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0 );
@@ -261,7 +261,7 @@ public class TileLoader
                 explosionResistance,
                 burnTime,
                 textureMap,
-                vanillaEquivalent );
+                equivalentItem );
 
             GeoTileSet tileSet = getOrCreateTileSet( tileSetName );
             tileSet.addTile( tile );
@@ -292,7 +292,7 @@ public class TileLoader
                 itemOreDictionaryName,
                 textureMap,
                 proxyOre,
-                vanillaEquivalent,
+                equivalentItem,
                 material,
                 soundType,
                 harvestTool,
@@ -332,7 +332,7 @@ public class TileLoader
         // IGeoTileInfo
         tileSetName = "";
         type = null;
-        vanillaEquivalent = null;
+        equivalentItem = null;
 
         // IOreInfo
         oreName = null;

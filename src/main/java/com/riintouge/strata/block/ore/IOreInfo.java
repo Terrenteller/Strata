@@ -19,7 +19,7 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
 
     ResourceLocation oreItemTextureResource();
 
-    ItemStack vanillaEquivalent();
+    ItemStack equivalentItem();
 
     default Block proxyBlock()
     {

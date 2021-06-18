@@ -4,7 +4,7 @@ generate laterite clay
 host
 hardness 0.6
 texture strata:blocks/clay/laterite
-vanillaItem minecraft:clay
+convertsTo minecraft:clay
 
 # Ground
 
@@ -324,7 +324,7 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/andesite
-vanillaItem minecraft:stone 5
+convertsTo minecraft:stone 5
 
 generate andesite cobble
 harvestLevel 1
@@ -350,7 +350,7 @@ generate andesite stonepolished
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 46 strata:overlays/polished_shadow darken 34 strata:blocks/stone/strong/andesite
-vanillaItem minecraft:stone 6
+convertsTo minecraft:stone 6
 
 generate basalt stone
 host
@@ -425,7 +425,7 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/granite
-vanillaItem minecraft:stone 1
+convertsTo minecraft:stone 1
 
 generate granite cobble
 harvestLevel 1
@@ -451,7 +451,7 @@ generate granite stonepolished
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 21 strata:overlays/polished_shadow darken 28 strata:blocks/stone/strong/granite
-vanillaItem minecraft:stone 2
+convertsTo minecraft:stone 2
 
 generate greenschist stone
 host
@@ -583,7 +583,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/sandstone
 textureCaps strata:blocks/stone/strong/sandstone_caps
-vanillaItem minecraft:sandstone
+convertsTo minecraft:sandstone
 
 generate sandstone cobble
 harvestLevel 1
@@ -621,7 +621,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/red_sandstone
 textureCaps strata:blocks/stone/strong/red_sandstone_caps
-vanillaItem minecraft:red_sandstone
+convertsTo minecraft:red_sandstone
 
 generate red_sandstone cobble
 harvestLevel 1
@@ -660,7 +660,7 @@ host
 harvestLevel 1
 hardness 2.5
 texture strata:blocks/stone/very_strong/diorite
-vanillaItem minecraft:stone 3
+convertsTo minecraft:stone 3
 
 generate diorite cobble
 harvestLevel 1
@@ -686,7 +686,7 @@ generate diorite stonepolished
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/polished_highlight lighten 36 strata:overlays/polished_shadow darken 41 strata:blocks/stone/very_strong/diorite
-vanillaItem minecraft:stone 4
+convertsTo minecraft:stone 4
 
 generate gabbro stone
 host

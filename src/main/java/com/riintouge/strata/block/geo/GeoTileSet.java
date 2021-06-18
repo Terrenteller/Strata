@@ -56,14 +56,14 @@ public class GeoTileSet implements IForgeRegistrable
         return tiles.getOrDefault( type , null );
     }
 
-    protected void createVanillaItemConversionRecipe( ResourceLocation registryName , Item item , ItemStack vanillaItem )
+    protected void createEquivalentItemConversionRecipe( ResourceLocation registryName , Item item , ItemStack equivalentItem )
     {
-        if( vanillaItem != null )
+        if( equivalentItem != null )
         {
             GameRegistry.addShapelessRecipe(
-                new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_vanilla" ),
+                new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_equivalent" ),
                 null,
-                vanillaItem,
+                equivalentItem,
                 Ingredient.fromItem( item ) );
         }
     }
@@ -268,10 +268,10 @@ public class GeoTileSet implements IForgeRegistrable
             // Stone can't have a 1:1 Strata -> vanilla shapeless recipe because it conflicts with the button recipe
             if( type != TileType.STONE )
             {
-                ItemStack vanillaItem = tile.vanillaEquivalent(); // Effectively an override
-                if( vanillaItem == null )
-                    vanillaItem = type.vanillaItemStack();
-                createVanillaItemConversionRecipe( registryName , item , vanillaItem );
+                ItemStack equivalentItem = tile.equivalentItem(); // Effectively an override
+                if( equivalentItem == null )
+                    equivalentItem = type.vanillaItemStack();
+                createEquivalentItemConversionRecipe( registryName , item , equivalentItem );
             }
 
             TileType stairType = tile.type().stairType();
@@ -290,7 +290,7 @@ public class GeoTileSet implements IForgeRegistrable
                 ItemStack vanillaStairs = stairType.vanillaItemStack();
                 if( vanillaStairs != null )
                     RecipeReplicator.INSTANCE.register( vanillaStairs , new ItemStack( stairItem ) );
-                createVanillaItemConversionRecipe( stairItem.getRegistryName() , stairItem , stairType.vanillaItemStack() );
+                createEquivalentItemConversionRecipe( stairItem.getRegistryName() , stairItem , stairType.vanillaItemStack() );
             }
 
             TileType slabType = tile.type().slabType();
@@ -307,7 +307,7 @@ public class GeoTileSet implements IForgeRegistrable
                 ItemStack vanillaSlab = slabType.vanillaItemStack();
                 if( vanillaSlab != null )
                     RecipeReplicator.INSTANCE.register( vanillaSlab , new ItemStack( slabItem ) );
-                createVanillaItemConversionRecipe( slabItem.getRegistryName() , slabItem , slabType.vanillaItemStack() );
+                createEquivalentItemConversionRecipe( slabItem.getRegistryName() , slabItem , slabType.vanillaItemStack() );
             }
 
             TileType wallType = tile.type().wallType();
@@ -325,7 +325,7 @@ public class GeoTileSet implements IForgeRegistrable
                 ItemStack vanillaWall = wallType.vanillaItemStack();
                 if( vanillaWall != null )
                     RecipeReplicator.INSTANCE.register( vanillaWall , new ItemStack( wallItem ) );
-                createVanillaItemConversionRecipe( wallItem.getRegistryName() , wallItem , wallType.vanillaItemStack() );
+                createEquivalentItemConversionRecipe( wallItem.getRegistryName() , wallItem , wallType.vanillaItemStack() );
             }
 
             TileType buttonType = tile.type().buttonType();
@@ -343,7 +343,7 @@ public class GeoTileSet implements IForgeRegistrable
                     ItemStack vanillaButton = buttonType.vanillaItemStack();
                     if( vanillaButton != null )
                         RecipeReplicator.INSTANCE.register( vanillaButton , new ItemStack( buttonItem ) );
-                    createVanillaItemConversionRecipe( buttonItem.getRegistryName() , buttonItem , buttonType.vanillaItemStack() );
+                    createEquivalentItemConversionRecipe( buttonItem.getRegistryName() , buttonItem , buttonType.vanillaItemStack() );
                 }
             }
 
@@ -364,7 +364,7 @@ public class GeoTileSet implements IForgeRegistrable
                     ItemStack vanillaLever = leverType.vanillaItemStack();
                     if( vanillaLever != null )
                         RecipeReplicator.INSTANCE.register( vanillaLever , new ItemStack( leverItem ) );
-                    createVanillaItemConversionRecipe( leverItem.getRegistryName() , leverItem , leverType.vanillaItemStack() );
+                    createEquivalentItemConversionRecipe( leverItem.getRegistryName() , leverItem , leverType.vanillaItemStack() );
                 }
             }
 
@@ -384,7 +384,7 @@ public class GeoTileSet implements IForgeRegistrable
                     ItemStack vanillaPressurePlate = pressurePlateType.vanillaItemStack();
                     if( vanillaPressurePlate != null )
                         RecipeReplicator.INSTANCE.register( vanillaPressurePlate , new ItemStack( pressurePlateItem ) );
-                    createVanillaItemConversionRecipe( pressurePlateItem.getRegistryName() , pressurePlateItem , pressurePlateType.vanillaItemStack() );
+                    createEquivalentItemConversionRecipe( pressurePlateItem.getRegistryName() , pressurePlateItem , pressurePlateType.vanillaItemStack() );
                 }
             }
         }

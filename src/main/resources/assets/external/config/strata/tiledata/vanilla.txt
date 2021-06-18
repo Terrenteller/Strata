@@ -46,7 +46,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/coal
-vanillaItem minecraft:coal_ore
+convertsTo minecraft:coal_ore
 proxy minecraft:coal_ore
 
 ore diamond oreDiamond
@@ -54,7 +54,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/diamond
-vanillaItem minecraft:diamond_ore
+convertsTo minecraft:diamond_ore
 proxy minecraft:diamond_ore
 
 ore emerald oreEmerald
@@ -62,7 +62,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/emerald
-vanillaItem minecraft:emerald_ore
+convertsTo minecraft:emerald_ore
 proxy minecraft:emerald_ore
 
 ore gold oreGold
@@ -70,7 +70,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/gold
-vanillaItem minecraft:gold_ore
+convertsTo minecraft:gold_ore
 proxy minecraft:gold_ore
 
 ore iron oreIron
@@ -78,7 +78,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/iron
-vanillaItem minecraft:iron_ore
+convertsTo minecraft:iron_ore
 proxy minecraft:iron_ore
 
 ore lapis oreLapis
@@ -86,7 +86,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/lapis
-vanillaItem minecraft:lapis_ore
+convertsTo minecraft:lapis_ore
 proxy minecraft:lapis_ore
 
 # Can we make this glowy-glowy like BlockRedstoneOre?
@@ -95,5 +95,5 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/redstone
-vanillaItem minecraft:redstone_ore
+convertsTo minecraft:redstone_ore
 proxy minecraft:redstone_ore

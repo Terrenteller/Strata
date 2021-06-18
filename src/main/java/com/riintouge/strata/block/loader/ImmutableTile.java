@@ -24,7 +24,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private float hardness;
     private float explosionResistance;
     private int burnTime;
-    private ItemStack vanillaEquivalent;
+    private ItemStack equivalentItem;
     private GenericCubeTextureMap genericCubeTextureMap;
 
     public ImmutableTile(
@@ -39,7 +39,7 @@ public final class ImmutableTile implements IGeoTileInfo
         float explosionResistance,
         int burnTime,
         GenericCubeTextureMap textureMap,
-        ItemStack vanillaEquivalent )
+        ItemStack equivalentItem )
     {
         this.tileSetName = tileSetName;
         this.registryName = type.registryName( tileSetName );
@@ -53,7 +53,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.explosionResistance = explosionResistance;
         this.burnTime = burnTime;
         this.genericCubeTextureMap = textureMap;
-        this.vanillaEquivalent = vanillaEquivalent;
+        this.equivalentItem = equivalentItem;
     }
 
     // IGeoTileInfo overrides
@@ -83,9 +83,9 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public ItemStack vanillaEquivalent()
+    public ItemStack equivalentItem()
     {
-        return vanillaEquivalent;
+        return equivalentItem;
     }
 
     // IHostInfo overrides
