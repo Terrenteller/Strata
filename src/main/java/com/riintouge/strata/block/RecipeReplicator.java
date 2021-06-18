@@ -81,7 +81,7 @@ public class RecipeReplicator
         targetPair.setValue( null );
     }
 
-    public boolean shouldReplicate( IRecipe recipe )
+    public boolean canReplicate( IRecipe recipe )
     {
         for( Ingredient ing : recipe.getIngredients() )
             for( ItemStack replaceableItemStack : megaMap.keySet() )
@@ -93,7 +93,7 @@ public class RecipeReplicator
 
     public IRecipe replicate( IRecipe recipe )
     {
-        if( !shouldReplicate( recipe ) )
+        if( !canReplicate( recipe ) )
             return null;
 
         IReplicator replicator = recipeReplicatorMap.get( recipe.getClass() );
