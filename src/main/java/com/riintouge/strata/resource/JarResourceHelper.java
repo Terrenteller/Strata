@@ -14,6 +14,7 @@ import java.util.zip.ZipException;
 public class JarResourceHelper
 {
     public static final JarResourceHelper INSTANCE = new JarResourceHelper();
+    public static final String Separator = "/";
 
     private List< String > resourcePaths;
 

@@ -54,10 +54,10 @@ public class Root
 
     public void extractMissingResourceFiles()
     {
-        String internalDirWithSlash = Paths.get( JarExternalDir , rootSubdirectory ).toString() + "/";
-        for( String path : JarResourceHelper.INSTANCE.find( s -> s.startsWith( internalDirWithSlash ) ) )
+        String internalJarDir = String.format( "%s/%s/" , JarExternalDir , rootSubdirectory ).replaceAll( "\\\\" , JarResourceHelper.Separator );
+        for( String path : JarResourceHelper.INSTANCE.find( s -> s.startsWith( internalJarDir ) ) )
         {
-            String resourcePath = path.substring( internalDirWithSlash.length() );
+            String resourcePath = path.substring( internalJarDir.length() );
             File targetFile = new File( externalPath.resolve( resourcePath ).toString() );
             if( targetFile.exists() )
                 continue;
