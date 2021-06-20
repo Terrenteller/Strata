@@ -1,7 +1,9 @@
 package com.riintouge.strata.block.ore;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -45,8 +47,17 @@ public class OreItemBlock extends ItemBlock
     @Override
     public String getUnlocalizedName( ItemStack stack )
     {
-        // Strata localization doesn't make a distinction between blocks and items.
-        // Proxy ores need to report their wrapped block's unmodified, unlocalized name.
-        return this.block.getUnlocalizedName().replaceFirst( "tile." , "" );
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+        {
+            Block proxyBlock = proxyBlockState.getBlock();
+            Item proxyItem = Item.getItemFromBlock( proxyBlock );
+            int proxyMeta = proxyBlock.damageDropped( proxyBlockState );
+            ItemStack proxyItemStack = new ItemStack( proxyItem , 1 , proxyMeta );
+            return proxyItem.getUnlocalizedName( proxyItemStack );
+        }
+
+        // Strata localization doesn't make a distinction between blocks and items
+        return this.block.getUnlocalizedName().replace( "tile." , "" );
     }
 }

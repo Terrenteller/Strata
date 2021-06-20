@@ -19,7 +19,7 @@ public class OreTileSet implements IOreTileSet
         // TODO: What if OreBlock takes on a host affected by gravity?
         block = oreInfo.material() == Material.SAND ? new OreBlockFalling( oreInfo ) : new OreBlock( oreInfo );
         itemBlock = new OreItemBlock( oreInfo , block );
-        item = oreInfo.proxyBlock() != null ? itemBlock : new OreItem( oreInfo );
+        item = oreInfo.proxyBlockState() != null ? itemBlock : new OreItem( oreInfo );
     }
 
     // IOreTileSet overrides

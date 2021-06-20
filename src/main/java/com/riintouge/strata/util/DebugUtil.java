@@ -36,4 +36,11 @@ public class DebugUtil
         // 4 is ...yeah
         System.out.println( stackTraceElements[ 2 ].getMethodName() + " eventually called from " + stackTraceElements[ 4 ].toString() );
     }
+
+    public static void printException( Exception e )
+    {
+        System.out.println( e.getClass().getName() );
+        for( StackTraceElement element : e.getStackTrace() )
+            System.out.println( element.toString() );
+    }
 }

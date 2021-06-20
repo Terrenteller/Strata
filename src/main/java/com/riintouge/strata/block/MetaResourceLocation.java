@@ -17,6 +17,12 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     public ResourceLocation resourceLocation;
     public int meta;
 
+    public MetaResourceLocation( String resourceLocation , int meta )
+    {
+        this.resourceLocation = new ResourceLocation( resourceLocation );
+        this.meta = meta;
+    }
+
     public MetaResourceLocation( ResourceLocation resourceLocation , int meta )
     {
         this.resourceLocation = resourceLocation;

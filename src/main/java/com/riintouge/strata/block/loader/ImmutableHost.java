@@ -13,7 +13,6 @@ public final class ImmutableHost implements IHostInfo
 {
     private ResourceLocation registryName;
     private int meta;
-    private ResourceLocation textureResource;
     private Material material;
     private SoundType soundType;
     private String harvestTool;
@@ -52,7 +51,6 @@ public final class ImmutableHost implements IHostInfo
     {
         this.registryName = registryName;
         this.meta = meta;
-        this.textureResource = textureResource;
         this.material = material;
         this.soundType = soundType;
         this.harvestTool = harvestTool;

@@ -4,6 +4,7 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGenericBlockProperties;
+import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -18,10 +19,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -32,10 +35,10 @@ import java.util.Stack;
 
 public class OreBlock extends Block
 {
-    // Ore blocks and their item blocks must have a slightly modified name
+    // Ore blocks and their item blocks must have a slightly different registry name
     // so the ore items can have the name of the ore without decoration.
     public static final String RegistryNameSuffix = "_ore";
-    protected static ThreadLocalHarvestTool harvestTool = new ThreadLocalHarvestTool();
+    protected static InitializedThreadLocal< ItemStack > harvestTool = new InitializedThreadLocal<>( ItemStack.EMPTY );
 
     protected IOreInfo oreInfo;
 
@@ -44,10 +47,11 @@ public class OreBlock extends Block
         super( oreInfo.material() );
         this.oreInfo = oreInfo;
 
-        // TODO: Do NOT set the registry name here because it cannot then be set by derivations or new instances!
         setRegistryName( Strata.modid + ":" + oreInfo.oreName() + RegistryNameSuffix );
-        if( oreInfo.proxyBlock() != null )
-            setUnlocalizedName( oreInfo.proxyBlock().getUnlocalizedName() );
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
+        if( proxyBlock != null )
+            setUnlocalizedName( proxyBlock.getUnlocalizedName() );
         else
             setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
 
@@ -111,7 +115,7 @@ public class OreBlock extends Block
         return 0;
     }
 
-    protected MetaResourceLocation getHost( World world , BlockPos pos )
+    protected MetaResourceLocation getHost( IBlockAccess world , BlockPos pos )
     {
         TileEntity entity = world.getTileEntity( pos );
         return entity instanceof OreBlockTileEntity
@@ -139,10 +143,31 @@ public class OreBlock extends Block
     {
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
         IOreInfo oreInfo = oreTileSet.getInfo();
-        Block proxyBlock = oreInfo.proxyBlock();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
 
         // The consequences of silk touch only applies to proxy blocks since we should never drop ourself as an item
-        return proxyBlock != null && proxyBlock.canSilkHarvest( world , pos , state , player );
+        return proxyBlockState != null && proxyBlockState.getBlock().canSilkHarvest( world , pos , proxyBlockState , player );
+    }
+
+    @Override
+    public boolean canSustainPlant( IBlockState state , IBlockAccess world , BlockPos pos , EnumFacing direction , IPlantable plantable )
+    {
+        MetaResourceLocation hostResourceLocation = getHost( world , pos );
+        Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
+        IBlockState hostState = host.getStateFromMeta( hostResourceLocation.meta );
+        if( host.canSustainPlant( hostState , world , pos , direction , plantable ) )
+            return true;
+
+        IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
+        IOreInfo oreInfo = oreTileSet.getInfo();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+        {
+            if( proxyBlockState.getBlock().canSustainPlant( proxyBlockState , world , pos , direction , plantable ) )
+                return true;
+        }
+
+        return super.canSustainPlant( state , world , pos , direction , plantable );
     }
 
     @Override
@@ -194,20 +219,20 @@ public class OreBlock extends Block
         Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
         IOreInfo oreInfo = oreTileSet.getInfo();
-        Block proxyBlock = oreInfo.proxyBlock();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
 
         if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestTool.get() ) > 0 )
         {
             drops.add( new ItemStack( hostBlock ) );
             if( proxyBlock != null )
-                drops.add( new ItemStack( proxyBlock ) );
+                drops.add( new ItemStack( proxyBlock , 1 , proxyBlock.damageDropped( proxyBlockState ) ) );
         }
         else
         {
-            // FIXME: getStateFromMeta is deprecated. What are we meant to use?
             hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
             if( proxyBlock != null )
-                proxyBlock.getDrops( drops , world , pos , state , fortune );
+                proxyBlock.getDrops( drops , world , pos , proxyBlockState , fortune );
         }
 
         if( proxyBlock == null )
@@ -225,9 +250,9 @@ public class OreBlock extends Block
     @Override
     public int getExpDrop( IBlockState state , IBlockAccess world , BlockPos pos , int fortune )
     {
-        Block proxyBlock = oreInfo.proxyBlock();
-        return proxyBlock != null
-            ? proxyBlock.getExpDrop( state , world , pos , fortune )
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        return proxyBlockState != null
+            ? proxyBlockState.getBlock().getExpDrop( proxyBlockState , world , pos , fortune )
             : oreInfo.baseExp() + calculateBonusExpr( oreInfo.bonusExpExpr() , fortune );
     }
 
@@ -403,15 +428,6 @@ public class OreBlock extends Block
         else
         {
             return player.getDigSpeed(state, pos) / hardness / 30F;
-        }
-    }
-
-    private static class ThreadLocalHarvestTool extends ThreadLocal< ItemStack >
-    {
-        @Override
-        protected ItemStack initialValue()
-        {
-            return ItemStack.EMPTY;
         }
     }
 }

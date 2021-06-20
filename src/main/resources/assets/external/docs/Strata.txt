@@ -16,7 +16,7 @@ Description:
 	Drops and recipes are determined using types that share a name.
 
 Key: host
-Value: <RegistryName> [meta]
+Value: <ResourceLocation> [meta]
 Description:
 	Register the block as one from which ores may acquire various properties.
 	Value is ignored with generate.
@@ -56,6 +56,14 @@ Value: <ResourceLocation> [meta]
 Description:
 	One-way, one-to-one conversion to another item for compatibility purposes.
 
+Key: sustains
+Value: <<EnumPlantType>|<ResourceLocation> [meta]>+
+Description:
+    Allows the block to sustain EnumPlantType(s) and/or what is sustained by other block(s).
+    Multiple values are allowed. EnumPlantType order does not matter but ResourceLocation order does.
+    Only applies to primary types.
+    Disclaimer: This will not work for everything due to world caching Strata cannot intercept.
+
 Key: textureResource
 Value: <ResourceLocation>
 Description:
@@ -70,7 +78,7 @@ Description:
 	Use a hyphen ("-") to indicate that object should not be registered with the ore dictionary.
 
 Key: proxy
-Value: <ResourceLocation>
+Value: <ResourceLocation> [meta]
 Description:
     Drop the drops of the specified block instead.
     Only applies to ores.

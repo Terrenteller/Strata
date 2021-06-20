@@ -2,6 +2,7 @@ package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.*;
 import com.riintouge.strata.block.ore.*;
 import com.riintouge.strata.image.BlendMode;
@@ -9,16 +10,12 @@ import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.EnumPlantType;
 import org.apache.commons.lang3.EnumUtils;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 public class TileLoader
 {
@@ -34,19 +31,21 @@ public class TileLoader
     private float explosionResistance;
 
     // IHostInfo
-    private ResourceLocation registryName;
-    private int meta;
+    private ResourceLocation hostRegistryName;
+    private int hostMeta;
 
     // IGeoTileInfo
     private String tileSetName;
     private TileType type;
-    private ItemStack equivalentItem;
+    private MetaResourceLocation equivalentItemResourceLocation;
+    private ArrayList< EnumPlantType > sustainedPlantTypes;
+    private ArrayList< MetaResourceLocation > sustainedPlantTypesOfBlock;
 
     // IOreInfo
     private String oreName;
     private String blockOreDictionaryName;
     private String itemOreDictionaryName;
-    private ResourceLocation proxyOre;
+    private MetaResourceLocation proxyOreResourceLocation;
     private int burnTime;
     private int baseDropAmount;
     private String bonusDropExpr;
@@ -128,15 +127,17 @@ public class TileLoader
                 soundType = type.soundType;
                 return true;
             case "host":
+            {
                 isHost = true;
                 if( !value.isEmpty() )
                 {
                     String[] values = value.split( " " );
-                    registryName = new ResourceLocation( values[ 0 ] );
+                    hostRegistryName = new ResourceLocation( values[ 0 ] );
                     if( values.length > 1 )
-                        meta = Integer.parseInt( values[ 1 ] );
+                        hostMeta = Integer.parseInt( values[ 1 ] );
                 }
                 return true;
+            }
             case "harvestLevel":
                 harvestLevel = Integer.parseInt( value );
                 return true;
@@ -149,10 +150,47 @@ public class TileLoader
             case "convertsTo":
             {
                 String[] values = value.split( " " );
-                equivalentItem = new ItemStack(
-                    Item.getByNameOrId( values[ 0 ] ),
-                    1,
-                    values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0 );
+                int meta = values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0;
+                equivalentItemResourceLocation = new MetaResourceLocation( values[ 0 ] , meta );
+                return true;
+            }
+            case "sustains":
+            {
+                sustainedPlantTypes = new ArrayList<>();
+                sustainedPlantTypesOfBlock = new ArrayList<>();
+                String resourceLocation = null;
+
+                for( String token : value.split( " " ) )
+                {
+                    try
+                    {
+                        int meta = Integer.parseInt( token );
+                        if( resourceLocation != null )
+                        {
+                            sustainedPlantTypesOfBlock.add( new MetaResourceLocation( resourceLocation , meta ) );
+                            resourceLocation = null;
+                        }
+                        continue; // Stray number
+                    }
+                    catch( NumberFormatException e )
+                    {
+                        // Not unexpected; ignore
+                    }
+
+                    if( token.contains( ":" ) )
+                    {
+                        if( resourceLocation != null )
+                            sustainedPlantTypesOfBlock.add( new MetaResourceLocation( resourceLocation , 0 ) );
+                        resourceLocation = token;
+                        continue;
+                    }
+
+                    sustainedPlantTypes.add( EnumPlantType.getPlantType( token ) );
+                }
+
+                if( resourceLocation != null )
+                    sustainedPlantTypesOfBlock.add( new MetaResourceLocation( resourceLocation , 0 ) );
+
                 return true;
             }
             case "ore":
@@ -166,8 +204,14 @@ public class TileLoader
                 return true;
             }
             case "proxy":
-                proxyOre = new ResourceLocation( value );
+            {
+                String[] values = value.split( " " );
+                int meta = 0;
+                if( values.length > 1 )
+                    meta = Integer.parseInt( values[ 1 ] );
+                proxyOreResourceLocation = new MetaResourceLocation( values[ 0 ] , meta );
                 return true;
+            }
             case "burnTime":
                 burnTime = Integer.parseInt( value );
                 return true;
@@ -261,7 +305,9 @@ public class TileLoader
                 explosionResistance,
                 burnTime,
                 textureMap,
-                equivalentItem );
+                equivalentItemResourceLocation,
+                sustainedPlantTypes,
+                sustainedPlantTypesOfBlock );
 
             GeoTileSet tileSet = getOrCreateTileSet( tileSetName );
             tileSet.addTile( tile );
@@ -269,11 +315,11 @@ public class TileLoader
             if( isHost )
                 HostRegistry.INSTANCE.register( tile.registryName() , tile.meta() , tile );
         }
-        else if( registryName != null && isHost )
+        else if( hostRegistryName != null && isHost )
         {
             ImmutableHost host = new ImmutableHost(
-                registryName,
-                meta,
+                hostRegistryName,
+                hostMeta,
                 textureResource,
                 material,
                 soundType,
@@ -291,8 +337,8 @@ public class TileLoader
                 blockOreDictionaryName,
                 itemOreDictionaryName,
                 textureMap,
-                proxyOre,
-                equivalentItem,
+                proxyOreResourceLocation,
+                equivalentItemResourceLocation,
                 material,
                 soundType,
                 harvestTool,
@@ -326,19 +372,21 @@ public class TileLoader
         explosionResistance = 0.0f;
 
         // IHostInfo
-        registryName = null;
-        meta = 0;
+        hostRegistryName = null;
+        hostMeta = 0;
 
         // IGeoTileInfo
         tileSetName = "";
         type = null;
-        equivalentItem = null;
+        equivalentItemResourceLocation = null;
+        sustainedPlantTypes = null;
+        sustainedPlantTypesOfBlock = null;
 
         // IOreInfo
         oreName = null;
         blockOreDictionaryName = null;
         itemOreDictionaryName = null;
-        proxyOre = null;
+        proxyOreResourceLocation = null;
         burnTime = 0;
         baseDropAmount = 1;
         bonusDropExpr = null;
