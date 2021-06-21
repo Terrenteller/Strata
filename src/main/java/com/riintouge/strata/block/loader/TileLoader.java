@@ -28,7 +28,7 @@ public class TileLoader
     private String harvestTool;
     private int harvestLevel;
     private float hardness;
-    private float explosionResistance;
+    private Float explosionResistance;
 
     // IHostInfo
     private ResourceLocation hostRegistryName;
@@ -302,7 +302,7 @@ public class TileLoader
                 harvestTool,
                 harvestLevel,
                 hardness,
-                explosionResistance,
+                explosionResistance != null ? explosionResistance : 5.0f * hardness,
                 burnTime,
                 textureMap,
                 equivalentItemResourceLocation,
@@ -326,7 +326,7 @@ public class TileLoader
                 harvestTool,
                 harvestLevel,
                 hardness,
-                explosionResistance );
+                explosionResistance != null ? explosionResistance : 5.0f * hardness );
 
             HostRegistry.INSTANCE.register( host.registryName() , host.meta() , host );
         }
@@ -344,7 +344,7 @@ public class TileLoader
                 harvestTool,
                 harvestLevel,
                 hardness,
-                explosionResistance,
+                explosionResistance != null ? explosionResistance : 1.7f * hardness,
                 burnTime,
                 baseDropAmount,
                 bonusDropExpr,
@@ -369,7 +369,7 @@ public class TileLoader
         harvestTool = "";
         harvestLevel = 0;
         hardness = 0.0f;
-        explosionResistance = 0.0f;
+        explosionResistance = null;
 
         // IHostInfo
         hostRegistryName = null;

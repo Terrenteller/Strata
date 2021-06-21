@@ -17,10 +17,7 @@ public interface IGenericBlockProperties
 
     float hardness();
 
-    default float explosionResistance()
-    {
-        return 5.0f * hardness();
-    }
+    float explosionResistance();
 
     default int burnTime()
     {

@@ -25,12 +25,4 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
     {
         return null;
     }
-
-    // IGenericBlockProperties overrides
-
-    @Override
-    default float explosionResistance()
-    {
-        return 1.7f * hardness(); // Roughly matches vanilla ore resistance
-    }
 }
