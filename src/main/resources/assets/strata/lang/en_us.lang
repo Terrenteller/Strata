@@ -6,13 +6,30 @@ itemGroup.strataOreBlocksTab=Strata Ore Blocks
 itemGroup.strataOreItemsTab=Strata Ore Items
 itemGroup.strataMiscItemsTab=Strata Misc. Items
 
+# Clay
+
+strata:laterite.name=Laterite
+strata:sodium_bentonite.name=Sodium Bentonite
+strata:calcium_bentonite.name=Calcium Bentonite
+strata:kaolinite.name=Kaolinite
+strata:vermiculite.name=Vermiculite
+
 # Ground
 
 strata:peat.name=Peat
 
-# Clay
+# Sand
 
-strata:laterite.name=Laterite
+strata:basaltic_mineral_sand.name=Basaltic Mineral Sand
+strata:cassiterite_sand.name=Cassiterite Sand
+strata:garnet_sand.name=Garnet Sand
+strata:granitic_mineral_sand.name=Granitic Mineral Sand
+strata:quartz_sand.name=Quartz Sand
+strata:volcanic_ash.name=Volcanic Ash
+strata:glauconite.name=Glauconite Sand
+strata:diatomite.name=Diatomerous Earth
+strata:sulfur.name=Sulfur
+strata:oil_sand.name=Oil Sand
 
 # Stone
 
@@ -656,24 +673,9 @@ strata:quartzite_pressureplate.name=Quartzite Pressure Plate
 
 # Ore
 
-strata:basaltic_mineral_sand.name=Basaltic Mineral Sand
-strata:cassiterite_sand.name=Cassiterite Sand
-strata:garnet_sand.name=Garnet Sand
-strata:granitic_mineral_sand.name=Granitic Mineral Sand
-strata:quartz_sand.name=Quartz Sand
-strata:volcanic_ash.name=Volcanic Ash
-strata:glauconite.name=Glauconite Sand
-strata:diatomite.name=Diatomerous Earth
-strata:sulfur.name=Sulfur
-strata:oil_sand.name=Oil Sand
-
 strata:bauxite.name=Bauxite (Aluminium Ore)
-strata:sodium_bentonite.name=Sodium Bentonite
-strata:calcium_bentonite.name=Calcium Bentonite
-strata:kaolinite.name=Kaolinite
 strata:brown_limonite.name=Brown Limonite (Iron Ore)
 strata:yellow_limonite.name=Yellow Limonite (Iron Ore)
-strata:vermiculite.name=Vermiculite
 
 strata:oil_shale.name=Oil Shale
 strata:bituminous_coal.name=Bituminous Coal

@@ -18,6 +18,9 @@ import java.util.regex.Pattern;
 public class GeoBlockModelLoader implements ICustomModelLoader
 {
     private static final String ResourcePattern = String.format( "^%s:(([a-z_]+?)(?:_([a-z]+))?)(?:#.+)$" , Strata.modid );
+    private static final int ResourcePatternResourceLocationPathGroup = 1;
+    private static final int ResourcePatternTileSetNameGroup = 2;
+    private static final int ResourcePatternTileTypeGroup = 3;
     private static final Pattern ResourceRegex = Pattern.compile( ResourcePattern );
 
     // ICustomModelLoader overrides
@@ -25,8 +28,8 @@ public class GeoBlockModelLoader implements ICustomModelLoader
     @Override
     public boolean accepts( ResourceLocation modelLocation )
     {
-        Pair< String , String > stoneAndType = getStoneAndTypePairFromLocation( modelLocation );
-        return stoneAndType != null && findTileType( stoneAndType.getLeft() , stoneAndType.getRight() ) != null;
+        Pair< String , TileType > stoneAndType = getNameAndTileTypeFromLocation( modelLocation );
+        return stoneAndType != null && stoneAndType.getRight() != null;
     }
 
     @Override
@@ -35,8 +38,8 @@ public class GeoBlockModelLoader implements ICustomModelLoader
         ModelResourceLocation modelResourceLocation = (ModelResourceLocation)modelLocation;
         System.out.println( String.format( "GeoBlockModelLoader::loadModel( \"%s\" )" , modelResourceLocation.toString() ) );
 
-        Pair< String , String > stoneAndType = getStoneAndTypePairFromLocation( modelLocation );
-        TileType tileType = findTileType( stoneAndType.getLeft() , stoneAndType.getRight() );
+        Pair< String , TileType > stoneAndType = getNameAndTileTypeFromLocation( modelLocation );
+        TileType tileType = stoneAndType.getRight();
         ModelResourceLocation templateModelResource = new ModelResourceLocation( tileType.modelName , modelResourceLocation.getVariant() );
         TileType primaryOrSecondaryType = tileType.parentType != null ? tileType.parentType : tileType;
         IGeoTileInfo tileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( stoneAndType.getLeft() , primaryOrSecondaryType );
@@ -80,15 +83,24 @@ public class GeoBlockModelLoader implements ICustomModelLoader
         return tileInfo != null ? tileInfo.type() : null;
     }
 
-    private static Pair< String , String > getStoneAndTypePairFromLocation( ResourceLocation modelLocation )
+    private static Pair< String , TileType > getNameAndTileTypeFromLocation( ResourceLocation modelLocation )
     {
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
         if( !matcher.find() )
             return null;
 
-        // We don't have the case insensitive version of isValidEnum
-        return matcher.group( 3 ) != null && EnumUtils.isValidEnum( TileType.class , matcher.group( 3 ).toUpperCase() )
-            ? new ImmutablePair<>( matcher.group( 2 ) , matcher.group( 3 ) )
-            : new ImmutablePair<>( matcher.group( 1 ) , null );
+        String tileTypeName = matcher.group( ResourcePatternTileTypeGroup );
+        if( tileTypeName != null && EnumUtils.isValidEnum( TileType.class , tileTypeName.toUpperCase() ) )
+        {
+            String tileSetName = matcher.group( ResourcePatternTileSetNameGroup );
+            TileType tileType = findTileType( tileSetName , tileTypeName );
+            if( tileType != null )
+                return new ImmutablePair<>( tileSetName , tileType );
+        }
+
+        // The resource name for a primary type may end with a primary type enum value and fail the above search
+        String resourcePath = matcher.group( ResourcePatternResourceLocationPathGroup );
+        TileType tileType = findTileType( resourcePath , null );
+        return new ImmutablePair<>( resourcePath , tileType );
     }
 }

@@ -272,29 +272,29 @@ ore bituminous_coal oreCoal bituminousCoal
 type stone
 hardness 3.0
 convertsTo minecraft:coal_ore
-texture strata:blocks/ore/crude/bituminous_coal
 burnTime 1600
+texture strata:blocks/ore/crude/bituminous_coal
 
 ore lignite oreCoal lignite
 type stone
 hardness 3.0
 convertsTo minecraft:coal_ore
-texture strata:blocks/ore/crude/lignite
 burnTime 1600
+texture strata:blocks/ore/crude/lignite
 
 ore anthracite oreCoal anthracite
 type stone
 hardness 3.0
 convertsTo minecraft:coal_ore
-texture strata:blocks/ore/crude/anthracite
 burnTime 1600
+texture strata:blocks/ore/crude/anthracite
 
 ore coke oreCoal coke
 type stone
 hardness 3.0
 convertsTo minecraft:coal_ore
-texture strata:blocks/ore/crude/coke
 burnTime 1600
+texture strata:blocks/ore/crude/coke
 
 # Clay
 
@@ -302,21 +302,6 @@ ore bauxite oreBauxite
 type clay
 hardness 1.5
 texture strata:blocks/ore/clay/bauxite
-
-ore sodium_bentonite
-type clay
-hardness 1.5
-texture strata:blocks/ore/clay/sodium_bentonite
-
-ore calcium_bentonite
-type clay
-hardness 1.5
-texture strata:blocks/ore/clay/calcium_bentonite
-
-ore kaolinite
-type clay
-hardness 1.5
-texture strata:blocks/ore/clay/kaolinite
 
 ore brown_limonite oreIron
 type clay
@@ -329,65 +314,3 @@ type clay
 hardness 1.5
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/clay/yellow_limonite
-
-ore vermiculite
-type clay
-hardness 1.5
-texture strata:blocks/ore/clay/vermiculite
-
-# Sand
-
-ore basaltic_mineral_sand
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/basaltic_mineral_sand
-textureCaps strata:blocks/ore/sand/basaltic_mineral_sand_caps
-
-ore cassiterite_sand
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/cassiterite_sand
-textureCaps strata:blocks/ore/sand/cassiterite_sand_caps
-
-ore garnet_sand
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/garnet_sand
-
-ore granitic_mineral_sand
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/granitic_mineral_sand
-textureCaps strata:blocks/ore/sand/granitic_mineral_sand_caps
-
-ore quartz_sand
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/quartz_sand
-
-ore volcanic_ash
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/volcanic_ash
-
-ore glauconite
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/glauconite
-textureCaps strata:blocks/ore/sand/glauconite_caps
-
-ore diatomite
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/diatomite
-textureCaps strata:blocks/ore/sand/diatomite_caps
-
-ore sulfur
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/sulfur
-
-ore oil_sand
-type sand
-hardness 1.0
-texture strata:blocks/ore/sand/oil_sand

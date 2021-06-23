@@ -59,13 +59,7 @@ public class OreBlockTextureManager
             return texture;
 
         System.out.println( String.format( "No texture was generated for \"%s\"!" , resourcePath ) );
-
-        // FIXME: Where on Notch's green, flat earth is the missing texture resource?
-        // Until this is fixed, good luck with the null...
-        return Minecraft
-            .getMinecraft()
-            .getTextureMapBlocks()
-            .getTextureExtry( "" ); // Yup, that's a typo in the Forge API
+        return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )

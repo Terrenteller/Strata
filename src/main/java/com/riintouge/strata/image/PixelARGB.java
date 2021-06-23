@@ -20,6 +20,14 @@ public class PixelARGB
         setPixel( pixel );
     }
 
+    public PixelARGB( int alpha , int red , int green , int blue )
+    {
+        setAlpha( alpha );
+        setRed( red );
+        setGreen( green );
+        setBlue( blue );
+    }
+
     public void setPixel( int pixel ) { argb = decompose( pixel ); }
 
     public int getAlpha() { return argb[ ALPHA ]; }

@@ -1,26 +1,31 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
-public class GeoBlock extends Block
+public class GeoBlock extends BlockFalling
 {
     public static InitializedThreadLocal< Boolean > canSustainPlantEventOverride = new InitializedThreadLocal<>( false );
 
     protected IGeoTileInfo info;
+    protected Integer particleColour = null;
 
     public GeoBlock( IGeoTileInfo info )
     {
@@ -39,6 +44,45 @@ public class GeoBlock extends Block
         setSoundType( info.soundType() );
         setHardness( info.hardness() );
         setResistance( info.explosionResistance() );
+    }
+
+    public boolean canFall()
+    {
+        return info.type() == TileType.SAND;
+    }
+
+    // BlockFalling overrides
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public int getDustColor( IBlockState state )
+    {
+        if( particleColour != null )
+            return particleColour;
+
+        ResourceLocation textureResourceLocation = info.facingTextureMap().getOrDefault( EnumFacing.DOWN );
+        TextureAtlasSprite texture = Minecraft.getMinecraft()
+            .getTextureMapBlocks()
+            .getTextureExtry( textureResourceLocation.toString() );
+
+        if( texture != null )
+        {
+            // Use the first pixel of the smallest mipmap as the average color
+            int[][] frameData = texture.getFrameTextureData( 0 );
+            particleColour = frameData[ frameData.length - 1 ][ 0 ];
+        }
+        else
+            particleColour = super.getDustColor( state );
+
+        return particleColour;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
+    {
+        if( canFall() )
+            super.randomDisplayTick( stateIn , worldIn , pos , rand );
     }
 
     // Block overrides
@@ -87,5 +131,33 @@ public class GeoBlock extends Block
         }
 
         return super.getItemDropped( state , rand , fortune );
+    }
+
+    @Override
+    public void neighborChanged( IBlockState state , World worldIn , BlockPos pos , Block blockIn , BlockPos fromPos )
+    {
+        if( canFall() )
+            super.neighborChanged( state , worldIn , pos , blockIn , fromPos );
+    }
+
+    @Override
+    public void onBlockAdded( World worldIn , BlockPos pos , IBlockState state )
+    {
+        if( canFall() )
+            super.onBlockAdded( worldIn , pos , state );
+    }
+
+    @Override
+    public int tickRate( World worldIn )
+    {
+        // 10 is the default from Block. We can't call Block.tickRate() from here because Java
+        return canFall() ? super.tickRate( worldIn ) : 10;
+    }
+
+    @Override
+    public void updateTick( World worldIn , BlockPos pos , IBlockState state , Random rand )
+    {
+        if( canFall() )
+            super.updateTick( worldIn , pos , state , rand );
     }
 }

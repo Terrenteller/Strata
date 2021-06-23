@@ -6,13 +6,82 @@ hardness 0.6
 texture strata:blocks/clay/laterite
 convertsTo minecraft:clay
 
+ore sodium_bentonite
+type clay
+hardness 1.5
+texture strata:blocks/clay/sodium_bentonite
+
+ore calcium_bentonite
+type clay
+hardness 1.5
+texture strata:blocks/clay/calcium_bentonite
+
+ore kaolinite
+type clay
+hardness 1.5
+texture strata:blocks/clay/kaolinite
+
+ore vermiculite
+type clay
+hardness 1.5
+texture strata:blocks/clay/vermiculite
+
 # Ground
 
 generate peat ground
 host
 hardness 0.5
-texture strata:blocks/ground/peat
+sustains Plains
 burnTime 800
+texture strata:blocks/ground/peat
+
+# Sand
+
+generate basaltic_mineral_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/basaltic_mineral_sand
+
+generate cassiterite_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/cassiterite_sand
+
+generate garnet_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/garnet_sand
+
+generate granitic_mineral_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/granitic_mineral_sand
+
+generate quartz_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/quartz_sand
+
+generate volcanic_ash sand
+hardness 1.0
+texture strata:blocks/sand/volcanic_ash
+
+generate glauconite sand
+hardness 1.0
+texture strata:blocks/sand/glauconite
+
+generate diatomite sand
+hardness 1.0
+texture strata:blocks/sand/diatomite
+textureCaps strata:blocks/sand/diatomite_caps
+
+generate sulfur sand
+hardness 1.0
+texture strata:blocks/sand/sulfur
+
+generate oil_sand sand
+hardness 1.0
+texture strata:blocks/sand/oil_sand
 
 # Weak
 
