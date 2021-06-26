@@ -89,7 +89,6 @@ texture strata:blocks/ore/vanilla/lapis
 convertsTo minecraft:lapis_ore
 proxy minecraft:lapis_ore
 
-# Can we make this glowy-glowy like BlockRedstoneOre?
 ore redstone oreRedstone
 type stone
 hardness 3.0

@@ -42,7 +42,7 @@ public class StateUtil
             IExtendedBlockState extendedState = (IExtendedBlockState)blockState.getBlock().getExtendedState( blockState , blockAccess , pos );
             Optional< T > optionalValue = (Optional< T >)extendedState.getUnlistedProperties().get( property );
 
-            return optionalValue.orElse( null );
+            return optionalValue != null ? optionalValue.orElse( null ) : null;
         }
 
         return null;
@@ -60,7 +60,7 @@ public class StateUtil
             IExtendedBlockState extendedState = (IExtendedBlockState)blockState;
             Optional< T > optionalValue = (Optional< T >)extendedState.getUnlistedProperties().get( property );
 
-            if( optionalValue.isPresent() )
+            if( optionalValue != null && optionalValue.isPresent() )
                 return optionalValue.get();
         }
 
@@ -74,7 +74,7 @@ public class StateUtil
             IExtendedBlockState extendedState = (IExtendedBlockState)blockState.getBlock().getExtendedState( blockState , blockAccess , pos );
             Optional< T > optionalValue = (Optional< T >)extendedState.getUnlistedProperties().get( property );
 
-            if( optionalValue.isPresent() )
+            if( optionalValue != null && optionalValue.isPresent() )
                 return optionalValue.get();
         }
 

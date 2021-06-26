@@ -76,6 +76,7 @@ Description:
 	The world block and dropped item may have distinct ore dictionary entries, if specified.
 	itemOreDictionaryName defaults to blockOreDictionaryName (which may be unspecified).
 	Use a hyphen ("-") to indicate that object should not be registered with the ore dictionary.
+	A blockOreDictionaryName of "oreRedstone" will make the block behave like vanilla redstone ore.
 
 Key: proxy
 Value: <ResourceLocation> [meta]
