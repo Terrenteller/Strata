@@ -203,9 +203,15 @@ public class GeoTileSet implements IForgeRegistrable
             ResourceLocation registryName = tile.registryName();
             Item item = itemMap.get( type );
 
+            ItemStack equivalentItem = tile.equivalentItem();
+            if( equivalentItem != null )
+                RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( item ) );
+
             ItemStack vanillaItemStack = type.vanillaItemStack();
             if( vanillaItemStack != null )
                 RecipeReplicator.INSTANCE.register( vanillaItemStack , new ItemStack( item ) );
+
+            createEquivalentItemConversionRecipe( registryName , item , equivalentItem != null ? equivalentItem : vanillaItemStack );
 
             switch( type )
             {
@@ -264,11 +270,6 @@ public class GeoTileSet implements IForgeRegistrable
                     }
                     break;
             }
-
-            ItemStack equivalentItem = tile.equivalentItem(); // Effectively an override
-            if( equivalentItem == null )
-                equivalentItem = type.vanillaItemStack();
-            createEquivalentItemConversionRecipe( registryName , item , equivalentItem );
 
             TileType stairType = tile.type().stairType();
             if( stairType != null )

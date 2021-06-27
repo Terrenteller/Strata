@@ -17,18 +17,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import sun.misc.Regexp;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class RecipeReplicator
 {
     public static final RecipeReplicator INSTANCE = new RecipeReplicator();
     private static boolean ConfigurationLoaded = false;
-    private static Set< ResourceLocation > RecipeBlacklist = new HashSet<>();
+    private static Set< Pattern > RecipeBlacklist = new HashSet<>();
 
     private final Map< Class , IReplicator > recipeReplicatorMap = new HashMap<>();
     private final Map< ItemStack , Pair< List< ItemStack > , Ingredient > > megaMap = new HashMap<>();
@@ -90,6 +92,20 @@ public class RecipeReplicator
 
     public boolean canReplicate( IRecipe recipe )
     {
+        ResourceLocation recipeResourceLocation = recipe.getRegistryName();
+        if( recipeResourceLocation.getResourceDomain().equals( Strata.modid ) )
+            return false;
+
+        // Input recipe blacklisting
+        String recipeResourceLocationString = recipeResourceLocation.toString();
+        if( RecipeBlacklist.stream().anyMatch( x -> x.matcher( recipeResourceLocationString ).matches() ) )
+            return false;
+
+        // Output recipe blacklisting
+        String replicatedResourceLocationString = replicatedResourceLocation( recipeResourceLocation ).toString();
+        if( RecipeBlacklist.stream().anyMatch( x -> x.matcher( replicatedResourceLocationString ).matches() ) )
+            return false;
+
         for( Ingredient ing : recipe.getIngredients() )
             for( ItemStack replaceableItemStack : megaMap.keySet() )
                 if( ing.apply( replaceableItemStack ) )
@@ -112,7 +128,7 @@ public class RecipeReplicator
 
     public ResourceLocation replicatedResourceLocation( ResourceLocation resourceLocation )
     {
-        if( resourceLocation.getResourceDomain().equalsIgnoreCase( Strata.modid ) )
+        if( resourceLocation.getResourceDomain().equals( Strata.modid ) )
             throw new IllegalArgumentException( "resourceLocation" );
 
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
@@ -180,9 +196,6 @@ public class RecipeReplicator
         List< IRecipe > copies = new ArrayList<>();
         for( Map.Entry< ResourceLocation , IRecipe > recipe : recipeRegistry.getEntries() )
         {
-            if( RecipeBlacklist.contains( recipe.getKey() ) )
-                continue;
-
             IRecipe copy = RecipeReplicator.INSTANCE.replicate( recipe.getValue() );
             if( copy != null )
                 copies.add( copy );
@@ -214,7 +227,7 @@ public class RecipeReplicator
                     switch( kv[ 0 ] )
                     {
                         case "blacklist":
-                            RecipeBlacklist.add( new ResourceLocation( kv[ 1 ] ) );
+                            RecipeBlacklist.add( Pattern.compile( kv[ 1 ] ) );
                             break;
                     }
                 }
