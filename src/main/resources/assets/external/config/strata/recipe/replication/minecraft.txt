@@ -1,4 +1,4 @@
-# Strata provides its own recipes
+# Strata generates its own equivalent of these blocks and their recipes
 blacklist minecraft:cobblestone_slab
 blacklist minecraft:cobblestone_wall
 blacklist minecraft:stone_slab
@@ -12,7 +12,7 @@ blacklist minecraft:stone_button
 blacklist minecraft:lever
 blacklist minecraft:stone_pressure_plate
 
-# Strata equivalent has vanillaOverride
+# Strata has equivalents which convert directly to these vanilla blocks
 blacklist minecraft:andesite
 blacklist minecraft:diorite
 blacklist minecraft:granite

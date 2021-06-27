@@ -70,14 +70,21 @@ public class RecipeReplicator
 
     public void register( ItemStack original , ItemStack alternative )
     {
+        List< ItemStack > matchingItemStacks;
         Pair< List< ItemStack > , Ingredient > targetPair = megaMap.getOrDefault( original , null );
         if( targetPair == null )
         {
-            targetPair = new MutablePair<>( new ArrayList<>() , null );
+            matchingItemStacks = new ArrayList<>();
+            // Start off with the original item to allow mix'n'match.
+            // Otherwise, our recipe will exclusively use our items.
+            matchingItemStacks.add( original );
+            targetPair = new MutablePair<>( matchingItemStacks , null );
             megaMap.put( original , targetPair );
         }
+        else
+            matchingItemStacks = targetPair.getKey();
 
-        targetPair.getKey().add( alternative );
+        matchingItemStacks.add( alternative );
         targetPair.setValue( null );
     }
 
@@ -106,7 +113,7 @@ public class RecipeReplicator
     public ResourceLocation replicatedResourceLocation( ResourceLocation resourceLocation )
     {
         if( resourceLocation.getResourceDomain().equalsIgnoreCase( Strata.modid ) )
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException( "resourceLocation" );
 
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
     }
