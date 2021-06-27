@@ -265,14 +265,10 @@ public class GeoTileSet implements IForgeRegistrable
                     break;
             }
 
-            // Stone can't have a 1:1 Strata -> vanilla shapeless recipe because it conflicts with the button recipe
-            if( type != TileType.STONE )
-            {
-                ItemStack equivalentItem = tile.equivalentItem(); // Effectively an override
-                if( equivalentItem == null )
-                    equivalentItem = type.vanillaItemStack();
-                createEquivalentItemConversionRecipe( registryName , item , equivalentItem );
-            }
+            ItemStack equivalentItem = tile.equivalentItem(); // Effectively an override
+            if( equivalentItem == null )
+                equivalentItem = type.vanillaItemStack();
+            createEquivalentItemConversionRecipe( registryName , item , equivalentItem );
 
             TileType stairType = tile.type().stairType();
             if( stairType != null )
@@ -334,11 +330,13 @@ public class GeoTileSet implements IForgeRegistrable
                 Item buttonItem = itemMap.getOrDefault( buttonType , null );
                 if( buttonItem != null )
                 {
-                    GameRegistry.addShapelessRecipe(
+                    GameRegistry.addShapedRecipe(
                         new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_button" ),
                         null,
-                        new ItemStack( buttonItem ),
-                        Ingredient.fromItem( item ) );
+                        new ItemStack( buttonItem , 2 ), // Two buttons since the original recipe is 1:1
+                        "X",
+                        "X",
+                        'X' , item );
 
                     ItemStack vanillaButton = buttonType.vanillaItemStack();
                     if( vanillaButton != null )

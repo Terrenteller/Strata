@@ -683,6 +683,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 39 strata:overlays/polished_shadow darken 29 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/polished_highlight lighten 39 strata:overlays/polished_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+convertsTo minecraft:sandstone 2
 
 generate red_sandstone stone
 host
@@ -721,6 +722,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 13 strata:overlays/polished_shadow darken 27 strata:blocks/stone/strong/red_sandstone
 textureCaps strata:overlays/polished_highlight lighten 13 strata:overlays/polished_shadow darken 27 strata:blocks/stone/strong/red_sandstone_caps
+convertsTo minecraft:red_sandstone 2
 
 # Very Strong
 
