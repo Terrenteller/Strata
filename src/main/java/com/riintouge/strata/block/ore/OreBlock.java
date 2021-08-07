@@ -12,6 +12,9 @@ import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleDigging;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,11 +26,16 @@ import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nullable;
@@ -144,6 +152,160 @@ public class OreBlock extends Block
     }
 
     // Block overrides
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
+    {
+        try
+        {
+            IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
+            Block block = state.getBlock();
+            int blockId = Block.getIdFromBlock( block );
+            ResourceLocation registryName = block.getRegistryName();
+            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+
+            String oreDomain = registryName.getResourceDomain();
+            String oreName = oreInfo.oreName();
+            int blockMeta = block.getMetaFromState( state );
+            String hostResourceDomain = host.resourceLocation.getResourceDomain();
+            String hostResourceLocation = host.resourceLocation.getResourcePath();
+
+            // This loop sampled from ParticleManager.addBlockDestroyEffects()
+            for( int x = 0 ; x < 4 ; ++x )
+            {
+                for( int y = 0 ; y < 4 ; ++y )
+                {
+                    for( int z = 0 ; z < 4 ; ++z )
+                    {
+                        double d0 = ( (double)x + 0.5D ) / 4.0D;
+                        double d1 = ( (double)y + 0.5D ) / 4.0D;
+                        double d2 = ( (double)z + 0.5D ) / 4.0D;
+
+                        ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
+                            0, // unused
+                            world,
+                            (double)pos.getX() + d0,
+                            (double)pos.getY() + d1,
+                            (double)pos.getZ() + d2,
+                            d0 - 0.5D,
+                            d1 - 0.5D,
+                            d2 - 0.5D,
+                            blockId );
+
+                        TextureAtlasSprite texture = OreBlockTextureManager.INSTANCE.findTexture(
+                            oreDomain,
+                            oreName,
+                            blockMeta,
+                            hostResourceDomain,
+                            hostResourceLocation,
+                            host.meta,
+                            EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] );
+
+                        particleDigging.setBlockPos( pos ).setParticleTexture( texture );
+                        manager.addEffect( particleDigging );
+                    }
+                }
+            }
+
+            return true;
+        }
+        catch( Exception e )
+        {
+            // TODO: warn
+        }
+
+        return false;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
+    {
+        try
+        {
+            BlockPos pos = target.getBlockPos();
+            state = worldObj.getBlockState( pos ).getActualState( worldObj , pos );
+            Block block = state.getBlock();
+            int blockId = Block.getIdFromBlock( block );
+            ResourceLocation registryName = block.getRegistryName();
+            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+
+            String oreDomain = registryName.getResourceDomain();
+            String oreName = oreInfo.oreName();
+            int blockMeta = block.getMetaFromState( state );
+            String hostResourceDomain = host.resourceLocation.getResourceDomain();
+            String hostResourceLocation = host.resourceLocation.getResourcePath();
+
+            // This logic sampled from ParticleManager.addBlockHitEffects()
+            double x = (double)pos.getX();
+            double y = (double)pos.getY();
+            double z = (double)pos.getZ();
+            AxisAlignedBB AABB = state.getBoundingBox( worldObj , pos );
+            double d0 = x + RANDOM.nextDouble() * ( AABB.maxX - AABB.minX - 0.2D ) + 0.1D + AABB.minX;
+            double d1 = y + RANDOM.nextDouble() * ( AABB.maxY - AABB.minY - 0.2D ) + 0.1D + AABB.minY;
+            double d2 = z + RANDOM.nextDouble() * ( AABB.maxZ - AABB.minZ - 0.2D ) + 0.1D + AABB.minZ;
+
+            switch( target.sideHit.getIndex() )
+            {
+                case 0: // DOWN
+                    d1 = y + AABB.minY - 0.1D;
+                    break;
+                case 1: // UP
+                    d1 = y + AABB.maxY + 0.1D;
+                    break;
+                case 2: // NORTH
+                    d2 = z + AABB.minZ - 0.1D;
+                    break;
+                case 3: // SOUTH
+                    d2 = z + AABB.maxZ + 0.1D;
+                    break;
+                case 4: // WEST
+                    d0 = x + AABB.minX - 0.1D;
+                    break;
+                case 5: // EAST
+                    d0 = x + AABB.maxX + 0.1D;
+                    break;
+                default:
+                    return false;
+            }
+
+            ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
+                0, // unused
+                worldObj,
+                d0,
+                d1,
+                d2,
+                0.0D,
+                0.0D,
+                0.0D,
+                blockId );
+
+            TextureAtlasSprite texture = OreBlockTextureManager.INSTANCE.findTexture(
+                oreDomain,
+                oreName,
+                blockMeta,
+                hostResourceDomain,
+                hostResourceLocation,
+                host.meta,
+                target.sideHit );
+
+            particleDigging
+                .setBlockPos( pos )
+                .multiplyVelocity( 0.2F )
+                .multipleParticleScaleBy( 0.6F )
+                .setParticleTexture( texture );
+
+            manager.addEffect( particleDigging );
+            return true;
+        }
+        catch( Exception e )
+        {
+            // TODO: warn
+        }
+
+        return false;
+    }
 
     @Override
     protected boolean canSilkHarvest()
