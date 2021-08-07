@@ -41,7 +41,11 @@ public class RedstoneOreBlock extends OreBlock
                 spawnRedstoneParticles( worldIn , pos );
         }
         else
-            getTileEntity( worldIn , pos ).setActive( activated );
+        {
+            OreBlockTileEntity tileEntity = getTileEntity( worldIn , pos );
+            if( tileEntity != null )
+                tileEntity.setActive( activated );
+        }
     }
 
     // OreBlock overrides
@@ -54,7 +58,7 @@ public class RedstoneOreBlock extends OreBlock
         BlockPos pos )
     {
         return super.getCompleteExtendedState( entity , state , world , pos )
-            .withProperty( UnlistedPropertyActiveState.PROPERTY , entity.isActive() );
+            .withProperty( UnlistedPropertyActiveState.PROPERTY , entity != null && entity.isActive() );
     }
 
     @Override
@@ -93,6 +97,7 @@ public class RedstoneOreBlock extends OreBlock
     @Override
     public boolean isToolEffective( String type , IBlockState state )
     {
+        // Vanilla behaviour
         return false;
     }
 

@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.util.ReflectionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockWall;
@@ -49,17 +50,11 @@ public class GeoBlockWall extends BlockWall
 
         try
         {
-            // Cannot get field by name due to obsfucation
-            for( Field field : Block.class.getDeclaredFields() )
-            {
-                if( field.getType() == BlockStateContainer.class )
-                {
-                    field.setAccessible( true );
-                    field.set( this , createBlockState() );
-                    field.setAccessible( false );
-                    break;
-                }
-            }
+            // Cannot get field by name due to obfuscation
+            Field field = ReflectionUtil.findFieldByType( Block.class , BlockStateContainer.class , false );
+            field.setAccessible( true );
+            field.set( this , createBlockState() );
+            field.setAccessible( false );
 
             setDefaultState( blockState.getBaseState()
                 .withProperty( UP , Boolean.valueOf( false ) )

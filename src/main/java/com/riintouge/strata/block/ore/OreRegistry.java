@@ -2,8 +2,10 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -111,16 +113,21 @@ public class OreRegistry
     {
         System.out.println( "OreRegistry::registerModels()" );
 
-        // TODO: Adjust this code to use either an item or a block for the model like so:
-        //new ModelResourceLocation( "minecraft:stone" , "inventory" )
-        //new ModelResourceLocation( String.format( "%s:%s%s" , Strata.modid , ResourceUtil.ModelResourceBasePath , "ore_cinnabar" ) , "inventory" )
-        //new ModelResourceLocation( tileSet.block.getRegistryName() , null )
-
-        // The process of replacing auto-generated block models with OreBlockModel
-        // during ModelBakeEvent trashes the would-be generated item models. Instead,
-        // load them from yet another auto-generated resource.
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
+            ModelLoader.setCustomStateMapper( tileSet.getBlock() , new StateMapperBase()
+            {
+                @Override
+                protected ModelResourceLocation getModelResourceLocation( IBlockState state )
+                {
+                    return new ModelResourceLocation( state.getBlock().getRegistryName() , "normal" );
+                }
+            } );
+
+            // The process of replacing auto-generated block models with OreBlockModel
+            // during ModelBakeEvent trashes the would-be generated item models. Instead,
+            // load them from yet another auto-generated resource.
+
             ModelLoader.setCustomModelResourceLocation(
                 tileSet.getItemBlock(),
                 0,

@@ -8,6 +8,7 @@ import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -29,9 +30,9 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.NotImplementedException;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Random;
+import java.util.Stack;
 
 public class OreBlock extends Block
 {
@@ -131,22 +132,18 @@ public class OreBlock extends Block
 
     protected MetaResourceLocation getHost( IBlockAccess world , BlockPos pos )
     {
-        return getTileEntity( world , pos ).getHostRock();
+        OreBlockTileEntity tileEntity = getTileEntity( world , pos );
+        return tileEntity != null ? tileEntity.getHostRock() : UnlistedPropertyHostRock.DEFAULT;
     }
 
     protected OreBlockTileEntity getTileEntity( IBlockAccess world , BlockPos pos )
     {
-        return (OreBlockTileEntity)world.getTileEntity( pos );
+        // This may be called before the tile entity is created
+        TileEntity tileEntity = world.getTileEntity( pos );
+        return tileEntity instanceof OreBlockTileEntity ? (OreBlockTileEntity) tileEntity : null;
     }
 
     // Block overrides
-
-    @Override
-    public boolean canHarvestBlock( IBlockAccess world , BlockPos pos , EntityPlayer player )
-    {
-        IBlockState state = getExtendedState( world.getBlockState( pos ) , world , pos );
-        return canHarvestBlock( state , player , world , pos );
-    }
 
     @Override
     protected boolean canSilkHarvest()
@@ -197,27 +194,33 @@ public class OreBlock extends Block
     @Override
     public TileEntity createTileEntity( World world , IBlockState state )
     {
-        return new OreBlockTileEntity();
+        return new OreBlockTileEntity( state );
     }
 
-    // This is passed to getHarvestLevel and getHarvestTool by ForgeHooks.canHarvestBlock
-    /*
     @Deprecated
     @Override
     public IBlockState getActualState( IBlockState state , IBlockAccess worldIn , BlockPos pos )
     {
-        // HACK HACK HACK
-        // Returning getExtendedState would likely work fine if the try/catch in the WorldType.DEBUG_ALL_BLOCK_STATES
-        // check in BlockRendererDispatcher.renderBlock() didn't run when it shouldn't. It appears the check is
-        // incorrectly inverted. If we modify the state here, BlockModelShapes.getModelForState() returns null and
-        // results in a missing model model without warnings or errors. Why do unlisted properties affect this?
-        // Would an IStateMapper help?
-        StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
-        return stackTraceElements[ 3 ].toString().contains( "ForgeHooks" )
-            ? getExtendedState( state , worldIn , pos )
-            : state;
+        // BlockRendererDispatcher.renderBlock() calls BlockModelShapes.getModelForState()
+        // which queries an IdentityHashMap populated by valid states of the block. Because this block has no metadata
+        // properties, only unlisted, there is only one valid state: the unmodified default.
+
+        // Option 1: Accept reality and deal with the consequences
+        //return super.getActualState( state , worldIn , pos );
+
+        // Option 2: Derive from IExtendedBlockState and have it create and manage a set of valid block states.
+        // Return whichever corresponds to the unlisted property values. Alternatively, create individual blocks.
+
+        // Option 3: Examine the stack to determine our behaviour (JDK 9+ has StackWalker)
+        //StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+        //String caller = stackTraceElements[ 2 ].toString();
+        //return caller.contains( "renderBlock" ) || caller.contains( "addBlockDestroyEffects" )
+        //    ? super.getActualState( state , worldIn , pos )
+        //    : getExtendedState( state , worldIn , pos );
+
+        // Option 4: Proxy BlockModelShapes.bakedModelStore to fallback on the state mapper
+        return getExtendedState( state , worldIn , pos );
     }
-    */
 
     @Deprecated
     @Override
@@ -280,8 +283,7 @@ public class OreBlock extends Block
     @Override
     public int getHarvestLevel( IBlockState state )
     {
-        // This state has up-to-date, unlisted properties because of the extended state passed
-        // to our modified blockStrength() called by getPlayerRelativeBlockHardness()
+        // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
         IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.harvestLevel() : super.getHarvestLevel( state );
@@ -291,8 +293,7 @@ public class OreBlock extends Block
     @Override
     public String getHarvestTool( IBlockState state )
     {
-        // This state has up-to-date, unlisted properties because of the extended state passed
-        // to our modified blockStrength() called by getPlayerRelativeBlockHardness()
+        // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
         IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.harvestTool() : super.getHarvestTool( state );
@@ -308,15 +309,26 @@ public class OreBlock extends Block
     @Override
     public Material getMaterial( IBlockState state )
     {
-        // Because state does not have up-to-date, unlisted property data, we cannot determine the actual material
-        return super.getMaterial( state );
+        // state as cached by the world does not have unlisted property data
+        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
+        if( hostResource == null )
+            return super.getMaterial( state );
+
+        // However, state from other callers might
+        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
+        return hostProperties != null ? hostProperties.material() : super.getMaterial( state );
     }
 
-    @Deprecated
     @Override
-    public float getPlayerRelativeBlockHardness( IBlockState state , EntityPlayer player , World worldIn , BlockPos pos )
+    public EnumPushReaction getMobilityFlag( IBlockState state )
     {
-        return blockStrength( getExtendedState( state , worldIn , pos ) , player , worldIn , pos );
+        // BUG ABUSE: The check for a tile entity should probably come first in BlockPistonBase.canPush(),
+        // but since it doesn't, we can use PUSH_ONLY to return true. The tile entity can be destroyed
+        // without consequence because we juggle unlisted properties from getActualState() back to createTileEntity().
+        // Although we could examine the stack in hasTileEntity() and return false if pistons are involved,
+        // that method is called too often from elsewhere to risk a performance hit at this time.
+        // Pushing ores is already a huge success.
+        return EnumPushReaction.PUSH_ONLY;
     }
 
     @Override
@@ -352,7 +364,7 @@ public class OreBlock extends Block
             harvestTool.set( stack );
             harvesters.set( player );
             int fortuneLevel = EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , stack );
-            this.dropBlockAsItem( worldIn , pos , state , fortuneLevel );
+            dropBlockAsItem( worldIn , pos , state , fortuneLevel );
         }
         finally
         {
@@ -384,59 +396,10 @@ public class OreBlock extends Block
         super.updateTick( worldIn , pos , state , rand );
 
         if( !worldIn.isRemote )
-            getTileEntity( worldIn , pos ).searchForAdjacentHostRock();
-    }
-
-    // Statics
-
-    // canHarvestBlock() and blockStrength() originated from ForgeHooks.java (Forge 1.12.2-14.23.4.2705).
-    // Originally, canHarvestBlock() re-acquired a block state from getActualState() instead of using whatever
-    // getPlayerRelativeBlockHardness() passed to blockStrength(). Unfortunately, returning getExtendedState() from an
-    // overridden getActualState() caused BlockRendererDispatcher.renderBlock() to draw a missing model model due to a
-    // cache miss in BlockModelShapes.getModelForState(). Making minor tweaks in copied code seemed less of a hack
-    // than basing the returned state on the caller of getActualState(). This should be re-examined and cleaned up
-    // in a future version. getActualState() is deprecated now and removed in 1.13.
-    // Modifications to these two methods are kept to a minimum for diff purposes.
-
-    private static boolean canHarvestBlock( @Nonnull IBlockState state, @Nonnull EntityPlayer player, @Nonnull IBlockAccess world, @Nonnull BlockPos pos)
-    {
-        if (state.getMaterial().isToolNotRequired())
         {
-            return true;
-        }
-
-        Block block = state.getBlock();
-        ItemStack stack = player.getHeldItemMainhand();
-        String tool = block.getHarvestTool(state);
-        if (stack.isEmpty() || tool == null)
-        {
-            return player.canHarvestBlock(state);
-        }
-
-        int toolLevel = stack.getItem().getHarvestLevel(stack, tool, player, state);
-        if (toolLevel < 0)
-        {
-            return player.canHarvestBlock(state);
-        }
-
-        return toolLevel >= block.getHarvestLevel(state);
-    }
-
-    private static float blockStrength(@Nonnull IBlockState state, @Nonnull EntityPlayer player, @Nonnull World world, @Nonnull BlockPos pos)
-    {
-        float hardness = state.getBlockHardness(world, pos);
-        if (hardness < 0.0F)
-        {
-            return 0.0F;
-        }
-
-        if (!canHarvestBlock(state, player, world, pos))
-        {
-            return player.getDigSpeed(state, pos) / hardness / 100F;
-        }
-        else
-        {
-            return player.getDigSpeed(state, pos) / hardness / 30F;
+            OreBlockTileEntity tileEntity = getTileEntity( worldIn , pos );
+            if( tileEntity != null )
+                tileEntity.searchForAdjacentHostRock();
         }
     }
 }

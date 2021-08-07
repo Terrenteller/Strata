@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -8,15 +9,25 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class OreBlockTileEntity extends TileEntity
 {
-    private Boolean isActive = false;
     private MetaResourceLocation hostRock = UnlistedPropertyHostRock.DEFAULT;
+    private Boolean isActive = UnlistedPropertyActiveState.DEFAULT;
 
     public OreBlockTileEntity()
     {
         // Nothing to do
+    }
+
+    public OreBlockTileEntity( IBlockState state )
+    {
+        if( state != null )
+        {
+            hostRock = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            isActive = StateUtil.getValue( state , UnlistedPropertyActiveState.PROPERTY , UnlistedPropertyActiveState.DEFAULT );
+        }
     }
 
     public boolean isActive()
@@ -55,7 +66,8 @@ public class OreBlockTileEntity extends TileEntity
             // adjacent stone in a neighbouring, but unloaded, chunk. Can a chunk load
             // trigger a block update? Should we remove the block and pretend like it never existed?
 
-            world.scheduleBlockUpdate( pos , this.blockType , 20 , 10 );
+            // The comment for getBlockType() says it's client-only but works just fine server-side
+            world.scheduleBlockUpdate( pos , getBlockType() , 20 , 10 );
             return;
         }
 
@@ -71,9 +83,7 @@ public class OreBlockTileEntity extends TileEntity
 
         // We must explicitly call checkLight because ExtendedBlockStorage caches IExtendedBlockState.getClean().
         // This means the tile entity (us) must be queried for getLightValue() and will return the same value for
-        // both old and new states. Because there is no difference in light values, the update to world lighting
-        // is skipped. Unfortunately, this also means OreBlock cannot be optimized to always use extended state
-        // information and requires the tile entity to be resolved each time.
+        // both old and new states. Because there is no difference in values, the lighting update is skipped.
         world.profiler.startSection( "checkLight" );
         world.checkLight( pos );
         world.profiler.endSection();
@@ -88,7 +98,10 @@ public class OreBlockTileEntity extends TileEntity
     public boolean shouldRefresh( World world , BlockPos pos , IBlockState oldState , IBlockState newSate )
     {
         // newSate? Does Forge have code reviewers?
-        return oldState.getBlock() != newSate.getBlock();
+        return !( newSate instanceof IExtendedBlockState )
+            || !hostRock.equals( StateUtil.getValue( newSate , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT ) )
+            || isActive != StateUtil.getValue( newSate , UnlistedPropertyActiveState.PROPERTY , false );
+
     }
 
     @Override

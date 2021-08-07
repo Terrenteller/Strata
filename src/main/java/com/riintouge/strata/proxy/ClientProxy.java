@@ -2,6 +2,7 @@ package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.block.ore.OreBlockTextureManager;
 import com.riintouge.strata.block.ore.OreItemTextureManager;
+import com.riintouge.strata.misc.BakedModelStoreProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -24,6 +25,8 @@ public class ClientProxy extends CommonProxy
     {
         super.init( event );
         System.out.println( "ClientProxy::init()" );
+
+        BakedModelStoreProxy.inject();
     }
 
     @Override
