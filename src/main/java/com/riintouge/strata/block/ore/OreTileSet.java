@@ -15,9 +15,9 @@ public class OreTileSet implements IOreTileSet
     {
         this.oreInfo = oreInfo;
 
-        // TODO: What if OreBlock takes on a host affected by gravity?
-        // TODO: Allow stone ores to be harvested by shovel if non-stone host
-        block = "oreRedstone".equals( oreInfo.blockOreDictionaryName() ) ? new RedstoneOreBlock( oreInfo ) : new OreBlock( oreInfo );
+        block = "oreRedstone".equals( oreInfo.blockOreDictionaryName() )
+            ? new RedstoneOreBlock( oreInfo )
+            : new OreBlock( oreInfo );
         itemBlock = new OreItemBlock( oreInfo , block );
         item = oreInfo.proxyBlockState() != null ? itemBlock : new OreItem( oreInfo );
     }

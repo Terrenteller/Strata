@@ -1,8 +1,9 @@
 package com.riintouge.strata;
 
 import com.riintouge.strata.block.geo.GeoBlock;
+import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.OreBlock;
-import com.riintouge.strata.util.DebugUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -13,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -34,6 +36,37 @@ public class EventHandlers
         event.setCanceled( true );
     }
     */
+
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void breakSpeed( PlayerEvent.BreakSpeed event )
+    {
+        IBlockState state = event.getState();
+        Block block = state.getBlock();
+        if( !( block instanceof OreBlock ) )
+            return;
+
+        World world = event.getEntityPlayer().world;
+        if( world == null )
+            return;
+
+        OreBlock oreBlock = (OreBlock)block;
+        ItemStack tool = event.getEntityPlayer().getHeldItemMainhand();
+        state = block.getActualState( state , world , event.getPos() );
+        IHostInfo hostInfo = oreBlock.getHostInfo( state );
+        IOreInfo oreInfo = oreBlock.getOreInfo();
+
+        // When the host material does not require a tool, methods like Block.getHarvestTool()
+        // and Block.getHarvestLevel() are skipped. This complicates requirement checks and speed boosts.
+        // Instead of having OreBlock gamble on an answer, it always reports true for tool effectiveness
+        // and relies on this event handler to apply a penalty where applicable.
+        if( !oreBlock.isToolActuallyEffective( tool , hostInfo.material() , oreInfo.material() ) )
+        {
+            Block hostBlock = Block.getBlockFromName( hostInfo.registryName().toString() );
+            float hostDestroySpeed = tool.getDestroySpeed( hostBlock.getStateFromMeta( hostInfo.meta() ) );
+            float forgeHookHarvestPenalty = 30f / 100f; // Inverse of the "bonus" in ForgeHooks.blockStrength()
+            event.setNewSpeed( hostDestroySpeed * forgeHookHarvestPenalty );
+        }
+    }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void playerInteractEvent( PlayerInteractEvent.RightClickBlock event )

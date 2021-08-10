@@ -16,6 +16,7 @@ public enum TileType
 {
     // Primaries
     CLAY   ( true , "%s:%s" , Material.CLAY   , SoundType.GROUND , "shovel"  , null , "generic_cube" ),
+    GRAVEL ( true , "%s:%s" , Material.SAND   , SoundType.GROUND , "shovel"  , null , "generic_cube" ),
     GROUND ( true , "%s:%s" , Material.GROUND , SoundType.GROUND , "shovel"  , null , "generic_cube" ),
     SAND   ( true , "%s:%s" , Material.SAND   , SoundType.SAND   , "shovel"  , null , "generic_cube" ),
     STONE  ( true , "%s:%s" , Material.ROCK   , SoundType.STONE  , "pickaxe" , null , "generic_cube" ),

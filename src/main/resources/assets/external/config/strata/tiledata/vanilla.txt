@@ -34,6 +34,23 @@ type ground
 hardness 0.5
 textureResource minecraft:blocks/coarse_dirt
 
+host minecraft:sand
+type sand
+hardness 0.5
+textureResource minecraft:blocks/sand
+
+host minecraft:sand 1
+type sand
+hardness 0.5
+textureResource minecraft:blocks/red_sand
+
+# gravel has no possibility of surface tension like sand.
+# This makes it weird as a host when it can't fall.
+host minecraft:gravel
+type gravel
+hardness 0.6
+textureResource minecraft:blocks/gravel
+
 host minecraft:clay
 type ground
 hardness 0.6
@@ -43,6 +60,21 @@ host minecraft:hardened_clay
 type stone
 hardness 1.25
 textureResource minecraft:blocks/hardened_clay
+
+host minecraft:netherrack
+type stone
+hardness 0.4
+textureResource minecraft:blocks/netherrack
+
+host minecraft:soul_sand
+type sand
+hardness 0.5
+textureResource minecraft:blocks/soul_sand
+
+host minecraft:end_stone
+type stone
+hardness 3.0
+textureResource minecraft:blocks/end_stone
 
 host minecraft:stained_hardened_clay
 type stone
@@ -139,21 +171,6 @@ type stone
 hardness 1.25
 resistance 7.0
 textureResource minecraft:blocks/hardened_clay_stained_black
-
-host minecraft:netherrack
-type stone
-hardness 0.4
-textureResource minecraft:blocks/netherrack
-
-host minecraft:soul_sand
-type sand
-hardness 0.5
-textureResource minecraft:blocks/soul_sand
-
-host minecraft:end_stone
-type stone
-hardness 3.0
-textureResource minecraft:blocks/end_stone
 
 # Ores
 

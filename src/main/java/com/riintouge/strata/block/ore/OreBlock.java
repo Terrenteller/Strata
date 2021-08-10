@@ -4,14 +4,16 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGenericBlockProperties;
-import com.riintouge.strata.misc.InitializedThreadLocal;
+import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -21,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
@@ -42,14 +45,15 @@ import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.Stack;
 
-public class OreBlock extends Block
+public class OreBlock extends BlockFalling
 {
     // Ore blocks and their item blocks must have a slightly different registry name
     // so the ore items can have the name of the ore without decoration.
     public static final String RegistryNameSuffix = "_ore";
-    protected static InitializedThreadLocal< ItemStack > harvestTool = new InitializedThreadLocal<>( ItemStack.EMPTY );
+    protected static ThreadLocal< ItemStack > harvestTool = new ThreadLocal<>();
 
     protected IOreInfo oreInfo;
+    protected ThreadLocal< Integer > particleColor = new ThreadLocal<>();
 
     public OreBlock( IOreInfo oreInfo )
     {
@@ -138,17 +142,78 @@ public class OreBlock extends Block
             .withProperty( UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
     }
 
-    protected MetaResourceLocation getHost( IBlockAccess world , BlockPos pos )
+    public MetaResourceLocation getHost( IBlockAccess world , BlockPos pos )
     {
         OreBlockTileEntity tileEntity = getTileEntity( world , pos );
         return tileEntity != null ? tileEntity.getHostRock() : UnlistedPropertyHostRock.DEFAULT;
     }
 
-    protected OreBlockTileEntity getTileEntity( IBlockAccess world , BlockPos pos )
+    public IHostInfo getHostInfo( IBlockState actualState )
+    {
+        MetaResourceLocation hostResource = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
+        return hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+    }
+
+    public IOreInfo getOreInfo()
+    {
+        return oreInfo;
+    }
+
+    public OreBlockTileEntity getTileEntity( IBlockAccess world , BlockPos pos )
     {
         // This may be called before the tile entity is created
         TileEntity tileEntity = world.getTileEntity( pos );
         return tileEntity instanceof OreBlockTileEntity ? (OreBlockTileEntity) tileEntity : null;
+    }
+
+    public boolean isToolActuallyEffective( ItemStack tool , Material hostMaterial , Material oreMaterial )
+    {
+        // A null ItemStack means getDrops() was called directly, such as by explosion
+        if( tool == null )
+            return true;
+
+        // A tool can be effective without meeting harvest level requirements
+        return tool.getItem() instanceof ItemPickaxe
+            ? hostMaterial == Material.ROCK || oreMaterial == Material.ROCK
+            : hostMaterial != Material.ROCK;
+    }
+
+    // BlockFalling overrides
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public int getDustColor( IBlockState state )
+    {
+        return particleColor.get() != null ? particleColor.get() : super.getDustColor( state );
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
+    {
+        // Cheap sanity check
+        if( !canFallThrough( worldIn.getBlockState( pos.down() ) ) )
+            return;
+
+        // TODO: Use a cached value on the host
+        IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
+        // It would be fancy to check if the host block is BlockFalling, but all Strata rocks are BlockFalling
+        if( hostInfo == null || hostInfo.material() != Material.SAND )
+            return;
+
+        ResourceLocation textureResourceLocation = hostInfo.facingTextureMap().getOrDefault( EnumFacing.DOWN );
+        TextureAtlasSprite texture = Minecraft.getMinecraft()
+            .getTextureMapBlocks()
+            .getTextureExtry( textureResourceLocation.toString() );
+
+        if( texture != null )
+        {
+            // Use the first pixel of the smallest mipmap as the average color
+            int[][] frameData = texture.getFrameTextureData( 0 );
+            particleColor.set( frameData[ frameData.length - 1 ][ 0 ] );
+        }
+
+        super.randomDisplayTick( stateIn , worldIn , pos , rand );
     }
 
     // Block overrides
@@ -163,7 +228,9 @@ public class OreBlock extends Block
             Block block = state.getBlock();
             int blockId = Block.getIdFromBlock( block );
             ResourceLocation registryName = block.getRegistryName();
-            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
+            if( host == null )
+                return false;
 
             String oreDomain = registryName.getResourceDomain();
             String oreName = oreInfo.oreName();
@@ -229,7 +296,9 @@ public class OreBlock extends Block
             Block block = state.getBlock();
             int blockId = Block.getIdFromBlock( block );
             ResourceLocation registryName = block.getRegistryName();
-            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
+            if( host == null )
+                return false;
 
             String oreDomain = registryName.getResourceDomain();
             String oreName = oreInfo.oreName();
@@ -388,7 +457,7 @@ public class OreBlock extends Block
     @Override
     public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
     {
-        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
+        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
         return hostProperties != null ? hostProperties.hardness() + 1.5f : oreInfo.hardness();
     }
 
@@ -396,13 +465,18 @@ public class OreBlock extends Block
     public void getDrops( NonNullList< ItemStack > drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
     {
         MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
+        IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
+        if( !isToolActuallyEffective( harvestTool.get() , hostInfo.material() , oreInfo.material() ) )
+            return;
+
+        ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
+        Block hostBlock = host != null ? Block.REGISTRY.getObject( host.resourceLocation ) : null;
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
         IOreInfo oreInfo = oreTileSet.getInfo();
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
 
-        if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestTool.get() ) > 0 )
+        if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestToolOrEmpty ) > 0 )
         {
             drops.add( new ItemStack( hostBlock ) );
             if( proxyBlock != null )
@@ -446,9 +520,9 @@ public class OreBlock extends Block
     public int getHarvestLevel( IBlockState state )
     {
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
-        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
-        return hostProperties != null ? hostProperties.harvestLevel() : super.getHarvestLevel( state );
+        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
+        IHostInfo hostProperties = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+        return hostProperties != null ? hostProperties.harvestLevel() : oreInfo.harvestLevel();
     }
 
     @Nullable
@@ -456,9 +530,9 @@ public class OreBlock extends Block
     public String getHarvestTool( IBlockState state )
     {
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
-        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
-        return hostProperties != null ? hostProperties.harvestTool() : super.getHarvestTool( state );
+        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
+        IHostInfo hostProperties = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+        return hostProperties != null ? hostProperties.harvestTool() : oreInfo.harvestTool();
     }
 
     @Override
@@ -476,8 +550,8 @@ public class OreBlock extends Block
         if( hostResource == null )
             return super.getMaterial( state );
 
-        // However, state from other callers might
-        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( hostResource );
+        // However, state from other callers might. Be aware of the consequences.
+        IHostInfo hostProperties = HostRegistry.INSTANCE.find( hostResource );
         return hostProperties != null ? hostProperties.material() : super.getMaterial( state );
     }
 
@@ -505,7 +579,7 @@ public class OreBlock extends Block
     @Override
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
-        IGenericBlockProperties hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
         return hostProperties != null ? hostProperties.soundType() : oreInfo.soundType();
     }
 
@@ -522,7 +596,7 @@ public class OreBlock extends Block
         {
             // Silk touch involves a separate code path in Block.harvestBlock()
             // which does not support dropping multiple items. Capture the tool here
-            // and bypass that logic for getDrops to figure everything out.
+            // and bypass that logic for getDrops() to figure everything out.
             harvestTool.set( stack );
             harvesters.set( player );
             int fortuneLevel = EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , stack );
@@ -544,6 +618,26 @@ public class OreBlock extends Block
     }
 
     @Override
+    public boolean isToolEffective( String type , IBlockState state )
+    {
+        // Assume the best case scenario because state is unlikely to have unlisted property data.
+        // Strata will apply a penalty to PlayerEvent.BreakSpeed where appropriate.
+        return true;
+    }
+
+    @Override
+    public void neighborChanged( IBlockState state , World worldIn , BlockPos pos , Block blockIn , BlockPos fromPos )
+    {
+        // Don't call super. Wait for updateTick().
+    }
+
+    @Override
+    public void onBlockAdded( World worldIn , BlockPos pos , IBlockState state )
+    {
+        // Don't call super. Wait for updateTick().
+    }
+
+    @Override
     public boolean removedByPlayer( IBlockState state , World world , BlockPos pos , EntityPlayer player , boolean willHarvest )
     {
         // See BlockFlowerPot for details about this logic.
@@ -555,7 +649,10 @@ public class OreBlock extends Block
     @Override
     public void updateTick( World worldIn , BlockPos pos , IBlockState state , Random rand )
     {
-        super.updateTick( worldIn , pos , state , rand );
+        // Do not call super.updateTick() so the ore block will not fall. The idea is the ore provides
+        // the "structure" to remain suspended. BlockFalling.checkFallable() is private for no good reason.
+        // Why BlockFalling then? It provides enough useful infrastructure.
+        // TODO: Revisit this should sandy ores be added.
 
         if( !worldIn.isRemote )
         {

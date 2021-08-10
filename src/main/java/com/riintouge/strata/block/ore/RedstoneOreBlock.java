@@ -97,8 +97,10 @@ public class RedstoneOreBlock extends OreBlock
     @Override
     public boolean isToolEffective( String type , IBlockState state )
     {
-        // Vanilla behaviour
-        return false;
+        // Block.isToolEffective() suggests pickaxes are not meant to be effective on redstone ore, but in practise
+        // that code path never executes. Nothing calls ForgeHooks.isToolEffective() and ItemPickaxe.getDestroySpeed()
+        // will never call ItemTool.getDestroySpeed() because the material of redstone ore is rock.
+        return super.isToolEffective( type , state );
     }
 
     @Override
