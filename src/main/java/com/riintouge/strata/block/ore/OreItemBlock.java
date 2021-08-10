@@ -28,6 +28,23 @@ public class OreItemBlock extends ItemBlock
     // ItemBlock overrides
 
     @Override
+    public String getUnlocalizedName( ItemStack stack )
+    {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+        {
+            Block proxyBlock = proxyBlockState.getBlock();
+            Item proxyItem = Item.getItemFromBlock( proxyBlock );
+            int proxyMeta = proxyBlock.damageDropped( proxyBlockState );
+            ItemStack proxyItemStack = new ItemStack( proxyItem , 1 , proxyMeta );
+            return proxyItem.getUnlocalizedName( proxyItemStack );
+        }
+
+        // Strata localization doesn't make a distinction between blocks and items
+        return this.block.getUnlocalizedName().replace( "tile." , "" );
+    }
+
+    @Override
     public EnumActionResult onItemUse(
         EntityPlayer player,
         World worldIn,
@@ -44,20 +61,12 @@ public class OreItemBlock extends ItemBlock
             : EnumActionResult.FAIL;
     }
 
-    @Override
-    public String getUnlocalizedName( ItemStack stack )
-    {
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        if( proxyBlockState != null )
-        {
-            Block proxyBlock = proxyBlockState.getBlock();
-            Item proxyItem = Item.getItemFromBlock( proxyBlock );
-            int proxyMeta = proxyBlock.damageDropped( proxyBlockState );
-            ItemStack proxyItemStack = new ItemStack( proxyItem , 1 , proxyMeta );
-            return proxyItem.getUnlocalizedName( proxyItemStack );
-        }
+    // Item overrides
 
-        // Strata localization doesn't make a distinction between blocks and items
-        return this.block.getUnlocalizedName().replace( "tile." , "" );
+    @Override
+    public String getItemStackDisplayName( ItemStack stack )
+    {
+        // TextFormatting.LIGHT_PURPLE to indicate a creative mode item
+        return "§d" + super.getItemStackDisplayName( stack );
     }
 }
