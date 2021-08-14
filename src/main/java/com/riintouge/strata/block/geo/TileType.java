@@ -54,9 +54,9 @@ public enum TileType
     public final Material material;
     public final SoundType soundType;
     public final String harvestTool;
-    private String resourceLocationFormat;
-    public TileType parentType;
-    public ResourceLocation modelName;
+    private final String resourceLocationFormat;
+    public final TileType parentType;
+    public final ResourceLocation modelName;
 
     TileType(
         Boolean isPrimary,

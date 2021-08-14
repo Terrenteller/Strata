@@ -68,13 +68,10 @@ public class OreBlockTextureManager
         System.out.println( "OreBlockTextureManager::onEvent( TextureStitchEvent.Pre )" );
 
         TextureMap textureMap = event.getMap();
-        int generatedTextureCount = 0 , oreCount = 0;
         Map< ResourceLocation , IHostInfo[] > hostInfoMap = HostRegistry.INSTANCE.allHosts();
 
         if( hostInfoMap.size() == 0 )
             return;
-
-        long startTime = System.nanoTime();
 
         for( ResourceLocation ore : INSTANCE.oreInfoMap.keySet() )
         {
@@ -88,8 +85,6 @@ public class OreBlockTextureManager
                     IOreInfo oreInfo = oreMetaInfos[ oreMeta ];
                     if( oreInfo == null )
                         continue;
-                    else
-                        oreCount++;
 
                     for( int hostMeta = 0 ; hostMeta < hostMetaInfos.length ; hostMeta++ )
                     {
@@ -119,24 +114,11 @@ public class OreBlockTextureManager
 
                             textureMap.setTextureEntry( generatedTexture );
                             INSTANCE.generatedTextureMap.put( generatedResource.getResourcePath() , generatedTexture );
-                            generatedTextureCount++;
                         }
                     }
                 }
             }
         }
-
-        if( oreCount == 0 )
-            return;
-
-        long endTime = System.nanoTime();
-        oreCount /= hostInfoMap.keySet().size();
-        LOGGER.info( String.format(
-            "Generated %d texture(s) from %d hosts and %d ores in %d millisecond(s)",
-            generatedTextureCount,
-            generatedTextureCount / ( oreCount * EnumFacing.values().length ),
-            oreCount,
-            ( endTime - startTime ) / 1000000 ) );
 
         INSTANCE.alreadyInitializedOnce = true;
     }

@@ -9,8 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +17,6 @@ public class OreItemTextureManager
 {
     public static final OreItemTextureManager INSTANCE = new OreItemTextureManager();
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private boolean alreadyInitializedOnce = false;
     private Map< String , ResourceLocation > oreNameToTextureResourceMap = new HashMap<>();
 
     private OreItemTextureManager()
@@ -30,9 +26,6 @@ public class OreItemTextureManager
 
     public void register( String ore , ResourceLocation resourceLocation )
     {
-        if( alreadyInitializedOnce )
-            LOGGER.warn( "OreItemTextureManager::Register() called too late!" );
-
         System.out.println( String.format( "OreItemTextureManager::register( \"%s\" , \"%s\" )" , ore , resourceLocation.toString() ) );
         if( !oreNameToTextureResourceMap.containsKey( ore ) )
             oreNameToTextureResourceMap.put( ore , resourceLocation );
@@ -51,8 +44,6 @@ public class OreItemTextureManager
         System.out.println( "OreItemTextureManager::onEvent( TextureStitchEvent.Pre )" );
 
         TextureMap textureMap = event.getMap();
-        int generatedTextureCount = 0;
-        long startTime = System.nanoTime();
 
         for( String oreName : INSTANCE.oreNameToTextureResourceMap.keySet() )
         {
@@ -66,15 +57,6 @@ public class OreItemTextureManager
                 new LayeredTextureLayer[] { oreLayer } );
 
             textureMap.setTextureEntry( generatedTexture );
-            generatedTextureCount++;
         }
-
-        long endTime = System.nanoTime();
-        LOGGER.info( String.format(
-            "Generated %d ore item textures in %d millisecond(s)",
-            generatedTextureCount,
-            ( endTime - startTime ) / 1000000 ) );
-
-        INSTANCE.alreadyInitializedOnce = true;
     }
 }

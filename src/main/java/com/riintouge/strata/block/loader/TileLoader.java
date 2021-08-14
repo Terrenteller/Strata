@@ -352,7 +352,7 @@ public class TileLoader
                 bonusExpExpr );
 
             OreRegistry.INSTANCE.register( new OreTileSet( ore ) );
-            OreBlockTextureManager.INSTANCE.registerOre( new ResourceLocation( Strata.modid , ore.oreName() ) , 0 , ore );
+            OreBlockTextureManager.INSTANCE.registerOre( Strata.resource( ore.oreName() ) , 0 , ore );
             OreItemTextureManager.INSTANCE.register( ore.oreName() , ore.oreItemTextureResource() );
         }
 

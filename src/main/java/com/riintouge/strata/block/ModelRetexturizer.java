@@ -2,7 +2,6 @@ package com.riintouge.strata.block;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
@@ -16,18 +15,18 @@ import java.util.function.Function;
 
 public class ModelRetexturizer implements IModel
 {
-    private final ModelResourceLocation templateModelResource;
+    private final ResourceLocation templateModelResource;
     private final ResourceLocation textureResource;
     private final IModelRetexturizerMap textureMap;
 
-    public ModelRetexturizer( ModelResourceLocation templateModelResource , ResourceLocation textureResource )
+    public ModelRetexturizer( ResourceLocation templateModelResource , ResourceLocation textureResource )
     {
         this.templateModelResource = templateModelResource;
         this.textureMap = null;
         this.textureResource = textureResource;
     }
 
-    public ModelRetexturizer( ModelResourceLocation templateModelResource , IModelRetexturizerMap textureMap )
+    public ModelRetexturizer( ResourceLocation templateModelResource , IModelRetexturizerMap textureMap )
     {
         this.templateModelResource = templateModelResource;
         this.textureMap = textureMap;

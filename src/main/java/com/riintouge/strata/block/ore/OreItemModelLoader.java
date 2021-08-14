@@ -1,19 +1,12 @@
 package com.riintouge.strata.block.ore;
 
-import com.google.common.collect.ImmutableMap;
 import com.riintouge.strata.Strata;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ModelBlock;
+import com.riintouge.strata.item.StrataItemModel;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ItemLayerModel;
 
-import java.util.ArrayList;
-
-// TODO: Adjust this class to accept and create flat and full block models depending on overlay transparency.
-// e.g. fully opaque textures become blocks while anything else is rendered as a flat item.
 public class OreItemModelLoader implements ICustomModelLoader
 {
     private static final String ModelResourceBasePath = "models/item/";
@@ -33,19 +26,8 @@ public class OreItemModelLoader implements ICustomModelLoader
     {
         System.out.println( String.format( "OreItemModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
-        ImmutableMap.Builder< String , String > textures = ImmutableMap.builder();
         String oreName = modelLocation.getResourcePath().replaceFirst( ModelResourceBasePath , "" );
-        textures.put( "layer0" , OreItemTextureManager.getTextureLocation( oreName ).toString() );
-
-        ModelBlock blockModel = new ModelBlock(
-            new ResourceLocation( "item/generated" ),
-            new ArrayList<>(),
-            textures.build(),
-            true,
-            true,
-            ItemCameraTransforms.DEFAULT,
-            new ArrayList<>() );
-        return new ItemLayerModel( blockModel );
+        return new StrataItemModel( OreItemTextureManager.getTextureLocation( oreName ) );
     }
 
     // IResourceManagerReloadListener overrides
