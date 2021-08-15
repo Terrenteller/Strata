@@ -580,7 +580,9 @@ public class OreBlock extends BlockFalling
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
         IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
-        return hostProperties != null ? hostProperties.soundType() : oreInfo.soundType();
+        return hostProperties != null ?
+            ( RANDOM.nextBoolean() ? hostProperties.soundType() : oreInfo.soundType() )
+            : oreInfo.soundType();
     }
 
     @Override
