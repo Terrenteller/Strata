@@ -22,9 +22,10 @@ public class Strata
 
     public static final StrataBlocksTab BLOCK_TAB = new StrataBlocksTab();
     public static final StrataBuildingBlocksTab BUILDING_BLOCK_TAB = new StrataBuildingBlocksTab();
+    public static final StrataMiscObjectsTab MISC_BLOCK_TAB = new StrataMiscObjectsTab();
+    public static final StrataBlockFragmentsTab BLOCK_FRAGMENT_TAB = new StrataBlockFragmentsTab();
     public static final StrataOreBlocksTab ORE_BLOCK_TAB = new StrataOreBlocksTab();
     public static final StrataOreItemsTab ORE_ITEM_TAB = new StrataOreItemsTab();
-    public static final StrataMiscItemsTab MISC_ITEM_TAB = new StrataMiscItemsTab();
 
     @Mod.Instance( modid )
     public static Strata instance = new Strata();

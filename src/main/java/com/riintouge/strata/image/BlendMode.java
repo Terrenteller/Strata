@@ -31,7 +31,8 @@ public enum BlendMode
     // C = B < 128 ? ( 2 * A * B / 255 ) : 255 - 2 * ( 255 - A ) * ( 255 - B ) / 255
     public static int normal( int top , float opacity , int bottom )
     {
-        final int topAlpha = (int)( ( ( top >>> 24 ) & 0xFF ) * ( opacity / 100.0f ) );
+        final float opacityN = opacity / 100.0f;
+        final int topAlpha = (int)( ( ( top >>> 24 ) & 0xFF ) * opacityN );
         final int topRed   =          ( top >>> 16 ) & 0xFF;
         final int topGreen =          ( top >>>  8 ) & 0xFF;
         final int topBlue  =            top          & 0xFF;
@@ -69,7 +70,7 @@ public enum BlendMode
         final float bottomGreen = ( ( bottom >>>  8 ) & 0xFF ) / 255.0f;
         final float bottomBlue  = (   bottom          & 0xFF ) / 255.0f;
 
-        final int targetAlpha = clamp( 255.0f * ( topAlpha                                          + ( 1.0f - topAlpha ) * bottomAlpha ) );
+        final int targetAlpha = clamp( 255.0f * bottomAlpha );
         final int targetRed   = clamp( 255.0f * ( topAlpha * ( Math.max( topRed   , bottomRed   ) ) + ( 1.0f - topAlpha ) * bottomRed   ) );
         final int targetGreen = clamp( 255.0f * ( topAlpha * ( Math.max( topGreen , bottomGreen ) ) + ( 1.0f - topAlpha ) * bottomGreen ) );
         final int targetBlue  = clamp( 255.0f * ( topAlpha * ( Math.max( topBlue  , bottomBlue  ) ) + ( 1.0f - topAlpha ) * bottomBlue  ) );
@@ -95,7 +96,7 @@ public enum BlendMode
         final float bottomGreen = ( ( bottom >>>  8 ) & 0xFF ) / 255.0f;
         final float bottomBlue  = (   bottom          & 0xFF ) / 255.0f;
 
-        final int targetAlpha = clamp( 255.0f * ( topAlpha                                          + ( 1.0f - topAlpha ) * bottomAlpha ) );
+        final int targetAlpha = clamp( 255.0f * bottomAlpha );
         final int targetRed   = clamp( 255.0f * ( topAlpha * ( Math.min( topRed   , bottomRed   ) ) + ( 1.0f - topAlpha ) * bottomRed   ) );
         final int targetGreen = clamp( 255.0f * ( topAlpha * ( Math.min( topGreen , bottomGreen ) ) + ( 1.0f - topAlpha ) * bottomGreen ) );
         final int targetBlue  = clamp( 255.0f * ( topAlpha * ( Math.min( topBlue  , bottomBlue  ) ) + ( 1.0f - topAlpha ) * bottomBlue  ) );

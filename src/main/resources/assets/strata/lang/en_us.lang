@@ -2,9 +2,10 @@
 
 itemGroup.strataBlocksTab=Strata Blocks
 itemGroup.strataBuildingBlocksTab=Strata Building Blocks
+itemGroup.strataMiscObjectsTab=Strata Misc. Objects
+itemGroup.strataBlockFragmentsTab=Strata Block Fragments
 itemGroup.strataOreBlocksTab=Strata Ore Blocks
 itemGroup.strataOreItemsTab=Strata Ore Items
-itemGroup.strataMiscItemsTab=Strata Misc. Items
 
 # Clay
 

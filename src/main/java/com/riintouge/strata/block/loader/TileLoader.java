@@ -38,6 +38,8 @@ public class TileLoader
     private String tileSetName;
     private TileType type;
     private MetaResourceLocation equivalentItemResourceLocation;
+    private List< LayeredTextureLayer > fragmentTextureLayers;
+    private MetaResourceLocation equivalentFragmentItemResourceLocation;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainedPlantTypesOfBlock;
 
@@ -92,7 +94,7 @@ public class TileLoader
             else if( line.charAt( 0 ) != '#' )
             {
                 String[] kv = Util.splitKV( line );
-                meaningfulLineProcessed = processKeyValue( kv[ 0 ] , kv[ 1 ] );
+                meaningfulLineProcessed |= processKeyValue( kv[ 0 ] , kv[ 1 ] );
             }
         }
         buffer.close();
@@ -152,6 +154,18 @@ public class TileLoader
                 String[] values = value.split( " " );
                 int meta = values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0;
                 equivalentItemResourceLocation = new MetaResourceLocation( values[ 0 ] , meta );
+                return true;
+            }
+            case "fragmentTexture":
+            {
+                fragmentTextureLayers = parseTextureLayers( value );
+                return true;
+            }
+            case "fragmentConvertsTo":
+            {
+                String[] values = value.split( " " );
+                int meta = values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0;
+                equivalentFragmentItemResourceLocation = new MetaResourceLocation( values[ 0 ] , meta );
                 return true;
             }
             case "sustains":
@@ -306,6 +320,8 @@ public class TileLoader
                 burnTime,
                 textureMap,
                 equivalentItemResourceLocation,
+                fragmentTextureLayers,
+                equivalentFragmentItemResourceLocation,
                 sustainedPlantTypes,
                 sustainedPlantTypesOfBlock );
 
@@ -379,6 +395,8 @@ public class TileLoader
         tileSetName = "";
         type = null;
         equivalentItemResourceLocation = null;
+        fragmentTextureLayers = null;
+        equivalentFragmentItemResourceLocation = null;
         sustainedPlantTypes = null;
         sustainedPlantTypesOfBlock = null;
 

@@ -100,7 +100,6 @@ public class LayeredTexture extends TextureAtlasSprite
 
             this.clearFramesTextureData();
             this.framesTextureData.add( pixels );
-
         }
 
         // What does it mean for this to be stitched or not?

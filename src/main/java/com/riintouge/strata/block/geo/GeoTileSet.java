@@ -23,6 +23,7 @@ import java.util.Map;
 public class GeoTileSet implements IForgeRegistrable
 {
     private final String DefaultModelVariant = null;
+    private final String DefaultFragmentVariant = null; // Doesn't actually do anything because items ignore it
     // Should we try to get properties from the default block state instead?
     private final String DefaultStairModelVariant = "facing=east,half=bottom,shape=straight";
     private final String DefaultSlabModelVariant = "half=bottom,variant=default";
@@ -33,6 +34,7 @@ public class GeoTileSet implements IForgeRegistrable
 
     protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
     protected Map< TileType , Item > itemMap = new HashMap<>();
+    protected Map< TileType , GeoItemFragment > fragmentMap = new HashMap<>();
     protected Map< TileType , GeoBlockStairs > stairsMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabMap = new HashMap<>();
     protected Map< TileType , GeoBlockSlab > slabsMap = new HashMap<>();
@@ -144,6 +146,13 @@ public class GeoTileSet implements IForgeRegistrable
             itemMap.put( type , item );
             itemRegistry.register( item );
 
+            if( tile.hasFragment() )
+            {
+                GeoItemFragment fragment = new GeoItemFragment( tile );
+                fragmentMap.put( type , fragment );
+                itemRegistry.register( fragment );
+            }
+
             TileType stairType = tile.type().stairType();
             if( stairType != null && stairType.parentType == tile.type() )
             {
@@ -213,11 +222,24 @@ public class GeoTileSet implements IForgeRegistrable
 
             createEquivalentItemConversionRecipe( registryName , item , equivalentItem != null ? equivalentItem : vanillaItemStack );
 
+            Item fragment = fragmentMap.getOrDefault( type , null );
+            if( fragment != null )
+            {
+                GameRegistry.addShapedRecipe(
+                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_block" ),
+                    null,
+                    new ItemStack( item ),
+                    "XX",
+                    "XX",
+                    'X' , fragment );
+
+                ItemStack equivalentFragmentItem = tile.equivalentFragmentItem();
+                if( equivalentFragmentItem != null )
+                    createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tile ) , fragment , equivalentFragmentItem );
+            }
+
             switch( type )
             {
-                case CLAY:
-                    // TODO: Clay ball to block
-                    break;
                 case STONE:
                     Item stoneBrickItem = itemMap.getOrDefault( TileType.STONEBRICK , null );
                     if( stoneBrickItem != null )
@@ -398,6 +420,15 @@ public class GeoTileSet implements IForgeRegistrable
                 Item.REGISTRY.getObject( tile.registryName() ),
                 tile.meta(),
                 new ModelResourceLocation( tile.registryName() , DefaultModelVariant ) );
+
+            GeoItemFragment fragment = fragmentMap.getOrDefault( tile.type() , null );
+            if( fragment != null )
+            {
+                ModelLoader.setCustomModelResourceLocation(
+                    fragment,
+                    tile.meta(),
+                    new ModelResourceLocation( fragment.getRegistryName() , DefaultFragmentVariant ) );
+            }
 
             TileType stairType = tile.type().stairType();
             if( stairType != null )

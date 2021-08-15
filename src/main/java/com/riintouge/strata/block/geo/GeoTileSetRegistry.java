@@ -16,6 +16,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class GeoTileSetRegistry
 {
@@ -26,6 +27,12 @@ public class GeoTileSetRegistry
     private GeoTileSetRegistry()
     {
         ModelLoaderRegistry.registerLoader( new GeoBlockModelLoader() );
+        ModelLoaderRegistry.registerLoader( new GeoItemFragmentModelLoader() );
+    }
+
+    public Set< String > tileSetNames()
+    {
+        return tileSets.keySet();
     }
 
     public void register( GeoTileSet tileSet , String tileSetName )

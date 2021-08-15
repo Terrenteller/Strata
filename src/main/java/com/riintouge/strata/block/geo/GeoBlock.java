@@ -4,6 +4,7 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -114,23 +115,20 @@ public class GeoBlock extends BlockFalling
     @Override
     public Item getItemDropped( IBlockState state , Random rand , int fortune )
     {
+        Item item = null;
+
         try
         {
-            switch( info.type() )
-            {
-                case STONE:
-                    return Item.REGISTRY.getObject( TileType.COBBLE.registryName( info.tileSetName() ) );
-                case CLAY:
-                    // TODO: Drop clay globs
-                default: { }
-            }
+            item = info.type() == TileType.STONE
+                ? Item.REGISTRY.getObject( TileType.COBBLE.registryName( info.tileSetName() ) )
+                : Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( info ) );
         }
         catch( NullPointerException e )
         {
             // No special drop
         }
 
-        return super.getItemDropped( state , rand , fortune );
+        return item != null ? item : super.getItemDropped( state , rand , fortune );
     }
 
     @Override
@@ -145,6 +143,12 @@ public class GeoBlock extends BlockFalling
     {
         if( canFall() )
             super.onBlockAdded( worldIn , pos , state );
+    }
+
+    @Override
+    public int quantityDropped( Random random )
+    {
+        return Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( info ) ) != null ? 4 : 1;
     }
 
     @Override

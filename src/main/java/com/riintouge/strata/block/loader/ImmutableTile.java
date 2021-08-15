@@ -6,6 +6,7 @@ import com.riintouge.strata.block.IModelRetexturizerMap;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
+import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -18,6 +19,7 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class ImmutableTile implements IGeoTileInfo
 {
@@ -34,6 +36,9 @@ public final class ImmutableTile implements IGeoTileInfo
     private int burnTime;
     private MetaResourceLocation equivalentItemResourceLocation;
     private ItemStack equivalentItemStack;
+    private LayeredTextureLayer[] fragmentTextureLayers;
+    private MetaResourceLocation equivalentFragmentItemResourceLocation;
+    private ItemStack equivalentFragmentItemStack;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy;
@@ -52,6 +57,8 @@ public final class ImmutableTile implements IGeoTileInfo
         int burnTime,
         GenericCubeTextureMap textureMap,
         MetaResourceLocation equivalentItem,
+        List< LayeredTextureLayer > fragmentTextureLayers,
+        MetaResourceLocation equivalentFragmentItem,
         ArrayList< EnumPlantType > sustainedPlantTypes,
         ArrayList< MetaResourceLocation > sustainsPlantsSustainedBy )
     {
@@ -68,6 +75,9 @@ public final class ImmutableTile implements IGeoTileInfo
         this.burnTime = burnTime;
         this.genericCubeTextureMap = textureMap;
         this.equivalentItemResourceLocation = equivalentItem;
+        if( fragmentTextureLayers != null )
+            this.fragmentTextureLayers = fragmentTextureLayers.toArray( new LayeredTextureLayer[ fragmentTextureLayers.size() ] );
+        this.equivalentFragmentItemResourceLocation = equivalentFragmentItem;
         this.sustainedPlantTypes = sustainedPlantTypes != null ? sustainedPlantTypes : new ArrayList<>();
         this.sustainsPlantsSustainedByRaw = sustainsPlantsSustainedBy != null ? sustainsPlantsSustainedBy : new ArrayList<>();
     }
@@ -105,11 +115,43 @@ public final class ImmutableTile implements IGeoTileInfo
         if( equivalentItemResourceLocation != null )
         {
             Item equivalentItem = Item.REGISTRY.getObject( equivalentItemResourceLocation.resourceLocation );
-            equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
+            if( equivalentItem != null )
+                equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
             equivalentItemResourceLocation = null;
         }
 
         return equivalentItemStack;
+    }
+
+    @Override
+    public Boolean hasFragment()
+    {
+        return fragmentTextureLayers != null;
+    }
+
+    @Override
+    public LayeredTextureLayer[] fragmentTextureLayers()
+    {
+        return fragmentTextureLayers;
+    }
+
+    @Override
+    public ItemStack equivalentFragmentItem()
+    {
+        // Deferred resolution until reasonably sure the item has been created
+        if( equivalentFragmentItemResourceLocation != null )
+        {
+            if( hasFragment() )
+            {
+                Item equivalentFragmentItem = Item.REGISTRY.getObject( equivalentFragmentItemResourceLocation.resourceLocation );
+                if( equivalentFragmentItem != null )
+                    equivalentFragmentItemStack = new ItemStack( equivalentFragmentItem , 1 , equivalentFragmentItemResourceLocation.meta );
+            }
+
+            equivalentFragmentItemResourceLocation = null;
+        }
+
+        return equivalentFragmentItemStack;
     }
 
     @Override

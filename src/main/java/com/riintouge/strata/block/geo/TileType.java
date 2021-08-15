@@ -179,6 +179,11 @@ public enum TileType
 
         switch( this )
         {
+            case CLAY:
+                vanillaItem = new ItemStack( Blocks.CLAY );
+                break;
+            // TODO: Evaluate GRAVEL when we have a use case
+            // TODO: Not all SANDs are equivalent to vanilla sand
             case STONE:
                 vanillaItem = new ItemStack( Blocks.STONE );
                 break;

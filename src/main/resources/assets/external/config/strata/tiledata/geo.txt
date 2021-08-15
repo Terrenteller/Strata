@@ -4,27 +4,36 @@ generate laterite clay
 host
 hardness 0.6
 texture strata:blocks/clay/laterite
-convertsTo minecraft:clay
+fragmentTexture strata:items/fragment_ball_shadow normal 70 strata:blocks/clay/laterite darken 100 strata:items/fragment_ball_mask normal 100 strata:items/fragment_ball_border
+fragmentConvertsTo minecraft:clay_ball
 
-ore sodium_bentonite
-type clay
-hardness 1.5
+generate sodium_bentonite clay
+host
+hardness 0.6
 texture strata:blocks/clay/sodium_bentonite
+fragmentTexture strata:items/fragment_ball_shadow normal 70 strata:blocks/clay/sodium_bentonite darken 100 strata:items/fragment_ball_mask normal 100 strata:items/fragment_ball_border
+fragmentConvertsTo minecraft:clay_ball
 
-ore calcium_bentonite
-type clay
-hardness 1.5
+generate calcium_bentonite clay
+host
+hardness 0.6
 texture strata:blocks/clay/calcium_bentonite
+fragmentTexture strata:items/fragment_ball_shadow normal 70 strata:blocks/clay/calcium_bentonite darken 100 strata:items/fragment_ball_mask normal 100 strata:items/fragment_ball_border
+fragmentConvertsTo minecraft:clay_ball
 
-ore kaolinite
-type clay
-hardness 1.5
+generate kaolinite clay
+host
+hardness 0.6
 texture strata:blocks/clay/kaolinite
+fragmentTexture strata:items/fragment_ball_shadow normal 70 strata:blocks/clay/kaolinite darken 100 strata:items/fragment_ball_mask normal 100 strata:items/fragment_ball_border
+fragmentConvertsTo minecraft:clay_ball
 
-ore vermiculite
-type clay
-hardness 1.5
+generate vermiculite clay
+host
+hardness 0.6
 texture strata:blocks/clay/vermiculite
+fragmentTexture strata:items/fragment_ball_shadow normal 70 strata:blocks/clay/vermiculite darken 100 strata:items/fragment_ball_mask normal 100 strata:items/fragment_ball_border
+fragmentConvertsTo minecraft:clay_ball
 
 # Ground
 
@@ -34,6 +43,7 @@ hardness 0.5
 sustains Plains
 burnTime 800
 texture strata:blocks/ground/peat
+convertsTo minecraft:dirt 2
 
 # Sand
 

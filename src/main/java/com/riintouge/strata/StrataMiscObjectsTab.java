@@ -5,11 +5,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class StrataMiscItemsTab extends CreativeTabs
+public class StrataMiscObjectsTab extends CreativeTabs
 {
-    public StrataMiscItemsTab()
+    public StrataMiscObjectsTab()
     {
-        super( "strataMiscItemsTab" );
+        super( "strataMiscObjectsTab" );
     }
 
     @Override

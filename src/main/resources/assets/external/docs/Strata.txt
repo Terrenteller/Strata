@@ -49,9 +49,21 @@ Key: texture[Caps|Sides|Up|Down|North|South|East|West]
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:
 	Generate a texture for the block model using an optional array of layers blended onto a required base.
-	Must come after a required "generate" line.
+	Must come after a "generate" line.
 
 Key: convertsTo
+Value: <ResourceLocation> [meta]
+Description:
+	One-way, one-to-one conversion to another item for compatibility purposes.
+
+Key: fragmentTexture
+Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
+Description:
+	Generate a texture for the fragment item using an optional array of layers blended onto a required base.
+	This KV implies a fragment will be created. A dedicated key is redundant.
+	Must come after a "generate" line.
+
+Key: fragmentConvertsTo
 Value: <ResourceLocation> [meta]
 Description:
 	One-way, one-to-one conversion to another item for compatibility purposes.

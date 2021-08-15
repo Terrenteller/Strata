@@ -11,7 +11,7 @@ public class GeoBlockButton extends BlockButtonStone
         ResourceLocation registryName = info.type().buttonType().registryName( info.tileSetName() );
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        setCreativeTab( Strata.MISC_ITEM_TAB );
+        setCreativeTab( Strata.MISC_BLOCK_TAB );
 
         setHarvestLevel( info.harvestTool() , 0 );
         setSoundType( info.soundType() );

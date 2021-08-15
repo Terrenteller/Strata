@@ -18,6 +18,11 @@ public class LayeredTextureLayer
         this( resource , blendMode , 100.0f );
     }
 
+    public LayeredTextureLayer( ResourceLocation resource , float opacity )
+    {
+        this( resource , BlendMode.NORMAL , opacity );
+    }
+
     public LayeredTextureLayer( ResourceLocation resource , BlendMode blendMode , float opacity )
     {
         this.resource = resource;
