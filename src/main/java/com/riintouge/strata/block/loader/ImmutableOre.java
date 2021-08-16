@@ -207,6 +207,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public void stitchTextures( TextureMap textureMap )
     {
-        genericCubeTextureMap.stitchTextures( oreName , textureMap );
+        genericCubeTextureMap.stitchTextures( textureMap );
     }
 }

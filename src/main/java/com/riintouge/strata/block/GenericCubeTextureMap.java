@@ -72,7 +72,7 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         layerLayers[ facing.ordinal() ] = layers;
     }
 
-    public void stitchTextures( String registryName , TextureMap textureMap )
+    public void stitchTextures( TextureMap textureMap )
     {
         for( Layer layer : Layer.values() )
         {

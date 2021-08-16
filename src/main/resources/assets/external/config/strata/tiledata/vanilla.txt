@@ -4,173 +4,187 @@ host minecraft:stone
 type stone
 hardness 1.5
 resistance 10
-textureResource minecraft:blocks/stone
+texture minecraft:blocks/stone
 
 host minecraft:stone 1
 type stone
 hardness 1.5
 resistance 10
-textureResource minecraft:blocks/stone_granite
+texture minecraft:blocks/stone_granite
 
 host minecraft:stone 3
 type stone
 hardness 1.5
 resistance 10
-textureResource minecraft:blocks/stone_diorite
+texture minecraft:blocks/stone_diorite
 
 host minecraft:stone 5
 type stone
 hardness 1.5
 resistance 10
-textureResource minecraft:blocks/stone_andesite
+texture minecraft:blocks/stone_andesite
 
 host minecraft:dirt
 type ground
 hardness 0.5
-textureResource minecraft:blocks/dirt
+texture minecraft:blocks/dirt
 
 host minecraft:dirt 1
 type ground
 hardness 0.5
-textureResource minecraft:blocks/coarse_dirt
+texture minecraft:blocks/coarse_dirt
 
 host minecraft:sand
 type sand
 hardness 0.5
-textureResource minecraft:blocks/sand
+texture minecraft:blocks/sand
 
 host minecraft:sand 1
 type sand
 hardness 0.5
-textureResource minecraft:blocks/red_sand
+texture minecraft:blocks/red_sand
 
 # gravel has no possibility of surface tension like sand.
 # This makes it weird as a host when it can't fall.
 host minecraft:gravel
 type gravel
 hardness 0.6
-textureResource minecraft:blocks/gravel
+texture minecraft:blocks/gravel
+
+host minecraft:sandstone
+type stone
+hardness 0.8
+texture minecraft:blocks/sandstone_normal
+textureUp minecraft:blocks/sandstone_top
+textureDown minecraft:blocks/sandstone_bottom
 
 host minecraft:clay
 type ground
 hardness 0.6
-textureResource minecraft:blocks/clay
+texture minecraft:blocks/clay
 
 host minecraft:hardened_clay
 type stone
 hardness 1.25
-textureResource minecraft:blocks/hardened_clay
+texture minecraft:blocks/hardened_clay
 
 host minecraft:netherrack
 type stone
 hardness 0.4
-textureResource minecraft:blocks/netherrack
+texture minecraft:blocks/netherrack
 
 host minecraft:soul_sand
 type sand
 hardness 0.5
-textureResource minecraft:blocks/soul_sand
+texture minecraft:blocks/soul_sand
 
 host minecraft:end_stone
 type stone
 hardness 3.0
-textureResource minecraft:blocks/end_stone
+texture minecraft:blocks/end_stone
 
 host minecraft:stained_hardened_clay
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_white
+texture minecraft:blocks/hardened_clay_stained_white
 
 host minecraft:stained_hardened_clay 1
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_orange
+texture minecraft:blocks/hardened_clay_stained_orange
 
 host minecraft:stained_hardened_clay 2
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_magenta
+texture minecraft:blocks/hardened_clay_stained_magenta
 
 host minecraft:stained_hardened_clay 3
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_light_blue
+texture minecraft:blocks/hardened_clay_stained_light_blue
 
 host minecraft:stained_hardened_clay 4
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_yellow
+texture minecraft:blocks/hardened_clay_stained_yellow
 
 host minecraft:stained_hardened_clay 5
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_lime
+texture minecraft:blocks/hardened_clay_stained_lime
 
 host minecraft:stained_hardened_clay 6
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_pink
+texture minecraft:blocks/hardened_clay_stained_pink
 
 host minecraft:stained_hardened_clay 7
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_gray
+texture minecraft:blocks/hardened_clay_stained_gray
 
 host minecraft:stained_hardened_clay 8
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_silver
+texture minecraft:blocks/hardened_clay_stained_silver
 
 host minecraft:stained_hardened_clay 9
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_cyan
+texture minecraft:blocks/hardened_clay_stained_cyan
 
 host minecraft:stained_hardened_clay 10
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_purple
+texture minecraft:blocks/hardened_clay_stained_purple
 
 host minecraft:stained_hardened_clay 11
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_blue
+texture minecraft:blocks/hardened_clay_stained_blue
 
 host minecraft:stained_hardened_clay 12
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_brown
+texture minecraft:blocks/hardened_clay_stained_brown
 
 host minecraft:stained_hardened_clay 13
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_green
+texture minecraft:blocks/hardened_clay_stained_green
 
 host minecraft:stained_hardened_clay 14
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_red
+texture minecraft:blocks/hardened_clay_stained_red
 
 host minecraft:stained_hardened_clay 15
 type stone
 hardness 1.25
 resistance 7.0
-textureResource minecraft:blocks/hardened_clay_stained_black
+texture minecraft:blocks/hardened_clay_stained_black
+
+host minecraft:red_sandstone
+type stone
+hardness 0.8
+texture minecraft:blocks/red_sandstone_normal
+textureUp minecraft:blocks/red_sandstone_top
+textureDown minecraft:blocks/red_sandstone_bottom
 
 # Ores
 

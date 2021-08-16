@@ -1,16 +1,16 @@
 package com.riintouge.strata.block.loader;
 
+import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IFacingTextureMap;
+import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
-
-public final class ImmutableHost implements IHostInfo
+public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 {
     private ResourceLocation registryName;
     private int meta;
@@ -20,36 +20,19 @@ public final class ImmutableHost implements IHostInfo
     private int harvestLevel;
     private float hardness;
     private float explosionResistance;
-    private OmniFacingTextureMap textureMap;
+    private GenericCubeTextureMap genericCubeTextureMap;
     private Integer particleFallingColor = null;
-
-    private class OmniFacingTextureMap implements IFacingTextureMap
-    {
-        private ResourceLocation textureResource;
-
-        public OmniFacingTextureMap( ResourceLocation textureResource )
-        {
-            this.textureResource = textureResource;
-        }
-
-        @Nonnull
-        @Override
-        public ResourceLocation getOrDefault( EnumFacing facing )
-        {
-            return textureResource;
-        }
-    }
 
     public ImmutableHost(
         ResourceLocation registryName,
         int meta,
-        ResourceLocation textureResource,
         Material material,
         SoundType soundType,
         String harvestTool,
         int harvestLevel,
         float hardness,
-        float explosionResistance )
+        float explosionResistance,
+        GenericCubeTextureMap textureMap )
     {
         this.registryName = registryName;
         this.meta = meta;
@@ -59,7 +42,7 @@ public final class ImmutableHost implements IHostInfo
         this.harvestLevel = harvestLevel;
         this.hardness = hardness;
         this.explosionResistance = explosionResistance;
-        this.textureMap = new OmniFacingTextureMap( textureResource );
+        this.genericCubeTextureMap = textureMap;
     }
 
     // IHostInfo overrides
@@ -79,7 +62,7 @@ public final class ImmutableHost implements IHostInfo
     @Override
     public IFacingTextureMap facingTextureMap()
     {
-        return textureMap;
+        return genericCubeTextureMap;
     }
 
     @Override
@@ -126,5 +109,13 @@ public final class ImmutableHost implements IHostInfo
     public float explosionResistance()
     {
         return explosionResistance;
+    }
+
+    // IForgeRegistrable overrides
+
+    @Override
+    public void stitchTextures( TextureMap textureMap )
+    {
+        genericCubeTextureMap.stitchTextures( textureMap );
     }
 }

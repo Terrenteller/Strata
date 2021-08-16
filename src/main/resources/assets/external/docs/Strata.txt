@@ -76,11 +76,6 @@ Description:
     Only applies to primary types.
     Disclaimer: This will not work for everything due to world caching Strata cannot intercept.
 
-Key: textureResource
-Value: <ResourceLocation>
-Description:
-	Location of an existing texture.
-
 Key: ore
 Value: <name> [blockOreDictionaryName] [itemOreDictionaryName]
 Description:

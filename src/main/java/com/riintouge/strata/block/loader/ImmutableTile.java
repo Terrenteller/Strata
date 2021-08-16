@@ -251,6 +251,6 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public void stitchTextures( TextureMap textureMap )
     {
-        genericCubeTextureMap.stitchTextures( registryName.getResourcePath() , textureMap );
+        genericCubeTextureMap.stitchTextures( textureMap );
     }
 }

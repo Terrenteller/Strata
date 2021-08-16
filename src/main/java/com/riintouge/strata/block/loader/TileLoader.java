@@ -55,7 +55,6 @@ public class TileLoader
     private String bonusExpExpr;
 
     // Shared
-    private ResourceLocation textureResource;
     private GenericCubeTextureMap textureMap;
 
     public TileLoader()
@@ -110,9 +109,6 @@ public class TileLoader
     {
         switch( key )
         {
-            case "textureResource":
-                textureResource = new ResourceLocation( value );
-                return true;
             case "generate":
             {
                 String[] values = value.split( " " );
@@ -262,7 +258,14 @@ public class TileLoader
                 layers.toArray( layerArray );
                 // FIXME: Using tileSetName, oreName, and type here violates the assumption that lines can be in any order
                 if( textureMap == null )
-                    textureMap = new GenericCubeTextureMap( type.registryName( tileSetName.isEmpty() ? oreName : tileSetName ).getResourcePath() );
+                {
+                    String registryName = !tileSetName.isEmpty()
+                        ? type.registryName( tileSetName ).getResourcePath()
+                        : oreName != null && !oreName.isEmpty()
+                            ? type.registryName( oreName ).getResourcePath()
+                            : String.format( "%s_%d" , hostRegistryName.getResourcePath() , hostMeta );
+                    textureMap = new GenericCubeTextureMap( registryName );
+                }
                 textureMap.set( facing , layerArray );
                 return true;
             }
@@ -336,13 +339,13 @@ public class TileLoader
             ImmutableHost host = new ImmutableHost(
                 hostRegistryName,
                 hostMeta,
-                textureResource,
                 material,
                 soundType,
                 harvestTool,
                 harvestLevel,
                 hardness,
-                explosionResistance != null ? explosionResistance : 5.0f * hardness );
+                explosionResistance != null ? explosionResistance : 5.0f * hardness,
+                textureMap );
 
             HostRegistry.INSTANCE.register( host.registryName() , host.meta() , host );
         }
@@ -412,7 +415,6 @@ public class TileLoader
         bonusExpExpr = null;
 
         // Shared
-        textureResource = null;
         textureMap = null;
     }
 }
