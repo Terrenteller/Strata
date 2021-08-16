@@ -4,6 +4,7 @@ import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IFacingTextureMap;
 import com.riintouge.strata.block.IModelRetexturizerMap;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
@@ -43,6 +44,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy;
     private GenericCubeTextureMap genericCubeTextureMap;
+    private Integer particleFallingColor = null;
 
     public ImmutableTile(
         String tileSetName,
@@ -234,6 +236,14 @@ public final class ImmutableTile implements IGeoTileInfo
     public IModelRetexturizerMap modelTextureMap()
     {
         return genericCubeTextureMap;
+    }
+
+    @Override
+    public int particleFallingColor()
+    {
+        return particleFallingColor != null
+            ? particleFallingColor
+            : ( particleFallingColor = HostRegistry.getParticleFallingColor( this ) );
     }
 
     // IForgeRegistrable overrides

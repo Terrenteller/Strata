@@ -13,4 +13,6 @@ public interface IHostInfo extends IGenericBlockProperties
     }
 
     IFacingTextureMap facingTextureMap();
+
+    int particleFallingColor();
 }

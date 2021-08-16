@@ -5,6 +5,7 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGenericBlockProperties;
 import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -184,6 +185,7 @@ public class OreBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public int getDustColor( IBlockState state )
     {
+        // We have to rely on randomDisplayTick() to set the particle color because state is clean
         return particleColor.get() != null ? particleColor.get() : super.getDustColor( state );
     }
 
@@ -195,24 +197,12 @@ public class OreBlock extends BlockFalling
         if( !canFallThrough( worldIn.getBlockState( pos.down() ) ) )
             return;
 
-        // TODO: Use a cached value on the host
         IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
         // It would be fancy to check if the host block is BlockFalling, but all Strata rocks are BlockFalling
         if( hostInfo == null || hostInfo.material() != Material.SAND )
             return;
 
-        ResourceLocation textureResourceLocation = hostInfo.facingTextureMap().getOrDefault( EnumFacing.DOWN );
-        TextureAtlasSprite texture = Minecraft.getMinecraft()
-            .getTextureMapBlocks()
-            .getTextureExtry( textureResourceLocation.toString() );
-
-        if( texture != null )
-        {
-            // Use the first pixel of the smallest mipmap as the average color
-            int[][] frameData = texture.getFrameTextureData( 0 );
-            particleColor.set( frameData[ frameData.length - 1 ][ 0 ] );
-        }
-
+        particleColor.set( hostInfo.particleFallingColor() );
         super.randomDisplayTick( stateIn , worldIn , pos , rand );
     }
 

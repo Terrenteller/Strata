@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.block.IFacingTextureMap;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -20,6 +21,7 @@ public final class ImmutableHost implements IHostInfo
     private float hardness;
     private float explosionResistance;
     private OmniFacingTextureMap textureMap;
+    private Integer particleFallingColor = null;
 
     private class OmniFacingTextureMap implements IFacingTextureMap
     {
@@ -78,6 +80,14 @@ public final class ImmutableHost implements IHostInfo
     public IFacingTextureMap facingTextureMap()
     {
         return textureMap;
+    }
+
+    @Override
+    public int particleFallingColor()
+    {
+        return particleFallingColor != null
+            ? particleFallingColor
+            : ( particleFallingColor = HostRegistry.getParticleFallingColor( this ) );
     }
 
     // IGenericBlockProperties overrides
