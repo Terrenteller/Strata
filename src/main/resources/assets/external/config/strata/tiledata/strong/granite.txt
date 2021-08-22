@@ -1,0 +1,32 @@
+generate granite stone
+host
+harvestLevel 1
+hardness 2.0
+texture strata:blocks/stone/strong/granite
+convertsTo minecraft:stone 1
+
+generate granite cobble
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/cobble normal 87 strata:blocks/stone/strong/granite
+
+generate granite cobblemossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 87 strata:blocks/stone/strong/granite
+
+generate granite stonebrick
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 28 strata:blocks/stone/strong/granite
+
+generate granite stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 28 strata:blocks/stone/strong/granite
+
+generate granite stonepolished
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/polished_highlight lighten 21 strata:overlays/polished_shadow darken 28 strata:blocks/stone/strong/granite
+convertsTo minecraft:stone 2

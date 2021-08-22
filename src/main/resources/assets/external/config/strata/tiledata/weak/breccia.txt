@@ -1,0 +1,24 @@
+generate breccia stone
+host
+hardness 1.0
+texture strata:blocks/stone/weak/breccia
+
+generate breccia cobble
+hardness 1.5
+texture strata:overlays/cobble normal 86 strata:blocks/stone/weak/breccia
+
+generate breccia cobblemossy
+hardness 1.5
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 86 strata:blocks/stone/weak/breccia
+
+generate breccia stonebrick
+hardness 1.0
+texture strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 30 strata:blocks/stone/weak/breccia
+
+generate breccia stonebrickmossy
+hardness 1.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 30 strata:blocks/stone/weak/breccia
+
+generate breccia stonepolished
+hardness 1.0
+texture strata:overlays/polished_highlight lighten 21 strata:overlays/polished_shadow darken 30 strata:blocks/stone/weak/breccia

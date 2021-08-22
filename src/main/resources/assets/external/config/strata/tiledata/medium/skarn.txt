@@ -1,0 +1,30 @@
+generate skarn stone
+host
+hardness 1.5
+texture strata:blocks/stone/medium/skarn
+textureCaps strata:blocks/stone/medium/skarn_caps
+
+generate skarn cobble
+hardness 2.0
+texture strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn
+textureCaps strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn_caps
+
+generate skarn cobblemossy
+hardness 2.0
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn
+textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn_caps
+
+generate skarn stonebrick
+hardness 1.5
+texture strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn
+textureCaps strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn_caps
+
+generate skarn stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn_caps
+
+generate skarn stonepolished
+hardness 1.5
+texture strata:overlays/polished_highlight lighten 23 strata:overlays/polished_shadow darken 28 strata:blocks/stone/medium/skarn
+textureCaps strata:overlays/polished_highlight lighten 23 strata:overlays/polished_shadow darken 28 strata:blocks/stone/medium/skarn_caps

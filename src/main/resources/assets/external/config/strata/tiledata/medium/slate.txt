@@ -1,0 +1,24 @@
+generate slate stone
+host
+hardness 1.5
+texture strata:blocks/stone/medium/slate
+
+generate slate cobble
+hardness 2.0
+texture strata:overlays/cobble normal 94 strata:blocks/stone/medium/slate
+
+generate slate cobblemossy
+hardness 2.0
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 94 strata:blocks/stone/medium/slate
+
+generate slate stonebrick
+hardness 1.5
+texture strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/slate
+
+generate slate stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/slate
+
+generate slate stonepolished
+hardness 1.5
+texture strata:overlays/polished_highlight lighten 10 strata:overlays/polished_shadow darken 28 strata:blocks/stone/medium/slate

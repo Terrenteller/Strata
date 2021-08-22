@@ -1,0 +1,30 @@
+generate quartzite stone
+host
+harvestLevel 1
+hardness 2.5
+texture strata:blocks/stone/very_strong/quartzite
+
+generate quartzite cobble
+harvestLevel 1
+hardness 3.0
+texture strata:overlays/cobble normal 95 strata:blocks/stone/very_strong/quartzite
+
+generate quartzite cobblemossy
+harvestLevel 1
+hardness 3.0
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/very_strong/quartzite
+
+generate quartzite stonebrick
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/brick_highlight lighten 27 strata:overlays/brick_shadow darken 34 strata:blocks/stone/very_strong/quartzite
+
+generate quartzite stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 27 strata:overlays/brick_shadow darken 34 strata:blocks/stone/very_strong/quartzite
+
+generate quartzite stonepolished
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/polished_highlight lighten 27 strata:overlays/polished_shadow darken 34 strata:blocks/stone/very_strong/quartzite

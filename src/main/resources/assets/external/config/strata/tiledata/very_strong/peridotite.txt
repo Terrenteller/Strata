@@ -1,0 +1,30 @@
+generate peridotite stone
+host
+harvestLevel 1
+hardness 2.5
+texture strata:blocks/stone/very_strong/peridotite
+
+generate peridotite cobble
+harvestLevel 1
+hardness 3.0
+texture strata:overlays/cobble normal 96 strata:blocks/stone/very_strong/peridotite
+
+generate peridotite cobblemossy
+harvestLevel 1
+hardness 3.0
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 96 strata:blocks/stone/very_strong/peridotite
+
+generate peridotite stonebrick
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 31 strata:blocks/stone/very_strong/peridotite
+
+generate peridotite stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 31 strata:blocks/stone/very_strong/peridotite
+
+generate peridotite stonepolished
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/polished_highlight lighten 21 strata:overlays/polished_shadow darken 31 strata:blocks/stone/very_strong/peridotite

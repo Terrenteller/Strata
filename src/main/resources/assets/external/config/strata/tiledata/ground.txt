@@ -1,0 +1,7 @@
+generate peat ground
+host
+hardness 0.5
+sustains Plains
+burnTime 800
+texture strata:blocks/ground/peat
+convertsTo minecraft:dirt 2

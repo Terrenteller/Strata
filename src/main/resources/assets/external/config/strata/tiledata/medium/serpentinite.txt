@@ -1,0 +1,24 @@
+generate serpentinite stone
+host
+hardness 1.5
+texture strata:blocks/stone/medium/serpentinite
+
+generate serpentinite cobble
+hardness 2.0
+texture strata:overlays/cobble normal 100 strata:blocks/stone/medium/serpentinite
+
+generate serpentinite cobblemossy
+hardness 2.0
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/medium/serpentinite
+
+generate serpentinite stonebrick
+hardness 1.5
+texture strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 36 strata:blocks/stone/medium/serpentinite
+
+generate serpentinite stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 36 strata:blocks/stone/medium/serpentinite
+
+generate serpentinite stonepolished
+hardness 1.5
+texture strata:overlays/polished_highlight lighten 19 strata:overlays/polished_shadow darken 36 strata:blocks/stone/medium/serpentinite

@@ -20,7 +20,7 @@ public class Blocks
         System.out.println( "Blocks::registerBlocks()" );
 
         TileLoader tileLoader = new TileLoader();
-        for( String path : Config.INSTANCE.allIn( Strata.modid + "/tiledata" , false ) )
+        for( String path : Config.INSTANCE.allIn( Strata.modid + "/tiledata" , true ) )
             tileLoader.loadFile( path );
 
         GameRegistry.registerTileEntity(

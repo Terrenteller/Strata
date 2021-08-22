@@ -1,0 +1,45 @@
+generate basaltic_mineral_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/basaltic_mineral_sand
+
+generate cassiterite_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/cassiterite_sand
+
+generate garnet_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/garnet_sand
+
+generate granitic_mineral_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/granitic_mineral_sand
+
+generate quartz_sand sand
+hardness 1.0
+sustains Beach Desert
+texture strata:blocks/sand/quartz_sand
+
+generate volcanic_ash sand
+hardness 1.0
+texture strata:blocks/sand/volcanic_ash
+
+generate glauconite sand
+hardness 1.0
+texture strata:blocks/sand/glauconite
+
+generate diatomite sand
+hardness 1.0
+texture strata:blocks/sand/diatomite
+textureCaps strata:blocks/sand/diatomite_caps
+
+generate sulfur sand
+hardness 1.0
+texture strata:blocks/sand/sulfur
+
+generate oil_sand sand
+hardness 1.0
+texture strata:blocks/sand/oil_sand

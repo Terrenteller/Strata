@@ -1,0 +1,38 @@
+generate sandstone stone
+host
+harvestLevel 1
+hardness 2.0
+texture strata:blocks/stone/strong/sandstone
+textureCaps strata:blocks/stone/strong/sandstone_caps
+convertsTo minecraft:sandstone
+
+generate sandstone cobble
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone
+textureCaps strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone_caps
+
+generate sandstone cobblemossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone
+textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone_caps
+
+generate sandstone stonebrick
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone
+textureCaps strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+
+generate sandstone stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+
+generate sandstone stonepolished
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/polished_highlight lighten 39 strata:overlays/polished_shadow darken 29 strata:blocks/stone/strong/sandstone
+textureCaps strata:overlays/polished_highlight lighten 39 strata:overlays/polished_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+convertsTo minecraft:sandstone 2

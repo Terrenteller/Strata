@@ -1,0 +1,30 @@
+generate rhyolite stone
+host
+harvestLevel 1
+hardness 2.0
+texture strata:blocks/stone/strong/rhyolite
+
+generate rhyolite cobble
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/cobble normal 78 strata:blocks/stone/strong/rhyolite
+
+generate rhyolite cobblemossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 78 strata:blocks/stone/strong/rhyolite
+
+generate rhyolite stonebrick
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/rhyolite
+
+generate rhyolite stonebrickmossy
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/rhyolite
+
+generate rhyolite stonepolished
+harvestLevel 1
+hardness 2.0
+texture strata:overlays/polished_highlight lighten 59 strata:overlays/polished_shadow darken 34 strata:blocks/stone/strong/rhyolite

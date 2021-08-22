@@ -1,0 +1,32 @@
+generate diorite stone
+host
+harvestLevel 1
+hardness 2.5
+texture strata:blocks/stone/very_strong/diorite
+convertsTo minecraft:stone 3
+
+generate diorite cobble
+harvestLevel 1
+hardness 3.0
+texture strata:overlays/cobble normal 100 strata:blocks/stone/very_strong/diorite
+
+generate diorite cobblemossy
+harvestLevel 1
+hardness 3.0
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/very_strong/diorite
+
+generate diorite stonebrick
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 41 strata:blocks/stone/very_strong/diorite
+
+generate diorite stonebrickmossy
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 41 strata:blocks/stone/very_strong/diorite
+
+generate diorite stonepolished
+harvestLevel 1
+hardness 2.5
+texture strata:overlays/polished_highlight lighten 36 strata:overlays/polished_shadow darken 41 strata:blocks/stone/very_strong/diorite
+convertsTo minecraft:stone 4
