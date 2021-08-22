@@ -3,78 +3,23 @@
 Information about each tile consists of a contiguous block of non-empty lines
 in any file directly under `config/strata/tiledata`. Each line works like a
 keyvalue or a key with multiple values. Line order within a block does not
-matter unless otherwise noted.
+matter unless stated otherwise.
 
 <> values are required. [] values are optional.
 
 --- Keyvalues ---
 
 Key: generate
-Value: <name> <TileType>
+Value: <tileSetName> <TileType>
 Description:
-	Register a block of type to be generated.
-	Drops and recipes are determined using types that share a name.
+    Register a tile set's tile type to be generated.
+	Recipes, drops, and other properties are determined using tiles in the same set.
 
 Key: host
 Value: <ResourceLocation> [meta]
 Description:
-	Register the block as one from which ores may acquire various properties.
-	Value is ignored with generate.
-
-Key: type
-Value: <TileType>
-Description:
-	Controls block properties such as preferred harvest tool and interaction sounds.
-	Value is redundant with generate.
-
-Key: harvestLevel
-Value: <int>
-Default: 0
-Description:
-	Level of tool required for harvest.
-
-Key: hardness
-Value: <float>
-Default: 0.0
-Description:
-	Harvest difficulty.
-
-Key: resistance
-Value: <float>
-Default: 1.7 * hardness if ore, 5.0 * hardness otherwise
-Description:
-	Explosion resistance.
-
-Key: texture[Caps|Sides|Up|Down|North|South|East|West]
-Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
-Description:
-	Generate a texture for the block model using an optional array of layers blended onto a required base.
-	Must come after a "generate" line.
-
-Key: convertsTo
-Value: <ResourceLocation> [meta]
-Description:
-	One-way, one-to-one conversion to another item for compatibility purposes.
-
-Key: fragmentTexture
-Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
-Description:
-	Generate a texture for the fragment item using an optional array of layers blended onto a required base.
-	This KV implies a fragment will be created. A dedicated key is redundant.
-	Must come after a "generate" line.
-
-Key: fragmentConvertsTo
-Value: <ResourceLocation> [meta]
-Description:
-	One-way, one-to-one conversion to another item for compatibility purposes.
-
-Key: sustains
-Value: <<EnumPlantType>|<ResourceLocation> [meta]>+
-Description:
-    Allows the block to sustain EnumPlantType(s) and/or what is sustained by other block(s).
-    Multiple values are allowed. EnumPlantType order does not matter but ResourceLocation order does.
-    Only applies to primary types.
-    Disclaimer: This will not work for everything due to world caching Strata cannot intercept.
+	Register the block as one from which ores may acquire various properties. Does not generate actual blocks or items.
+	When used with "generate", the Value (not Key!) is ignored and only applies to primary tile types.
 
 Key: ore
 Value: <name> [blockOreDictionaryName] [itemOreDictionaryName]
@@ -85,18 +30,81 @@ Description:
 	Use a hyphen ("-") to indicate that object should not be registered with the ore dictionary.
 	A blockOreDictionaryName of "oreRedstone" will make the block behave like vanilla redstone ore.
 
-Key: proxy
-Value: <ResourceLocation> [meta]
+Key: type
+Value: <TileType>
 Description:
-    Drop the drops of the specified block instead.
-    Only applies to ores.
+	Defines common block properties such as harvest tool, sound type, and block model.
+	Value is redundant with generate.
+
+Key: harvestLevel
+Value: <int>
+Default: 0
+Description:
+	Level of tool required for harvest. The tool itself is defined by the tile type.
+	If the tile type has a parent, the parent's value takes priority as the default.
+
+Key: hardness
+Value: <float>
+Default: 1.0
+Description:
+	Harvest difficulty. For reference, vanilla stone has a hardness of 1.5.
+	If the tile type has a parent, the parent's value takes priority as the default.
+
+Key: resistance
+Value: <float>
+Default: 1.7 * hardness if ore, 5.0 * hardness otherwise
+Description:
+	Explosion resistance. For reference, vanilla stone has a resistance of 10.
+	If the tile type has a parent, the parent's value takes priority as the default.
+
+Key: sustains
+Value: <<EnumPlantType>|<ResourceLocation> [meta]>+
+Description:
+    Allows the block to sustain EnumPlantType(s) and/or what is sustained by other block(s).
+    Multiple values are allowed. EnumPlantType order does not matter but ResourceLocation order does.
+    Only applies to primary tile types.
+    Disclaimer: This may not work due to world caching Strata cannot intercept. Some plants check for specific block(s).
 
 Key: burnTime
 Value: <int>
 Default: 0
 Description:
-    Ticks the ore will burn for in a furnace.
+    Number of ticks the item will burn in a furnace.
     For reference, there are 20 ticks per second and it takes 10 seconds to smelt an item. Standard coal is 1600.
+    Only applies to ores and primary tile types.
+
+Key: texture[Caps|Sides|Up|Down|North|South|East|West]
+Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
+Description:
+	Generate a texture for the block model using an optional array of layers blended onto a required base.
+	If the tile type has a parent, the parent's complete texture map will be used by default.
+	Any of these keys will cause a new texture map to be created.
+	Must come after a "generate", "host", or "ore" line.
+
+Key: convertsTo
+Value: <ResourceLocation> [meta]
+Description:
+	One-way, one-to-one conversion to another item for compatibility purposes.
+	Some tile types have an automatic vanilla equivalent.
+
+Key: fragmentTexture
+Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
+Description:
+	Generate a texture for the fragment item using an optional array of layers blended onto a required base.
+	This KV implies a fragment will be created. A dedicated key is redundant.
+	Only applies to some primary tile types.
+
+Key: fragmentConvertsTo
+Value: <ResourceLocation> [meta]
+Description:
+	One-way, one-to-one conversion to another item for compatibility purposes.
+	Only applies to some primary tile types.
+
+Key: proxy
+Value: <ResourceLocation> [meta]
+Description:
+    Drop the drops, sustain the plants, etc. of the specified block instead.
+    Only applies to ores.
 
 Key: drops
 Value: <baseDropAmount> [maxBonusDropExpr]
@@ -104,7 +112,7 @@ Default: 1
 Description:
     Controls the number of items dropped by an ore.
     Will always drop baseDropAmount with a random bonus of zero to the result of maxBonusDropExpr, inclusive.
-    maxBonusDropExpr shall be a simple expression in Reverse Polish notation. Operators +, -, *, and / are available.
+    maxBonusDropExpr shall be a simple expression in Reverse Polish Notation. Operators +, -, *, and / are available.
     The value of fortune is provided as the variable 'f'.
     The result of maxBonusDropExpr is rounded to the nearest integer.
     For example, "drops 0 0.2 f *" will only give a 50% chance of dropping an ore with Fortune III.
@@ -112,11 +120,11 @@ Description:
 
 Key: exp
 Value: <baseExp> [maxBonusExpExpr]
-Default: 1
+Default: 0
 Description:
     Controls the amount of experience dropped by an ore.
     Will always drop baseExp with a random bonus of zero to the result of maxBonusExpExpr, inclusive.
-    maxBonusExpExpr shall be a simple expression in Reverse Polish notation. Operators +, -, *, and / are available.
+    maxBonusExpExpr shall be a simple expression in Reverse Polish Notation. Operators +, -, *, and / are available.
     The value of fortune is provided as the variable 'f'.
     The result of maxBonusExpExpr is rounded to the nearest integer.
-    For example, "exp 0 2 f +" may provide 0-5 experience upon being mined/dug with Fortune III.
+    For example, "exp 1 2 f +" will provide 1 to 6 experience with Fortune III.

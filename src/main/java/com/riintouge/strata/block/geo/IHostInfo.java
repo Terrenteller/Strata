@@ -7,10 +7,7 @@ public interface IHostInfo extends IGenericBlockProperties
 {
     ResourceLocation registryName();
 
-    default int meta()
-    {
-        return 0;
-    }
+    int meta();
 
     IFacingTextureMap facingTextureMap();
 

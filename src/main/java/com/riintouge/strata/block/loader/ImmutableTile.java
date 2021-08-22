@@ -8,6 +8,7 @@ import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -20,14 +21,27 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public final class ImmutableTile implements IGeoTileInfo
 {
+    // IGeoTileInfo
     private String tileSetName;
-    private ResourceLocation registryName;
-    private int meta;
     private TileType type;
+    private MetaResourceLocation equivalentItemResourceLocation;
+    private ItemStack equivalentItemStack = null; // Lazily evaluated
+    private LayeredTextureLayer[] fragmentTextureLayers;
+    private MetaResourceLocation equivalentFragmentItemResourceLocation;
+    private ItemStack equivalentFragmentItemStack = null; // Lazily evaluated
+    private ArrayList< EnumPlantType > sustainedPlantTypes;
+    private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
+    private ArrayList< IBlockState > sustainsPlantsSustainedBy = null; // Lazily evaluated
+    private GenericCubeTextureMap modelTextureMap;
+
+    // IHostInfo
+    private ResourceLocation registryName;
+    private Integer particleFallingColor = null; // Lazily evaluated
+
+    // IGenericBlockProperties
     private Material material;
     private SoundType soundType;
     private String harvestTool;
@@ -35,53 +49,31 @@ public final class ImmutableTile implements IGeoTileInfo
     private float hardness;
     private float explosionResistance;
     private int burnTime;
-    private MetaResourceLocation equivalentItemResourceLocation;
-    private ItemStack equivalentItemStack;
-    private LayeredTextureLayer[] fragmentTextureLayers;
-    private MetaResourceLocation equivalentFragmentItemResourceLocation;
-    private ItemStack equivalentFragmentItemStack;
-    private ArrayList< EnumPlantType > sustainedPlantTypes;
-    private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
-    private ArrayList< IBlockState > sustainsPlantsSustainedBy;
-    private GenericCubeTextureMap genericCubeTextureMap;
-    private Integer particleFallingColor = null;
 
-    public ImmutableTile(
-        String tileSetName,
-        int meta,
-        TileType type,
-        Material material,
-        SoundType soundType,
-        String harvestTool,
-        int harvestLevel,
-        float hardness,
-        float explosionResistance,
-        int burnTime,
-        GenericCubeTextureMap textureMap,
-        MetaResourceLocation equivalentItem,
-        List< LayeredTextureLayer > fragmentTextureLayers,
-        MetaResourceLocation equivalentFragmentItem,
-        ArrayList< EnumPlantType > sustainedPlantTypes,
-        ArrayList< MetaResourceLocation > sustainsPlantsSustainedBy )
+    public ImmutableTile( TileData tileData ) throws IllegalArgumentException
     {
-        this.tileSetName = tileSetName;
-        this.registryName = type.registryName( tileSetName );
-        this.meta = meta;
-        this.type = type;
-        this.material = material;
-        this.soundType = soundType;
-        this.harvestTool = harvestTool;
-        this.harvestLevel = harvestLevel;
-        this.hardness = hardness;
-        this.explosionResistance = explosionResistance;
-        this.burnTime = burnTime;
-        this.genericCubeTextureMap = textureMap;
-        this.equivalentItemResourceLocation = equivalentItem;
-        if( fragmentTextureLayers != null )
-            this.fragmentTextureLayers = fragmentTextureLayers.toArray( new LayeredTextureLayer[ fragmentTextureLayers.size() ] );
-        this.equivalentFragmentItemResourceLocation = equivalentFragmentItem;
-        this.sustainedPlantTypes = sustainedPlantTypes != null ? sustainedPlantTypes : new ArrayList<>();
-        this.sustainsPlantsSustainedByRaw = sustainsPlantsSustainedBy != null ? sustainsPlantsSustainedBy : new ArrayList<>();
+        // IGeoTileInfo
+        this.tileSetName = Util.argumentNullCheck( tileData.tileSetName , "tileSetName" );
+        this.type = Util.argumentNullCheck( tileData.type , "type" );
+        this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
+        if( tileData.fragmentTextureLayers != null && tileData.fragmentTextureLayers.size() > 0 )
+            this.fragmentTextureLayers = tileData.fragmentTextureLayers.toArray( new LayeredTextureLayer[ tileData.fragmentTextureLayers.size() ] );
+        this.equivalentFragmentItemResourceLocation = tileData.equivalentFragmentItemResourceLocation;
+        this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
+        this.sustainsPlantsSustainedByRaw = Util.lazyCoalesce( tileData.sustainsPlantsSustainedByRaw , ArrayList::new );
+        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
+
+        // IHostInfo
+        this.registryName = tileData.type.registryName( this.tileSetName );
+
+        // IGenericBlockProperties
+        this.material = Util.argumentNullCheck( tileData.material , "material" );
+        this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
+        this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
+        this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
+        this.hardness = Util.coalesce( tileData.hardness , 1.0f );
+        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f * this.hardness );
+        this.burnTime = Util.coalesce( tileData.burnTime , 0 );
     }
 
     // IGeoTileInfo overrides
@@ -93,25 +85,13 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public ResourceLocation registryName()
-    {
-        return registryName;
-    }
-
-    @Override
-    public int meta()
-    {
-        return meta;
-    }
-
-    @Override
     public TileType type()
     {
         return type;
     }
 
     @Override
-    public ItemStack equivalentItem()
+    public ItemStack equivalentItemStack()
     {
         // Deferred resolution until reasonably sure the item has been created
         if( equivalentItemResourceLocation != null )
@@ -138,7 +118,7 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public ItemStack equivalentFragmentItem()
+    public ItemStack equivalentFragmentItemStack()
     {
         // Deferred resolution until reasonably sure the item has been created
         if( equivalentFragmentItemResourceLocation != null )
@@ -180,12 +160,38 @@ public final class ImmutableTile implements IGeoTileInfo
         return sustainsPlantsSustainedBy;
     }
 
+    @Override
+    public IModelRetexturizerMap modelTextureMap()
+    {
+        return modelTextureMap;
+    }
+
     // IHostInfo overrides
+
+    @Override
+    public ResourceLocation registryName()
+    {
+        return registryName;
+    }
+
+    @Override
+    public int meta()
+    {
+        return 0;
+    }
 
     @Override
     public IFacingTextureMap facingTextureMap()
     {
-        return genericCubeTextureMap;
+        return modelTextureMap;
+    }
+
+    @Override
+    public int particleFallingColor()
+    {
+        return particleFallingColor != null
+            ? particleFallingColor
+            : ( particleFallingColor = HostRegistry.getParticleFallingColor( this ) );
     }
 
     // IGenericBlockProperties overrides
@@ -232,25 +238,11 @@ public final class ImmutableTile implements IGeoTileInfo
         return burnTime;
     }
 
-    @Override
-    public IModelRetexturizerMap modelTextureMap()
-    {
-        return genericCubeTextureMap;
-    }
-
-    @Override
-    public int particleFallingColor()
-    {
-        return particleFallingColor != null
-            ? particleFallingColor
-            : ( particleFallingColor = HostRegistry.getParticleFallingColor( this ) );
-    }
-
     // IForgeRegistrable overrides
 
     @Override
     public void stitchTextures( TextureMap textureMap )
     {
-        genericCubeTextureMap.stitchTextures( textureMap );
+        modelTextureMap.stitchTextures( textureMap );
     }
 }

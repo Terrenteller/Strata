@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumPlantType;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
@@ -15,13 +16,16 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 
     TileType type();
 
-    ItemStack equivalentItem();
+    @Nullable
+    ItemStack equivalentItemStack();
 
     Boolean hasFragment();
 
+    @Nullable
     LayeredTextureLayer[] fragmentTextureLayers();
 
-    ItemStack equivalentFragmentItem();
+    @Nullable
+    ItemStack equivalentFragmentItemStack();
 
     ArrayList< EnumPlantType > sustainedPlantTypes();
 

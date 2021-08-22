@@ -7,22 +7,35 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+
 public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
 {
     String oreName();
 
+    @Nullable
     String blockOreDictionaryName();
 
+    @Nullable
     String itemOreDictionaryName();
 
     GenericCubeTextureMap modelTextureMap();
 
     ResourceLocation oreItemTextureResource();
 
-    ItemStack equivalentItem();
+    @Nullable
+    ItemStack equivalentItemStack();
 
-    default IBlockState proxyBlockState()
-    {
-        return null;
-    }
+    @Nullable
+    IBlockState proxyBlockState();
+
+    int baseDropAmount();
+
+    @Nullable
+    String bonusDropExpr();
+
+    int baseExp();
+
+    @Nullable
+    String bonusExpExpr();
 }

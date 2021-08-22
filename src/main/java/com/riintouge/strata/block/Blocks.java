@@ -1,7 +1,7 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.loader.TileLoader;
+import com.riintouge.strata.block.loader.TileDataLoader;
 import com.riintouge.strata.block.ore.OreBlockTileEntity;
 import com.riintouge.strata.resource.Config;
 import net.minecraft.block.Block;
@@ -19,9 +19,9 @@ public class Blocks
     {
         System.out.println( "Blocks::registerBlocks()" );
 
-        TileLoader tileLoader = new TileLoader();
+        TileDataLoader tileDataLoader = new TileDataLoader();
         for( String path : Config.INSTANCE.allIn( Strata.modid + "/tiledata" , true ) )
-            tileLoader.loadFile( path );
+            tileDataLoader.loadFile( path );
 
         GameRegistry.registerTileEntity(
             OreBlockTileEntity.class,

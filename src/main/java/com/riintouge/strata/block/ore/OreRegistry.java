@@ -96,8 +96,8 @@ public class OreRegistry
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
             IOreInfo oreInfo = tileSet.getInfo();
-            ItemStack equivalentItem = tileSet.getInfo().equivalentItem();
-            if( equivalentItem != null )
+            ItemStack equivalentItem = tileSet.getInfo().equivalentItemStack();
+            if( equivalentItem != null && !equivalentItem.isEmpty() )
             {
                 GameRegistry.addShapelessRecipe(
                     new ResourceLocation( Strata.modid , oreInfo.oreName() + "_equivalent" ),

@@ -212,8 +212,8 @@ public class GeoTileSet implements IForgeRegistrable
             ResourceLocation registryName = tile.registryName();
             Item item = itemMap.get( type );
 
-            ItemStack equivalentItem = tile.equivalentItem();
-            if( equivalentItem != null )
+            ItemStack equivalentItem = tile.equivalentItemStack();
+            if( equivalentItem != null && !equivalentItem.isEmpty() )
                 RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( item ) );
 
             ItemStack vanillaItemStack = type.vanillaItemStack();
@@ -233,8 +233,8 @@ public class GeoTileSet implements IForgeRegistrable
                     "XX",
                     'X' , fragment );
 
-                ItemStack equivalentFragmentItem = tile.equivalentFragmentItem();
-                if( equivalentFragmentItem != null )
+                ItemStack equivalentFragmentItem = tile.equivalentFragmentItemStack();
+                if( equivalentFragmentItem != null && !equivalentFragmentItem.isEmpty() )
                     createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tile ) , fragment , equivalentFragmentItem );
             }
 

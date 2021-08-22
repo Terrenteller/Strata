@@ -4,6 +4,7 @@ import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ore.IOreInfo;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -16,10 +17,22 @@ import net.minecraft.util.ResourceLocation;
 
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
+    // IOreInfo
     private String oreName;
     private String blockOreDictionaryName;
     private String itemOreDictionaryName;
-    private GenericCubeTextureMap genericCubeTextureMap;
+    private GenericCubeTextureMap modelTextureMap;
+    private ResourceLocation oreItemTextureResource;
+    private MetaResourceLocation equivalentItemResourceLocation;
+    private ItemStack equivalentItemStack = null; // Lazily evaluated
+    private MetaResourceLocation proxyBlockResourceLocation;
+    private IBlockState proxyBlockState = null; // Lazily evaluated
+    private int baseDropAmount;
+    private String bonusDropExpr;
+    private int baseExp;
+    private String bonusExpExpr;
+
+    // IGenericBlockProperties
     private Material material;
     private SoundType soundType;
     private String harvestTool;
@@ -27,51 +40,30 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private float hardness;
     private float explosionResistance;
     private int burnTime;
-    private MetaResourceLocation proxyBlockResourceLocation;
-    private IBlockState proxyBlockState;
-    private MetaResourceLocation equivalentItemResourceLocation;
-    private ItemStack equivalentItemStack;
-    private int baseDropAmount;
-    private String bonusDropExpr;
-    private int baseExp;
-    private String bonusExpExpr;
 
-    public ImmutableOre(
-        String oreName,
-        String blockOreDictionaryName,
-        String itemOreDictionaryName,
-        GenericCubeTextureMap textureMap,
-        MetaResourceLocation proxyBlockResourceLocation,
-        MetaResourceLocation equivalentItemResourceLocation,
-        Material material,
-        SoundType soundType,
-        String harvestTool,
-        int harvestLevel,
-        float hardness,
-        float explosionResistance,
-        int burnTime,
-        int baseDropAmount,
-        String bonusDropExpr,
-        int baseExp,
-        String bonusExpExpr )
+    public ImmutableOre( TileData tileData ) throws IllegalArgumentException
     {
-        this.oreName = oreName;
-        this.blockOreDictionaryName = blockOreDictionaryName;
-        this.itemOreDictionaryName = itemOreDictionaryName;
-        this.genericCubeTextureMap = textureMap;
-        this.material = material;
-        this.soundType = soundType;
-        this.harvestTool = harvestTool;
-        this.harvestLevel = harvestLevel;
-        this.hardness = hardness;
-        this.explosionResistance = explosionResistance == 0.0f ? 1.7f * hardness : explosionResistance;
-        this.burnTime = burnTime;
-        this.proxyBlockResourceLocation = proxyBlockResourceLocation;
-        this.equivalentItemResourceLocation = equivalentItemResourceLocation;
-        this.baseDropAmount = baseDropAmount;
-        this.bonusDropExpr = bonusDropExpr;
-        this.baseExp = baseExp;
-        this.bonusExpExpr = bonusExpExpr;
+        // IOreInfo
+        this.oreName = Util.argumentNullCheck( tileData.oreName , "oreName" );
+        this.blockOreDictionaryName = tileData.blockOreDictionaryName;
+        this.itemOreDictionaryName = tileData.itemOreDictionaryName;
+        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
+        this.oreItemTextureResource = this.modelTextureMap.getOrDefault( (EnumFacing)null );
+        this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
+        this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
+        this.baseDropAmount = Util.coalesce( tileData.baseDropAmount , 1 );
+        this.bonusDropExpr = tileData.bonusDropExpr;
+        this.baseExp = Util.coalesce( tileData.baseExp , 0 );
+        this.bonusExpExpr = tileData.bonusExpExpr;
+
+        // IGenericBlockProperties
+        this.material = Util.argumentNullCheck( tileData.material , "material" );
+        this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
+        this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
+        this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
+        this.hardness = Util.coalesce( tileData.hardness , 1.0f );
+        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 1.7f * this.hardness );
+        this.burnTime = Util.coalesce( tileData.burnTime , 0 );
     }
 
     // IOreInfo overrides
@@ -97,17 +89,17 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public GenericCubeTextureMap modelTextureMap()
     {
-        return genericCubeTextureMap;
+        return modelTextureMap;
     }
 
     @Override
     public ResourceLocation oreItemTextureResource()
     {
-        return genericCubeTextureMap.getOrDefault( (EnumFacing)null );
+        return oreItemTextureResource;
     }
 
     @Override
-    public ItemStack equivalentItem()
+    public ItemStack equivalentItemStack()
     {
         // Deferred resolution until reasonably sure the item has been created
         if( equivalentItemResourceLocation != null )
@@ -207,6 +199,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public void stitchTextures( TextureMap textureMap )
     {
-        genericCubeTextureMap.stitchTextures( textureMap );
+        modelTextureMap.stitchTextures( textureMap );
     }
 }

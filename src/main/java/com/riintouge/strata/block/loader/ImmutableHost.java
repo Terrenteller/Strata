@@ -5,6 +5,7 @@ import com.riintouge.strata.block.IFacingTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -12,37 +13,36 @@ import net.minecraft.util.ResourceLocation;
 
 public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 {
+    // IHostInfo
     private ResourceLocation registryName;
     private int meta;
+    private GenericCubeTextureMap facingTextureMap;
+    private Integer particleFallingColor = null; // Lazily evaluated
+
+    // IGenericBlockProperties
     private Material material;
     private SoundType soundType;
     private String harvestTool;
     private int harvestLevel;
     private float hardness;
     private float explosionResistance;
-    private GenericCubeTextureMap genericCubeTextureMap;
-    private Integer particleFallingColor = null;
+    private int burnTime;
 
-    public ImmutableHost(
-        ResourceLocation registryName,
-        int meta,
-        Material material,
-        SoundType soundType,
-        String harvestTool,
-        int harvestLevel,
-        float hardness,
-        float explosionResistance,
-        GenericCubeTextureMap textureMap )
+    public ImmutableHost( TileData tileData ) throws IllegalArgumentException
     {
-        this.registryName = registryName;
-        this.meta = meta;
-        this.material = material;
-        this.soundType = soundType;
-        this.harvestTool = harvestTool;
-        this.harvestLevel = harvestLevel;
-        this.hardness = hardness;
-        this.explosionResistance = explosionResistance;
-        this.genericCubeTextureMap = textureMap;
+        // IHostInfo
+        this.registryName = Util.argumentNullCheck( tileData.hostRegistryName , "hostRegistryName" );
+        this.meta = Util.coalesce( tileData.hostMeta , 0 );
+        this.facingTextureMap = tileData.textureMap;
+
+        // IGenericBlockProperties
+        this.material = Util.argumentNullCheck( tileData.material , "material" );
+        this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
+        this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
+        this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
+        this.hardness = Util.coalesce( tileData.hardness , 1.0f );
+        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f * this.hardness );
+        this.burnTime = Util.coalesce( tileData.burnTime , 0 );
     }
 
     // IHostInfo overrides
@@ -62,7 +62,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     @Override
     public IFacingTextureMap facingTextureMap()
     {
-        return genericCubeTextureMap;
+        return facingTextureMap;
     }
 
     @Override
@@ -111,11 +111,17 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
         return explosionResistance;
     }
 
+    @Override
+    public int burnTime()
+    {
+        return burnTime;
+    }
+
     // IForgeRegistrable overrides
 
     @Override
     public void stitchTextures( TextureMap textureMap )
     {
-        genericCubeTextureMap.stitchTextures( textureMap );
+        facingTextureMap.stitchTextures( textureMap );
     }
 }
