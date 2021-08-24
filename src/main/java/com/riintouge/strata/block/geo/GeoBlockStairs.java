@@ -13,7 +13,7 @@ public class GeoBlockStairs extends BlockStairs
         // This is what Forge does for BlockStairs in Block.registerBlocks()
         this.useNeighborBrightness = true;
 
-        ResourceLocation registryName = info.type().stairType().registryName( info.tileSetName() );
+        ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BUILDING_BLOCK_TAB );

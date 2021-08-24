@@ -46,9 +46,7 @@ public class GeoBlockSlab extends BlockSlab
         // This is what Forge does for BlockSlab in Block.registerBlocks()
         this.useNeighborBrightness = true;
 
-        ResourceLocation registryName = isDouble()
-            ? info.type().slabsType().registryName( info.tileSetName() )
-            : info.type().slabType().registryName( info.tileSetName() );
+        ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BUILDING_BLOCK_TAB );

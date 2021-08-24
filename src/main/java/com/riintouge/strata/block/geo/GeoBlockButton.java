@@ -8,7 +8,7 @@ public class GeoBlockButton extends BlockButtonStone
 {
     public GeoBlockButton( IGeoTileInfo info )
     {
-        ResourceLocation registryName = info.type().buttonType().registryName( info.tileSetName() );
+        ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.MISC_BLOCK_TAB );

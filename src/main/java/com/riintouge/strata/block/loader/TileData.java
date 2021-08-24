@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import org.apache.commons.lang3.EnumUtils;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.*;
 
 public class TileData
@@ -232,6 +233,25 @@ public class TileData
         }
 
         return false;
+    }
+
+    public TileData createMissingChildType( TileType type ) throws OperationNotSupportedException
+    {
+        if( this.tileSetName == null || this.type == null || type.parentType != this.type )
+            throw new OperationNotSupportedException();
+
+        TileData child = new TileData();
+        child.tileSetName = this.tileSetName;
+        child.type = type;
+        child.material = type.material;
+        child.soundType = type.soundType;
+        child.harvestTool = type.harvestTool;
+        child.harvestLevel = this.harvestLevel;
+        child.hardness = this.hardness;
+        child.explosionResistance = this.explosionResistance;
+        child.textureMap = this.textureMap;
+
+        return child;
     }
 
     // Statics

@@ -11,6 +11,7 @@ import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.block.ore.OreTileSet;
 import com.riintouge.strata.util.Util;
 
+import javax.naming.OperationNotSupportedException;
 import java.io.*;
 import java.util.*;
 
@@ -162,10 +163,30 @@ public class TileDataLoader
             GeoTileSet tileSet = tileSetMap.computeIfAbsent( tileSetName , x -> new GeoTileSet() );
             Map< TileType , TileData > tileDataMap = tileSetTileDataMap.get( tileSetName );
 
-            for( TileData tileData : tileDataMap.values() )
+            for( TileType type : TileType.values() )
             {
-                ImmutableTile tile;
+                TileData tileData = tileDataMap.getOrDefault( type , null );
+                if( tileData == null )
+                {
+                    if( type.parentType == null )
+                        continue;
 
+                    // FIXME: Temporary tertiary type creation until all types are defined in config files
+                    try
+                    {
+                        TileData parentData = tileDataMap.get( type.parentType );
+                        if( parentData != null )
+                            tileDataMap.put( type , tileData = parentData.createMissingChildType( type ) );
+                        else
+                            continue;
+                    }
+                    catch( OperationNotSupportedException e )
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+                ImmutableTile tile;
                 try
                 {
                     tile = new ImmutableTile( tileData );

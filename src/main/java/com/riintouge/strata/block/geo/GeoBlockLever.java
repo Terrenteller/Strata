@@ -8,7 +8,7 @@ public class GeoBlockLever extends BlockLever
 {
     public GeoBlockLever( IGeoTileInfo info )
     {
-        ResourceLocation registryName = info.type().leverType().registryName( info.tileSetName() );
+        ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.MISC_BLOCK_TAB );

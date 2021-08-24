@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -17,45 +18,30 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class GeoTileSet implements IForgeRegistrable
 {
-    private final String DefaultModelVariant = null;
-    private final String DefaultFragmentVariant = null; // Doesn't actually do anything because items ignore it
-    // Should we try to get properties from the default block state instead?
-    private final String DefaultStairModelVariant = "facing=east,half=bottom,shape=straight";
-    private final String DefaultSlabModelVariant = "half=bottom,variant=default";
-    private final String DefaultWallModelVariant = "inventory";
-    private final String DefaultButtonModelVariant = "inventory";
-    private final String DefaultLeverModelVariant = "facing=up_z,powered=false";
-    private final String DefaultPressurePlateModelVariant = "powered=false";
-
-    protected Map< TileType , IGeoTileInfo > tiles = new HashMap<>();
-    protected Map< TileType , Item > itemMap = new HashMap<>();
-    protected Map< TileType , GeoItemFragment > fragmentMap = new HashMap<>();
-    protected Map< TileType , GeoBlockStairs > stairsMap = new HashMap<>();
-    protected Map< TileType , GeoBlockSlab > slabMap = new HashMap<>();
-    protected Map< TileType , GeoBlockSlab > slabsMap = new HashMap<>();
-    protected Map< TileType , GeoBlockWall > wallMap = new HashMap<>();
-    protected Map< TileType , GeoBlockButton > buttonMap = new HashMap<>();
-    protected Map< TileType , GeoBlockLever > leverMap = new HashMap<>();
-    protected Map< TileType , GeoBlockPressurePlate > pressurePlateMap = new HashMap<>();
+    protected IGeoTileInfo[] tileInfos;
+    protected Block[] blocks;
+    protected ItemBlock[] itemBlocks;
+    protected GeoItemFragment[] fragmentItems;
 
     public GeoTileSet()
     {
-        // Nothing to do
+        int numberOfTileTypes = TileType.values().length;
+        tileInfos = new IGeoTileInfo[ numberOfTileTypes ];
+        blocks = new Block[ numberOfTileTypes ];
+        itemBlocks = new ItemBlock[ numberOfTileTypes ];
+        fragmentItems = new GeoItemFragment[ numberOfTileTypes ];
     }
 
-    public void addTile( IGeoTileInfo tile )
+    public void addTile( IGeoTileInfo tileInfo )
     {
-        tiles.put( tile.type() , tile );
+        tileInfos[ tileInfo.type().ordinal() ] = tileInfo;
     }
 
     public IGeoTileInfo find( TileType type )
     {
-        return tiles.getOrDefault( type , null );
+        return tileInfos[ type.ordinal() ];
     }
 
     protected void createEquivalentItemConversionRecipe( ResourceLocation registryName , Item item , ItemStack equivalentItem )
@@ -63,7 +49,7 @@ public class GeoTileSet implements IForgeRegistrable
         if( equivalentItem != null )
         {
             GameRegistry.addShapelessRecipe(
-                new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_equivalent" ),
+                new ResourceLocation( registryName.toString() + "_equivalent" ),
                 null,
                 equivalentItem,
                 Ingredient.fromItem( item ) );
@@ -75,419 +61,336 @@ public class GeoTileSet implements IForgeRegistrable
     @Override
     public void registerBlocks( IForgeRegistry< Block > blockRegistry )
     {
-        for( TileType type : tiles.keySet() )
+        for( TileType type : TileType.values() )
         {
-            IGeoTileInfo tile = tiles.get( type );
-            GeoBlock block = new GeoBlock( tile );
+            int typeIndex = type.ordinal();
+            IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
+            if( tileInfo == null )
+                continue;
+
+            Block block;
+            switch( type )
+            {
+                case COBBLESTAIRS:
+                case STONESTAIRS:
+                case STONEBRICKSTAIRS:
+                    block = new GeoBlockStairs( tileInfo , blocks[ type.parentType.ordinal() ].getDefaultState() );
+                    break;
+                case COBBLESLAB:
+                case STONESLAB:
+                case STONEBRICKSLAB:
+                    block = new GeoBlockSlab( tileInfo );
+                    break;
+                case COBBLESLABS:
+                case STONESLABS:
+                case STONEBRICKSLABS:
+                    block = new GeoBlockSlabs( tileInfo , (GeoBlockSlab)blocks[ typeIndex - 1 ] );
+                    break;
+                case COBBLEWALL:
+                case COBBLEWALLMOSSY:
+                case STONEWALL:
+                case STONEBRICKWALL:
+                case STONEBRICKWALLMOSSY:
+                    block = new GeoBlockWall( tileInfo , blocks[ type.parentType.ordinal() ] );
+                    break;
+                case BUTTON:
+                    block = new GeoBlockButton( tileInfo );
+                    break;
+                case LEVER:
+                    block = new GeoBlockLever( tileInfo );
+                    break;
+                case PRESSUREPLATE:
+                    block = new GeoBlockPressurePlate( tileInfo );
+                    break;
+                default:
+                    block = new GeoBlock( tileInfo );
+            }
+
+            blocks[ typeIndex ] = block;
             blockRegistry.register( block );
-
-            TileType stairType = tile.type().stairType();
-            if( stairType != null && stairType.parentType == tile.type() )
-            {
-                GeoBlockStairs stairs = new GeoBlockStairs( tile , block.getDefaultState() );
-                stairsMap.put( type , stairs );
-                blockRegistry.register( stairs );
-            }
-
-            TileType slabType = tile.type().slabType();
-            if( slabType != null && tile.type().slabsType() != null && slabType.parentType == tile.type() )
-            {
-                GeoBlockSlab slab = new GeoBlockSlab( tile );
-                slabMap.put( type , slab );
-                blockRegistry.register( slab );
-
-                GeoBlockSlab slabs = new GeoBlockSlabs( tile , slab );
-                slabsMap.put( type , slabs );
-                blockRegistry.register( slabs );
-            }
-
-            TileType wallType = tile.type().wallType();
-            if( wallType != null && wallType.parentType == tile.type() )
-            {
-                GeoBlockWall wall = new GeoBlockWall( tile , block );
-                wallMap.put( type , wall );
-                blockRegistry.register( wall );
-            }
-
-            TileType buttonType = tile.type().buttonType();
-            if( buttonType != null && buttonType.parentType == tile.type() )
-            {
-                GeoBlockButton button = new GeoBlockButton( tile );
-                buttonMap.put( type , button );
-                blockRegistry.register( button );
-            }
-
-            TileType leverType = tile.type().leverType();
-            if( leverType != null && leverType.parentType == tile.type() )
-            {
-                GeoBlockLever lever = new GeoBlockLever( tile );
-                leverMap.put( type , lever );
-                blockRegistry.register( lever );
-            }
-
-            TileType pressurePlateType = tile.type().pressurePlateType();
-            if( pressurePlateType != null && pressurePlateType.parentType == tile.type() )
-            {
-                GeoBlockPressurePlate pressurePlate = new GeoBlockPressurePlate( tile );
-                pressurePlateMap.put( type , pressurePlate );
-                blockRegistry.register( pressurePlate );
-            }
         }
     }
 
     @Override
     public void registerItems( IForgeRegistry< Item > itemRegistry )
     {
-        for( TileType type : tiles.keySet() )
+        for( TileType type : TileType.values() )
         {
-            IGeoTileInfo tile = tiles.get( type );
-            Block block = Block.REGISTRY.getObject( tile.registryName() );
-            Item item = new GeoItemBlock( tile , block );
-            itemMap.put( type , item );
-            itemRegistry.register( item );
+            int typeIndex = type.ordinal();
+            IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
+            if( tileInfo == null )
+                continue;
 
-            if( tile.hasFragment() )
+            if( tileInfo.hasFragment() )
             {
-                GeoItemFragment fragment = new GeoItemFragment( tile );
-                fragmentMap.put( type , fragment );
+                GeoItemFragment fragment = new GeoItemFragment( tileInfo );
+                fragmentItems[ typeIndex ] = fragment;
                 itemRegistry.register( fragment );
             }
 
-            TileType stairType = tile.type().stairType();
-            if( stairType != null && stairType.parentType == tile.type() )
+            ItemBlock itemBlock;
+            switch( type )
             {
-                GeoItemBlock stairs = new GeoItemBlock( tile , stairsMap.get( type ) );
-                itemMap.put( stairType , stairs );
-                itemRegistry.register( stairs );
+                case COBBLESLAB:
+                case STONESLAB:
+                case STONEBRICKSLAB:
+                    itemBlock = new GeoItemBlockSlab(
+                        (GeoBlockSlab)blocks[ type.ordinal() ],
+                        (GeoBlockSlab)blocks[ type.ordinal() + 1 ] );
+                    break;
+                case COBBLESLABS:
+                case STONESLABS:
+                case STONEBRICKSLABS:
+                    continue; // Double slabs do not have an item
+                default:
+                    itemBlock = new GeoItemBlock( tileInfo , blocks[ typeIndex ] );
             }
 
-            TileType slabType = tile.type().slabType();
-            if( slabType != null && tile.type().slabsType() != null && slabType.parentType == tile.type() )
-            {
-                GeoItemBlockSlab slab = new GeoItemBlockSlab( slabMap.get( type ) , slabsMap.get( type ) );
-                itemMap.put( slabType , slab );
-                itemRegistry.register( slab );
-            }
-
-            TileType wallType = tile.type().wallType();
-            if( wallType != null && wallType.parentType == tile.type() )
-            {
-                GeoItemBlock wall = new GeoItemBlock( tile , wallMap.get( type ) );
-                itemMap.put( wallType , wall );
-                itemRegistry.register( wall );
-            }
-
-            TileType buttonType = tile.type().buttonType();
-            if( buttonType != null && buttonType.parentType == tile.type() )
-            {
-                GeoItemBlock button = new GeoItemBlock( tile , buttonMap.get( type ) );
-                itemMap.put( buttonType , button );
-                itemRegistry.register( button );
-            }
-
-            TileType leverType = tile.type().leverType();
-            if( leverType != null && leverType.parentType == tile.type() )
-            {
-                GeoItemBlock lever = new GeoItemBlock( tile , leverMap.get( type ) );
-                itemMap.put( leverType , lever );
-                itemRegistry.register( lever );
-            }
-
-            TileType pressurePlateType = tile.type().pressurePlateType();
-            if( pressurePlateType != null && pressurePlateType.parentType == tile.type() )
-            {
-                GeoItemBlock stonePressurePlate = new GeoItemBlock( tile , pressurePlateMap.get( type ) );
-                itemMap.put( pressurePlateType , stonePressurePlate );
-                itemRegistry.register( stonePressurePlate );
-            }
+            itemBlocks[ typeIndex ] = itemBlock;
+            itemRegistry.register( itemBlock );
         }
     }
 
     @Override
     public void registerRecipes( IForgeRegistry< IRecipe > recipeRegistry )
     {
-        for( TileType type : tiles.keySet() )
+        for( TileType type : TileType.values() )
         {
-            IGeoTileInfo tile = tiles.get( type );
-            ResourceLocation registryName = tile.registryName();
-            Item item = itemMap.get( type );
+            int typeIndex = type.ordinal();
+            IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
+            ItemBlock itemBlock = itemBlocks[ type.ordinal() ];
+            if( tileInfo == null || itemBlock == null )
+                continue;
 
-            ItemStack equivalentItem = tile.equivalentItemStack();
-            if( equivalentItem != null && !equivalentItem.isEmpty() )
-                RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( item ) );
+            ResourceLocation registryName = tileInfo.registryName();
+            ItemBlock parentItemBlock = type.parentType != null ? itemBlocks[ type.parentType.ordinal() ] : null;
+            GeoItemFragment fragment = fragmentItems[ type.ordinal() ];
 
-            ItemStack vanillaItemStack = type.vanillaItemStack();
-            if( vanillaItemStack != null )
-                RecipeReplicator.INSTANCE.register( vanillaItemStack , new ItemStack( item ) );
-
-            createEquivalentItemConversionRecipe( registryName , item , equivalentItem != null ? equivalentItem : vanillaItemStack );
-
-            Item fragment = fragmentMap.getOrDefault( type , null );
             if( fragment != null )
             {
                 GameRegistry.addShapedRecipe(
-                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_block" ),
+                    new ResourceLocation( registryName.toString() + "_block" ),
                     null,
-                    new ItemStack( item ),
+                    new ItemStack( itemBlock ),
                     "XX",
                     "XX",
                     'X' , fragment );
 
-                ItemStack equivalentFragmentItem = tile.equivalentFragmentItemStack();
+                ItemStack equivalentFragmentItem = tileInfo.equivalentFragmentItemStack();
                 if( equivalentFragmentItem != null && !equivalentFragmentItem.isEmpty() )
-                    createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tile ) , fragment , equivalentFragmentItem );
+                    createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tileInfo ) , fragment , equivalentFragmentItem );
             }
 
             switch( type )
             {
                 case STONE:
-                    Item stoneBrickItem = itemMap.getOrDefault( TileType.STONEBRICK , null );
-                    if( stoneBrickItem != null )
+                {
+                    ItemBlock cobbleItemBlock = itemBlocks[ TileType.COBBLE.ordinal() ];
+                    if( cobbleItemBlock != null )
+                        GameRegistry.addSmelting( cobbleItemBlock , new ItemStack( itemBlock ) , 0.1f ); // Vanilla exp
+
+                    break;
+                }
+                case COBBLEMOSSY:
+                {
+                    ItemBlock cobbleItemBlock = itemBlocks[ TileType.COBBLE.ordinal() ];
+                    if( cobbleItemBlock != null )
+                    {
+                        GameRegistry.addShapelessRecipe(
+                            registryName,
+                            null,
+                            new ItemStack( itemBlock ),
+                            Ingredient.fromItem( cobbleItemBlock ),
+                            Ingredient.fromItem( Item.getItemFromBlock( Blocks.VINE ) ) );
+                    }
+
+                    break;
+                }
+                case STONEBRICK:
+                {
+                    ItemBlock stoneItemBlock = itemBlocks[ TileType.STONE.ordinal() ];
+                    if( stoneItemBlock != null )
                     {
                         GameRegistry.addShapedRecipe(
-                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_stonebrick" ),
+                            registryName,
                             null,
-                            new ItemStack( stoneBrickItem , 4 ),
+                            new ItemStack( stoneItemBlock , 4 ),
                             "XX ",
                             " XX",
-                            'X' , item );
+                            'X' , itemBlock );
                     }
-                    Item stonePolishedItem = itemMap.getOrDefault( TileType.STONEPOLISHED , null );
-                    if( stonePolishedItem != null )
+
+                    break;
+                }
+                case STONEBRICKMOSSY:
+                {
+                    ItemBlock stoneBrickItemBlock = itemBlocks[ TileType.STONEBRICK.ordinal() ];
+                    if( stoneBrickItemBlock != null )
+                    {
+                        GameRegistry.addShapelessRecipe(
+                            registryName,
+                            null,
+                            new ItemStack( stoneBrickItemBlock ),
+                            Ingredient.fromItem( itemBlock ),
+                            Ingredient.fromItem( Item.getItemFromBlock( Blocks.VINE ) ) );
+                    }
+
+                    break;
+                }
+                case STONEPOLISHED:
+                {
+                    ItemBlock stoneItemBlock = itemBlocks[ TileType.STONE.ordinal() ];
+                    if( stoneItemBlock != null )
                     {
                         GameRegistry.addShapedRecipe(
-                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_polished" ),
+                            registryName,
                             null,
-                            new ItemStack( stonePolishedItem , 4 ),
+                            new ItemStack( stoneItemBlock , 4 ),
                             "XX",
                             "XX",
-                            'X' , item );
+                            'X' , itemBlock );
                     }
+
                     break;
-                case STONEBRICK:
-                    Item stoneBrickMossyItem = itemMap.getOrDefault( TileType.STONEBRICKMOSSY , null );
-                    if( stoneBrickMossyItem != null )
+                }
+                case COBBLESTAIRS:
+                case STONESTAIRS:
+                case STONEBRICKSTAIRS:
+                {
+                    if( parentItemBlock != null )
                     {
-                        GameRegistry.addShapelessRecipe(
-                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_stonebrickmossy" ),
+                        GameRegistry.addShapedRecipe(
+                            registryName,
                             null,
-                            new ItemStack( stoneBrickMossyItem ),
-                            Ingredient.fromItem( item ),
-                            Ingredient.fromItem( Item.getItemFromBlock( Blocks.VINE ) ) );
+                            new ItemStack( itemBlock , 4 ),
+                            "X  ",
+                            "XX ",
+                            "XXX",
+                            'X' , parentItemBlock );
                     }
+
                     break;
-                case COBBLE:
-                    Item stoneItem = itemMap.getOrDefault( TileType.STONE , null );
-                    if( stoneItem != null )
-                        GameRegistry.addSmelting( item , new ItemStack( stoneItem ) , 0.1f ); // Vanilla exp
-                    Item cobbleMossyItem = itemMap.getOrDefault( TileType.COBBLEMOSSY , null );
-                    if( cobbleMossyItem != null )
+                }
+                case COBBLESLAB:
+                case STONESLAB:
+                case STONEBRICKSLAB:
+                {
+                    if( parentItemBlock != null )
                     {
-                        GameRegistry.addShapelessRecipe(
-                            new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_cobblemossy" ),
+                        GameRegistry.addShapedRecipe(
+                            registryName,
                             null,
-                            new ItemStack( cobbleMossyItem ),
-                            Ingredient.fromItem( item ),
-                            Ingredient.fromItem( Item.getItemFromBlock( Blocks.VINE ) ) );
+                            new ItemStack( itemBlock , 6 ),
+                            "XXX",
+                            'X' , parentItemBlock );
                     }
+
                     break;
-            }
-
-            TileType stairType = tile.type().stairType();
-            if( stairType != null )
-            {
-                Item stairItem = itemMap.getOrDefault( stairType , null );
-                GameRegistry.addShapedRecipe(
-                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_stairs" ),
-                    null,
-                    new ItemStack( stairItem , 4 ),
-                    "X  ",
-                    "XX ",
-                    "XXX",
-                    'X' , item );
-
-                ItemStack vanillaStairs = stairType.vanillaItemStack();
-                if( vanillaStairs != null )
-                    RecipeReplicator.INSTANCE.register( vanillaStairs , new ItemStack( stairItem ) );
-                createEquivalentItemConversionRecipe( stairItem.getRegistryName() , stairItem , stairType.vanillaItemStack() );
-            }
-
-            TileType slabType = tile.type().slabType();
-            if( slabType != null )
-            {
-                Item slabItem = itemMap.getOrDefault( slabType , null );
-                GameRegistry.addShapedRecipe(
-                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_slab" ),
-                    null,
-                    new ItemStack( slabItem , 6 ),
-                    "XXX",
-                    'X' , item );
-
-                ItemStack vanillaSlab = slabType.vanillaItemStack();
-                if( vanillaSlab != null )
-                    RecipeReplicator.INSTANCE.register( vanillaSlab , new ItemStack( slabItem ) );
-                createEquivalentItemConversionRecipe( slabItem.getRegistryName() , slabItem , slabType.vanillaItemStack() );
-            }
-
-            TileType wallType = tile.type().wallType();
-            if( wallType != null )
-            {
-                Item wallItem = itemMap.getOrDefault( wallType , null );
-                GameRegistry.addShapedRecipe(
-                    new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_wall" ),
-                    null,
-                    new ItemStack( wallItem , 6 ),
-                    "XXX",
-                    "XXX",
-                    'X' , item );
-
-                ItemStack vanillaWall = wallType.vanillaItemStack();
-                if( vanillaWall != null )
-                    RecipeReplicator.INSTANCE.register( vanillaWall , new ItemStack( wallItem ) );
-                createEquivalentItemConversionRecipe( wallItem.getRegistryName() , wallItem , wallType.vanillaItemStack() );
-            }
-
-            TileType buttonType = tile.type().buttonType();
-            if( buttonType != null )
-            {
-                Item buttonItem = itemMap.getOrDefault( buttonType , null );
-                if( buttonItem != null )
+                }
+                case COBBLEWALL:
+                case COBBLEWALLMOSSY:
+                case STONEWALL:
+                case STONEBRICKWALL:
+                case STONEBRICKWALLMOSSY:
                 {
-                    GameRegistry.addShapedRecipe(
-                        new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_button" ),
-                        null,
-                        new ItemStack( buttonItem , 2 ), // Two buttons since the original recipe is 1:1
-                        "X",
-                        "X",
-                        'X' , item );
+                    if( parentItemBlock != null )
+                    {
+                        GameRegistry.addShapedRecipe(
+                            registryName,
+                            null,
+                            new ItemStack( itemBlock , 6 ),
+                            "XXX",
+                            "XXX",
+                            'X' , parentItemBlock );
+                    }
 
-                    ItemStack vanillaButton = buttonType.vanillaItemStack();
-                    if( vanillaButton != null )
-                        RecipeReplicator.INSTANCE.register( vanillaButton , new ItemStack( buttonItem ) );
-                    createEquivalentItemConversionRecipe( buttonItem.getRegistryName() , buttonItem , buttonType.vanillaItemStack() );
+                    break;
+                }
+                case BUTTON:
+                {
+                    if( parentItemBlock != null )
+                    {
+                        GameRegistry.addShapedRecipe(
+                            registryName,
+                            null,
+                            new ItemStack( itemBlock , 2 ), // Two buttons since the original recipe is 1:1
+                            "X",
+                            "X",
+                            'X' , parentItemBlock );
+                    }
+
+                    break;
+                }
+                case LEVER:
+                {
+                    if( parentItemBlock != null )
+                    {
+                        GameRegistry.addShapedRecipe(
+                            registryName,
+                            null,
+                            new ItemStack( itemBlock ),
+                            "X",
+                            "Y",
+                            'X' , Items.STICK , 'Y' , parentItemBlock );
+                    }
+
+                    break;
+                }
+                case PRESSUREPLATE:
+                {
+                    if( parentItemBlock != null )
+                    {
+                        GameRegistry.addShapedRecipe(
+                            registryName,
+                            null,
+                            new ItemStack( itemBlock ),
+                            "XX",
+                            'X' , parentItemBlock );
+                    }
+
+                    break;
                 }
             }
 
-            TileType leverType = tile.type().leverType();
-            if( leverType != null )
-            {
-                Item leverItem = itemMap.getOrDefault( leverType , null );
-                if( leverItem != null )
-                {
-                    GameRegistry.addShapedRecipe(
-                        new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_lever" ),
-                        null,
-                        new ItemStack( leverItem ),
-                        "X",
-                        "Y",
-                        'X' , Items.STICK , 'Y' , item );
+            ItemStack equivalentItem = tileInfo.equivalentItemStack();
+            if( equivalentItem != null && !equivalentItem.isEmpty() )
+                RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( itemBlock ) );
 
-                    ItemStack vanillaLever = leverType.vanillaItemStack();
-                    if( vanillaLever != null )
-                        RecipeReplicator.INSTANCE.register( vanillaLever , new ItemStack( leverItem ) );
-                    createEquivalentItemConversionRecipe( leverItem.getRegistryName() , leverItem , leverType.vanillaItemStack() );
-                }
-            }
+            ItemStack vanillaItemStack = type.vanillaItemStack();
+            if( vanillaItemStack != null && !vanillaItemStack.isEmpty() )
+                RecipeReplicator.INSTANCE.register( vanillaItemStack , new ItemStack( itemBlock ) );
 
-            TileType pressurePlateType = tile.type().pressurePlateType();
-            if( pressurePlateType != null )
-            {
-                Item pressurePlateItem = itemMap.getOrDefault( pressurePlateType , null );
-                if( pressurePlateItem != null )
-                {
-                    GameRegistry.addShapedRecipe(
-                        new ResourceLocation( registryName.getResourceDomain() , registryName.getResourcePath() + "_pressureplate" ),
-                        null,
-                        new ItemStack( pressurePlateItem ),
-                        "XX",
-                        'X' , item );
-
-                    ItemStack vanillaPressurePlate = pressurePlateType.vanillaItemStack();
-                    if( vanillaPressurePlate != null )
-                        RecipeReplicator.INSTANCE.register( vanillaPressurePlate , new ItemStack( pressurePlateItem ) );
-                    createEquivalentItemConversionRecipe( pressurePlateItem.getRegistryName() , pressurePlateItem , pressurePlateType.vanillaItemStack() );
-                }
-            }
+            createEquivalentItemConversionRecipe( registryName , itemBlock , equivalentItem != null ? equivalentItem : vanillaItemStack );
         }
     }
 
     @Override
     public void registerModels( ModelRegistryEvent event )
     {
-        for( IGeoTileInfo tile : tiles.values() )
+        for( TileType type : TileType.values() )
         {
-            ModelLoader.setCustomModelResourceLocation(
-                Item.REGISTRY.getObject( tile.registryName() ),
-                tile.meta(),
-                new ModelResourceLocation( tile.registryName() , DefaultModelVariant ) );
+            int typeIndex = type.ordinal();
+            IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
+            if( tileInfo == null )
+                continue;
 
-            GeoItemFragment fragment = fragmentMap.getOrDefault( tile.type() , null );
+            GeoItemFragment fragment = fragmentItems[ typeIndex ];
             if( fragment != null )
             {
+                // The null variant Doesn't do anything because items ignore it
                 ModelLoader.setCustomModelResourceLocation(
                     fragment,
-                    tile.meta(),
-                    new ModelResourceLocation( fragment.getRegistryName() , DefaultFragmentVariant ) );
+                    tileInfo.meta(),
+                    new ModelResourceLocation( fragment.getRegistryName() , null ) );
             }
 
-            TileType stairType = tile.type().stairType();
-            if( stairType != null )
+            ItemBlock itemBlock = itemBlocks[ typeIndex ];
+            if( itemBlock != null )
             {
-                ResourceLocation stairsRegistryName = stairType.registryName( tile.tileSetName() );
                 ModelLoader.setCustomModelResourceLocation(
-                    Item.REGISTRY.getObject( stairsRegistryName ),
-                    tile.meta(),
-                    new ModelResourceLocation( stairsRegistryName , DefaultStairModelVariant ) );
-            }
-
-            TileType slabType = tile.type().slabType();
-            if( slabType != null && tile.type().slabsType() != null )
-            {
-                ResourceLocation slabRegistryName = slabType.registryName( tile.tileSetName() );
-                ModelLoader.setCustomModelResourceLocation(
-                    Item.REGISTRY.getObject( slabRegistryName ),
-                    tile.meta(),
-                    new ModelResourceLocation( slabRegistryName , DefaultSlabModelVariant ) );
-            }
-
-            TileType wallType = tile.type().wallType();
-            if( wallType != null )
-            {
-                ResourceLocation wallRegistryName = wallType.registryName( tile.tileSetName() );
-                ModelLoader.setCustomModelResourceLocation(
-                    Item.REGISTRY.getObject( wallRegistryName ),
-                    tile.meta(),
-                    new ModelResourceLocation( wallRegistryName , DefaultWallModelVariant ) );
-            }
-
-            TileType buttonType = tile.type().buttonType();
-            if( buttonType != null )
-            {
-                ResourceLocation buttonRegistryName = buttonType.registryName( tile.tileSetName() );
-                ModelLoader.setCustomModelResourceLocation(
-                    Item.REGISTRY.getObject( buttonRegistryName ),
-                    tile.meta(),
-                    new ModelResourceLocation( buttonRegistryName , DefaultButtonModelVariant ) );
-            }
-
-            TileType leverType = tile.type().leverType();
-            if( leverType != null )
-            {
-                ResourceLocation leverRegistryName = leverType.registryName( tile.tileSetName() );
-                ModelLoader.setCustomModelResourceLocation(
-                    Item.REGISTRY.getObject( leverRegistryName ),
-                    tile.meta(),
-                    new ModelResourceLocation( leverRegistryName , DefaultLeverModelVariant ) );
-            }
-
-            TileType pressurePlateType = tile.type().pressurePlateType();
-            if( pressurePlateType != null )
-            {
-                ResourceLocation pressurePlateRegistryName = pressurePlateType.registryName( tile.tileSetName() );
-                ModelLoader.setCustomModelResourceLocation(
-                    Item.REGISTRY.getObject( pressurePlateRegistryName ),
-                    tile.meta(),
-                    new ModelResourceLocation( pressurePlateRegistryName , DefaultPressurePlateModelVariant ) );
+                    itemBlock,
+                    tileInfo.meta(),
+                    new ModelResourceLocation( itemBlock.getRegistryName() , type.defaultModelVariant ) );
             }
         }
     }
@@ -498,7 +401,8 @@ public class GeoTileSet implements IForgeRegistrable
         // TODO: Don't generate a texture if a texture already exists, such as from a texture pack.
         // I think ModelDynBucket has example code for this...
 
-        for( IGeoTileInfo tile : tiles.values() )
-            tile.stitchTextures( textureMap );
+        for( IGeoTileInfo tileInfo : tileInfos )
+            if( tileInfo != null )
+                tileInfo.stitchTextures( textureMap );
     }
 }

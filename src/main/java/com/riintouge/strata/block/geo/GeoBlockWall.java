@@ -33,7 +33,7 @@ public class GeoBlockWall extends BlockWall
 
         RemoveBlockWallVariantFromBlockState();
 
-        ResourceLocation registryName = info.type().wallType().registryName( info.tileSetName() );
+        ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BUILDING_BLOCK_TAB );
@@ -81,12 +81,12 @@ public class GeoBlockWall extends BlockWall
             if( info.tileSetName().compareTo( otherWall.info.tileSetName() ) != 0 )
                 return false;
 
-            switch( info.type().wallType() )
+            switch( info.type() )
             {
                 case COBBLEWALL:
                 case COBBLEWALLMOSSY:
                 {
-                    switch( otherWall.info.type().wallType() )
+                    switch( otherWall.info.type() )
                     {
                         case COBBLEWALL:
                         case COBBLEWALLMOSSY:
@@ -95,10 +95,12 @@ public class GeoBlockWall extends BlockWall
 
                     break;
                 }
+                case STONEWALL:
+                    return otherWall.info.type() == TileType.STONEWALL;
                 case STONEBRICKWALL:
                 case STONEBRICKWALLMOSSY:
                 {
-                    switch( otherWall.info.type().wallType() )
+                    switch( otherWall.info.type() )
                     {
                         case STONEBRICKWALL:
                         case STONEBRICKWALLMOSSY:

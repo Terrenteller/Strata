@@ -11,7 +11,7 @@ public class GeoBlockPressurePlate extends BlockPressurePlate
         // Match vanilla stone pressure plate sensitivity
         super( info.material() , Sensitivity.MOBS );
 
-        ResourceLocation registryName = info.type().pressurePlateType().registryName( info.tileSetName() );
+        ResourceLocation registryName = info.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.MISC_BLOCK_TAB );
