@@ -12,7 +12,7 @@ lang.en Breccia Cobblestone
 generate breccia cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 86 strata:blocks/stone/weak/breccia
-lang.en Moss Breccia Stone
+lang.en Mossy Breccia Cobblestone
 
 generate breccia stonebrick
 hardness 1.0

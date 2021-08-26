@@ -16,7 +16,7 @@ generate andesite cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/strong/andesite
-lang.en Moss Andesite Stone
+lang.en Mossy Andesite Cobblestone
 
 generate andesite stonebrick
 harvestLevel 1

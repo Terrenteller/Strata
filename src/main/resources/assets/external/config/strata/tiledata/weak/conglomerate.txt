@@ -12,7 +12,7 @@ lang.en Conglomerate Cobblestone
 generate conglomerate cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 98 strata:blocks/stone/weak/conglomerate
-lang.en Moss Conglomerate Stone
+lang.en Mossy Conglomerate Cobblestone
 
 generate conglomerate stonebrick
 hardness 1.0

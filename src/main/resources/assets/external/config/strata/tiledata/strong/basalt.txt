@@ -15,7 +15,7 @@ generate basalt cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/basalt
-lang.en Moss Basalt Stone
+lang.en Mossy Basalt Cobblestone
 
 generate basalt stonebrick
 harvestLevel 1

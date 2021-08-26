@@ -16,7 +16,7 @@ generate diorite cobblemossy
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/very_strong/diorite
-lang.en Moss Diorite Stone
+lang.en Mossy Diorite Cobblestone
 
 generate diorite stonebrick
 harvestLevel 1

@@ -15,7 +15,7 @@ generate greenschist cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/strong/greenschist
-lang.en Moss Greenschist Stone
+lang.en Mossy Greenschist Cobblestone
 
 generate greenschist stonebrick
 harvestLevel 1

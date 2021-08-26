@@ -12,7 +12,7 @@ lang.en Slate Cobblestone
 generate slate cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 94 strata:blocks/stone/medium/slate
-lang.en Moss Slate Stone
+lang.en Mossy Slate Cobblestone
 
 generate slate stonebrick
 hardness 1.5

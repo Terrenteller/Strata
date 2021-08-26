@@ -12,7 +12,7 @@ lang.en Serpentinite Cobblestone
 generate serpentinite cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/medium/serpentinite
-lang.en Moss Serpentinite Stone
+lang.en Mossy Serpentinite Cobblestone
 
 generate serpentinite stonebrick
 hardness 1.5

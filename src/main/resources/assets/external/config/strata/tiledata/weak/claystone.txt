@@ -15,7 +15,7 @@ generate claystone cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 85 strata:blocks/stone/weak/claystone
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 85 strata:blocks/stone/weak/claystone_caps
-lang.en Moss Claystone Stone
+lang.en Mossy Claystone Cobblestone
 
 generate claystone stonebrick
 hardness 1.0

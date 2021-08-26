@@ -12,7 +12,7 @@ lang.en Mudstone Cobblestone
 generate mudstone cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 91 strata:blocks/stone/weak/mudstone
-lang.en Moss Mudstone Stone
+lang.en Mossy Mudstone Cobblestone
 
 generate mudstone stonebrick
 hardness 1.0

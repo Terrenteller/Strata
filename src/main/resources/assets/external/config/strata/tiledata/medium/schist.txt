@@ -12,7 +12,7 @@ lang.en Schist Cobblestone
 generate schist cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 97 strata:blocks/stone/medium/schist
-lang.en Moss Schist Stone
+lang.en Mossy Schist Cobblestone
 
 generate schist stonebrick
 hardness 1.5

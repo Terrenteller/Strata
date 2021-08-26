@@ -15,7 +15,7 @@ generate limestone cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 94 strata:blocks/stone/medium/limestone
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 94 strata:blocks/stone/medium/limestone_caps
-lang.en Moss Limestone
+lang.en Mossy Limestone Cobblestone
 
 generate limestone stonebrick
 hardness 1.5

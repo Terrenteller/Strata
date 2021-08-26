@@ -15,7 +15,7 @@ generate hornfels cobblemossy
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 96 strata:blocks/stone/very_strong/hornfels
-lang.en Moss Hornfels Stone
+lang.en Mossy Hornfels Cobblestone
 
 generate hornfels stonebrick
 harvestLevel 1

@@ -15,7 +15,7 @@ generate quartzite cobblemossy
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/very_strong/quartzite
-lang.en Moss Quartzite Stone
+lang.en Mossy Quartzite Cobblestone
 
 generate quartzite stonebrick
 harvestLevel 1

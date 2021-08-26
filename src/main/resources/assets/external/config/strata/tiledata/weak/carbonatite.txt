@@ -12,7 +12,7 @@ lang.en Carbonatite Cobblestone
 generate carbonatite cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 85 strata:blocks/stone/weak/carbonatite
-lang.en Moss Carbonatite Stone
+lang.en Mossy Carbonatite Cobblestone
 
 generate carbonatite stonebrick
 hardness 1.0

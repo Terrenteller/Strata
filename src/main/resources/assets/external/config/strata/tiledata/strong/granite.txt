@@ -16,7 +16,7 @@ generate granite cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 87 strata:blocks/stone/strong/granite
-lang.en Moss Granite Stone
+lang.en Mossy Granite Cobblestone
 
 generate granite stonebrick
 harvestLevel 1

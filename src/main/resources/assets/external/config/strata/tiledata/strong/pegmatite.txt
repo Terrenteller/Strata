@@ -15,7 +15,7 @@ generate pegmatite cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 78 strata:blocks/stone/strong/pegmatite
-lang.en Moss Pegmatite Stone
+lang.en Mossy Pegmatite Cobblestone
 
 generate pegmatite stonebrick
 harvestLevel 1

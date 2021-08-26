@@ -15,7 +15,7 @@ generate marble cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 71 strata:blocks/stone/strong/marble
-lang.en Moss Marble Stone
+lang.en Mossy Marble Cobblestone
 
 generate marble stonebrick
 harvestLevel 1

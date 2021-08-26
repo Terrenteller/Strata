@@ -15,7 +15,7 @@ generate skarn cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn_caps
-lang.en Moss Skarn Stone
+lang.en Mossy Skarn Cobblestone
 
 generate skarn stonebrick
 hardness 1.5

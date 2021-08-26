@@ -18,7 +18,7 @@ harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/strong/gneiss
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/strong/gneiss_caps
-lang.en Moss Gneiss Stone
+lang.en Mossy Gneiss Cobblestone
 
 generate gneiss stonebrick
 harvestLevel 1

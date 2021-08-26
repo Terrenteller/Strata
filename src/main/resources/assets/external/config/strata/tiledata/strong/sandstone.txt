@@ -19,7 +19,7 @@ harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone_caps
-lang.en Moss Sandstone Stone
+lang.en Mossy Sandstone Cobblestone
 
 generate sandstone stonebrick
 harvestLevel 1

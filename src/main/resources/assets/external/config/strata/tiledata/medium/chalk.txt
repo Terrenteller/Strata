@@ -15,7 +15,7 @@ generate chalk cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 88 strata:blocks/stone/medium/chalk
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 88 strata:blocks/stone/medium/chalk_caps
-lang.en Moss Chalk Stone
+lang.en Mossy Chalk Cobblestone
 
 generate chalk stonebrick
 hardness 1.5
