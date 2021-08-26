@@ -3,28 +3,76 @@ host
 harvestLevel 1
 hardness 2.5
 texture strata:blocks/stone/very_strong/gabbro
+lang.en Gabbro
 
 generate gabbro cobble
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/cobble normal 96 strata:blocks/stone/very_strong/gabbro
+lang.en Gabbro Cobblestone
 
 generate gabbro cobblemossy
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 96 strata:blocks/stone/very_strong/gabbro
+lang.en Moss Gabbro Stone
 
 generate gabbro stonebrick
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 26 strata:overlays/brick_shadow darken 36 strata:blocks/stone/very_strong/gabbro
+lang.en Gabbro Bricks
 
 generate gabbro stonebrickmossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 26 strata:overlays/brick_shadow darken 36 strata:blocks/stone/very_strong/gabbro
+lang.en Mossy Gabbro Bricks
 
 generate gabbro stonepolished
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/polished_highlight lighten 26 strata:overlays/polished_shadow darken 36 strata:blocks/stone/very_strong/gabbro
+lang.en Polished Gabbro
+
+generate gabbro cobblestairs
+lang.en Gabbro Cobblestone Stairs
+
+generate gabbro stonestairs
+lang.en Gabbro Stairs
+
+generate gabbro stonebrickstairs
+lang.en Gabbro Brick Stairs
+
+generate gabbro cobbleslab
+lang.en Gabbro Cobblestone Slab
+
+generate gabbro stoneslab
+lang.en Gabbro Slab
+
+generate gabbro stonebrickslab
+lang.en Gabbro Brick Slab
+
+generate gabbro cobblewall
+lang.en Gabbro Cobblestone Wall
+
+generate gabbro cobblewallmossy
+lang.en Mossy Gabbro Cobblestone Wall
+
+generate gabbro stonewall
+lang.en Gabbro Wall
+
+generate gabbro stonebrickwall
+lang.en Gabbro Brick Wall
+
+generate gabbro stonebrickwallmossy
+lang.en Mossy Gabbro Brick Wall
+
+generate gabbro button
+lang.en Gabbro Button
+
+generate gabbro lever
+lang.en Gabbro Lever
+
+generate gabbro pressureplate
+lang.en Gabbro Pressure Plate

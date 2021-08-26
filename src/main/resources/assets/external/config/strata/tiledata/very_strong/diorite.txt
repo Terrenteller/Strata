@@ -4,29 +4,77 @@ harvestLevel 1
 hardness 2.5
 texture strata:blocks/stone/very_strong/diorite
 convertsTo minecraft:stone 3
+lang.en Diorite
 
 generate diorite cobble
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/cobble normal 100 strata:blocks/stone/very_strong/diorite
+lang.en Diorite Cobblestone
 
 generate diorite cobblemossy
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/very_strong/diorite
+lang.en Moss Diorite Stone
 
 generate diorite stonebrick
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 41 strata:blocks/stone/very_strong/diorite
+lang.en Diorite Bricks
 
 generate diorite stonebrickmossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 36 strata:overlays/brick_shadow darken 41 strata:blocks/stone/very_strong/diorite
+lang.en Mossy Diorite Bricks
 
 generate diorite stonepolished
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/polished_highlight lighten 36 strata:overlays/polished_shadow darken 41 strata:blocks/stone/very_strong/diorite
 convertsTo minecraft:stone 4
+lang.en Polished Diorite
+
+generate diorite cobblestairs
+lang.en Diorite Cobblestone Stairs
+
+generate diorite stonestairs
+lang.en Diorite Stairs
+
+generate diorite stonebrickstairs
+lang.en Diorite Brick Stairs
+
+generate diorite cobbleslab
+lang.en Diorite Cobblestone Slab
+
+generate diorite stoneslab
+lang.en Diorite Slab
+
+generate diorite stonebrickslab
+lang.en Diorite Brick Slab
+
+generate diorite cobblewall
+lang.en Diorite Cobblestone Wall
+
+generate diorite cobblewallmossy
+lang.en Mossy Diorite Cobblestone Wall
+
+generate diorite stonewall
+lang.en Diorite Wall
+
+generate diorite stonebrickwall
+lang.en Diorite Brick Wall
+
+generate diorite stonebrickwallmossy
+lang.en Mossy Diorite Brick Wall
+
+generate diorite button
+lang.en Diorite Button
+
+generate diorite lever
+lang.en Diorite Lever
+
+generate diorite pressureplate
+lang.en Diorite Pressure Plate

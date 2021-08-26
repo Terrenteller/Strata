@@ -2,44 +2,54 @@ generate basaltic_mineral_sand sand
 hardness 1.0
 sustains Beach Desert
 texture strata:blocks/sand/basaltic_mineral_sand
+lang.en Basaltic Mineral Sand
 
 generate cassiterite_sand sand
 hardness 1.0
 sustains Beach Desert
 texture strata:blocks/sand/cassiterite_sand
+lang.en Cassiterite Sand
 
 generate garnet_sand sand
 hardness 1.0
 sustains Beach Desert
 texture strata:blocks/sand/garnet_sand
+lang.en Garnet Sand
 
 generate granitic_mineral_sand sand
 hardness 1.0
 sustains Beach Desert
 texture strata:blocks/sand/granitic_mineral_sand
+lang.en Granitic Mineral Sand
 
 generate quartz_sand sand
 hardness 1.0
 sustains Beach Desert
 texture strata:blocks/sand/quartz_sand
+lang.en Quartz Sand
 
 generate volcanic_ash sand
 hardness 1.0
 texture strata:blocks/sand/volcanic_ash
+lang.en Volcanic Ash
 
 generate glauconite sand
 hardness 1.0
 texture strata:blocks/sand/glauconite
+lang.en Glauconite Sand
 
 generate diatomite sand
 hardness 1.0
 texture strata:blocks/sand/diatomite
 textureCaps strata:blocks/sand/diatomite_caps
+lang.en Diatomerous Earth
 
 generate sulfur sand
 hardness 1.0
 texture strata:blocks/sand/sulfur
+lang.en Sulfur
 
 generate oil_sand sand
 hardness 1.0
 texture strata:blocks/sand/oil_sand
+lang.en Oil Sand

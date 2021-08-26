@@ -128,3 +128,13 @@ Description:
     The value of fortune is provided as the variable 'f'.
     The result of maxBonusExpExpr is rounded to the nearest integer.
     For example, "exp 1 2 f +" will provide 1 to 6 experience with Fortune III.
+
+Key: lang.<language>[_<region>]
+Value: <localizedName>
+Description:
+    Use localizedName as the user-visible text for a block and item in a locale.
+    The locale format parallels BCP 47 but varies slightly to match what Forge provides. ("en_us", "ru_ru", etc.)
+    A region takes priority over a generic language if both exist. ("en_us" > "en")
+    A region will not fall back onto another region.
+    If no translation is found for the current locale, "en" will be used, if present. ("pt_pt" > "pt" > "en")
+    The registry name or the ore name will be used as the final fallback.

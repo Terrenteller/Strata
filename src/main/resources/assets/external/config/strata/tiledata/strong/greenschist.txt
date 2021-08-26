@@ -3,28 +3,76 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/greenschist
+lang.en Greenschist
 
 generate greenschist cobble
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/cobble normal 100 strata:blocks/stone/strong/greenschist
+lang.en Greenschist Cobblestone
 
 generate greenschist cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/strong/greenschist
+lang.en Moss Greenschist Stone
 
 generate greenschist stonebrick
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 37 strata:blocks/stone/strong/greenschist
+lang.en Greenschist Bricks
 
 generate greenschist stonebrickmossy
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 37 strata:blocks/stone/strong/greenschist
+lang.en Mossy Greenschist Bricks
 
 generate greenschist stonepolished
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 10 strata:overlays/polished_shadow darken 37 strata:blocks/stone/strong/greenschist
+lang.en Polished Greenschist
+
+generate greenschist cobblestairs
+lang.en Greenschist Cobblestone Stairs
+
+generate greenschist stonestairs
+lang.en Greenschist Stairs
+
+generate greenschist stonebrickstairs
+lang.en Greenschist Brick Stairs
+
+generate greenschist cobbleslab
+lang.en Greenschist Cobblestone Slab
+
+generate greenschist stoneslab
+lang.en Greenschist Slab
+
+generate greenschist stonebrickslab
+lang.en Greenschist Brick Slab
+
+generate greenschist cobblewall
+lang.en Greenschist Cobblestone Wall
+
+generate greenschist cobblewallmossy
+lang.en Mossy Greenschist Cobblestone Wall
+
+generate greenschist stonewall
+lang.en Greenschist Wall
+
+generate greenschist stonebrickwall
+lang.en Greenschist Brick Wall
+
+generate greenschist stonebrickwallmossy
+lang.en Mossy Greenschist Brick Wall
+
+generate greenschist button
+lang.en Greenschist Button
+
+generate greenschist lever
+lang.en Greenschist Lever
+
+generate greenschist pressureplate
+lang.en Greenschist Pressure Plate

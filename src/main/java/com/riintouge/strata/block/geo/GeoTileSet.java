@@ -135,6 +135,7 @@ public class GeoTileSet implements IForgeRegistrable
                 case STONESLAB:
                 case STONEBRICKSLAB:
                     itemBlock = new GeoItemBlockSlab(
+                        tileInfo,
                         (GeoBlockSlab)blocks[ type.ordinal() ],
                         (GeoBlockSlab)blocks[ type.ordinal() + 1 ] );
                     break;

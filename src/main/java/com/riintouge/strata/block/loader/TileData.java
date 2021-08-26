@@ -51,6 +51,7 @@ public class TileData
     // Shared
     public boolean isHost = false;
     public GenericCubeTextureMap textureMap = null;
+    public Map< String , String > languageMap = null;
 
     public boolean processKeyValue( String key , String value )
     {
@@ -230,6 +231,14 @@ public class TileData
                 textureMap.set( facing , layerArray );
                 return true;
             }
+        }
+        else if( key.startsWith( "lang." ) )
+        {
+            if( languageMap == null )
+                languageMap = new HashMap<>();
+
+            languageMap.put( key.substring( "lang.".length() ) , value );
+            return true;
         }
 
         return false;

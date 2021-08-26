@@ -1,9 +1,11 @@
 package com.riintouge.strata.block.loader;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ore.IOreInfo;
+import com.riintouge.strata.item.LocalizationRegistry;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -15,8 +17,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
+    private Map< String , String > languageMap;
+
     // IOreInfo
     private String oreName;
     private String blockOreDictionaryName;
@@ -43,6 +50,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     public ImmutableOre( TileData tileData ) throws IllegalArgumentException
     {
+        this.languageMap = Util.lazyCoalesce( tileData.languageMap , HashMap::new );
+
         // IOreInfo
         this.oreName = Util.argumentNullCheck( tileData.oreName , "oreName" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
@@ -64,6 +73,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.hardness = Util.coalesce( tileData.hardness , 1.0f );
         this.explosionResistance = Util.coalesce( tileData.explosionResistance , 1.7f * this.hardness );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
+
+        LocalizationRegistry.INSTANCE.register( this , Strata.resource( oreName ).toString() + ".name" , this.languageMap );
     }
 
     // IOreInfo overrides
@@ -124,6 +135,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         }
 
         return proxyBlockState;
+    }
+
+    @Override
+    public String localizedName()
+    {
+        return LocalizationRegistry.INSTANCE.get( this );
     }
 
     // IGenericBlockProperties overrides

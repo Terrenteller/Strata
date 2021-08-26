@@ -67,6 +67,8 @@ public class OreItemBlock extends ItemBlock
     public String getItemStackDisplayName( ItemStack stack )
     {
         // TextFormatting.LIGHT_PURPLE to indicate a creative mode item
-        return "§d" + super.getItemStackDisplayName( stack );
+        return "§d" + ( oreInfo.proxyBlockState() != null
+            ? super.getItemStackDisplayName( stack )
+            : oreInfo.localizedName() );
     }
 }

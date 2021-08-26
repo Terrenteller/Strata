@@ -2,23 +2,71 @@ generate mudstone stone
 host
 hardness 1.0
 texture strata:blocks/stone/weak/mudstone
+lang.en Mudstone
 
 generate mudstone cobble
 hardness 1.5
 texture strata:overlays/cobble normal 91 strata:blocks/stone/weak/mudstone
+lang.en Mudstone Cobblestone
 
 generate mudstone cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 91 strata:blocks/stone/weak/mudstone
+lang.en Moss Mudstone Stone
 
 generate mudstone stonebrick
 hardness 1.0
 texture strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/mudstone
+lang.en Mudstone Bricks
 
 generate mudstone stonebrickmossy
 hardness 1.0
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/mudstone
+lang.en Mossy Mudstone Bricks
 
 generate mudstone stonepolished
 hardness 1.0
 texture strata:overlays/polished_highlight lighten 23 strata:overlays/polished_shadow darken 23 strata:blocks/stone/weak/mudstone
+lang.en Polished Mudstone
+
+generate mudstone cobblestairs
+lang.en Mudstone Cobblestone Stairs
+
+generate mudstone stonestairs
+lang.en Mudstone Stairs
+
+generate mudstone stonebrickstairs
+lang.en Mudstone Brick Stairs
+
+generate mudstone cobbleslab
+lang.en Mudstone Cobblestone Slab
+
+generate mudstone stoneslab
+lang.en Mudstone Slab
+
+generate mudstone stonebrickslab
+lang.en Mudstone Brick Slab
+
+generate mudstone cobblewall
+lang.en Mudstone Cobblestone Wall
+
+generate mudstone cobblewallmossy
+lang.en Mossy Mudstone Cobblestone Wall
+
+generate mudstone stonewall
+lang.en Mudstone Wall
+
+generate mudstone stonebrickwall
+lang.en Mudstone Brick Wall
+
+generate mudstone stonebrickwallmossy
+lang.en Mossy Mudstone Brick Wall
+
+generate mudstone button
+lang.en Mudstone Button
+
+generate mudstone lever
+lang.en Mudstone Lever
+
+generate mudstone pressureplate
+lang.en Mudstone Pressure Plate

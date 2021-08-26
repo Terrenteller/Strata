@@ -3,28 +3,76 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/basalt
+lang.en Basalt
 
 generate basalt cobble
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/cobble normal 82 strata:blocks/stone/strong/basalt
+lang.en Basalt Cobblestone
 
 generate basalt cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/basalt
+lang.en Moss Basalt Stone
 
 generate basalt stonebrick
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/basalt
+lang.en Basalt Bricks
 
 generate basalt stonebrickmossy
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 10 strata:overlays/brick_shadow darken 27 strata:blocks/stone/strong/basalt
+lang.en Mossy Basalt Bricks
 
 generate basalt stonepolished
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 10 strata:overlays/polished_shadow darken 27 strata:blocks/stone/strong/basalt
+lang.en Polished Basalt
+
+generate basalt cobblestairs
+lang.en Basalt Cobblestone Stairs
+
+generate basalt stonestairs
+lang.en Basalt Stairs
+
+generate basalt stonebrickstairs
+lang.en Basalt Brick Stairs
+
+generate basalt cobbleslab
+lang.en Basalt Cobblestone Slab
+
+generate basalt stoneslab
+lang.en Basalt Slab
+
+generate basalt stonebrickslab
+lang.en Basalt Brick Slab
+
+generate basalt cobblewall
+lang.en Basalt Cobblestone Wall
+
+generate basalt cobblewallmossy
+lang.en Mossy Basalt Cobblestone Wall
+
+generate basalt stonewall
+lang.en Basalt Wall
+
+generate basalt stonebrickwall
+lang.en Basalt Brick Wall
+
+generate basalt stonebrickwallmossy
+lang.en Mossy Basalt Brick Wall
+
+generate basalt button
+lang.en Basalt Button
+
+generate basalt lever
+lang.en Basalt Lever
+
+generate basalt pressureplate
+lang.en Basalt Pressure Plate

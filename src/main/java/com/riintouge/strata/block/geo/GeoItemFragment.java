@@ -28,7 +28,13 @@ public class GeoItemFragment extends Item
         setCreativeTab( Strata.BLOCK_FRAGMENT_TAB );
     }
 
-    // ItemBlock overrides
+    // Item overrides
+
+    @Override
+    public String getItemStackDisplayName( ItemStack stack )
+    {
+        return geoTileInfo.localizedName();
+    }
 
     @Override
     public String getUnlocalizedName()

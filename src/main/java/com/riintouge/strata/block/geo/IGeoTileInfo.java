@@ -32,4 +32,6 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     ArrayList< IBlockState > sustainsPlantsSustainedBy();
 
     IModelRetexturizerMap modelTextureMap();
+
+    String localizedName();
 }

@@ -3,28 +3,76 @@ host
 hardness 1.0
 texture strata:blocks/stone/weak/claystone
 textureCaps strata:blocks/stone/weak/claystone_caps
+lang.en Claystone
 
 generate claystone cobble
 hardness 1.5
 texture strata:overlays/cobble normal 85 strata:blocks/stone/weak/claystone
 textureCaps strata:overlays/cobble normal 85 strata:blocks/stone/weak/claystone_caps
+lang.en Claystone Cobblestone
 
 generate claystone cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 85 strata:blocks/stone/weak/claystone
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 85 strata:blocks/stone/weak/claystone_caps
+lang.en Moss Claystone Stone
 
 generate claystone stonebrick
 hardness 1.0
 texture strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone
 textureCaps strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone_caps
+lang.en Claystone Bricks
 
 generate claystone stonebrickmossy
 hardness 1.0
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone
 textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 35 strata:overlays/brick_shadow darken 23 strata:blocks/stone/weak/claystone_caps
+lang.en Mossy Claystone Bricks
 
 generate claystone stonepolished
 hardness 1.0
 texture strata:overlays/polished_highlight lighten 35 strata:overlays/polished_shadow darken 23 strata:blocks/stone/weak/claystone
 textureCaps strata:overlays/polished_highlight lighten 35 strata:overlays/polished_shadow darken 23 strata:blocks/stone/weak/claystone_caps
+lang.en Polished Claystone
+
+generate claystone cobblestairs
+lang.en Claystone Cobblestone Stairs
+
+generate claystone stonestairs
+lang.en Claystone Stairs
+
+generate claystone stonebrickstairs
+lang.en Claystone Brick Stairs
+
+generate claystone cobbleslab
+lang.en Claystone Cobblestone Slab
+
+generate claystone stoneslab
+lang.en Claystone Slab
+
+generate claystone stonebrickslab
+lang.en Claystone Brick Slab
+
+generate claystone cobblewall
+lang.en Claystone Cobblestone Wall
+
+generate claystone cobblewallmossy
+lang.en Mossy Claystone Cobblestone Wall
+
+generate claystone stonewall
+lang.en Claystone Wall
+
+generate claystone stonebrickwall
+lang.en Claystone Brick Wall
+
+generate claystone stonebrickwallmossy
+lang.en Mossy Claystone Brick Wall
+
+generate claystone button
+lang.en Claystone Button
+
+generate claystone lever
+lang.en Claystone Lever
+
+generate claystone pressureplate
+lang.en Claystone Pressure Plate

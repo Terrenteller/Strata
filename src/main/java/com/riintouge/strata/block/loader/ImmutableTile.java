@@ -8,22 +8,27 @@ import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.item.LocalizationRegistry;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.Language;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public final class ImmutableTile implements IGeoTileInfo
 {
+    private Map< String , String > languageMap;
+
     // IGeoTileInfo
     private String tileSetName;
     private TileType type;
@@ -52,6 +57,8 @@ public final class ImmutableTile implements IGeoTileInfo
 
     public ImmutableTile( TileData tileData ) throws IllegalArgumentException
     {
+        this.languageMap = Util.lazyCoalesce( tileData.languageMap , HashMap::new );
+
         // IGeoTileInfo
         this.tileSetName = Util.argumentNullCheck( tileData.tileSetName , "tileSetName" );
         this.type = Util.argumentNullCheck( tileData.type , "type" );
@@ -74,6 +81,8 @@ public final class ImmutableTile implements IGeoTileInfo
         this.hardness = Util.coalesce( tileData.hardness , 1.0f );
         this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f * this.hardness );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
+
+        LocalizationRegistry.INSTANCE.register( this , registryName.toString() + ".name" , this.languageMap );
     }
 
     // IGeoTileInfo overrides
@@ -164,6 +173,12 @@ public final class ImmutableTile implements IGeoTileInfo
     public IModelRetexturizerMap modelTextureMap()
     {
         return modelTextureMap;
+    }
+
+    @Override
+    public String localizedName()
+    {
+        return LocalizationRegistry.INSTANCE.get( this );
     }
 
     // IHostInfo overrides

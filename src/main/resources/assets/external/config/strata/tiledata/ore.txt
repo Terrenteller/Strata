@@ -4,90 +4,107 @@ ore borax
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/borax
+lang.en Borax
 
 ore cinnabar oreCinnabar
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/cinnabar
+lang.en Cinnabar (Mercury Ore)
 
 ore galena oreLead
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/galena
+lang.en Galena (Lead Ore)
 
 # This was referred to oreMolydenum in the original PFAA COG XML
 ore molybdenite oreMolybdenum
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/molybdenite
+lang.en Molybdenite (Molybdenum Ore)
 
 ore pyrolusite oreManganese
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/pyrolusite
+lang.en Pyrolusite (Manganese Ore)
 
 ore salt oreSalt
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/salt
+lang.en Salt
 
 ore stibnite
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/stibnite
+lang.en Stibnite (Antimony Ore)
 
 ore chrysotile
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/chrysotile
+lang.en Chrysotile (Asbestos Ore)
 
 ore salitre
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/salitre
+lang.en Salitre
 
 ore realgar oreArsenic
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/realgar
+lang.en Realgar (Arsenic Ore)
 
 ore graphite
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/graphite
+lang.en Graphite
 
 ore gypsum
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/gypsum
+lang.en Gypsum
 
 ore mirabilite
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/mirabilite
+lang.en Mirabilite
 
 ore mica
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/mica
 textureCaps strata:blocks/ore/weak/mica_caps
+lang.en Mica
 
 ore soapstone
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/soapstone
+lang.en Soapstone
 
 ore trona
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/trona
 textureCaps strata:blocks/ore/weak/trona_caps
+lang.en Trona
 
 ore bog_iron oreIron
 type stone
 hardness 2.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/weak/bog_iron
+lang.en Bog Iron
 
 # Medium
 
@@ -95,83 +112,99 @@ ore barite oreBarium
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/barite
+lang.en Barite (Barium Ore)
 
 ore bastnasite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/bastnasite
+lang.en Bastnasite
 
 # PFAA COG XML mentions malachite but cannot be found
 ore chalcopyrite oreCopper
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/chalcopyrite
+lang.en Chalcopyrite (Copper Ore)
 
 ore garnierite oreNickel
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/garnierite
+lang.en Garnierite (Nickel Ore)
 
 ore lepidolite oreLithium
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/lepidolite
+lang.en Lepidolite (Lithium Ore)
 
 ore magnesite oreMagnesium
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/magnesite
+lang.en Magnesite
 
 ore pentlandite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/pentlandite
+lang.en Pentlandite
 
 ore scheelite oreTungsten
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/scheelite
+lang.en Scheelite (Tungsten Ore)
 
 ore sphalerite oreZinc
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/sphalerite
+lang.en Sphalerite (Zinc Ore)
 
 ore wolframite oreTungsten
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/wolframite
+lang.en Wolframite (Tungsten Ore)
 
 # Regardless of IUPAC naming, oreBauxite came first
 ore alunite oreBauxite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/alunite
+lang.en Alunite (Aluminium Ore)
 
 ore celestine oreStrontium
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/celestine
+lang.en Celestine (Strontium Ore)
 
 ore dolomite oreMagnesium
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/dolomite
+lang.en Dolomite (Magnesium Ore)
 
 ore fluorite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/fluorite
+lang.en Fluorite
 
 ore wollastonite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/wollastonite
+lang.en Wollastonite
 
 ore zeolite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/zeolite
+lang.en Zeolite
 
 # Strong
 
@@ -181,85 +214,101 @@ hardness 4.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/strong/banded_iron
 textureCaps strata:blocks/ore/strong/banded_iron_caps
+lang.en Banded Iron (Iron Ore)
 
 ore quartz
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/quartz
+lang.en Quartz
 
 ore cassiterite oreTin
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/cassiterite
+lang.en Cassiterite (Tin Ore)
 
 ore chromite oreChromium
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/chromite
+lang.en Chromite (Chromium Ore)
 
 ore ilmenite oreTitanium
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/ilmenite
+lang.en Ilmenite (Titanium Ore)
 
 ore magnetite oreIron
 type stone
 hardness 4.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/strong/magnetite
+lang.en Magnetite (Iron Ore)
 
 # Caesium is the IUPAC name. Beware of oreCesium
 ore pollucite oreCaesium
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/pollucite
+lang.en Pollucite (Caesium Ore)
 
 ore spodumene oreLithium
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/spodumene
+lang.en Spodumene (Lithium Ore)
 
 ore tantalite oreTantalum
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/tantalite
+lang.en Tantalite (Tantalum Ore)
 
 ore pitchblende oreUranium
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/pitchblende
+lang.en Pitchblende (Uranium Ore)
 
 ore vanadium_magnetite oreVanadium
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/vanadium_magnetite
+lang.en Vanadium Magnetite (Vanadium Ore)
 
 # orePhosphate or orePhosphorus? PFAA COG XML uses oreApatite
 ore apatite oreApatite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/apatite
+lang.en Apatite
 
 ore kyanite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/kyanite
+lang.en Kyanite
 
 ore perlite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/perlite
 textureCaps strata:blocks/ore/strong/perlite_caps
+lang.en Perlite
 
 ore pumice
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/pumice
+lang.en Pumice
 
 ore pyrite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/pyrite
+lang.en Pyrite
 
 # Crude
 
@@ -267,6 +316,7 @@ ore oil_shale
 type stone
 hardness 3.0
 texture strata:blocks/ore/crude/oil_shale
+lang.en Oil Shale
 
 ore bituminous_coal oreCoal bituminousCoal
 type stone
@@ -274,6 +324,7 @@ hardness 3.0
 convertsTo minecraft:coal_ore
 burnTime 1600
 texture strata:blocks/ore/crude/bituminous_coal
+lang.en Bituminous Coal
 
 ore lignite oreCoal lignite
 type stone
@@ -281,6 +332,7 @@ hardness 3.0
 convertsTo minecraft:coal_ore
 burnTime 1600
 texture strata:blocks/ore/crude/lignite
+lang.en Lignite
 
 ore anthracite oreCoal anthracite
 type stone
@@ -288,6 +340,7 @@ hardness 3.0
 convertsTo minecraft:coal_ore
 burnTime 1600
 texture strata:blocks/ore/crude/anthracite
+lang.en Anthracite
 
 ore coke oreCoal coke
 type stone
@@ -295,6 +348,7 @@ hardness 3.0
 convertsTo minecraft:coal_ore
 burnTime 1600
 texture strata:blocks/ore/crude/coke
+lang.en Coke
 
 # Clay
 
@@ -302,15 +356,18 @@ ore bauxite oreBauxite
 type clay
 hardness 1.5
 texture strata:blocks/ore/clay/bauxite
+lang.en Bauxite (Aluminium Ore)
 
 ore brown_limonite oreIron
 type clay
 hardness 1.5
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/clay/brown_limonite
+lang.en Brown Limonite (Iron Ore)
 
 ore yellow_limonite oreIron
 type clay
 hardness 1.5
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/clay/yellow_limonite
+lang.en Yellow Limonite (Iron Ore)

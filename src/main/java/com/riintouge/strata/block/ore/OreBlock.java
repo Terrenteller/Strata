@@ -528,6 +528,12 @@ public class OreBlock extends BlockFalling
         return Items.AIR;
     }
 
+    @Override
+    public String getLocalizedName()
+    {
+        return oreInfo.localizedName();
+    }
+
     @Deprecated
     @Override
     public Material getMaterial( IBlockState state )

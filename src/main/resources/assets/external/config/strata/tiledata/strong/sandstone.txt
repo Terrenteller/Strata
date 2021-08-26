@@ -5,34 +5,82 @@ hardness 2.0
 texture strata:blocks/stone/strong/sandstone
 textureCaps strata:blocks/stone/strong/sandstone_caps
 convertsTo minecraft:sandstone
+lang.en Sandstone
 
 generate sandstone cobble
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone_caps
+lang.en Sandstone Cobblestone
 
 generate sandstone cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 82 strata:blocks/stone/strong/sandstone_caps
+lang.en Moss Sandstone Stone
 
 generate sandstone stonebrick
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+lang.en Sandstone Bricks
 
 generate sandstone stonebrickmossy
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 39 strata:overlays/brick_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+lang.en Mossy Sandstone Bricks
 
 generate sandstone stonepolished
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 39 strata:overlays/polished_shadow darken 29 strata:blocks/stone/strong/sandstone
 textureCaps strata:overlays/polished_highlight lighten 39 strata:overlays/polished_shadow darken 29 strata:blocks/stone/strong/sandstone_caps
+lang.en Polished Sandstone
 convertsTo minecraft:sandstone 2
+
+generate sandstone cobblestairs
+lang.en Sandstone Cobblestone Stairs
+
+generate sandstone stonestairs
+lang.en Sandstone Stairs
+
+generate sandstone stonebrickstairs
+lang.en Sandstone Brick Stairs
+
+generate sandstone cobbleslab
+lang.en Sandstone Cobblestone Slab
+
+generate sandstone stoneslab
+lang.en Sandstone Slab
+
+generate sandstone stonebrickslab
+lang.en Sandstone Brick Slab
+
+generate sandstone cobblewall
+lang.en Sandstone Cobblestone Wall
+
+generate sandstone cobblewallmossy
+lang.en Mossy Sandstone Cobblestone Wall
+
+generate sandstone stonewall
+lang.en Sandstone Wall
+
+generate sandstone stonebrickwall
+lang.en Sandstone Brick Wall
+
+generate sandstone stonebrickwallmossy
+lang.en Mossy Sandstone Brick Wall
+
+generate sandstone button
+lang.en Sandstone Button
+
+generate sandstone lever
+lang.en Sandstone Lever
+
+generate sandstone pressureplate
+lang.en Sandstone Pressure Plate

@@ -2,23 +2,71 @@ generate serpentinite stone
 host
 hardness 1.5
 texture strata:blocks/stone/medium/serpentinite
+lang.en Serpentinite
 
 generate serpentinite cobble
 hardness 2.0
 texture strata:overlays/cobble normal 100 strata:blocks/stone/medium/serpentinite
+lang.en Serpentinite Cobblestone
 
 generate serpentinite cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 100 strata:blocks/stone/medium/serpentinite
+lang.en Moss Serpentinite Stone
 
 generate serpentinite stonebrick
 hardness 1.5
 texture strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 36 strata:blocks/stone/medium/serpentinite
+lang.en Serpentinite Bricks
 
 generate serpentinite stonebrickmossy
 hardness 1.5
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 19 strata:overlays/brick_shadow darken 36 strata:blocks/stone/medium/serpentinite
+lang.en Mossy Serpentinite Bricks
 
 generate serpentinite stonepolished
 hardness 1.5
 texture strata:overlays/polished_highlight lighten 19 strata:overlays/polished_shadow darken 36 strata:blocks/stone/medium/serpentinite
+lang.en Polished Serpentinite
+
+generate serpentinite cobblestairs
+lang.en Serpentinite Cobblestone Stairs
+
+generate serpentinite stonestairs
+lang.en Serpentinite Stairs
+
+generate serpentinite stonebrickstairs
+lang.en Serpentinite Brick Stairs
+
+generate serpentinite cobbleslab
+lang.en Serpentinite Cobblestone Slab
+
+generate serpentinite stoneslab
+lang.en Serpentinite Slab
+
+generate serpentinite stonebrickslab
+lang.en Serpentinite Brick Slab
+
+generate serpentinite cobblewall
+lang.en Serpentinite Cobblestone Wall
+
+generate serpentinite cobblewallmossy
+lang.en Mossy Serpentinite Cobblestone Wall
+
+generate serpentinite stonewall
+lang.en Serpentinite Wall
+
+generate serpentinite stonebrickwall
+lang.en Serpentinite Brick Wall
+
+generate serpentinite stonebrickwallmossy
+lang.en Mossy Serpentinite Brick Wall
+
+generate serpentinite button
+lang.en Serpentinite Button
+
+generate serpentinite lever
+lang.en Serpentinite Lever
+
+generate serpentinite pressureplate
+lang.en Serpentinite Pressure Plate

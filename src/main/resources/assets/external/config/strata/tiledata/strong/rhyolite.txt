@@ -3,28 +3,76 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/rhyolite
+lang.en Rhyolite
 
 generate rhyolite cobble
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/cobble normal 78 strata:blocks/stone/strong/rhyolite
+lang.en Rhyolite Cobblestone
 
 generate rhyolite cobblemossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 78 strata:blocks/stone/strong/rhyolite
+lang.en Moss Rhyolite Stone
 
 generate rhyolite stonebrick
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/rhyolite
+lang.en Rhyolite Bricks
 
 generate rhyolite stonebrickmossy
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 59 strata:overlays/brick_shadow darken 34 strata:blocks/stone/strong/rhyolite
+lang.en Mossy Rhyolite Bricks
 
 generate rhyolite stonepolished
 harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 59 strata:overlays/polished_shadow darken 34 strata:blocks/stone/strong/rhyolite
+lang.en Polished Rhyolite
+
+generate rhyolite cobblestairs
+lang.en Rhyolite Cobblestone Stairs
+
+generate rhyolite stonestairs
+lang.en Rhyolite Stairs
+
+generate rhyolite stonebrickstairs
+lang.en Rhyolite Brick Stairs
+
+generate rhyolite cobbleslab
+lang.en Rhyolite Cobblestone Slab
+
+generate rhyolite stoneslab
+lang.en Rhyolite Slab
+
+generate rhyolite stonebrickslab
+lang.en Rhyolite Brick Slab
+
+generate rhyolite cobblewall
+lang.en Rhyolite Cobblestone Wall
+
+generate rhyolite cobblewallmossy
+lang.en Mossy Rhyolite Cobblestone Wall
+
+generate rhyolite stonewall
+lang.en Rhyolite Wall
+
+generate rhyolite stonebrickwall
+lang.en Rhyolite Brick Wall
+
+generate rhyolite stonebrickwallmossy
+lang.en Mossy Rhyolite Brick Wall
+
+generate rhyolite button
+lang.en Rhyolite Button
+
+generate rhyolite lever
+lang.en Rhyolite Lever
+
+generate rhyolite pressureplate
+lang.en Rhyolite Pressure Plate

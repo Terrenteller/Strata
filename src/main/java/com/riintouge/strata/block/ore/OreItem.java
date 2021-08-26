@@ -42,4 +42,10 @@ public class OreItem extends Item
     {
         return oreInfo.burnTime();
     }
+
+    @Override
+    public String getItemStackDisplayName( ItemStack stack )
+    {
+        return oreInfo.localizedName();
+    }
 }

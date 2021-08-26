@@ -4,7 +4,6 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -129,6 +128,12 @@ public class GeoBlock extends BlockFalling
         }
 
         return item != null ? item : super.getItemDropped( state , rand , fortune );
+    }
+
+    @Override
+    public String getLocalizedName()
+    {
+        return info.localizedName();
     }
 
     @Override

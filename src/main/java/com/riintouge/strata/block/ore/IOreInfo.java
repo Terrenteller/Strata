@@ -38,4 +38,6 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
 
     @Nullable
     String bonusExpExpr();
+
+    String localizedName();
 }

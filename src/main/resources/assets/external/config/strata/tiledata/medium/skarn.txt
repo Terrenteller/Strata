@@ -3,28 +3,76 @@ host
 hardness 1.5
 texture strata:blocks/stone/medium/skarn
 textureCaps strata:blocks/stone/medium/skarn_caps
+lang.en Skarn
 
 generate skarn cobble
 hardness 2.0
 texture strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn
 textureCaps strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn_caps
+lang.en Skarn Cobblestone
 
 generate skarn cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 95 strata:blocks/stone/medium/skarn_caps
+lang.en Moss Skarn Stone
 
 generate skarn stonebrick
 hardness 1.5
 texture strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn
 textureCaps strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn_caps
+lang.en Skarn Bricks
 
 generate skarn stonebrickmossy
 hardness 1.5
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn
 textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 23 strata:overlays/brick_shadow darken 28 strata:blocks/stone/medium/skarn_caps
+lang.en Mossy Skarn Bricks
 
 generate skarn stonepolished
 hardness 1.5
 texture strata:overlays/polished_highlight lighten 23 strata:overlays/polished_shadow darken 28 strata:blocks/stone/medium/skarn
 textureCaps strata:overlays/polished_highlight lighten 23 strata:overlays/polished_shadow darken 28 strata:blocks/stone/medium/skarn_caps
+lang.en Polished Skarn
+
+generate skarn cobblestairs
+lang.en Skarn Cobblestone Stairs
+
+generate skarn stonestairs
+lang.en Skarn Stairs
+
+generate skarn stonebrickstairs
+lang.en Skarn Brick Stairs
+
+generate skarn cobbleslab
+lang.en Skarn Cobblestone Slab
+
+generate skarn stoneslab
+lang.en Skarn Slab
+
+generate skarn stonebrickslab
+lang.en Skarn Brick Slab
+
+generate skarn cobblewall
+lang.en Skarn Cobblestone Wall
+
+generate skarn cobblewallmossy
+lang.en Mossy Skarn Cobblestone Wall
+
+generate skarn stonewall
+lang.en Skarn Wall
+
+generate skarn stonebrickwall
+lang.en Skarn Brick Wall
+
+generate skarn stonebrickwallmossy
+lang.en Mossy Skarn Brick Wall
+
+generate skarn button
+lang.en Skarn Button
+
+generate skarn lever
+lang.en Skarn Lever
+
+generate skarn pressureplate
+lang.en Skarn Pressure Plate

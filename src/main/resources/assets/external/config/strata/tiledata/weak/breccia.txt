@@ -2,23 +2,71 @@ generate breccia stone
 host
 hardness 1.0
 texture strata:blocks/stone/weak/breccia
+lang.en Breccia
 
 generate breccia cobble
 hardness 1.5
 texture strata:overlays/cobble normal 86 strata:blocks/stone/weak/breccia
+lang.en Breccia Cobblestone
 
 generate breccia cobblemossy
 hardness 1.5
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 86 strata:blocks/stone/weak/breccia
+lang.en Moss Breccia Stone
 
 generate breccia stonebrick
 hardness 1.0
 texture strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 30 strata:blocks/stone/weak/breccia
+lang.en Breccia Bricks
 
 generate breccia stonebrickmossy
 hardness 1.0
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 21 strata:overlays/brick_shadow darken 30 strata:blocks/stone/weak/breccia
+lang.en Mossy Breccia Bricks
 
 generate breccia stonepolished
 hardness 1.0
 texture strata:overlays/polished_highlight lighten 21 strata:overlays/polished_shadow darken 30 strata:blocks/stone/weak/breccia
+lang.en Polished Breccia
+
+generate breccia cobblestairs
+lang.en Breccia Cobblestone Stairs
+
+generate breccia stonestairs
+lang.en Breccia Stairs
+
+generate breccia stonebrickstairs
+lang.en Breccia Brick Stairs
+
+generate breccia cobbleslab
+lang.en Breccia Cobblestone Slab
+
+generate breccia stoneslab
+lang.en Breccia Slab
+
+generate breccia stonebrickslab
+lang.en Breccia Brick Slab
+
+generate breccia cobblewall
+lang.en Breccia Cobblestone Wall
+
+generate breccia cobblewallmossy
+lang.en Mossy Breccia Cobblestone Wall
+
+generate breccia stonewall
+lang.en Breccia Wall
+
+generate breccia stonebrickwall
+lang.en Breccia Brick Wall
+
+generate breccia stonebrickwallmossy
+lang.en Mossy Breccia Brick Wall
+
+generate breccia button
+lang.en Breccia Button
+
+generate breccia lever
+lang.en Breccia Lever
+
+generate breccia pressureplate
+lang.en Breccia Pressure Plate

@@ -6,9 +6,12 @@ import net.minecraft.item.ItemStack;
 
 public class GeoItemBlockSlab extends ItemSlab
 {
-    public GeoItemBlockSlab( BlockSlab singleSlab , BlockSlab doubleSlab )
+    protected IGeoTileInfo tileInfo;
+
+    public GeoItemBlockSlab( IGeoTileInfo tileInfo , BlockSlab singleSlab , BlockSlab doubleSlab )
     {
         super( singleSlab , singleSlab , doubleSlab );
+        this.tileInfo = tileInfo;
 
         String blockRegistryName = block.getRegistryName().toString();
         setRegistryName( blockRegistryName );
@@ -18,8 +21,22 @@ public class GeoItemBlockSlab extends ItemSlab
     // ItemBlock overrides
 
     @Override
-    public String getUnlocalizedName( ItemStack stack )
+    public String getUnlocalizedName()
     {
         return this.block.getUnlocalizedName().replaceAll( "tile." , "" );
+    }
+
+    @Override
+    public String getUnlocalizedName( ItemStack stack )
+    {
+        return getUnlocalizedName();
+    }
+
+    // Item overrides
+
+    @Override
+    public String getItemStackDisplayName( ItemStack stack )
+    {
+        return tileInfo.localizedName();
     }
 }

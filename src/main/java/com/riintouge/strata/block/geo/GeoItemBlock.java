@@ -21,9 +21,15 @@ public class GeoItemBlock extends ItemBlock
     // ItemBlock overrides
 
     @Override
-    public String getUnlocalizedName( ItemStack stack )
+    public String getUnlocalizedName()
     {
         return this.block.getUnlocalizedName().replaceAll( "tile." , "" );
+    }
+
+    @Override
+    public String getUnlocalizedName( ItemStack stack )
+    {
+        return getUnlocalizedName();
     }
 
     // Item overrides
@@ -32,5 +38,11 @@ public class GeoItemBlock extends ItemBlock
     public int getItemBurnTime( ItemStack itemStack )
     {
         return tileInfo.type().isPrimary ? tileInfo.burnTime() : 0;
+    }
+
+    @Override
+    public String getItemStackDisplayName( ItemStack stack )
+    {
+        return tileInfo.localizedName();
     }
 }

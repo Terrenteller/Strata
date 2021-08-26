@@ -3,28 +3,76 @@ host
 harvestLevel 1
 hardness 2.5
 texture strata:blocks/stone/very_strong/hornfels
+lang.en Hornfels
 
 generate hornfels cobble
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/cobble normal 96 strata:blocks/stone/very_strong/hornfels
+lang.en Hornfels Cobblestone
 
 generate hornfels cobblemossy
 harvestLevel 1
 hardness 3.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 96 strata:blocks/stone/very_strong/hornfels
+lang.en Moss Hornfels Stone
 
 generate hornfels stonebrick
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/brick_highlight lighten 25 strata:overlays/brick_shadow darken 39 strata:blocks/stone/very_strong/hornfels
+lang.en Hornfels Bricks
 
 generate hornfels stonebrickmossy
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 25 strata:overlays/brick_shadow darken 39 strata:blocks/stone/very_strong/hornfels
+lang.en Mossy Hornfels Bricks
 
 generate hornfels stonepolished
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/polished_highlight lighten 25 strata:overlays/polished_shadow darken 39 strata:blocks/stone/very_strong/hornfels
+lang.en Polished Hornfels
+
+generate hornfels cobblestairs
+lang.en Hornfels Cobblestone Stairs
+
+generate hornfels stonestairs
+lang.en Hornfels Stairs
+
+generate hornfels stonebrickstairs
+lang.en Hornfels Brick Stairs
+
+generate hornfels cobbleslab
+lang.en Hornfels Cobblestone Slab
+
+generate hornfels stoneslab
+lang.en Hornfels Slab
+
+generate hornfels stonebrickslab
+lang.en Hornfels Brick Slab
+
+generate hornfels cobblewall
+lang.en Hornfels Cobblestone Wall
+
+generate hornfels cobblewallmossy
+lang.en Mossy Hornfels Cobblestone Wall
+
+generate hornfels stonewall
+lang.en Hornfels Wall
+
+generate hornfels stonebrickwall
+lang.en Hornfels Brick Wall
+
+generate hornfels stonebrickwallmossy
+lang.en Mossy Hornfels Brick Wall
+
+generate hornfels button
+lang.en Hornfels Button
+
+generate hornfels lever
+lang.en Hornfels Lever
+
+generate hornfels pressureplate
+lang.en Hornfels Pressure Plate

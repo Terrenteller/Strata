@@ -25,6 +25,7 @@ public class HostRegistry
 
     private HostRegistry()
     {
+        // Nothing to do
     }
 
     public void register( ResourceLocation registryName , int meta , IHostInfo info )

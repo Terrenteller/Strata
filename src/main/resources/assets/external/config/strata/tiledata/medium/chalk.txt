@@ -3,28 +3,77 @@ host
 hardness 1.5
 texture strata:blocks/stone/medium/chalk
 textureCaps strata:blocks/stone/medium/chalk_caps
+lang.en Chalk
 
 generate chalk cobble
 hardness 2.0
 texture strata:overlays/cobble normal 88 strata:blocks/stone/medium/chalk
 textureCaps strata:overlays/cobble normal 88 strata:blocks/stone/medium/chalk_caps
+lang.en Chalk Cobblestone
 
 generate chalk cobblemossy
 hardness 2.0
 texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 88 strata:blocks/stone/medium/chalk
 textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 88 strata:blocks/stone/medium/chalk_caps
+lang.en Moss Chalk Stone
 
 generate chalk stonebrick
 hardness 1.5
 texture strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk
 textureCaps strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk_caps
+lang.en Chalk Bricks
 
 generate chalk stonebrickmossy
 hardness 1.5
 texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk
 textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 100 strata:overlays/brick_shadow darken 8 strata:blocks/stone/medium/chalk_caps
+lang.en Mossy Chalk Bricks
 
 generate chalk stonepolished
 hardness 1.5
 texture strata:overlays/polished_highlight lighten 100 strata:overlays/polished_shadow darken 8 strata:blocks/stone/medium/chalk
 textureCaps strata:overlays/polished_highlight lighten 100 strata:overlays/polished_shadow darken 8 strata:blocks/stone/medium/chalk_caps
+lang.en Polished Chalk
+
+generate chalk cobblestairs
+lang.en Chalk Cobblestone Stairs
+
+generate chalk stonestairs
+lang.en Chalk Stairs
+
+generate chalk stonebrickstairs
+lang.en Chalk Brick Stairs
+
+generate chalk cobbleslab
+lang.en Chalk Cobblestone Slab
+
+generate chalk stoneslab
+lang.en Chalk Slab
+
+generate chalk stonebrickslab
+lang.en Chalk Brick Slab
+
+generate chalk cobblewall
+lang.en Chalk Cobblestone Wall
+
+generate chalk cobblewallmossy
+lang.en Mossy Chalk Cobblestone Wall
+
+generate chalk stonewall
+lang.en Chalk Wall
+
+generate chalk stonebrickwall
+lang.en Chalk Brick Wall
+
+generate chalk stonebrickwallmossy
+lang.en Mossy Chalk Brick Wall
+
+generate chalk button
+lang.en Chalk Button
+lang.de foo bar
+
+generate chalk lever
+lang.en Chalk Lever
+
+generate chalk pressureplate
+lang.en Chalk Pressure Plate

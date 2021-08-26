@@ -30,6 +30,7 @@ public class OreBlockTextureManager
 
     private OreBlockTextureManager()
     {
+        // Nothing to do
     }
 
     public void registerOre( ResourceLocation oreRegistryName , int meta , IOreInfo oreInfo )
