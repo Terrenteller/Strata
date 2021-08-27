@@ -188,28 +188,29 @@ textureDown minecraft:blocks/red_sandstone_bottom
 
 # Ores
 
-ore coal oreCoal
+ore coal oreCoal -
 type stone
 hardness 3.0
 resistance 5.0
+burnTime 1600
 texture strata:blocks/ore/vanilla/coal
-convertsTo minecraft:coal_ore
+convertsTo minecraft:coal
 proxy minecraft:coal_ore
 
-ore diamond oreDiamond
+ore diamond oreDiamond gemDiamond
 type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/diamond
-convertsTo minecraft:diamond_ore
+convertsTo minecraft:diamond
 proxy minecraft:diamond_ore
 
-ore emerald oreEmerald
+ore emerald oreEmerald gemEmerald
 type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/emerald
-convertsTo minecraft:emerald_ore
+convertsTo minecraft:emerald
 proxy minecraft:emerald_ore
 
 ore gold oreGold
@@ -228,18 +229,18 @@ texture strata:blocks/ore/vanilla/iron
 convertsTo minecraft:iron_ore
 proxy minecraft:iron_ore
 
-ore lapis oreLapis
+ore lapis oreLapis gemLapis
 type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/lapis
-convertsTo minecraft:lapis_ore
+convertsTo minecraft:dye 4
 proxy minecraft:lapis_ore
 
-ore redstone oreRedstone
+ore redstone oreRedstone dustRedstone
 type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/redstone
-convertsTo minecraft:redstone_ore
+convertsTo minecraft:redstone
 proxy minecraft:redstone_ore

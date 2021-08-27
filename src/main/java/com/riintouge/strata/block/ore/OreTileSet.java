@@ -19,7 +19,9 @@ public class OreTileSet implements IOreTileSet
             ? new RedstoneOreBlock( oreInfo )
             : new OreBlock( oreInfo );
         itemBlock = new OreItemBlock( oreInfo , block );
-        item = oreInfo.proxyBlockState() != null ? itemBlock : new OreItem( oreInfo );
+        // Ores with proxies should never drop this item (rather the drops of the proxy ore), but it should
+        // always be created so if an ore becomes a proxy it doesn't lead to missing registry entries on world load.
+        item = new OreItem( oreInfo );
     }
 
     // IOreTileSet overrides

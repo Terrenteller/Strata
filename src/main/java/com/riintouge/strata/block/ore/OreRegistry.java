@@ -1,12 +1,15 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.RecipeReplicator;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -96,9 +99,28 @@ public class OreRegistry
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
             IOreInfo oreInfo = tileSet.getInfo();
+            IBlockState proxyBlockState = oreInfo.proxyBlockState();
+            ItemStack blockTargetItemStack = proxyBlockState != null
+                ? new ItemStack( proxyBlockState.getBlock() )
+                : new ItemStack( tileSet.getItem() );
+
+            GameRegistry.addShapelessRecipe(
+                new ResourceLocation( Strata.modid , oreInfo.oreName() + "_item" ),
+                null,
+                blockTargetItemStack,
+                Ingredient.fromItem( tileSet.getItemBlock() ) );
+
             ItemStack equivalentItem = tileSet.getInfo().equivalentItemStack();
+            if( ( equivalentItem == null || equivalentItem.isEmpty() ) && proxyBlockState != null )
+            {
+                Item proxyBlockDroppedItem = proxyBlockState.getBlock().getItemDropped( proxyBlockState , null , 0 );
+                if( proxyBlockDroppedItem != null && !proxyBlockDroppedItem.equals( Items.AIR ) )
+                    equivalentItem = new ItemStack( proxyBlockDroppedItem );
+            }
+
             if( equivalentItem != null && !equivalentItem.isEmpty() )
             {
+                RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( tileSet.getItem() ) );
                 GameRegistry.addShapelessRecipe(
                     new ResourceLocation( Strata.modid , oreInfo.oreName() + "_equivalent" ),
                     null,

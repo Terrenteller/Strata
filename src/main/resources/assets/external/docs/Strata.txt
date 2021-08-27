@@ -86,6 +86,7 @@ Value: <ResourceLocation> [meta]
 Description:
 	One-way, one-to-one conversion to another item for compatibility purposes.
 	Some tile types have an automatic vanilla equivalent.
+	For ores, this applies to the ore item, not the creative mode item block.
 
 Key: fragmentTexture
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>

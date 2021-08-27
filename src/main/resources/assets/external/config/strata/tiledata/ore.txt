@@ -321,7 +321,7 @@ lang.en Oil Shale
 ore bituminous_coal oreCoal bituminousCoal
 type stone
 hardness 3.0
-convertsTo minecraft:coal_ore
+convertsTo minecraft:coal
 burnTime 1600
 texture strata:blocks/ore/crude/bituminous_coal
 lang.en Bituminous Coal
@@ -329,7 +329,7 @@ lang.en Bituminous Coal
 ore lignite oreCoal lignite
 type stone
 hardness 3.0
-convertsTo minecraft:coal_ore
+convertsTo minecraft:coal
 burnTime 1600
 texture strata:blocks/ore/crude/lignite
 lang.en Lignite
@@ -337,7 +337,7 @@ lang.en Lignite
 ore anthracite oreCoal anthracite
 type stone
 hardness 3.0
-convertsTo minecraft:coal_ore
+convertsTo minecraft:coal
 burnTime 1600
 texture strata:blocks/ore/crude/anthracite
 lang.en Anthracite
@@ -345,7 +345,7 @@ lang.en Anthracite
 ore coke oreCoal coke
 type stone
 hardness 3.0
-convertsTo minecraft:coal_ore
+convertsTo minecraft:coal
 burnTime 1600
 texture strata:blocks/ore/crude/coke
 lang.en Coke
