@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.RecipeReplicator;
 import net.minecraft.block.Block;
@@ -17,6 +18,8 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import static com.riintouge.strata.block.geo.TileType.*;
 
 public class GeoTileSet implements IForgeRegistrable
 {
@@ -303,6 +306,22 @@ public class GeoTileSet implements IForgeRegistrable
                             "XXX",
                             "XXX",
                             'X' , parentItemBlock );
+                    }
+
+                    ItemBlock mossyWall = null;
+                    if( type == COBBLEWALL )
+                        mossyWall = itemBlocks[ COBBLEWALLMOSSY.ordinal() ];
+                    else if( type == STONEBRICKWALL )
+                        mossyWall = itemBlocks[ STONEBRICKWALLMOSSY.ordinal() ];
+
+                    if( mossyWall != null )
+                    {
+                        GameRegistry.addShapelessRecipe(
+                            Strata.resource( registryName.getResourcePath() + "_mossy" ),
+                            null,
+                            new ItemStack( mossyWall ),
+                            Ingredient.fromItem( itemBlock ),
+                            Ingredient.fromItem( Item.getItemFromBlock( Blocks.VINE ) ) );
                     }
 
                     break;
