@@ -1,0 +1,52 @@
+{
+    "textures": {
+        "particle": "strata:meta/all",
+        "up": "strata:meta/up",
+        "down": "strata:meta/down",
+        "north": "strata:meta/north",
+        "south": "strata:meta/south",
+        "east": "strata:meta/east",
+        "west": "strata:meta/west"
+    },
+    "elements": [
+        {
+            "__comment": "Post",
+            "from": [ 4, 0, 4 ],
+            "to": [ 12, 16, 12 ],
+            "faces": {
+                "up":    { "texture": "#up", "cullface": "up" },
+                "down":  { "texture": "#down", "cullface": "down" },
+                "north": { "texture": "#north" },
+                "south": { "texture": "#south" },
+                "east":  { "texture": "#east" },
+                "west":  { "texture": "#west" }
+            }
+        },
+        {
+            "__comment": "North/South",
+            "from": [ 5, 0, 0 ],
+            "to": [ 11, 16, 16 ],
+            "faces": {
+                "up":    { "texture": "#up" },
+                "down":  { "texture": "#down", "cullface": "down" },
+                "north": { "texture": "#north" },
+                "south": { "texture": "#south" },
+                "east":  { "texture": "#east" },
+                "west":  { "texture": "#west" }
+            }
+        },
+        {
+            "__comment": "East/West",
+            "from": [ 0, 0, 5 ],
+            "to": [ 16, 16, 11 ],
+            "faces": {
+                "up":    { "texture": "#up" },
+                "down":  { "texture": "#down", "cullface": "down" },
+                "north": { "texture": "#north" },
+                "south": { "texture": "#south" },
+                "east":  { "texture": "#east" },
+                "west":  { "texture": "#west" }
+            }
+        }
+    ]
+}

@@ -1,10 +1,14 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.ReflectionUtil;
+import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
+import net.minecraft.block.BlockTorch;
 import net.minecraft.block.BlockWall;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -21,6 +25,9 @@ import java.lang.reflect.Field;
 
 public class GeoBlockWall extends BlockWall
 {
+    public static final PropertyBool TALL = PropertyBool.create( "tall" );
+    protected static InitializedThreadLocal< Boolean > IsRecursingUp = new InitializedThreadLocal<>( false );
+
     // The logic for this hack MUST respect the default boolean value.
     // A default of true will not be set until after it is too late.
     private boolean createRealBlockState;
@@ -57,11 +64,12 @@ public class GeoBlockWall extends BlockWall
             field.setAccessible( false );
 
             setDefaultState( blockState.getBaseState()
-                .withProperty( UP , Boolean.valueOf( false ) )
-                .withProperty( NORTH , Boolean.valueOf( false ) )
-                .withProperty( EAST , Boolean.valueOf( false ) )
-                .withProperty( SOUTH , Boolean.valueOf( false ) )
-                .withProperty( WEST , Boolean.valueOf( false ) ) );
+                .withProperty( UP , Boolean.FALSE )
+                .withProperty( NORTH , Boolean.FALSE )
+                .withProperty( EAST , Boolean.FALSE )
+                .withProperty( SOUTH , Boolean.FALSE )
+                .withProperty( WEST , Boolean.FALSE )
+                .withProperty( TALL , Boolean.FALSE ) );
         }
         catch( Exception ex )
         {
@@ -69,12 +77,16 @@ public class GeoBlockWall extends BlockWall
         }
     }
 
-    // private in BlockWall and required for overriding behaviour
-    protected boolean canConnectTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
+    // BlockWall overrides
+
+    @Override
+    public boolean canBeConnectedTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
     {
-        // Only connect to relevant types for visual quality
-        IBlockState otherBlockState = world.getBlockState( pos );
+        BlockPos otherPos = pos.offset( facing );
+        IBlockState otherBlockState = world.getBlockState( otherPos );
         Block otherBlock = otherBlockState.getBlock();
+
+        // Filter out visually displeasing wall connections
         if( otherBlock instanceof GeoBlockWall )
         {
             GeoBlockWall otherWall = (GeoBlockWall)otherBlock;
@@ -114,27 +126,11 @@ public class GeoBlockWall extends BlockWall
             return false;
         }
 
-        BlockFaceShape blockFaceShape = otherBlockState.getBlockFaceShape( world , pos , facing );
+        // Opposite facing to get the face which faces towards us
+        BlockFaceShape otherBlockFaceShape = otherBlockState.getBlockFaceShape( world , otherPos , facing.getOpposite() );
         // Do not connect to BlockFaceShape.MIDDLE_POLE_THICK so we don't connect to other walls
-        return ( blockFaceShape == BlockFaceShape.MIDDLE_POLE && otherBlock instanceof BlockFenceGate )
-            || ( !isExcepBlockForAttachWithPiston( otherBlock ) && blockFaceShape == BlockFaceShape.SOLID );
-    }
-
-    // private in BlockWall and required for overriding behaviour
-    protected boolean canWallConnectTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
-    {
-        BlockPos otherPos = pos.offset( facing );
-        Block otherBlock = world.getBlockState( otherPos ).getBlock();
-        // Vanilla ORs instead of ANDs not respecting a mutual connection
-        return otherBlock.canBeConnectedTo( world , otherPos , facing.getOpposite() ) && canConnectTo( world , otherPos , facing.getOpposite() );
-    }
-
-    // BlockWall overrides
-
-    @Override
-    public boolean canBeConnectedTo( IBlockAccess world , BlockPos pos , EnumFacing facing )
-    {
-        return canConnectTo( world , pos.offset( facing ), facing.getOpposite() );
+        return ( otherBlockFaceShape == BlockFaceShape.MIDDLE_POLE && otherBlock instanceof BlockFenceGate )
+            || ( !isExcepBlockForAttachWithPiston( otherBlock ) && otherBlockFaceShape == BlockFaceShape.SOLID );
     }
 
     // Block overrides
@@ -151,8 +147,8 @@ public class GeoBlockWall extends BlockWall
         // BlockWall stuffs its VARIANT PropertyEnum into the default block state in its constructor.
         // This property does not make sense for Strata. Play along until we can remove it.
         return createRealBlockState
-            ? new BlockStateContainer( this , UP , NORTH , EAST , WEST , SOUTH )
-            : new BlockStateContainer( this , UP , NORTH , EAST , WEST , SOUTH , VARIANT );
+            ? new BlockStateContainer( this , UP , NORTH , EAST , SOUTH , WEST , TALL )
+            : new BlockStateContainer( this , UP , NORTH , EAST , SOUTH , WEST , TALL , VARIANT );
     }
 
     @Override
@@ -164,20 +160,90 @@ public class GeoBlockWall extends BlockWall
     @Override
     public IBlockState getActualState( IBlockState state , IBlockAccess worldIn , BlockPos pos )
     {
-        boolean north = canWallConnectTo( worldIn , pos , EnumFacing.NORTH );
-        boolean east = canWallConnectTo( worldIn , pos , EnumFacing.EAST );
-        boolean south = canWallConnectTo( worldIn , pos , EnumFacing.SOUTH );
-        boolean west = canWallConnectTo( worldIn , pos , EnumFacing.WEST );
-        boolean up = !( ( north && !east && south && !west ) || ( !north && east && !south && west ) )
-            || !worldIn.isAirBlock( pos.up() )
-            || worldIn.getBlockState( pos.offset( EnumFacing.DOWN ) ).getBlock() instanceof BlockWall;
+        boolean north = canBeConnectedTo( worldIn , pos , EnumFacing.NORTH );
+        boolean east = canBeConnectedTo( worldIn , pos , EnumFacing.EAST );
+        boolean south = canBeConnectedTo( worldIn , pos , EnumFacing.SOUTH );
+        boolean west = canBeConnectedTo( worldIn , pos , EnumFacing.WEST );
+        // up is true if the wall is not a straight section
+        boolean up = !( ( north && !east && south && !west ) || ( !north && east && !south && west ) );
+        boolean tall = false;
+
+        if( true ) // TODO: make Forge config option
+        {
+            // Bail out early if we have what we need. "Tallness" doesn't affect posts.
+            if( up && IsRecursingUp.get() )
+            {
+                return state
+                    .withProperty( UP , up )
+                    .withProperty( NORTH , north )
+                    .withProperty( EAST , east )
+                    .withProperty( SOUTH , south )
+                    .withProperty( WEST , west );
+            }
+
+            BlockPos abovePos = pos.offset( EnumFacing.UP );
+            IBlockState aboveBlockState = worldIn.getBlockState( abovePos );
+            Block aboveBlock = aboveBlockState.getBlock();
+
+            switch( aboveBlockState.getBlockFaceShape( worldIn , abovePos , EnumFacing.DOWN ) )
+            {
+                case BOWL:
+                    break;
+                case SOLID:
+                    tall = true;
+                    break;
+                case UNDEFINED:
+                    up |= aboveBlock instanceof BlockTorch; // Torch bottoms aren't CENTER_SMALL for some reason
+                    break;
+                case CENTER_BIG:
+                    if( aboveBlock instanceof BlockWall )
+                    {
+                        // Recurse upwards
+                        boolean wasRecursingUp = IsRecursingUp.get();
+                        if( !wasRecursingUp )
+                            IsRecursingUp.set( true );
+                        IBlockState aboveBlockActualState = aboveBlock.getActualState( aboveBlockState , worldIn , abovePos );
+                        if( !wasRecursingUp )
+                            IsRecursingUp.remove();
+
+                        boolean aboveNorth = StateUtil.getValue( aboveBlockActualState , NORTH , false );
+                        boolean aboveEast = StateUtil.getValue( aboveBlockActualState , EAST , false );
+                        boolean aboveSouth = StateUtil.getValue( aboveBlockActualState , SOUTH , false );
+                        boolean aboveWest = StateUtil.getValue( aboveBlockActualState , WEST , false );
+
+                        // If the wall above has a post, we do too. Otherwise, we're a post if connections differ.
+                        // Stacked, parallel walls will pass these checks and not have a post.
+                        up |= StateUtil.getValue( aboveBlockActualState , UP , false )
+                            || ( north != aboveNorth ) || ( east != aboveEast ) || ( south != aboveSouth ) || ( west != aboveWest );
+
+                        // If the wall above has any connections which match ours, all directions are considered "tall".
+                        // This dampens the model state combinatorial explosion in the "generic_wall" blockstate.
+                        // Visual oddities will occur with certain arrangements, but the overall improvement
+                        // is worth the edge cases. This might can be fixed if/when we can load a multipart model
+                        // as a dependency. See the note in GeoTileSetRegistry.registerBlocks() for details.
+                        tall |= ( north && aboveNorth ) || ( east && aboveEast ) || ( south && aboveSouth ) || ( west && aboveWest );
+
+                        break;
+                    }
+                default:
+                    up = true;
+            }
+        }
+        /*
+        else
+        {
+            up |= !worldIn.isAirBlock( pos.up() )
+                || worldIn.getBlockState( pos.offset( EnumFacing.DOWN ) ).getBlock() instanceof BlockWall;
+        }
+        */
 
         return state
-            .withProperty( UP , Boolean.valueOf( up ) )
-            .withProperty( NORTH , Boolean.valueOf( north ) )
-            .withProperty( EAST , Boolean.valueOf( east ) )
-            .withProperty( SOUTH , Boolean.valueOf( south ) )
-            .withProperty( WEST , Boolean.valueOf( west ) );
+            .withProperty( UP , up )
+            .withProperty( NORTH , north )
+            .withProperty( EAST , east )
+            .withProperty( SOUTH , south )
+            .withProperty( WEST , west )
+            .withProperty( TALL , tall );
     }
 
     @Override

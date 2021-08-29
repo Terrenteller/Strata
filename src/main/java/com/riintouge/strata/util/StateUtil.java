@@ -26,6 +26,15 @@ public class StateUtil
         return (T)blockState.getProperties().get( property );
     }
 
+    public static < T extends Comparable< T > >
+    T getValue( IBlockState blockState , IProperty< T > property , T defaultValue )
+    {
+        if( blockState == null )
+            return defaultValue;
+
+        return (T)blockState.getProperties().getOrDefault( property , defaultValue );
+    }
+
     public static < T > T getValue( IBlockState blockState , PropertyEnum< ? > property , T defaultValue )
     {
         if( blockState == null || property == null )
