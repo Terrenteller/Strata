@@ -59,9 +59,9 @@ public enum StrataItemCameraTransform
     public final ItemTransformVec3f Vector;
     public final TRSRTransformation TRSR;
 
-    StrataItemCameraTransform( Vector3f translation , Vector3f rotation , Vector3f scale )
+    StrataItemCameraTransform( Vector3f rotation , Vector3f translation , Vector3f scale )
     {
-        Vector = new ItemTransformVec3f( translation , rotation , scale );
+        Vector = new ItemTransformVec3f( rotation , translation , scale );
         TRSR = TRSRTransformation.blockCenterToCorner( TRSRTransformation.from( Vector ) );
     }
     
