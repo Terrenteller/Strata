@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.function.Function;
 
-public class Root
+public class RootDir
 {
     private static final String JarExternalDir = "assets/external";
 
@@ -20,7 +20,7 @@ public class Root
     private String rootSubdirectory;
     private Path externalPath;
 
-    public Root( @Nullable String subdirectory )
+    public RootDir( @Nullable String subdirectory )
     {
         this.rootSubdirectory = subdirectory;
 
@@ -63,7 +63,7 @@ public class Root
                 continue;
 
             targetFile.getParentFile().mkdirs();
-            InputStream stream = Root.class.getClassLoader().getResourceAsStream( path );
+            InputStream stream = RootDir.class.getClassLoader().getResourceAsStream( path );
 
             try
             {

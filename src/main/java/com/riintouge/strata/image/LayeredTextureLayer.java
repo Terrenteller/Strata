@@ -10,7 +10,7 @@ public class LayeredTextureLayer
 
     public LayeredTextureLayer( ResourceLocation resource )
     {
-        this( resource , BlendMode.NORMAL, 100.0f );
+        this( resource , BlendMode.NORMAL , 100.0f );
     }
 
     public LayeredTextureLayer( ResourceLocation resource , BlendMode blendMode )

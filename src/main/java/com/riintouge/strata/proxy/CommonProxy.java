@@ -1,14 +1,15 @@
 package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.EventHandlers;
+import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.geo.HostRegistry;
-import com.riintouge.strata.resource.Docs;
+import com.riintouge.strata.resource.DocsDir;
 import com.riintouge.strata.block.Blocks;
 import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
-import com.riintouge.strata.resource.Config;
+import com.riintouge.strata.resource.ConfigDir;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -20,9 +21,11 @@ public class CommonProxy
     {
         System.out.println( "CommonProxy::preInit()" );
 
-        Config.INSTANCE.extractMissingResourceFiles();
-        Docs.INSTANCE.extractMissingResourceFiles();
+        StrataConfig.INSTANCE.getConfig(); // Ignore return for initialization
+        ConfigDir.INSTANCE.extractMissingResourceFiles();
+        DocsDir.INSTANCE.extractMissingResourceFiles();
 
+        MinecraftForge.EVENT_BUS.register( StrataConfig.class );
         MinecraftForge.EVENT_BUS.register( Blocks.class );
         MinecraftForge.EVENT_BUS.register( EventHandlers.class );
         MinecraftForge.EVENT_BUS.register( FurnaceRecipeReplicator.class );

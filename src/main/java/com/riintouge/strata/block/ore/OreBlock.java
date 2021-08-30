@@ -500,7 +500,7 @@ public class OreBlock extends BlockFalling
     @Override
     public IBlockState getExtendedState( IBlockState state , IBlockAccess world , BlockPos pos )
     {
-        return getCompleteExtendedState( getTileEntity( world , pos ) , state , world,  pos );
+        return getCompleteExtendedState( getTileEntity( world , pos ) , state , world ,  pos );
     }
 
     @Override

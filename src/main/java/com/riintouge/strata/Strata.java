@@ -1,5 +1,6 @@
 package com.riintouge.strata;
 
+import com.riintouge.strata.gui.*;
 import com.riintouge.strata.proxy.CommonProxy;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
@@ -9,7 +10,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod( modid = Strata.modid , name = Strata.name , version = Strata.internalVersion )
+@Mod( modid = Strata.modid , name = Strata.name , version = Strata.internalVersion , guiFactory = "com.riintouge.strata.gui.StrataGuiFactory" )
 public class Strata
 {
     // We're not using useMetadata so that display and internal versions remain separate.

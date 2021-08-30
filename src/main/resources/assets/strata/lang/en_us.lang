@@ -1,5 +1,20 @@
 # GUI
 
+### Configuration
+
+strata.config.main=Strata Configuration
+
+strata.config.clientCategory=Client Settings
+strata.config.clientCategory.tooltip=Client-side settings which don't affect gameplay
+
+strata.config.useModernWallStyle=Emulate 1.16+ Wall Style
+strata.config.useModernWallStyleDesc=Comes with minor visual discrepancies. Vanilla blocks are not designed for this. Changes will take effect as chunks are re-built.
+
+#strata.config.requeryStatemapper=Re-query Statemapper
+#strata.config.requeryStatemapperDesc=Re-query a block's StateMapperBase on a BlockModelShapes cache miss. This also allows ore blocks to be pushed (but not pulled) by pistons.
+
+### Creative Tabs
+
 itemGroup.strataBlocksTab=Strata Blocks
 itemGroup.strataBuildingBlocksTab=Strata Building Blocks
 itemGroup.strataMiscObjectsTab=Strata Misc. Objects

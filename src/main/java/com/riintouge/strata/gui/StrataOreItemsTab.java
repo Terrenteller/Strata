@@ -1,4 +1,4 @@
-package com.riintouge.strata;
+package com.riintouge.strata.gui;
 
 import com.riintouge.strata.block.ore.OreRegistry;
 import net.minecraft.creativetab.CreativeTabs;

@@ -1,5 +1,6 @@
-package com.riintouge.strata;
+package com.riintouge.strata.gui;
 
+import com.riintouge.strata.Strata;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

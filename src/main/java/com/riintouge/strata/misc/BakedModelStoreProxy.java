@@ -37,7 +37,7 @@ public class BakedModelStoreProxy implements InvocationHandler
     }
 
     @SuppressWarnings( "unchecked" )
-    protected Map< Block, IStateMapper > getBlockStateMapperMap()
+    protected Map< Block , IStateMapper > getBlockStateMapperMap()
     {
         try
         {
@@ -52,7 +52,7 @@ public class BakedModelStoreProxy implements InvocationHandler
 
             Field fieldBlockStateMap = ReflectionUtil.findFieldByType( BlockStateMapper.class , IdentityHashMap.class , true );
             fieldBlockStateMap.setAccessible( true );
-            return (Map< Block, IStateMapper >)fieldBlockStateMap.get( blockStateMapper );
+            return (Map< Block , IStateMapper >)fieldBlockStateMap.get( blockStateMapper );
         }
         catch( Exception e )
         {
@@ -152,7 +152,7 @@ public class BakedModelStoreProxy implements InvocationHandler
             Object bakedModelStore = field.get( blockModelShapes );
             if( !( bakedModelStore instanceof Proxy ) )
             {
-                Map< IBlockState, IBakedModel > originalValue = (Map< IBlockState , IBakedModel >)bakedModelStore;
+                Map< IBlockState , IBakedModel > originalValue = (Map< IBlockState , IBakedModel >)bakedModelStore;
                 Object bakedModelStoreProxyProxy = Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(),
                     new Class[]{ Map.class },

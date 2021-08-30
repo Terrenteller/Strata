@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.StateUtil;
@@ -168,19 +169,13 @@ public class GeoBlockWall extends BlockWall
         boolean up = !( ( north && !east && south && !west ) || ( !north && east && !south && west ) );
         boolean tall = false;
 
-        if( true ) // TODO: make Forge config option
+        if( !StrataConfig.useModernWallStyle )
         {
-            // Bail out early if we have what we need. "Tallness" doesn't affect posts.
-            if( up && IsRecursingUp.get() )
-            {
-                return state
-                    .withProperty( UP , up )
-                    .withProperty( NORTH , north )
-                    .withProperty( EAST , east )
-                    .withProperty( SOUTH , south )
-                    .withProperty( WEST , west );
-            }
-
+            up |= !worldIn.isAirBlock( pos.up() )
+                || worldIn.getBlockState( pos.offset( EnumFacing.DOWN ) ).getBlock() instanceof BlockWall;
+        }
+        else if( !( up && IsRecursingUp.get() ) )
+        {
             BlockPos abovePos = pos.offset( EnumFacing.UP );
             IBlockState aboveBlockState = worldIn.getBlockState( abovePos );
             Block aboveBlock = aboveBlockState.getBlock();
@@ -229,13 +224,6 @@ public class GeoBlockWall extends BlockWall
                     up = true;
             }
         }
-        /*
-        else
-        {
-            up |= !worldIn.isAirBlock( pos.up() )
-                || worldIn.getBlockState( pos.offset( EnumFacing.DOWN ) ).getBlock() instanceof BlockWall;
-        }
-        */
 
         return state
             .withProperty( UP , up )
