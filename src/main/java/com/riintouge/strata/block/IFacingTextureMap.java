@@ -8,5 +8,7 @@ import javax.annotation.Nonnull;
 public interface IFacingTextureMap
 {
     @Nonnull
-    ResourceLocation getOrDefault( EnumFacing facing );
+    ResourceLocation get( EnumFacing facing );
+
+    ResourceLocation getOrDefault( EnumFacing facing , ResourceLocation defaultValue );
 }

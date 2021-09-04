@@ -1,6 +1,6 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.IFacingTextureMap;
+import com.riintouge.strata.block.GenericCubeTextureMap;
 import net.minecraft.util.ResourceLocation;
 
 public interface IHostInfo extends IGenericBlockProperties
@@ -9,7 +9,7 @@ public interface IHostInfo extends IGenericBlockProperties
 
     int meta();
 
-    IFacingTextureMap facingTextureMap();
+    GenericCubeTextureMap modelTextureMap();
 
     int particleFallingColor();
 }

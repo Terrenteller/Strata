@@ -12,32 +12,35 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+// TODO: This class needs an interface. Too many things know about what it really is.
 public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTextureMap
 {
-    private final String registryName;
-    private final LayeredTextureLayer[][] layerLayers = new LayeredTextureLayer[ Layer.values().length ][];
+    protected final String registryName;
+    protected final LayeredTextureLayer[][] layerLayers = new LayeredTextureLayer[ Layer.values().length ][];
 
     public enum Layer
     {
-        ALL   ( null  , null             ),
-        CAPS  ( ALL   , null             ),
-        SIDES ( ALL   , null             ),
-        UP    ( CAPS  , EnumFacing.UP    ),
-        DOWN  ( CAPS  , EnumFacing.DOWN  ),
-        NORTH ( SIDES , EnumFacing.NORTH ),
-        SOUTH ( SIDES , EnumFacing.SOUTH ),
-        EAST  ( SIDES , EnumFacing.EAST  ),
-        WEST  ( SIDES , EnumFacing.WEST  );
+        ALL   ( null  , null             , EnumFacing.VALUES               ),
+        CAPS  ( ALL   , null             , EnumFacing.UP , EnumFacing.DOWN ),
+        SIDES ( ALL   , null             , EnumFacing.HORIZONTALS          ),
+        UP    ( CAPS  , EnumFacing.UP    , EnumFacing.UP                   ),
+        DOWN  ( CAPS  , EnumFacing.DOWN  , EnumFacing.DOWN                 ),
+        NORTH ( SIDES , EnumFacing.NORTH , EnumFacing.NORTH                ),
+        SOUTH ( SIDES , EnumFacing.SOUTH , EnumFacing.SOUTH                ),
+        EAST  ( SIDES , EnumFacing.EAST  , EnumFacing.EAST                 ),
+        WEST  ( SIDES , EnumFacing.WEST  , EnumFacing.WEST                 );
 
         public final Layer parentLayer;
         public final ResourceLocation resourceLocation;
         public final EnumFacing facing;
+        public final EnumFacing[] applicableFacings;
 
-        Layer( Layer parentLayer , EnumFacing facing )
+        Layer( Layer parentLayer , EnumFacing facing , EnumFacing ... applicableFacings )
         {
             this.parentLayer = parentLayer;
             this.resourceLocation = new ResourceLocation( Strata.modid , String.format( "meta/%s" , this.toString().toLowerCase() ) );
             this.facing = facing;
+            this.applicableFacings = applicableFacings;
         }
 
         public String resourceLocationSuffix()
@@ -64,12 +67,23 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
             if( layerLayers[ displayLayer.ordinal() ] != null )
                 return displayLayer;
 
-        return layer;
+        return Layer.ALL;
     }
 
-    public void set( Layer facing , LayeredTextureLayer[] layers )
+    public Layer getDisplayLayer( EnumFacing facing )
     {
-        layerLayers[ facing.ordinal() ] = layers;
+        if( facing != null )
+            for( Layer layer : Layer.values() )
+                if( layer.facing == facing )
+                    return layer;
+
+        return Layer.ALL;
+    }
+
+    // TODO: move to constructor
+    public void set( Layer layer , LayeredTextureLayer[] layers )
+    {
+        layerLayers[ layer.ordinal() ] = layers;
     }
 
     public void stitchTextures( TextureMap textureMap )
@@ -86,6 +100,22 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
                         textureLayers ) );
             }
         }
+    }
+
+    @Nonnull
+    public ResourceLocation get( Layer layer )
+    {
+        ResourceLocation resourceLocation = getOrDefault( layer , null );
+        return resourceLocation != null
+            ? resourceLocation
+            : new ResourceLocation( Strata.modid , registryName + GenericCubeTextureMap.Layer.ALL.resourceLocationSuffix() );
+    }
+
+    public ResourceLocation getOrDefault( Layer layer , ResourceLocation defaultValue )
+    {
+        return layerLayers[ layer.ordinal() ] != null
+            ? new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() )
+            : defaultValue;
     }
 
     // IModelRetexturizerMap overrides
@@ -117,13 +147,22 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
 
     @Nonnull
     @Override
-    public ResourceLocation getOrDefault( EnumFacing facing )
+    public ResourceLocation get( EnumFacing facing )
+    {
+        ResourceLocation resourceLocation = getOrDefault( facing , null );
+        return resourceLocation != null
+            ? resourceLocation
+            : new ResourceLocation( Strata.modid , registryName + GenericCubeTextureMap.Layer.ALL.resourceLocationSuffix() );
+    }
+
+    @Override
+    public ResourceLocation getOrDefault( EnumFacing facing , ResourceLocation defaultValue )
     {
         if( facing != null )
             for( Layer layer : Layer.values() )
                 if( layer.facing == facing )
                     return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() );
 
-        return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( GenericCubeTextureMap.Layer.ALL ).resourceLocationSuffix() );
+        return defaultValue;
     }
 }

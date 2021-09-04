@@ -57,7 +57,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.itemOreDictionaryName = tileData.itemOreDictionaryName;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
-        this.oreItemTextureResource = this.modelTextureMap.getOrDefault( (EnumFacing)null );
+        this.oreItemTextureResource = this.modelTextureMap.get( (EnumFacing)null );
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
         this.baseDropAmount = Util.coalesce( tileData.baseDropAmount , 1 );

@@ -60,7 +60,7 @@ public class GeoBlock extends BlockFalling
         if( particleColour != null )
             return particleColour;
 
-        ResourceLocation textureResourceLocation = info.facingTextureMap().getOrDefault( EnumFacing.DOWN );
+        ResourceLocation textureResourceLocation = info.modelTextureMap().get( EnumFacing.DOWN );
         TextureAtlasSprite texture = Minecraft.getMinecraft()
             .getTextureMapBlocks()
             .getTextureExtry( textureResourceLocation.toString() );

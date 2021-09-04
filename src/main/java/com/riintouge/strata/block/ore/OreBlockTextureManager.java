@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.image.LayeredTexture;
@@ -54,7 +55,7 @@ public class OreBlockTextureManager
         int hostMeta,
         EnumFacing facing )
     {
-        String resourcePath = getGeneratedResourceLocation( oreDomain , orePath , oreMeta , hostDomain , hostPath , hostMeta , facing ).getResourcePath();
+        String resourcePath = getGeneratedResourceLocation( oreDomain , orePath , oreMeta , hostDomain , hostPath , hostMeta , facing.getName2() ).getResourcePath();
         TextureAtlasSprite texture = generatedTextureMap.getOrDefault( resourcePath , null );
         if( texture != null )
             return texture;
@@ -93,28 +94,34 @@ public class OreBlockTextureManager
                         if( hostInfo == null )
                             continue;
 
-                        // TODO: Most hosts and ores are not expected to have distinct textures on every side.
-                        // This inner loop leads to unnecessary duplication and is in dire need of optimization.
-                        // Even with 16x16 images the memory footprint is outrageous compared to what it could be.
-                        // How often does getQuads get called? Can we use something like getDisplayLayer so
-                        // non-unique sides point to a more generic texture? Would it be better to put ore blocks
-                        // in the cutout render layer and introduce a new block model to let the render engine do
-                        // all the work?
-                        for( EnumFacing facing : EnumFacing.values() )
+                        // TODO: Investigate if MultiLayerModel can clean this up once and for all
+                        for( GenericCubeTextureMap.Layer layer : GenericCubeTextureMap.Layer.values() )
                         {
-                            ResourceLocation oreTextureResource = oreInfo.modelTextureMap().getOrDefault( facing );
-                            ResourceLocation hostTextureResource = hostInfo.facingTextureMap().getOrDefault( facing );
-                            ResourceLocation generatedResource = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta , facing );
-                            //System.out.println( "Generating " + generatedResource.toString() );
+                            GenericCubeTextureMap oreTextureMap = oreInfo.modelTextureMap();
+                            GenericCubeTextureMap hostTextureMap = hostInfo.modelTextureMap();
 
-                            LayeredTextureLayer oreLayer = new LayeredTextureLayer( oreTextureResource );
-                            LayeredTextureLayer hostLayer = new LayeredTextureLayer( hostTextureResource );
+                            ResourceLocation oreTextureResource = oreTextureMap.getOrDefault( layer , null );
+                            ResourceLocation hostTextureResource = hostTextureMap.getOrDefault( layer , null );
+
+                            if( oreTextureResource == null && hostTextureResource == null )
+                                continue;
+
+                            ResourceLocation facingResource = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta , layer.toString().toLowerCase() );
+                            System.out.println( "Preparing " + facingResource.toString() );
+
+                            LayeredTextureLayer oreLayer = new LayeredTextureLayer( oreTextureResource != null ? oreTextureResource : oreTextureMap.get( layer ) );
+                            LayeredTextureLayer hostLayer = new LayeredTextureLayer( hostTextureResource != null ? hostTextureResource : hostTextureMap.get( layer ) );
+
                             TextureAtlasSprite generatedTexture = new LayeredTexture(
-                                generatedResource ,
-                                new LayeredTextureLayer[]{ oreLayer , hostLayer } );
-
+                                facingResource,
+                                new LayeredTextureLayer[] { oreLayer , hostLayer } );
                             textureMap.setTextureEntry( generatedTexture );
-                            INSTANCE.generatedTextureMap.put( generatedResource.getResourcePath() , generatedTexture );
+
+                            for( EnumFacing facing : layer.applicableFacings )
+                            {
+                                ResourceLocation layerResource = getGeneratedResourceLocation( ore , oreMeta , host , hostMeta , facing.getName2() );
+                                INSTANCE.generatedTextureMap.put( layerResource.getResourcePath() , generatedTexture );
+                            }
                         }
                     }
                 }
@@ -129,7 +136,7 @@ public class OreBlockTextureManager
         int oreMeta,
         ResourceLocation host,
         int hostMeta,
-        EnumFacing facing )
+        String direction )
     {
         return getGeneratedResourceLocation(
             ore.getResourceDomain(),
@@ -138,7 +145,7 @@ public class OreBlockTextureManager
             host.getResourceDomain(),
             host.getResourcePath(),
             hostMeta,
-            facing );
+            direction );
     }
 
     private static ResourceLocation getGeneratedResourceLocation(
@@ -148,7 +155,7 @@ public class OreBlockTextureManager
         String hostDomain,
         String hostPath,
         int hostMeta,
-        EnumFacing facing )
+        String direction )
     {
         // Ex: ore_strata_cinnabar_0_host_minecraft_stone_3_north
         String texturePath = String.format(
@@ -159,7 +166,7 @@ public class OreBlockTextureManager
             hostDomain,
             hostPath,
             hostMeta,
-            facing.getName2() );
+            direction );
         return new ResourceLocation( Strata.modid , texturePath );
     }
 }

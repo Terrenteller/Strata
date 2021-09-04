@@ -63,7 +63,7 @@ public class HostRegistry
         if( info.material() != Material.SAND )
             return DefaultParticleColor;
 
-        ResourceLocation textureResourceLocation = info.facingTextureMap().getOrDefault( EnumFacing.DOWN );
+        ResourceLocation textureResourceLocation = info.modelTextureMap().get( EnumFacing.DOWN );
         TextureAtlasSprite texture = Minecraft.getMinecraft()
             .getTextureMapBlocks()
             .getTextureExtry( textureResourceLocation.toString() );

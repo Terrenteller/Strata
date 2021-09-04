@@ -1,8 +1,6 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.block.GenericCubeTextureMap;
-import com.riintouge.strata.block.IFacingTextureMap;
-import com.riintouge.strata.block.IModelRetexturizerMap;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
@@ -14,16 +12,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.Language;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class ImmutableTile implements IGeoTileInfo
 {
@@ -170,7 +168,7 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public IModelRetexturizerMap modelTextureMap()
+    public GenericCubeTextureMap modelTextureMap()
     {
         return modelTextureMap;
     }
@@ -193,12 +191,6 @@ public final class ImmutableTile implements IGeoTileInfo
     public int meta()
     {
         return 0;
-    }
-
-    @Override
-    public IFacingTextureMap facingTextureMap()
-    {
-        return modelTextureMap;
     }
 
     @Override

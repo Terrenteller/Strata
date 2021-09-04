@@ -1,7 +1,6 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.block.GenericCubeTextureMap;
-import com.riintouge.strata.block.IFacingTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
@@ -16,7 +15,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     // IHostInfo
     private ResourceLocation registryName;
     private int meta;
-    private GenericCubeTextureMap facingTextureMap;
+    private GenericCubeTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
 
     // IGenericBlockProperties
@@ -33,7 +32,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
         // IHostInfo
         this.registryName = Util.argumentNullCheck( tileData.hostRegistryName , "hostRegistryName" );
         this.meta = Util.coalesce( tileData.hostMeta , 0 );
-        this.facingTextureMap = tileData.textureMap;
+        this.modelTextureMap = tileData.textureMap;
 
         // IGenericBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
@@ -60,9 +59,9 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     }
 
     @Override
-    public IFacingTextureMap facingTextureMap()
+    public GenericCubeTextureMap modelTextureMap()
     {
-        return facingTextureMap;
+        return modelTextureMap;
     }
 
     @Override
@@ -122,6 +121,6 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     @Override
     public void stitchTextures( TextureMap textureMap )
     {
-        facingTextureMap.stitchTextures( textureMap );
+        modelTextureMap.stitchTextures( textureMap );
     }
 }

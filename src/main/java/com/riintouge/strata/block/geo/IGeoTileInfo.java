@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
-import com.riintouge.strata.block.IModelRetexturizerMap;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 
     ArrayList< IBlockState > sustainsPlantsSustainedBy();
 
-    IModelRetexturizerMap modelTextureMap();
+    GenericCubeTextureMap modelTextureMap();
 
     String localizedName();
 }
