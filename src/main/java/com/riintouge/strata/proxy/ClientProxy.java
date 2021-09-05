@@ -1,7 +1,7 @@
 package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.block.geo.GeoItemFragmentTextureManager;
-import com.riintouge.strata.block.ore.OreBlockTextureManager;
+import com.riintouge.strata.block.ore.OreParticleTextureManager;
 import com.riintouge.strata.block.ore.OreItemTextureManager;
 import com.riintouge.strata.misc.BakedModelStoreProxy;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,7 +18,7 @@ public class ClientProxy extends CommonProxy
         System.out.println( "ClientProxy::preInit()" );
 
         MinecraftForge.EVENT_BUS.register( GeoItemFragmentTextureManager.class );
-        MinecraftForge.EVENT_BUS.register( OreBlockTextureManager.class );
+        MinecraftForge.EVENT_BUS.register( OreParticleTextureManager.class );
         MinecraftForge.EVENT_BUS.register( OreItemTextureManager.class );
     }
 

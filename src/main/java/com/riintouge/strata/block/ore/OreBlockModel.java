@@ -1,16 +1,20 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.util.BakedQuadUtil;
-import com.riintouge.strata.util.StateUtil;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.util.OverlayBakedQuadUtil;
+import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
@@ -19,10 +23,13 @@ import java.util.Vector;
 
 public class OreBlockModel implements IBakedModel
 {
-    private IBakedModel originalModel;
+    protected IOreTileSet oreTileSet;
+    protected IBakedModel originalModel;
+    protected BakedQuad[] oreQuads = new BakedQuad[ EnumFacing.values().length ];
 
-    public OreBlockModel( IBakedModel originalModel )
+    public OreBlockModel( IOreTileSet oreTileSet , IBakedModel originalModel )
     {
+        this.oreTileSet = oreTileSet;
         this.originalModel = originalModel;
     }
 
@@ -34,25 +41,44 @@ public class OreBlockModel implements IBakedModel
         if( side == null || !( state instanceof IExtendedBlockState ) )
             return originalModel.getQuads( state , side , rand );
 
-        Block block = state.getBlock();
-        ResourceLocation registryName = block.getRegistryName();
-        String oreName = registryName.getResourcePath().replaceFirst( OreBlock.RegistryNameSuffix , "" );
-        if( !OreRegistry.INSTANCE.contains( oreName ) )
-            return originalModel.getQuads( state , side , rand );
-
-        MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        TextureAtlasSprite texture = OreBlockTextureManager.INSTANCE.findTexture(
-            registryName.getResourceDomain(),
-            oreName,
-            block.getMetaFromState( state ),
-            host.resourceLocation.getResourceDomain(),
-            host.resourceLocation.getResourcePath(),
-            host.meta,
-            side );
+        // renderLayer is null when pistons are involved
+        BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
         List< BakedQuad > newQuads = new Vector<>();
-        newQuads.add( BakedQuadUtil.createBakedQuadForFace( 0 , texture , side ) );
 
-        return newQuads;
+        if( renderLayer == BlockRenderLayer.SOLID || renderLayer == null )
+        {
+            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            IBakedModel hostModel = HostRegistry.INSTANCE.getBakedModel( host );
+            Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
+            IBlockState hostState = hostBlock.getStateFromMeta( host.meta );
+
+            // When hostModel is WeightedBakedModel, the value of rand has a major role in overlay Z-fighting.
+            // Stone, netherrack, and dirt blockstates (at least) specify random rotations to break up monotony.
+            // This is good, but some rotations (non-default?) cause additional quads to Z-fight.
+            // Using a zero value for rand (because it's actually a long) appears to solve the problem.
+            // However, I cannot prove it solves the problem in all cases.
+            // Therefore, continue passing rand to satisfy the purpose of WeightedBakedModel
+            // and use OverlayBakedQuadUtil to produce special quads with an anti-Z-fighting fudge factor.
+            // It's not the solution I was hoping for and is noticeable in-game if you're looking for it,
+            // but the flexibility of allowing the host to draw itself is worth the "ehh".
+            newQuads.addAll( hostModel.getQuads( hostState , side , rand ) );
+        }
+
+        if( renderLayer == BlockRenderLayer.TRANSLUCENT || renderLayer == null )
+        {
+            BakedQuad quad = oreQuads[ side.ordinal() ];
+            if( quad == null )
+            {
+                ResourceLocation textureResourceLocation = oreTileSet.getInfo().modelTextureMap().get( side );
+                TextureAtlasSprite texture = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite( textureResourceLocation.toString() );
+                quad = OverlayBakedQuadUtil.createBakedQuadForFace( 0 , texture , side );
+                oreQuads[ side.ordinal() ] = quad;
+            }
+
+            newQuads.add( quad );
+        }
+
+        return newQuads.size() > 0 ? newQuads : originalModel.getQuads( state , side , rand );
     }
 
     @Override

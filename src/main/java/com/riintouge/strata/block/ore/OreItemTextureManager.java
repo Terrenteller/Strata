@@ -49,7 +49,7 @@ public class OreItemTextureManager
         {
             ResourceLocation textureResource = INSTANCE.oreNameToTextureResourceMap.get( oreName );
             ResourceLocation generatedResourceLocation = getTextureLocation( oreName );
-            //System.out.println( "Generating " + generatedResourceLocation.toString() );
+            //System.out.println( "Stitching " + generatedResourceLocation.toString() );
 
             LayeredTextureLayer oreLayer = new LayeredTextureLayer( textureResource );
             TextureAtlasSprite generatedTexture = new LayeredTexture(

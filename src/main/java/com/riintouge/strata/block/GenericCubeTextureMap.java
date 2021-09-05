@@ -3,6 +3,7 @@ package com.riintouge.strata.block;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -17,6 +18,7 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
 {
     protected final String registryName;
     protected final LayeredTextureLayer[][] layerLayers = new LayeredTextureLayer[ Layer.values().length ][];
+    protected final TextureAtlasSprite[] layerTextures = new TextureAtlasSprite[ Layer.values().length ];
 
     public enum Layer
     {
@@ -94,10 +96,11 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
             if( textureLayers != null )
             {
                 System.out.println( "Stitching " + registryName + layer.resourceLocationSuffix() );
-                textureMap.setTextureEntry(
-                    new LayeredTexture(
-                        new ResourceLocation( Strata.modid , registryName + layer.resourceLocationSuffix() ),
-                        textureLayers ) );
+                LayeredTexture layerTexture = new LayeredTexture(
+                    new ResourceLocation( Strata.modid , registryName + layer.resourceLocationSuffix() ),
+                    textureLayers );
+                layerTextures[ layer.ordinal() ] = layerTexture;
+                textureMap.setTextureEntry( layerTexture );
             }
         }
     }
@@ -116,6 +119,15 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         return layerLayers[ layer.ordinal() ] != null
             ? new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() )
             : defaultValue;
+    }
+
+    public TextureAtlasSprite getTexture( EnumFacing facing )
+    {
+        for( Layer layer = getDisplayLayer( facing ) ; layer != null ; layer = layer.parentLayer )
+            if( layerLayers[ layer.ordinal() ] != null )
+                return layerTextures[ layer.ordinal() ];
+
+        return layerTextures[ Layer.ALL.ordinal() ];
     }
 
     // IModelRetexturizerMap overrides

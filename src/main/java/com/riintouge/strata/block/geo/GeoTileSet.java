@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.RecipeReplicator;
 import net.minecraft.block.Block;
@@ -18,6 +19,8 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.*;
 
 import static com.riintouge.strata.block.geo.TileType.*;
 
@@ -421,8 +424,15 @@ public class GeoTileSet implements IForgeRegistrable
         // TODO: Don't generate a texture if a texture already exists, such as from a texture pack.
         // I think ModelDynBucket has example code for this...
 
+        // Stitching the same texture multiple times leads to weird lookup failures.
+        // No exceptions make it back to us, but we'll end up with (sometimes malformed) water and lava particles.
+        Set< GenericCubeTextureMap > textureMaps = new HashSet<>();
+
         for( IGeoTileInfo tileInfo : tileInfos )
             if( tileInfo != null )
-                tileInfo.stitchTextures( textureMap );
+                textureMaps.add( tileInfo.modelTextureMap() );
+
+        for( GenericCubeTextureMap tileTextureMap : textureMaps )
+            tileTextureMap.stitchTextures( textureMap );
     }
 }

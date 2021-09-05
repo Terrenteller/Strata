@@ -15,7 +15,8 @@ public final class StrataConfig extends ConfigBase
 
     // Client Settings
     public static final String CATEGORY_CLIENT = "client";
-    public static boolean useModernWallStyle = true;
+    public static Boolean useModernWallStyle;
+    public static Boolean usePrecomputedOreParticles;
 
     private final Configuration config;
 
@@ -38,6 +39,7 @@ public final class StrataConfig extends ConfigBase
 
         pushCategory( config , CATEGORY_CLIENT );
         useModernWallStyle = getBoolean( "useModernWallStyle" , true );
+        usePrecomputedOreParticles = getBoolean( "usePrecomputedOreParticles" , true );
         popCategory();
 
         // TODO: remove any property we don't recognize?

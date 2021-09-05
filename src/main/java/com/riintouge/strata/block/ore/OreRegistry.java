@@ -2,7 +2,6 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.RecipeReplicator;
-import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -31,11 +30,12 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OreRegistry
+public final class OreRegistry
 {
     public static final OreRegistry INSTANCE = new OreRegistry();
 
     private Map< String , IOreTileSet > oreTileSetMap = new HashMap<>();
+    private Map< String , IBakedModel > bakedOreModelMap = new HashMap<>();
 
     private OreRegistry()
     {
@@ -57,6 +57,11 @@ public class OreRegistry
     public boolean contains( String oreName )
     {
         return oreTileSetMap.getOrDefault( oreName , null ) != null;
+    }
+
+    public IBakedModel getBakedModel( String oreName )
+    {
+        return bakedOreModelMap.getOrDefault( oreName , null );
     }
 
     // Statics
@@ -167,7 +172,6 @@ public class OreRegistry
     {
         System.out.println( "OreRegistry::stitchTextures()" );
 
-        // TODO: Move logic out of OreBlockTextureManager?
         TextureMap textureMap = event.getMap();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
             tileSet.getInfo().stitchTextures( textureMap );
@@ -184,7 +188,11 @@ public class OreRegistry
             IBakedModel existingModel = modelRegistry.getObject( modelVariantResource );
 
             if( existingModel != null )
-                modelRegistry.putObject( modelVariantResource , new OreBlockModel( existingModel ) );
+            {
+                IBakedModel bakedOreModel = new OreBlockModel( tileSet , existingModel );
+                INSTANCE.bakedOreModelMap.put( tileSet.getInfo().oreName() , bakedOreModel );
+                modelRegistry.putObject( modelVariantResource , bakedOreModel );
+            }
         }
     }
 }

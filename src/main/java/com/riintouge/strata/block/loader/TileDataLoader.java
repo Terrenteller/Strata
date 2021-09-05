@@ -5,7 +5,7 @@ import com.riintouge.strata.block.geo.GeoTileSet;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.TileType;
-import com.riintouge.strata.block.ore.OreBlockTextureManager;
+import com.riintouge.strata.block.ore.OreParticleTextureManager;
 import com.riintouge.strata.block.ore.OreItemTextureManager;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.block.ore.OreTileSet;
@@ -147,7 +147,7 @@ public class TileDataLoader
             }
 
             OreRegistry.INSTANCE.register( new OreTileSet( ore ) );
-            OreBlockTextureManager.INSTANCE.registerOre( Strata.resource( ore.oreName() ) , 0 , ore );
+            OreParticleTextureManager.INSTANCE.registerOre( Strata.resource( ore.oreName() ) , ore );
             OreItemTextureManager.INSTANCE.register( ore.oreName() , ore.oreItemTextureResource() );
         }
 

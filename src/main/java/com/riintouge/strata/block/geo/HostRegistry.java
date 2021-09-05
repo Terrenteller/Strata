@@ -2,8 +2,14 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.loader.ImmutableTile;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelManager;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
@@ -16,12 +22,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HostRegistry
+public final class HostRegistry
 {
     public static final HostRegistry INSTANCE = new HostRegistry();
     public static final int DefaultParticleColor = -16777216; // Taken from BlockFalling
 
     private Map< ResourceLocation , IHostInfo[] > hostInfos = new HashMap<>();
+    private Map< MetaResourceLocation , IBakedModel > hostBakedModelMap = new HashMap<>();
 
     private HostRegistry()
     {
@@ -55,6 +62,32 @@ public class HostRegistry
         return Collections.unmodifiableMap( hostInfos );
     }
 
+    public IBakedModel getBakedModel( MetaResourceLocation metaResourceLocation )
+    {
+        // This method is meant for hosts, but works with anything. Oh well.
+        // TODO: Have a special cache for this kind of stuff that resets on resource reload events.
+
+        IBakedModel hostModel = hostBakedModelMap.getOrDefault( metaResourceLocation , null );
+        if( hostModel == null )
+        {
+            ModelManager modelManager = Minecraft.getMinecraft()
+                .getBlockRendererDispatcher()
+                .getBlockModelShapes()
+                .getModelManager();
+
+            Block hostBlock = Block.REGISTRY.getObject( metaResourceLocation.resourceLocation );
+            Map< IBlockState, ModelResourceLocation > variants = modelManager.getBlockModelShapes()
+                .getBlockStateMapper()
+                .getVariants( hostBlock );
+
+            ModelResourceLocation hostModelResource = variants.get( hostBlock.getStateFromMeta( metaResourceLocation.meta ) );
+            hostModel = modelManager.getModel( hostModelResource );
+            hostBakedModelMap.put( metaResourceLocation , hostModel );
+        }
+
+        return hostModel;
+    }
+
     // Statics
 
     public static int getParticleFallingColor( IHostInfo info )
@@ -86,7 +119,9 @@ public class HostRegistry
         TextureMap textureMap = event.getMap();
         for( IHostInfo[] hostInfos : INSTANCE.hostInfos.values() )
             for( IHostInfo hostInfo : hostInfos )
-                if( hostInfo instanceof IForgeRegistrable )
+                if( hostInfo instanceof ImmutableTile ) // FIXME: We're not supposed to know about tiles here
+                    break;
+                else if( hostInfo instanceof IForgeRegistrable )
                     ( (IForgeRegistrable)hostInfo ).stitchTextures( textureMap );
     }
 }
