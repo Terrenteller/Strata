@@ -3,6 +3,7 @@ host
 hardness 1.5
 texture strata:blocks/stone/medium/limestone
 textureCaps strata:blocks/stone/medium/limestone_caps
+blockstate strata:generic_cube_ym
 lang.en Limestone
 
 generate limestone cobble

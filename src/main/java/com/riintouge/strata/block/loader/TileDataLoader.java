@@ -171,7 +171,7 @@ public class TileDataLoader
                     if( type.parentType == null )
                         continue;
 
-                    // FIXME: Temporary tertiary type creation until all types are defined in config files
+                    // All tertiary types are meant to be defined in config files, but double slabs are special
                     try
                     {
                         TileData parentData = tileDataMap.get( type.parentType );

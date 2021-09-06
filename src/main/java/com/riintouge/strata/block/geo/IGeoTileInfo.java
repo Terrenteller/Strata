@@ -5,6 +5,7 @@ import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 
 import javax.annotation.Nullable;
@@ -32,6 +33,8 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     ArrayList< IBlockState > sustainsPlantsSustainedBy();
 
     GenericCubeTextureMap modelTextureMap();
+
+    ResourceLocation blockstateResourceLocation();
 
     String localizedName();
 }

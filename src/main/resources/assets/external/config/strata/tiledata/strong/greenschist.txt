@@ -3,6 +3,7 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/greenschist
+blockstate strata:generic_cube_yh
 lang.en Greenschist
 
 generate greenschist cobble

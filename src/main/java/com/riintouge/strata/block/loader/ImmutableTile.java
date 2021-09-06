@@ -38,6 +38,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = null; // Lazily evaluated
     private GenericCubeTextureMap modelTextureMap;
+    private ResourceLocation blockstateResourceLocation;
 
     // IHostInfo
     private ResourceLocation registryName;
@@ -66,6 +67,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
         this.sustainsPlantsSustainedByRaw = Util.lazyCoalesce( tileData.sustainsPlantsSustainedByRaw , ArrayList::new );
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
+        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.type.blockstate );
 
         // IHostInfo
         this.registryName = tileData.type.registryName( this.tileSetName );
@@ -170,6 +172,12 @@ public final class ImmutableTile implements IGeoTileInfo
     public GenericCubeTextureMap modelTextureMap()
     {
         return modelTextureMap;
+    }
+
+    @Override
+    public ResourceLocation blockstateResourceLocation()
+    {
+        return blockstateResourceLocation;
     }
 
     @Override

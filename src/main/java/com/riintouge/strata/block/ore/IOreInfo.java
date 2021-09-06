@@ -21,6 +21,8 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
 
     GenericCubeTextureMap modelTextureMap();
 
+    ResourceLocation blockstateResourceLocation();
+
     ResourceLocation oreItemTextureResource();
 
     @Nullable

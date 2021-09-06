@@ -2,6 +2,7 @@ generate serpentinite stone
 host
 hardness 1.5
 texture strata:blocks/stone/medium/serpentinite
+blockstate strata:generic_cube_m
 lang.en Serpentinite
 
 generate serpentinite cobble

@@ -29,6 +29,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private String blockOreDictionaryName;
     private String itemOreDictionaryName;
     private GenericCubeTextureMap modelTextureMap;
+    private ResourceLocation blockstateResourceLocation;
     private ResourceLocation oreItemTextureResource;
     private MetaResourceLocation equivalentItemResourceLocation;
     private ItemStack equivalentItemStack = null; // Lazily evaluated
@@ -57,6 +58,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.itemOreDictionaryName = tileData.itemOreDictionaryName;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
+        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , Strata.resource( "generic_cube_gimbal_overlay" ) );
         this.oreItemTextureResource = this.modelTextureMap.get( (EnumFacing)null );
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
@@ -101,6 +103,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public GenericCubeTextureMap modelTextureMap()
     {
         return modelTextureMap;
+    }
+
+    @Override
+    public ResourceLocation blockstateResourceLocation()
+    {
+        return blockstateResourceLocation;
     }
 
     @Override

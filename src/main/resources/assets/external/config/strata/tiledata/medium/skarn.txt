@@ -3,6 +3,7 @@ host
 hardness 1.5
 texture strata:blocks/stone/medium/skarn
 textureCaps strata:blocks/stone/medium/skarn_caps
+blockstate strata:generic_cube_y
 lang.en Skarn
 
 generate skarn cobble

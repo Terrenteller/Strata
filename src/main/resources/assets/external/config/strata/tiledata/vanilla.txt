@@ -194,6 +194,7 @@ hardness 3.0
 resistance 5.0
 burnTime 1600
 texture strata:blocks/ore/vanilla/coal
+blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:coal
 proxy minecraft:coal_ore
 
@@ -202,6 +203,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/diamond
+blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:diamond
 proxy minecraft:diamond_ore
 
@@ -210,6 +212,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/emerald
+blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:emerald
 proxy minecraft:emerald_ore
 
@@ -218,6 +221,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/gold
+blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:gold_ore
 proxy minecraft:gold_ore
 
@@ -226,6 +230,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/iron
+blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:iron_ore
 proxy minecraft:iron_ore
 
@@ -234,6 +239,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/lapis
+blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:dye 4
 proxy minecraft:lapis_ore
 
@@ -242,5 +248,6 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/redstone
+blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:redstone
 proxy minecraft:redstone_ore

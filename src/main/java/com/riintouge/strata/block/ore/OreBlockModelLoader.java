@@ -39,10 +39,10 @@ public class OreBlockModelLoader implements ICustomModelLoader
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
         matcher.find();
 
-        ResourceLocation blockState = new ResourceLocation( Strata.modid , "generic_cube" );
-        ModelResourceLocation templateModelResource = new ModelResourceLocation( blockState , null );
         String oreName = matcher.group( ResourcePatternOreNameGroup );
-        IModelRetexturizerMap textureMap = OreRegistry.INSTANCE.find( oreName ).getInfo().modelTextureMap();
+        IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
+        ModelResourceLocation templateModelResource = new ModelResourceLocation( oreInfo.blockstateResourceLocation() , null );
+        IModelRetexturizerMap textureMap = oreInfo.modelTextureMap();
         return new ModelRetexturizer( templateModelResource , textureMap );
     }
 

@@ -84,6 +84,7 @@ type stone
 hardness 2.0
 texture strata:blocks/ore/weak/mica
 textureCaps strata:blocks/ore/weak/mica_caps
+blockstate strata:generic_cube_y_overlay
 lang.en Mica
 
 ore soapstone
@@ -214,6 +215,7 @@ hardness 4.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/strong/banded_iron
 textureCaps strata:blocks/ore/strong/banded_iron_caps
+blockstate strata:generic_cube_y_overlay
 lang.en Banded Iron (Iron Ore)
 
 ore quartz
@@ -296,6 +298,7 @@ type stone
 hardness 4.0
 texture strata:blocks/ore/strong/perlite
 textureCaps strata:blocks/ore/strong/perlite_caps
+blockstate strata:generic_cube_y_overlay
 lang.en Perlite
 
 ore pumice

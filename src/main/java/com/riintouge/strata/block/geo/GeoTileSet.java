@@ -413,7 +413,7 @@ public class GeoTileSet implements IForgeRegistrable
                 ModelLoader.setCustomModelResourceLocation(
                     itemBlock,
                     tileInfo.meta(),
-                    new ModelResourceLocation( itemBlock.getRegistryName() , type.defaultModelVariant ) );
+                    new ModelResourceLocation( itemBlock.getRegistryName() , type.defaultVariant ) );
             }
         }
     }

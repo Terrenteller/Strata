@@ -14,6 +14,7 @@ Value: <tileSetName> <TileType>
 Description:
     Register a tile set's tile type to be generated.
 	Recipes, drops, and other properties are determined using tiles in the same set.
+	Double slabs are special and should not be explicitly defined.
 
 Key: host
 Value: <ResourceLocation> [meta]
@@ -34,7 +35,7 @@ Key: type
 Value: <TileType>
 Description:
 	Defines common block properties such as harvest tool, sound type, and block model.
-	Value is redundant with generate.
+	Value is redundant with "generate".
 
 Key: harvestLevel
 Value: <int>
@@ -79,7 +80,14 @@ Description:
 	Generate a texture for the block model using an optional array of layers blended onto a required base.
 	If the tile type has a parent, the parent's complete texture map will be used by default.
 	Any of these keys will cause a new texture map to be created.
+	Although Strata does not generate host blocks, these textures are used for their particles.
 	Must come after a "generate", "host", or "ore" line.
+
+Key: blockstate
+Value: <ResourceLocation>
+Description:
+    Override the Strata-provided, general-purpose, default blockstate. Custom blockstates cannot omit variants.
+    Does not apply to hosts.
 
 Key: convertsTo
 Value: <ResourceLocation> [meta]

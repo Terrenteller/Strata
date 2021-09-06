@@ -51,6 +51,7 @@ public class TileData
 
     // Shared
     public boolean isHost = false;
+    public ResourceLocation blockstateResourceLocation = null;
     public GenericCubeTextureMap textureMap = null;
     public Map< String , String > languageMap = null;
 
@@ -58,6 +59,11 @@ public class TileData
     {
         switch( key )
         {
+            case "blockstate":
+            {
+                blockstateResourceLocation = new ResourceLocation( value );
+                return true;
+            }
             case "burnTime":
             {
                 burnTime = Integer.parseInt( value );

@@ -15,11 +15,11 @@ import java.util.Map;
 public enum TileType
 {
     // Primaries
-    CLAY   ( true , "%s:%s" , Material.CLAY   , SoundType.GROUND , "shovel"  , null , "generic_cube" , null ),
-    GRAVEL ( true , "%s:%s" , Material.SAND   , SoundType.GROUND , "shovel"  , null , "generic_cube" , null ),
-    GROUND ( true , "%s:%s" , Material.GROUND , SoundType.GROUND , "shovel"  , null , "generic_cube" , null ),
-    SAND   ( true , "%s:%s" , Material.SAND   , SoundType.SAND   , "shovel"  , null , "generic_cube" , null ),
-    STONE  ( true , "%s:%s" , Material.ROCK   , SoundType.STONE  , "pickaxe" , null , "generic_cube" , null ),
+    CLAY   ( true , "%s:%s" , Material.CLAY   , SoundType.GROUND , "shovel"  , null , "generic_cube_gimbal" , null ),
+    GRAVEL ( true , "%s:%s" , Material.SAND   , SoundType.GROUND , "shovel"  , null , "generic_cube_gimbal" , null ),
+    GROUND ( true , "%s:%s" , Material.GROUND , SoundType.GROUND , "shovel"  , null , "generic_cube_gimbal" , null ),
+    SAND   ( true , "%s:%s" , Material.SAND   , SoundType.SAND   , "shovel"  , null , "generic_cube_gimbal" , null ),
+    STONE  ( true , "%s:%s" , Material.ROCK   , SoundType.STONE  , "pickaxe" , null , "generic_cube_gimbal" , null ),
 
     // Secondaries - manually specified derivatives of a primary
     COBBLE          ( false , "%s:%s_cobble"          , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
@@ -28,7 +28,8 @@ public enum TileType
     STONEBRICKMOSSY ( false , "%s:%s_stonebrickmossy" , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
     STONEPOLISHED   ( false , "%s:%s_stonepolished"   , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
 
-    // Tertiaries - internally auto-generated from a primary or secondary
+    // Tertiaries - manually* specified derivatives of a primary or secondary
+    // * double slabs are special and should not be specified in config files
     COBBLESTAIRS        ( false , "%s:%s_cobblestairs"        , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "generic_stairs"         , "facing=east,half=bottom,shape=straight" ),
     STONESTAIRS         ( false , "%s:%s_stonestairs"         , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "generic_stairs"         , "facing=east,half=bottom,shape=straight" ),
     STONEBRICKSTAIRS    ( false , "%s:%s_stonebrickstairs"    , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "generic_stairs"         , "facing=east,half=bottom,shape=straight" ),
@@ -56,8 +57,8 @@ public enum TileType
     public final String harvestTool;
     private final String resourceLocationFormat;
     public final TileType parentType;
-    public final ResourceLocation modelName;
-    public final String defaultModelVariant;
+    public final ResourceLocation blockstate;
+    public final String defaultVariant;
 
     TileType(
         Boolean isPrimary,
@@ -66,8 +67,8 @@ public enum TileType
         SoundType soundType,
         String harvestTool,
         TileType parentType,
-        String modelName,
-        String defaultModelVariant )
+        String blockstate,
+        String defaultVariant )
     {
         this.isPrimary = isPrimary;
         this.resourceLocationFormat = resourceLocationFormat;
@@ -75,8 +76,8 @@ public enum TileType
         this.soundType = soundType;
         this.harvestTool = harvestTool;
         this.parentType = parentType;
-        this.modelName = new ResourceLocation( Strata.modid , modelName );
-        this.defaultModelVariant = defaultModelVariant;
+        this.blockstate = Strata.resource( blockstate );
+        this.defaultVariant = defaultVariant;
     }
 
     public ResourceLocation registryName( ResourceLocation baseLocation )

@@ -42,6 +42,7 @@ generate diatomite sand
 hardness 1.0
 texture strata:blocks/sand/diatomite
 textureCaps strata:blocks/sand/diatomite_caps
+blockstate strata:generic_cube_ym
 lang.en Diatomerous Earth
 
 generate sulfur sand

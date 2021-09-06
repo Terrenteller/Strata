@@ -4,6 +4,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/red_sandstone
 textureCaps strata:blocks/stone/strong/red_sandstone_caps
+blockstate strata:generic_cube_y
 convertsTo minecraft:red_sandstone
 lang.en Red Sandstone
 
