@@ -29,6 +29,8 @@ public final class ImmutableTile implements IGeoTileInfo
     // IGeoTileInfo
     private String tileSetName;
     private TileType type;
+    private String blockOreDictionaryName;
+    private String fragmentItemOreDictionaryName;
     private MetaResourceLocation equivalentItemResourceLocation;
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private LayeredTextureLayer[] fragmentTextureLayers;
@@ -60,6 +62,8 @@ public final class ImmutableTile implements IGeoTileInfo
         // IGeoTileInfo
         this.tileSetName = Util.argumentNullCheck( tileData.tileSetName , "tileSetName" );
         this.type = Util.argumentNullCheck( tileData.type , "type" );
+        this.blockOreDictionaryName = tileData.blockOreDictionaryName;
+        this.fragmentItemOreDictionaryName = tileData.fragmentItemOreDictionaryName;
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         if( tileData.fragmentTextureLayers != null && tileData.fragmentTextureLayers.size() > 0 )
             this.fragmentTextureLayers = tileData.fragmentTextureLayers.toArray( new LayeredTextureLayer[ tileData.fragmentTextureLayers.size() ] );
@@ -96,6 +100,18 @@ public final class ImmutableTile implements IGeoTileInfo
     public TileType type()
     {
         return type;
+    }
+
+    @Override
+    public String blockOreDictionaryName()
+    {
+        return blockOreDictionaryName;
+    }
+
+    @Override
+    public String fragmentItemOreDictionaryName()
+    {
+        return fragmentItemOreDictionaryName;
     }
 
     @Override

@@ -30,6 +30,7 @@ public class TileData
     public String oreName = null;
     public String blockOreDictionaryName = null;
     public String itemOreDictionaryName = null;
+    public String fragmentItemOreDictionaryName = null;
     public MetaResourceLocation proxyOreResourceLocation = null;
     public Integer burnTime = null;
     public Integer baseDropAmount = null;
@@ -135,12 +136,15 @@ public class TileData
             }
             case "ore":
             {
+                oreName = value;
+                return true;
+            }
+            case "oreDict":
+            {
                 String[] values = value.split( " " );
-                oreName = values[ 0 ];
-                blockOreDictionaryName = values.length > 1 && values[ 1 ].compareTo( "-" ) != 0 ? values[ 1 ] : null;
-                itemOreDictionaryName = values.length > 2
-                    ? ( values[ 2 ].compareTo( "-" ) != 0 ? values[ 2 ] : null )
-                    : blockOreDictionaryName;
+                blockOreDictionaryName = values[ 0 ].equals( "-" ) ? null : values[ 0 ];
+                itemOreDictionaryName = values.length > 1 ? ( values[ 1 ].equals( "-" ) ? null : values[ 1 ] ) : blockOreDictionaryName;
+                fragmentItemOreDictionaryName = values.length > 2 && !values[ 2 ].equals( "-" ) ? values[ 2 ] : null;
                 return true;
             }
             case "proxy":

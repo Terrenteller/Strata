@@ -1,0 +1,79 @@
+generate dolostone stone
+host
+hardness 1.5
+texture strata:blocks/stone/medium/dolostone
+textureCaps strata:blocks/stone/medium/dolostone_caps
+blockstate strata:generic_cube_ym
+lang.en Dolostone
+
+generate dolostone cobble
+hardness 2.0
+texture strata:overlays/cobble normal 94 strata:blocks/stone/medium/dolostone
+textureCaps strata:overlays/cobble normal 94 strata:blocks/stone/medium/dolostone_caps
+lang.en Dolostone Cobblestone
+
+generate dolostone cobblemossy
+hardness 2.0
+texture strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 94 strata:blocks/stone/medium/dolostone
+textureCaps strata:overlays/mossy_cobble normal 100 strata:overlays/cobble normal 94 strata:blocks/stone/medium/dolostone_caps
+lang.en Mossy Dolostone Cobblestone
+
+generate dolostone stonebrick
+hardness 1.5
+texture strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/dolostone
+textureCaps strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/dolostone_caps
+lang.en Dolostone Bricks
+
+generate dolostone stonebrickmossy
+hardness 1.5
+texture strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/dolostone
+textureCaps strata:overlays/mossy_stonebrick normal 100 strata:overlays/brick_highlight lighten 43 strata:overlays/brick_shadow darken 23 strata:blocks/stone/medium/dolostone_caps
+lang.en Mossy Dolostone Bricks
+
+generate dolostone stonepolished
+hardness 1.5
+texture strata:overlays/polished_highlight lighten 43 strata:overlays/polished_shadow darken 23 strata:blocks/stone/medium/dolostone
+textureCaps strata:overlays/polished_highlight lighten 43 strata:overlays/polished_shadow darken 23 strata:blocks/stone/medium/dolostone_caps
+lang.en Polished Dolostone
+
+generate dolostone cobblestairs
+lang.en Dolostone Cobblestone Stairs
+
+generate dolostone stonestairs
+lang.en Dolostone Stairs
+
+generate dolostone stonebrickstairs
+lang.en Dolostone Brick Stairs
+
+generate dolostone cobbleslab
+lang.en Dolostone Cobblestone Slab
+
+generate dolostone stoneslab
+lang.en Dolostone Slab
+
+generate dolostone stonebrickslab
+lang.en Dolostone Brick Slab
+
+generate dolostone cobblewall
+lang.en Dolostone Cobblestone Wall
+
+generate dolostone cobblewallmossy
+lang.en Mossy Dolostone Cobblestone Wall
+
+generate dolostone stonewall
+lang.en Dolostone Wall
+
+generate dolostone stonebrickwall
+lang.en Dolostone Brick Wall
+
+generate dolostone stonebrickwallmossy
+lang.en Mossy Dolostone Brick Wall
+
+generate dolostone button
+lang.en Dolostone Button
+
+generate dolostone lever
+lang.en Dolostone Lever
+
+generate dolostone pressureplate
+lang.en Dolostone Pressure Plate

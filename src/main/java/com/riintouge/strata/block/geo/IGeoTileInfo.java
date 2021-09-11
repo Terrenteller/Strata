@@ -18,6 +18,12 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     TileType type();
 
     @Nullable
+    String blockOreDictionaryName();
+
+    @Nullable
+    String fragmentItemOreDictionaryName();
+
+    @Nullable
     ItemStack equivalentItemStack();
 
     Boolean hasFragment();

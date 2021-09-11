@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.*;
@@ -132,6 +133,9 @@ public class GeoTileSet implements IForgeRegistrable
                 GeoItemFragment fragment = new GeoItemFragment( tileInfo );
                 fragmentItems[ typeIndex ] = fragment;
                 itemRegistry.register( fragment );
+
+                if( tileInfo.fragmentItemOreDictionaryName() != null )
+                    OreDictionary.registerOre( tileInfo.fragmentItemOreDictionaryName() , fragment );
             }
 
             ItemBlock itemBlock;
@@ -155,6 +159,9 @@ public class GeoTileSet implements IForgeRegistrable
 
             itemBlocks[ typeIndex ] = itemBlock;
             itemRegistry.register( itemBlock );
+
+            if( tileInfo.blockOreDictionaryName() != null )
+                OreDictionary.registerOre( tileInfo.blockOreDictionaryName() , itemBlock );
         }
     }
 

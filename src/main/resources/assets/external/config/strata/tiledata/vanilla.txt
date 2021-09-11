@@ -188,7 +188,8 @@ textureDown minecraft:blocks/red_sandstone_bottom
 
 # Ores
 
-ore coal oreCoal -
+ore coal
+oreDict oreCoal -
 type stone
 hardness 3.0
 resistance 5.0
@@ -198,7 +199,8 @@ blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:coal
 proxy minecraft:coal_ore
 
-ore diamond oreDiamond gemDiamond
+ore diamond
+oreDict oreDiamond gemDiamond
 type stone
 hardness 3.0
 resistance 5.0
@@ -207,7 +209,8 @@ blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:diamond
 proxy minecraft:diamond_ore
 
-ore emerald oreEmerald gemEmerald
+ore emerald
+oreDict oreEmerald gemEmerald
 type stone
 hardness 3.0
 resistance 5.0
@@ -216,7 +219,8 @@ blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:emerald
 proxy minecraft:emerald_ore
 
-ore gold oreGold
+ore gold
+oreDict oreGold
 type stone
 hardness 3.0
 resistance 5.0
@@ -225,7 +229,8 @@ blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:gold_ore
 proxy minecraft:gold_ore
 
-ore iron oreIron
+ore iron
+oreDict oreIron
 type stone
 hardness 3.0
 resistance 5.0
@@ -234,7 +239,8 @@ blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:iron_ore
 proxy minecraft:iron_ore
 
-ore lapis oreLapis gemLapis
+ore lapis
+oreDict oreLapis gemLapis
 type stone
 hardness 3.0
 resistance 5.0
@@ -243,7 +249,8 @@ blockstate strata:generic_cube_y_overlay
 convertsTo minecraft:dye 4
 proxy minecraft:lapis_ore
 
-ore redstone oreRedstone dustRedstone
+ore redstone
+oreDict oreRedstone dustRedstone
 type stone
 hardness 3.0
 resistance 5.0

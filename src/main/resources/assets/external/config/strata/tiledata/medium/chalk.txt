@@ -71,7 +71,6 @@ lang.en Mossy Chalk Brick Wall
 
 generate chalk button
 lang.en Chalk Button
-lang.de foo bar
 
 generate chalk lever
 lang.en Chalk Lever

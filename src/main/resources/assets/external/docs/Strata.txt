@@ -23,13 +23,19 @@ Description:
 	When used with "generate", the Value (not Key!) is ignored and only applies to primary tile types.
 
 Key: ore
-Value: <name> [blockOreDictionaryName] [itemOreDictionaryName]
+Value: <name>
 Description:
 	Register an ore to be generated.
-	The world block and dropped item may have distinct ore dictionary entries, if specified.
-	itemOreDictionaryName defaults to blockOreDictionaryName (which may be unspecified).
-	Use a hyphen ("-") to indicate that object should not be registered with the ore dictionary.
-	A blockOreDictionaryName of "oreRedstone" will make the block behave like vanilla redstone ore.
+
+Key: oreDict
+Value: <itemBlockOreDictionaryName> [itemOreDictionaryName] [fragmentItemOreDictionaryName]
+Description:
+    Register the block item, ore item, and/or fragment item to the ore dictionary.
+    Each may be registered independently. Omit, or use a hyphen, to skip that object's registration.
+    itemOreDictionaryName defaults to itemBlockOreDictionaryName.
+    itemOreDictionaryName does not apply when used with "generate".
+    Ores with an itemBlockOreDictionaryName of "oreRedstone" will make the block behave like vanilla redstone ore.
+    Only applies to ores and primary tile types.
 
 Key: type
 Value: <TileType>

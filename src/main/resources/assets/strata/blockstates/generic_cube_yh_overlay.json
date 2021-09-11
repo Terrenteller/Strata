@@ -1,0 +1,27 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"all": "strata:meta/all",
+			"caps": "strata:meta/caps",
+			"sides": "strata:meta/sides",
+			"up": "strata:meta/up",
+			"down": "strata:meta/down",
+			"north": "strata:meta/north",
+			"south": "strata:meta/south",
+			"east": "strata:meta/east",
+			"west": "strata:meta/west",
+			"particle": "strata:meta/all"
+		}
+	},
+	"variants": {
+		"normal": [
+			{ "model": "strata:generic_cube_overlay",   "y":   0 },
+			{ "model": "strata:generic_cube_overlay",   "y": 180 },
+			{ "model": "strata:generic_cube_overlay_m", "y":   0 },
+			{ "model": "strata:generic_cube_overlay_m", "y": 180 },
+			{ "model": "strata:generic_cube_overlay_i", "y":   0 },
+			{ "model": "strata:generic_cube_overlay_i", "y": 180 }
+		]
+	}
+}
