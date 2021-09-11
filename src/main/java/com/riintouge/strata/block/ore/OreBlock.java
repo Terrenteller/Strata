@@ -4,6 +4,7 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.StateUtil;
@@ -31,7 +32,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -370,173 +370,46 @@ public class OreBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
+        BlockPos blockPos = target.getBlockPos();
+        IBlockState actualState = worldObj.getBlockState( blockPos ).getActualState( worldObj , blockPos );
+        TextureAtlasSprite texture;
+
         if( StrataConfig.usePrecomputedOreParticles && OreParticleTextureManager.INSTANCE.isInitialized() )
-            return addPrecomputedHitEffects( state , worldObj , target , manager );
-
-        try
         {
-            BlockPos blockPos = target.getBlockPos();
-            IBlockState actualState = worldObj.getBlockState( blockPos ).getActualState( worldObj , blockPos );
-            int blockId = Block.getIdFromBlock( actualState.getBlock() );
-
-            // This logic sampled from ParticleManager.addBlockHitEffects()
-            double x = (double)blockPos.getX();
-            double y = (double)blockPos.getY();
-            double z = (double)blockPos.getZ();
-            AxisAlignedBB AABB = actualState.getBoundingBox( worldObj , blockPos );
-            double d0 = x + RANDOM.nextDouble() * ( AABB.maxX - AABB.minX - 0.2d ) + 0.1d + AABB.minX;
-            double d1 = y + RANDOM.nextDouble() * ( AABB.maxY - AABB.minY - 0.2d ) + 0.1d + AABB.minY;
-            double d2 = z + RANDOM.nextDouble() * ( AABB.maxZ - AABB.minZ - 0.2d ) + 0.1d + AABB.minZ;
-
-            switch( target.sideHit.getIndex() )
-            {
-                case 0: // DOWN
-                    d1 = y + AABB.minY - 0.1d;
-                    break;
-                case 1: // UP
-                    d1 = y + AABB.maxY + 0.1d;
-                    break;
-                case 2: // NORTH
-                    d2 = z + AABB.minZ - 0.1d;
-                    break;
-                case 3: // SOUTH
-                    d2 = z + AABB.maxZ + 0.1d;
-                    break;
-                case 4: // WEST
-                    d0 = x + AABB.minX - 0.1d;
-                    break;
-                case 5: // EAST
-                    d0 = x + AABB.maxX + 0.1d;
-                    break;
-                default:
-                    return false;
-            }
-
-            ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
-                0, // unused
-                worldObj,
-                d0,
-                d1,
-                d2,
-                0.0d,
-                0.0d,
-                0.0d,
-                blockId );
-
-            TextureAtlasSprite texture = null;
-            if( RANDOM.nextBoolean() )
-            {
-                MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
-                IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-                GenericCubeTextureMap hostTextureMap = hostInfo.modelTextureMap();
-                texture = hostTextureMap != null
-                    ? hostTextureMap.getTexture( target.sideHit )
-                    : HostRegistry.INSTANCE.getBakedModel( host ).getParticleTexture();
-            }
-            else
-            {
-                String oreName = oreInfo.oreName();
-                IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
-                GenericCubeTextureMap oreTextureMap = oreInfo.modelTextureMap();
-                texture = oreTextureMap != null
-                    ? oreTextureMap.getTexture( target.sideHit )
-                    : OreRegistry.INSTANCE.getBakedModel( oreName ).getParticleTexture();
-            }
-
-            particleDigging
-                .setBlockPos( blockPos )
-                .multiplyVelocity( 0.2f )
-                .multipleParticleScaleBy( 0.6f )
-                .setParticleTexture( texture );
-
-            manager.addEffect( particleDigging );
-            return true;
-        }
-        catch( Exception e )
-        {
-            // TODO: warn
-        }
-
-        return false;
-    }
-
-    @SideOnly( Side.CLIENT )
-    protected boolean addPrecomputedHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
-    {
-        try
-        {
-            BlockPos blockPos = target.getBlockPos();
-            IBlockState actualState = worldObj.getBlockState( blockPos ).getActualState( worldObj , blockPos );
-            int blockId = Block.getIdFromBlock( actualState.getBlock() );
-
-            String oreName = oreInfo.oreName();
             MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
-            String hostResourceDomain = host.resourceLocation.getResourceDomain();
-            String hostResourceLocation = host.resourceLocation.getResourcePath();
 
-            // This logic sampled from ParticleManager.addBlockHitEffects()
-            double x = (double)blockPos.getX();
-            double y = (double)blockPos.getY();
-            double z = (double)blockPos.getZ();
-            AxisAlignedBB AABB = actualState.getBoundingBox( worldObj , blockPos );
-            double d0 = x + RANDOM.nextDouble() * ( AABB.maxX - AABB.minX - 0.2d ) + 0.1d + AABB.minX;
-            double d1 = y + RANDOM.nextDouble() * ( AABB.maxY - AABB.minY - 0.2d ) + 0.1d + AABB.minY;
-            double d2 = z + RANDOM.nextDouble() * ( AABB.maxZ - AABB.minZ - 0.2d ) + 0.1d + AABB.minZ;
-
-            switch( target.sideHit.getIndex() )
-            {
-                case 0: // DOWN
-                    d1 = y + AABB.minY - 0.1d;
-                    break;
-                case 1: // UP
-                    d1 = y + AABB.maxY + 0.1d;
-                    break;
-                case 2: // NORTH
-                    d2 = z + AABB.minZ - 0.1d;
-                    break;
-                case 3: // SOUTH
-                    d2 = z + AABB.maxZ + 0.1d;
-                    break;
-                case 4: // WEST
-                    d0 = x + AABB.minX - 0.1d;
-                    break;
-                case 5: // EAST
-                    d0 = x + AABB.maxX + 0.1d;
-                    break;
-                default:
-                    return false;
-            }
-
-            ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
-                0, // unused
-                worldObj,
-                d0,
-                d1,
-                d2,
-                0.0d,
-                0.0d,
-                0.0d,
-                blockId );
-
-            TextureAtlasSprite texture = OreParticleTextureManager.INSTANCE.findTexture(
-                oreName,
-                hostResourceDomain,
-                hostResourceLocation,
+            texture = OreParticleTextureManager.INSTANCE.findTexture(
+                oreInfo.oreName(),
+                host.resourceLocation.getResourceDomain(),
+                host.resourceLocation.getResourcePath(),
                 host.meta,
                 target.sideHit );
-
-            particleDigging
-                .setBlockPos( blockPos )
-                .multiplyVelocity( 0.2f )
-                .multipleParticleScaleBy( 0.6f )
-                .setParticleTexture( texture );
-
-            manager.addEffect( particleDigging );
-            return true;
         }
-        catch( Exception e )
+        else if( RANDOM.nextBoolean() )
         {
-            // TODO: warn
+            MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
+            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
+            GenericCubeTextureMap hostTextureMap = hostInfo.modelTextureMap();
+
+            texture = hostTextureMap != null
+                ? hostTextureMap.getTexture( target.sideHit )
+                : HostRegistry.INSTANCE.getBakedModel( host ).getParticleTexture();
+        }
+        else
+        {
+            String oreName = oreInfo.oreName();
+            IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
+            GenericCubeTextureMap oreTextureMap = oreInfo.modelTextureMap();
+
+            texture = oreTextureMap != null
+                ? oreTextureMap.getTexture( target.sideHit )
+                : OreRegistry.INSTANCE.getBakedModel( oreName ).getParticleTexture();
+        }
+
+        if( texture != null )
+        {
+            ParticleHelper.createHitParticle( actualState , worldObj , target , manager , RANDOM , texture );
+            return true;
         }
 
         return false;

@@ -2,6 +2,8 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
+import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.StateUtil;
@@ -13,14 +15,20 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
 
@@ -29,10 +37,10 @@ public class GeoBlockWall extends BlockWall
     public static final PropertyBool TALL = PropertyBool.create( "tall" );
     protected static InitializedThreadLocal< Boolean > IsRecursingUp = new InitializedThreadLocal<>( false );
 
+    protected IGeoTileInfo info;
     // The logic for this hack MUST respect the default boolean value.
     // A default of true will not be set until after it is too late.
     private boolean createRealBlockState;
-    private IGeoTileInfo info;
 
     public GeoBlockWall( IGeoTileInfo info , Block block )
     {
@@ -135,6 +143,26 @@ public class GeoBlockWall extends BlockWall
     }
 
     // Block overrides
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
+    {
+        GenericCubeTextureMap hostTextureMap = info.modelTextureMap();
+        ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
+
+        return true;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
+    {
+        TextureAtlasSprite texture = info.modelTextureMap().getTexture( target.sideHit );
+        ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
+
+        return true;
+    }
 
     @Override
     public boolean canPlaceTorchOnTop( IBlockState state , IBlockAccess world , BlockPos pos )

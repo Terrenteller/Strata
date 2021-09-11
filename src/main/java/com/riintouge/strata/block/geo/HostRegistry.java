@@ -92,10 +92,6 @@ public final class HostRegistry
 
     public static int getParticleFallingColor( IHostInfo info )
     {
-        // It would be fancy to check if the host block is BlockFalling, but all Strata rocks are BlockFalling
-        if( info.material() != Material.SAND )
-            return DefaultParticleColor;
-
         ResourceLocation textureResourceLocation = info.modelTextureMap().get( EnumFacing.DOWN );
         TextureAtlasSprite texture = Minecraft.getMinecraft()
             .getTextureMapBlocks()
