@@ -6,19 +6,19 @@ hardness 1.5
 resistance 10
 texture minecraft:blocks/stone
 
-host minecraft:stone 1
+host minecraft:stone:1
 type stone
 hardness 1.5
 resistance 10
 texture minecraft:blocks/stone_granite
 
-host minecraft:stone 3
+host minecraft:stone:3
 type stone
 hardness 1.5
 resistance 10
 texture minecraft:blocks/stone_diorite
 
-host minecraft:stone 5
+host minecraft:stone:5
 type stone
 hardness 1.5
 resistance 10
@@ -29,7 +29,7 @@ type ground
 hardness 0.5
 texture minecraft:blocks/dirt
 
-host minecraft:dirt 1
+host minecraft:dirt:1
 type ground
 hardness 0.5
 texture minecraft:blocks/coarse_dirt
@@ -39,7 +39,7 @@ type sand
 hardness 0.5
 texture minecraft:blocks/sand
 
-host minecraft:sand 1
+host minecraft:sand:1
 type sand
 hardness 0.5
 texture minecraft:blocks/red_sand
@@ -89,91 +89,91 @@ hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_white
 
-host minecraft:stained_hardened_clay 1
+host minecraft:stained_hardened_clay:1
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_orange
 
-host minecraft:stained_hardened_clay 2
+host minecraft:stained_hardened_clay:2
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_magenta
 
-host minecraft:stained_hardened_clay 3
+host minecraft:stained_hardened_clay:3
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_light_blue
 
-host minecraft:stained_hardened_clay 4
+host minecraft:stained_hardened_clay:4
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_yellow
 
-host minecraft:stained_hardened_clay 5
+host minecraft:stained_hardened_clay:5
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_lime
 
-host minecraft:stained_hardened_clay 6
+host minecraft:stained_hardened_clay:6
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_pink
 
-host minecraft:stained_hardened_clay 7
+host minecraft:stained_hardened_clay:7
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_gray
 
-host minecraft:stained_hardened_clay 8
+host minecraft:stained_hardened_clay:8
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_silver
 
-host minecraft:stained_hardened_clay 9
+host minecraft:stained_hardened_clay:9
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_cyan
 
-host minecraft:stained_hardened_clay 10
+host minecraft:stained_hardened_clay:10
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_purple
 
-host minecraft:stained_hardened_clay 11
+host minecraft:stained_hardened_clay:11
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_blue
 
-host minecraft:stained_hardened_clay 12
+host minecraft:stained_hardened_clay:12
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_brown
 
-host minecraft:stained_hardened_clay 13
+host minecraft:stained_hardened_clay:13
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_green
 
-host minecraft:stained_hardened_clay 14
+host minecraft:stained_hardened_clay:14
 type stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_red
 
-host minecraft:stained_hardened_clay 15
+host minecraft:stained_hardened_clay:15
 type stone
 hardness 1.25
 resistance 7.0
@@ -246,7 +246,7 @@ hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/lapis
 blockstate strata:generic_cube_y_overlay
-convertsTo minecraft:dye 4
+convertsTo minecraft:dye:4
 proxy minecraft:lapis_ore
 
 ore redstone

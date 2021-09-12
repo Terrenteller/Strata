@@ -13,14 +13,13 @@ import java.util.regex.Pattern;
 
 public class MetaResourceLocation implements Comparable< MetaResourceLocation >
 {
-    private static final String ResourcePattern = String.format( "^(.+?)[:_](.+)[:_]([0-9]+)$" , Strata.modid );
+    private static final Pattern ResourceRegex = Pattern.compile( "^([^:]+):([^0-9][^:]*)(?::([0-9]+))?$" );
     private static final int DomainGroup = 1;
     private static final int PathGroup = 2;
     private static final int MetaGroup = 3;
-    private static final Pattern ResourceRegex = Pattern.compile( ResourcePattern );
 
     public ResourceLocation resourceLocation;
-    public int meta;
+    public int meta = 0;
 
     public MetaResourceLocation( String resourceLocation , int meta )
     {
@@ -41,9 +40,14 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
             throw new IllegalArgumentException( resourceString );
 
         this.resourceLocation = new ResourceLocation( matcher.group( DomainGroup ) , matcher.group( PathGroup ) );
-        this.meta = Integer.parseInt( matcher.group( MetaGroup ) );
-        if( this.meta < 0 || this.meta > 16 )
-            throw new IllegalArgumentException( resourceString );
+
+        String metaString = matcher.group( MetaGroup );
+        if( metaString != null )
+        {
+            this.meta = Integer.parseInt( metaString );
+            if( this.meta < 0 || this.meta > 15 )
+                throw new IllegalArgumentException( resourceString );
+        }
     }
 
     public boolean equals( MetaResourceLocation other )

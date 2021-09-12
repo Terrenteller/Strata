@@ -107,7 +107,7 @@ public class TileDataLoader
 
             tileDataMap.put( tileData.type , tileData );
         }
-        else if( tileData.hostRegistryName != null )
+        else if( tileData.hostMetaResource != null )
         {
             ImmutableHost host;
 
@@ -119,8 +119,8 @@ public class TileDataLoader
             {
                 String informativeMessage = String.format(
                     "Failed to create host '%s:%d' with invalid '%s'!",
-                    tileData.hostRegistryName.toString(),
-                    tileData.hostMeta,
+                    tileData.hostMetaResource.resourceLocation.toString(),
+                    tileData.hostMetaResource.meta,
                     e.getMessage() );
 
                 throw new IllegalArgumentException( informativeMessage , e );

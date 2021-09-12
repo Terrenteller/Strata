@@ -3,7 +3,7 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/granite
-convertsTo minecraft:stone 1
+convertsTo minecraft:stone:1
 lang.en Granite
 
 generate granite cobble
@@ -35,7 +35,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 21 strata:overlays/polished_shadow darken 28 strata:blocks/stone/strong/granite
 lang.en Polished Granite
-convertsTo minecraft:stone 2
+convertsTo minecraft:stone:2
 
 generate granite cobblestairs
 lang.en Granite Cobblestone Stairs

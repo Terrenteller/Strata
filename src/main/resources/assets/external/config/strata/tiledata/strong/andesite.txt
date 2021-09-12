@@ -3,7 +3,7 @@ host
 harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/andesite
-convertsTo minecraft:stone 5
+convertsTo minecraft:stone:5
 lang.en Andesite
 
 generate andesite cobble
@@ -35,7 +35,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:overlays/polished_highlight lighten 46 strata:overlays/polished_shadow darken 34 strata:blocks/stone/strong/andesite
 lang.en Polished Andesite
-convertsTo minecraft:stone 6
+convertsTo minecraft:stone:6
 
 generate andesite cobblestairs
 lang.en Andesite Cobblestone Stairs

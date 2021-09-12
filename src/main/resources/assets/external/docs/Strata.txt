@@ -17,7 +17,7 @@ Description:
 	Double slabs are special and should not be explicitly defined.
 
 Key: host
-Value: <ResourceLocation> [meta]
+Value: <ResourceLocation>[:<meta>]
 Description:
 	Register the block as one from which ores may acquire various properties. Does not generate actual blocks or items.
 	When used with "generate", the Value (not Key!) is ignored and only applies to primary tile types.
@@ -66,7 +66,7 @@ Description:
 	If the tile type has a parent, the parent's value takes priority as the default.
 
 Key: sustains
-Value: <<EnumPlantType>|<ResourceLocation> [meta]>+
+Value: <<EnumPlantType>|<ResourceLocation>[:<meta>]>+
 Description:
     Allows the block to sustain EnumPlantType(s) and/or what is sustained by other block(s).
     Multiple values are allowed. EnumPlantType order does not matter but ResourceLocation order does.
@@ -97,14 +97,14 @@ Description:
     Does not apply to hosts.
 
 Key: convertsTo
-Value: <ResourceLocation> [meta]
+Value: <ResourceLocation>[:<meta>]
 Description:
 	One-way, one-to-one conversion to another item for compatibility purposes.
 	Some tile types have an automatic vanilla equivalent.
 	For ores, this applies to the ore item, not the creative mode item block.
 
 Key: furnaceResult
-Value: <ResourceLocation> [meta]
+Value: <ResourceLocation>[:<meta>]
 Description:
     Add a furnace recipe or override oreDict's behaviour.
     Only applies to ores and primary tile types.
@@ -125,12 +125,12 @@ Description:
 	Only applies to some primary tile types.
 
 Key: fragmentConvertsTo
-Value: <ResourceLocation> [meta]
+Value: <ResourceLocation>[:<meta>]
 Description:
 	One-way, one-to-one conversion to another item for compatibility purposes.
 
 Key: fragmentFurnaceResult
-Value: <ResourceLocation> [meta]
+Value: <ResourceLocation>[:<meta>]
 Description:
     Add a furnace recipe for the fragment or override oreDict's behaviour.
 
@@ -143,7 +143,7 @@ Description:
     Only used with fragmentFurnaceResult.
 
 Key: proxy
-Value: <ResourceLocation> [meta]
+Value: <ResourceLocation>[:<meta>]
 Description:
     Drop the drops, sustain the plants, etc. of the specified block instead.
     Only applies to ores.

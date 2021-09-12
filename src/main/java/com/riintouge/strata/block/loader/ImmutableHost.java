@@ -2,6 +2,7 @@ package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.Util;
@@ -13,8 +14,7 @@ import net.minecraft.util.ResourceLocation;
 public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 {
     // IHostInfo
-    private ResourceLocation registryName;
-    private int meta;
+    private MetaResourceLocation hostMetaResource;
     private GenericCubeTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
 
@@ -30,8 +30,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     public ImmutableHost( TileData tileData ) throws IllegalArgumentException
     {
         // IHostInfo
-        this.registryName = Util.argumentNullCheck( tileData.hostRegistryName , "hostRegistryName" );
-        this.meta = Util.coalesce( tileData.hostMeta , 0 );
+        this.hostMetaResource = Util.argumentNullCheck( tileData.hostMetaResource , "hostMetaResource" );
         this.modelTextureMap = tileData.textureMap;
 
         // IGenericBlockProperties
@@ -49,13 +48,13 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     @Override
     public ResourceLocation registryName()
     {
-        return registryName;
+        return hostMetaResource.resourceLocation;
     }
 
     @Override
     public int meta()
     {
-        return meta;
+        return hostMetaResource.meta;
     }
 
     @Override

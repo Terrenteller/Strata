@@ -3,7 +3,7 @@ host
 harvestLevel 1
 hardness 2.5
 texture strata:blocks/stone/very_strong/diorite
-convertsTo minecraft:stone 3
+convertsTo minecraft:stone:3
 lang.en Diorite
 
 generate diorite cobble
@@ -34,7 +34,7 @@ generate diorite stonepolished
 harvestLevel 1
 hardness 2.5
 texture strata:overlays/polished_highlight lighten 36 strata:overlays/polished_shadow darken 41 strata:blocks/stone/very_strong/diorite
-convertsTo minecraft:stone 4
+convertsTo minecraft:stone:4
 lang.en Polished Diorite
 
 generate diorite cobblestairs

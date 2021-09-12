@@ -43,8 +43,7 @@ public class TileData
     public String bonusExpExpr = null;
 
     // IHostInfo
-    public ResourceLocation hostRegistryName = null;
-    public Integer hostMeta = null;
+    public MetaResourceLocation hostMetaResource = null;
 
     // IGenericBlockProperties
     public Material material = null;
@@ -76,7 +75,7 @@ public class TileData
             }
             case "convertsTo":
             {
-                equivalentItemResourceLocation = parseMetaResourceLocation( value );
+                equivalentItemResourceLocation = new MetaResourceLocation( value );
                 return true;
             }
             case "drops":
@@ -97,7 +96,7 @@ public class TileData
             }
             case "fragmentConvertsTo":
             {
-                equivalentFragmentItemResourceLocation = parseMetaResourceLocation( value );
+                equivalentFragmentItemResourceLocation = new MetaResourceLocation( value );
                 return true;
             }
             case "fragmentTexture":
@@ -112,7 +111,7 @@ public class TileData
             }
             case "fragmentFurnaceResult":
             {
-                fragmentFurnaceResult = parseMetaResourceLocation( value );
+                fragmentFurnaceResult = new MetaResourceLocation( value );
                 return true;
             }
             case "furnaceExp":
@@ -122,7 +121,7 @@ public class TileData
             }
             case "furnaceResult":
             {
-                furnaceResult = parseMetaResourceLocation( value );
+                furnaceResult = new MetaResourceLocation( value );
                 return true;
             }
             case "generate":
@@ -146,12 +145,7 @@ public class TileData
             {
                 isHost = true;
                 if( !value.isEmpty() )
-                {
-                    String[] values = value.split( " " );
-                    hostRegistryName = new ResourceLocation( values[ 0 ] );
-                    if( values.length > 1 )
-                        hostMeta = Integer.parseInt( values[ 1 ] );
-                }
+                    hostMetaResource = new MetaResourceLocation( value );
                 return true;
             }
             case "ore":
@@ -169,7 +163,7 @@ public class TileData
             }
             case "proxy":
             {
-                proxyOreResourceLocation = parseMetaResourceLocation( value );
+                proxyOreResourceLocation = new MetaResourceLocation( value );
                 return true;
             }
             case "resistance":
@@ -181,38 +175,14 @@ public class TileData
             {
                 sustainedPlantTypes = new ArrayList<>();
                 sustainsPlantsSustainedByRaw = new ArrayList<>();
-                String resourceLocation = null;
 
                 for( String token : value.split( " " ) )
                 {
-                    try
-                    {
-                        int meta = Integer.parseInt( token );
-                        if( resourceLocation != null )
-                        {
-                            sustainsPlantsSustainedByRaw.add( new MetaResourceLocation( resourceLocation , meta ) );
-                            resourceLocation = null;
-                        }
-                        continue; // Stray number
-                    }
-                    catch( NumberFormatException e )
-                    {
-                        // Not unexpected; ignore
-                    }
-
                     if( token.contains( ":" ) )
-                    {
-                        if( resourceLocation != null )
-                            sustainsPlantsSustainedByRaw.add( new MetaResourceLocation( resourceLocation , 0 ) );
-                        resourceLocation = token;
-                        continue;
-                    }
-
-                    sustainedPlantTypes.add( EnumPlantType.getPlantType( token ) );
+                        sustainsPlantsSustainedByRaw.add( new MetaResourceLocation( token ) );
+                    else
+                        sustainedPlantTypes.add( EnumPlantType.getPlantType( token ) );
                 }
-
-                if( resourceLocation != null )
-                    sustainsPlantsSustainedByRaw.add( new MetaResourceLocation( resourceLocation , 0 ) );
 
                 return true;
             }
@@ -250,7 +220,7 @@ public class TileData
                         ? type.registryName( tileSetName ).getResourcePath()
                         : oreName != null
                             ? type.registryName( oreName ).getResourcePath()
-                            : String.format( "%s_%d" , hostRegistryName.getResourcePath() , Util.coalesce( hostMeta , 0 ) );
+                            : String.format( "%s_%d" , hostMetaResource.resourceLocation.getResourcePath() , hostMetaResource.meta );
 
                     textureMap = new GenericCubeTextureMap( registryName );
                 }
@@ -269,13 +239,6 @@ public class TileData
         }
 
         return false;
-    }
-
-    protected MetaResourceLocation parseMetaResourceLocation( String value )
-    {
-        String[] values = value.split( " " );
-        int meta = values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0;
-        return new MetaResourceLocation( values[ 0 ] , meta );
     }
 
     public TileData createMissingChildType( TileType type ) throws OperationNotSupportedException

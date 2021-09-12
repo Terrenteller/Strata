@@ -42,7 +42,7 @@ hardness 2.0
 texture strata:overlays/polished_highlight lighten 13 strata:overlays/polished_shadow darken 27 strata:blocks/stone/strong/red_sandstone
 textureCaps strata:overlays/polished_highlight lighten 13 strata:overlays/polished_shadow darken 27 strata:blocks/stone/strong/red_sandstone_caps
 lang.en Polished Red Sandstone
-convertsTo minecraft:red_sandstone 2
+convertsTo minecraft:red_sandstone:2
 
 generate red_sandstone cobblestairs
 lang.en Red Sandstone Cobblestone Stairs
