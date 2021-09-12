@@ -1,6 +1,11 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.regex.Matcher;
@@ -44,6 +49,19 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     public boolean equals( MetaResourceLocation other )
     {
         return compareTo( other ) == 0;
+    }
+
+    public ItemStack toItemStack()
+    {
+        Block resultBlock = Block.REGISTRY.getObject( resourceLocation );
+        if( resultBlock != null && resultBlock != Blocks.AIR )
+            return new ItemStack( resultBlock , 1 , meta );
+
+        Item resultItem = Item.REGISTRY.getObject( resourceLocation );
+        if( resultItem != null && resultItem != Items.AIR )
+            return new ItemStack( resultItem , 1 , meta );
+
+        return ItemStack.EMPTY;
     }
 
     // Comparable overrides

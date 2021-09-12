@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +33,14 @@ public final class ImmutableTile implements IGeoTileInfo
     private String blockOreDictionaryName;
     private String fragmentItemOreDictionaryName;
     private MetaResourceLocation equivalentItemResourceLocation;
+    private MetaResourceLocation furnaceResult;
+    private Float furnaceExp;
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private LayeredTextureLayer[] fragmentTextureLayers;
     private MetaResourceLocation equivalentFragmentItemResourceLocation;
     private ItemStack equivalentFragmentItemStack = null; // Lazily evaluated
+    private MetaResourceLocation fragmentFurnaceResult;
+    private Float fragmentFurnaceExp;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = null; // Lazily evaluated
@@ -65,9 +70,13 @@ public final class ImmutableTile implements IGeoTileInfo
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.fragmentItemOreDictionaryName = tileData.fragmentItemOreDictionaryName;
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
+        this.furnaceResult = tileData.furnaceResult;
+        this.furnaceExp = tileData.furnaceExp;
         if( tileData.fragmentTextureLayers != null && tileData.fragmentTextureLayers.size() > 0 )
             this.fragmentTextureLayers = tileData.fragmentTextureLayers.toArray( new LayeredTextureLayer[ tileData.fragmentTextureLayers.size() ] );
         this.equivalentFragmentItemResourceLocation = tileData.equivalentFragmentItemResourceLocation;
+        this.fragmentFurnaceResult = tileData.fragmentFurnaceResult;
+        this.fragmentFurnaceExp = tileData.fragmentFurnaceExp;
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
         this.sustainsPlantsSustainedByRaw = Util.lazyCoalesce( tileData.sustainsPlantsSustainedByRaw , ArrayList::new );
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
@@ -129,6 +138,19 @@ public final class ImmutableTile implements IGeoTileInfo
         return equivalentItemStack;
     }
 
+    @Nullable
+    @Override
+    public MetaResourceLocation furnaceResult()
+    {
+        return furnaceResult;
+    }
+
+    @Override
+    public Float furnaceExp()
+    {
+        return furnaceExp;
+    }
+
     @Override
     public Boolean hasFragment()
     {
@@ -158,6 +180,19 @@ public final class ImmutableTile implements IGeoTileInfo
         }
 
         return equivalentFragmentItemStack;
+    }
+
+    @Nullable
+    @Override
+    public MetaResourceLocation fragmentFurnaceResult()
+    {
+        return fragmentFurnaceResult;
+    }
+
+    @Override
+    public Float fragmentFurnaceExp()
+    {
+        return fragmentFurnaceExp;
     }
 
     @Override

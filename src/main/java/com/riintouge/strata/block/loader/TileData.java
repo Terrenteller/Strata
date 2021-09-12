@@ -21,8 +21,12 @@ public class TileData
     public String tileSetName = null;
     public TileType type = null;
     public MetaResourceLocation equivalentItemResourceLocation = null;
+    public MetaResourceLocation furnaceResult = null;
+    public Float furnaceExp = null;
     public List< LayeredTextureLayer > fragmentTextureLayers = null;
     public MetaResourceLocation equivalentFragmentItemResourceLocation = null;
+    public MetaResourceLocation fragmentFurnaceResult = null;
+    public Float fragmentFurnaceExp = null;
     public ArrayList< EnumPlantType > sustainedPlantTypes = null;
     public ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw = null;
 
@@ -72,9 +76,7 @@ public class TileData
             }
             case "convertsTo":
             {
-                String[] values = value.split( " " );
-                int meta = values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0;
-                equivalentItemResourceLocation = new MetaResourceLocation( values[ 0 ] , meta );
+                equivalentItemResourceLocation = parseMetaResourceLocation( value );
                 return true;
             }
             case "drops":
@@ -95,14 +97,32 @@ public class TileData
             }
             case "fragmentConvertsTo":
             {
-                String[] values = value.split( " " );
-                int meta = values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0;
-                equivalentFragmentItemResourceLocation = new MetaResourceLocation( values[ 0 ] , meta );
+                equivalentFragmentItemResourceLocation = parseMetaResourceLocation( value );
                 return true;
             }
             case "fragmentTexture":
             {
                 fragmentTextureLayers = parseTextureLayers( value );
+                return true;
+            }
+            case "fragmentFurnaceExp":
+            {
+                fragmentFurnaceExp = Float.parseFloat( value );
+                return true;
+            }
+            case "fragmentFurnaceResult":
+            {
+                fragmentFurnaceResult = parseMetaResourceLocation( value );
+                return true;
+            }
+            case "furnaceExp":
+            {
+                furnaceExp = Float.parseFloat( value );
+                return true;
+            }
+            case "furnaceResult":
+            {
+                furnaceResult = parseMetaResourceLocation( value );
                 return true;
             }
             case "generate":
@@ -149,11 +169,7 @@ public class TileData
             }
             case "proxy":
             {
-                String[] values = value.split( " " );
-                int meta = 0;
-                if( values.length > 1 )
-                    meta = Integer.parseInt( values[ 1 ] );
-                proxyOreResourceLocation = new MetaResourceLocation( values[ 0 ] , meta );
+                proxyOreResourceLocation = parseMetaResourceLocation( value );
                 return true;
             }
             case "resistance":
@@ -253,6 +269,13 @@ public class TileData
         }
 
         return false;
+    }
+
+    protected MetaResourceLocation parseMetaResourceLocation( String value )
+    {
+        String[] values = value.split( " " );
+        int meta = values.length > 1 ? Integer.parseInt( values[ 1 ] ) : 0;
+        return new MetaResourceLocation( values[ 0 ] , meta );
     }
 
     public TileData createMissingChildType( TileType type ) throws OperationNotSupportedException

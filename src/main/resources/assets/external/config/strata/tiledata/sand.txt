@@ -25,6 +25,8 @@ lang.en Granitic Mineral Sand
 generate quartz_sand sand
 hardness 1.0
 sustains Beach Desert
+convertsTo minecraft:sand
+furnaceResult minecraft:glass
 texture strata:blocks/sand/quartz_sand
 lang.en Quartz Sand
 

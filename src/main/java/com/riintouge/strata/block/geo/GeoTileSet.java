@@ -1,9 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.GenericCubeTextureMap;
-import com.riintouge.strata.block.IForgeRegistrable;
-import com.riintouge.strata.block.RecipeReplicator;
+import com.riintouge.strata.block.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -189,6 +187,8 @@ public class GeoTileSet implements IForgeRegistrable
                     "XX",
                     "XX",
                     'X' , fragment );
+
+                FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( fragment , tileInfo.fragmentFurnaceResult() , tileInfo.fragmentFurnaceExp() );
 
                 ItemStack equivalentFragmentItem = tileInfo.equivalentFragmentItemStack();
                 if( equivalentFragmentItem != null && !equivalentFragmentItem.isEmpty() )
@@ -381,6 +381,9 @@ public class GeoTileSet implements IForgeRegistrable
                     break;
                 }
             }
+
+            if( tileInfo.type().isPrimary )
+                FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( itemBlock , tileInfo.furnaceResult() , tileInfo.furnaceExp() );
 
             ItemStack equivalentItem = tileInfo.equivalentItemStack();
             if( equivalentItem != null && !equivalentItem.isEmpty() )

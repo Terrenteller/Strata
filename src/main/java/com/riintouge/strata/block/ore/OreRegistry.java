@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -114,6 +115,10 @@ public final class OreRegistry
                 null,
                 blockTargetItemStack,
                 Ingredient.fromItem( tileSet.getItemBlock() ) );
+
+            // Although the item block should be creative only, we'll add a recipe for convenience
+            FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( tileSet.getItemBlock() , oreInfo.furnaceResult() , oreInfo.furnaceExp() );
+            FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( tileSet.getItem() , oreInfo.furnaceResult() , oreInfo.furnaceExp() );
 
             ItemStack equivalentItem = tileSet.getInfo().equivalentItemStack();
             if( ( equivalentItem == null || equivalentItem.isEmpty() ) && proxyBlockState != null )

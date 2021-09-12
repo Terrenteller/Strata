@@ -35,6 +35,7 @@ Description:
     itemOreDictionaryName defaults to itemBlockOreDictionaryName.
     itemOreDictionaryName does not apply when used with "generate".
     Ores with an itemBlockOreDictionaryName of "oreRedstone" will make the block behave like vanilla redstone ore.
+    For each entry, Strata will replicate the first furnace recipe found as provided by vanilla or another mod.
     Only applies to ores and primary tile types.
 
 Key: type
@@ -102,6 +103,20 @@ Description:
 	Some tile types have an automatic vanilla equivalent.
 	For ores, this applies to the ore item, not the creative mode item block.
 
+Key: furnaceResult
+Value: <ResourceLocation> [meta]
+Description:
+    Add a furnace recipe or override oreDict's behaviour.
+    Only applies to ores and primary tile types.
+
+Key: furnaceExp
+Value: <float>
+Default: 0
+Description:
+    Set the experience given for smelting the item in a furnace.
+    If unset and another recipe results in the target item, that recipe's experience will be used instead.
+    Only used with furnaceResult.
+
 Key: fragmentTexture
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:
@@ -113,7 +128,19 @@ Key: fragmentConvertsTo
 Value: <ResourceLocation> [meta]
 Description:
 	One-way, one-to-one conversion to another item for compatibility purposes.
-	Only applies to some primary tile types.
+
+Key: fragmentFurnaceResult
+Value: <ResourceLocation> [meta]
+Description:
+    Add a furnace recipe for the fragment or override oreDict's behaviour.
+
+Key: fragmentFurnaceExp
+Value: <float>
+Default: 0
+Description:
+    Set the experience given for smelting the fragment in a furnace.
+    If unset and another recipe results in the target item, that recipe's experience will be used instead.
+    Only used with fragmentFurnaceResult.
 
 Key: proxy
 Value: <ResourceLocation> [meta]

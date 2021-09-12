@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private ResourceLocation blockstateResourceLocation;
     private ResourceLocation oreItemTextureResource;
     private MetaResourceLocation equivalentItemResourceLocation;
+    private MetaResourceLocation furnaceResult;
+    private Float furnaceExp;
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
@@ -61,6 +64,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , Strata.resource( "generic_cube_gimbal_overlay" ) );
         this.oreItemTextureResource = this.modelTextureMap.get( (EnumFacing)null );
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
+        this.furnaceResult = tileData.furnaceResult;
+        this.furnaceExp = tileData.furnaceExp;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
         this.baseDropAmount = Util.coalesce( tileData.baseDropAmount , 1 );
         this.bonusDropExpr = tileData.bonusDropExpr;
@@ -129,6 +134,19 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         }
 
         return equivalentItemStack;
+    }
+
+    @Nullable
+    @Override
+    public MetaResourceLocation furnaceResult()
+    {
+        return furnaceResult;
+    }
+
+    @Override
+    public Float furnaceExp()
+    {
+        return furnaceExp;
     }
 
     @Override

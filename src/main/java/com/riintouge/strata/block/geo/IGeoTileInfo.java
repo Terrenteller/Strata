@@ -2,6 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -26,6 +27,12 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     @Nullable
     ItemStack equivalentItemStack();
 
+    @Nullable
+    MetaResourceLocation furnaceResult();
+
+    @Nullable
+    Float furnaceExp();
+
     Boolean hasFragment();
 
     @Nullable
@@ -33,6 +40,12 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 
     @Nullable
     ItemStack equivalentFragmentItemStack();
+
+    @Nullable
+    MetaResourceLocation fragmentFurnaceResult();
+
+    @Nullable
+    Float fragmentFurnaceExp();
 
     ArrayList< EnumPlantType > sustainedPlantTypes();
 
