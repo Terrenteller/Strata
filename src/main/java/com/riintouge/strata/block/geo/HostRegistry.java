@@ -4,7 +4,6 @@ import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.loader.ImmutableTile;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -12,6 +11,9 @@ import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -22,7 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class HostRegistry
+public final class HostRegistry implements IResourceManagerReloadListener
 {
     public static final HostRegistry INSTANCE = new HostRegistry();
     public static final int DefaultParticleColor = -16777216; // Taken from BlockFalling
@@ -32,7 +34,7 @@ public final class HostRegistry
 
     private HostRegistry()
     {
-        // Nothing to do
+        ( (IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager() ).registerReloadListener( this );
     }
 
     public void register( ResourceLocation registryName , int meta , IHostInfo info )
@@ -86,6 +88,14 @@ public final class HostRegistry
         }
 
         return hostModel;
+    }
+
+    // IResourceManagerReloadListener overrides
+
+    @Override
+    public void onResourceManagerReload( IResourceManager resourceManager )
+    {
+        hostBakedModelMap.clear();
     }
 
     // Statics
