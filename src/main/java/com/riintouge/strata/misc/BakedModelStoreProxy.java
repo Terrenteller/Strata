@@ -91,7 +91,6 @@ public class BakedModelStoreProxy implements InvocationHandler
                 StateMapperBase stateMapperBase = (StateMapperBase)stateMapper;
                 Method getModelResourceLocationMethod = ReflectionUtil.findMethodByTypes(
                     StateMapperBase.class,
-                    true,
                     ModelResourceLocation.class,
                     true,
                     IBlockState.class );
