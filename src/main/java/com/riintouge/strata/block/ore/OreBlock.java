@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -681,7 +682,21 @@ public class OreBlock extends BlockFalling
     @Override
     public void neighborChanged( IBlockState state , World worldIn , BlockPos pos , Block blockIn , BlockPos fromPos )
     {
-        // Don't call super. Wait for updateTick().
+        // Don't call super to schedule an update. Wait for updateTick().
+
+        if( worldIn.isRemote )
+            return;
+
+        OreBlockTileEntity tileEntity = getTileEntity( worldIn , pos );
+        if( tileEntity.getHostRock() != UnlistedPropertyHostRock.DEFAULT )
+            return;
+
+        IBlockState changedState = worldIn.getBlockState( fromPos );
+        if( changedState.getBlock() == Blocks.AIR )
+            return;
+
+        if( changedState.getBlock() instanceof OreBlock )
+            worldIn.scheduleBlockUpdate( pos , state.getBlock() , 20 , 10 );
     }
 
     @Override

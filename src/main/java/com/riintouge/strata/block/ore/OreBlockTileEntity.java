@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +14,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 public class OreBlockTileEntity extends TileEntity
 {
+    private boolean updateOnLoad = false;
     private MetaResourceLocation hostRock = UnlistedPropertyHostRock.DEFAULT;
     private Boolean isActive = UnlistedPropertyActiveState.DEFAULT;
 
@@ -23,11 +25,18 @@ public class OreBlockTileEntity extends TileEntity
 
     public OreBlockTileEntity( IBlockState state )
     {
-        if( state != null )
+        if( state == null )
+            return;
+
+        hostRock = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY );
+        if( hostRock == null )
         {
-            hostRock = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-            isActive = StateUtil.getValue( state , UnlistedPropertyActiveState.PROPERTY , UnlistedPropertyActiveState.DEFAULT );
+            hostRock = UnlistedPropertyHostRock.DEFAULT;
+            updateOnLoad = true;
+            return;
         }
+
+        isActive = StateUtil.getValue( state , UnlistedPropertyActiveState.PROPERTY , UnlistedPropertyActiveState.DEFAULT );
     }
 
     public boolean isActive()
@@ -49,6 +58,15 @@ public class OreBlockTileEntity extends TileEntity
         return hostRock;
     }
 
+    public void setHostRock( MetaResourceLocation hostMetaLocation )
+    {
+        if( hostMetaLocation != null && !world.isRemote && !hostRock.equals( hostMetaLocation ) )
+        {
+            hostRock = hostMetaLocation;
+            update();
+        }
+    }
+
     public void searchForAdjacentHostRock()
     {
         if( world.isRemote )
@@ -59,17 +77,7 @@ public class OreBlockTileEntity extends TileEntity
 
         hostRock = UnlistedPropertyHostRock.findHost( world , pos );
         if( hostRock.equals( UnlistedPropertyHostRock.DEFAULT ) )
-        {
-            //System.out.println( "Unable to determine host" );
-
-            // FIXME: We can't exactly "timeout". Consider an ore block that has a single,
-            // adjacent stone in a neighbouring, but unloaded, chunk. Can a chunk load
-            // trigger a block update? Should we remove the block and pretend like it never existed?
-
-            // The comment for getBlockType() says it's client-only but works just fine server-side
-            world.scheduleBlockUpdate( pos , getBlockType() , 20 , 10 );
-            return;
-        }
+            return; // No host found. Wait for something to update us or try again later.
 
         update();
     }
@@ -109,10 +117,8 @@ public class OreBlockTileEntity extends TileEntity
     {
         super.onLoad();
 
-        // TODO: Can we save the stone type as part of NBT data? May help cut down on corner cases.
-
         // Only the server should poll
-        if( !world.isRemote )
+        if( !world.isRemote && updateOnLoad )
             world.scheduleBlockUpdate( pos , this.getBlockType() , 20 , 10 );
     }
 
@@ -161,6 +167,13 @@ public class OreBlockTileEntity extends TileEntity
             MetaResourceLocation host = new MetaResourceLocation( propertyString );
             if( !host.equals( hostRock ) )
             {
+                if( HostRegistry.INSTANCE.find( hostRock ) == null )
+                {
+                    // The client must have known about the block to get this far, but not that it was a host.
+                    // Visual discrepancies aside, the ore will not know the real properties bestowed upon it.
+                    throw new IllegalStateException( String.format( "Server reported unknown host '%s'" , host.toString() ) );
+                }
+
                 hostRock = host;
                 hasUpdates = true;
                 hostChanged = true;
@@ -184,5 +197,46 @@ public class OreBlockTileEntity extends TileEntity
 
         if( hasUpdates )
             update();
+    }
+
+    @Override
+    public void readFromNBT( NBTTagCompound compound )
+    {
+        super.readFromNBT( compound );
+
+        try
+        {
+            if( !compound.hasKey( UnlistedPropertyHostRock.PROPERTY.getName() ) )
+            {
+                updateOnLoad = true;
+                return;
+            }
+
+            hostRock = new MetaResourceLocation( compound.getString( UnlistedPropertyHostRock.PROPERTY.getName() ) );
+            if( HostRegistry.INSTANCE.find( hostRock ) == null )
+            {
+                hostRock = UnlistedPropertyHostRock.DEFAULT;
+                updateOnLoad = true;
+                return;
+            }
+
+            isActive = compound.getBoolean( UnlistedPropertyActiveState.PROPERTY.getName() );
+
+        }
+        catch( Exception e )
+        {
+            updateOnLoad = true;
+        }
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT( NBTTagCompound compound )
+    {
+        super.writeToNBT( compound );
+
+        compound.setString( UnlistedPropertyHostRock.PROPERTY.getName() , hostRock.toString() );
+        compound.setBoolean( UnlistedPropertyActiveState.PROPERTY.getName() , isActive );
+
+        return compound;
     }
 }
