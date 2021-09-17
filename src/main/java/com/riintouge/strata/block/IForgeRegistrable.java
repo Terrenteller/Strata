@@ -5,6 +5,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public interface IForgeRegistrable
@@ -29,6 +31,7 @@ public interface IForgeRegistrable
         // Dummy
     }
 
+    @SideOnly( Side.CLIENT )
     default void stitchTextures( TextureMap textureMap )
     {
         // Dummy

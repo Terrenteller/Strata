@@ -8,18 +8,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly( Side.CLIENT )
 public class GeoItemFragmentTextureManager
 {
-    public static final GeoItemFragmentTextureManager INSTANCE = new GeoItemFragmentTextureManager();
-
-    private GeoItemFragmentTextureManager()
-    {
-        // Nothing to do
-    }
-
-    // Statics
-
     public static ResourceLocation getTextureLocation( IHostInfo hostInfo , TileType fragmentType )
     {
         String type = GeoItemFragment.getTypeForMaterial( fragmentType.material );

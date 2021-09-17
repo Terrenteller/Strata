@@ -4,12 +4,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.function.Function;
 
+@SideOnly( Side.CLIENT )
 public class LayeredTexture extends TextureAtlasSprite
 {
     private LayeredTextureLayer[] layers;

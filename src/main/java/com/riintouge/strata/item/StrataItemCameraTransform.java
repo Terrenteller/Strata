@@ -5,6 +5,8 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.EnumMap;
@@ -14,6 +16,7 @@ import java.util.Optional;
 // just hardcode the important numbers here and don't bother with a template item model JSON.
 // These values were very unscientifically taken from the result of model.getAllTransforms()
 // in ModelLoader.VanillaModelWrapper.bakeImpl() for "minecraft:models/item/clay_ball".
+@SideOnly( Side.CLIENT )
 public enum StrataItemCameraTransform
 {
     THIRD_PERSON_LEFT_HAND(

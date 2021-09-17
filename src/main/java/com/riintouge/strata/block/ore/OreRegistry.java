@@ -3,6 +3,7 @@ package com.riintouge.strata.block.ore;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
+import com.riintouge.strata.block.geo.BakedModelCache;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -20,14 +21,16 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,12 +39,10 @@ public final class OreRegistry
     public static final OreRegistry INSTANCE = new OreRegistry();
 
     private Map< String , IOreTileSet > oreTileSetMap = new HashMap<>();
-    private Map< String , IBakedModel > bakedOreModelMap = new HashMap<>();
 
     private OreRegistry()
     {
-        ModelLoaderRegistry.registerLoader( new OreBlockModelLoader() );
-        ModelLoaderRegistry.registerLoader( new OreItemModelLoader() );
+        // Nothing to do
     }
 
     public void register( IOreTileSet tileSet )
@@ -60,9 +61,9 @@ public final class OreRegistry
         return oreTileSetMap.getOrDefault( oreName , null ) != null;
     }
 
-    public IBakedModel getBakedModel( String oreName )
+    public Collection< IOreTileSet > all()
     {
-        return bakedOreModelMap.getOrDefault( oreName , null );
+        return oreTileSetMap.values();
     }
 
     // Statics
@@ -140,6 +141,7 @@ public final class OreRegistry
         }
     }
 
+    @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerModels( ModelRegistryEvent event )
     {
@@ -172,6 +174,7 @@ public final class OreRegistry
         }
     }
 
+    @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
@@ -182,6 +185,7 @@ public final class OreRegistry
             tileSet.getInfo().stitchTextures( textureMap );
     }
 
+    @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void bakeModels( ModelBakeEvent event )
     {
@@ -195,7 +199,7 @@ public final class OreRegistry
             if( existingModel != null )
             {
                 IBakedModel bakedOreModel = new OreBlockModel( tileSet , existingModel );
-                INSTANCE.bakedOreModelMap.put( tileSet.getInfo().oreName() , bakedOreModel );
+                BakedModelCache.INSTANCE.registerOreBakedModel( tileSet.getInfo().oreName() , bakedOreModel );
                 modelRegistry.putObject( modelVariantResource , bakedOreModel );
             }
         }

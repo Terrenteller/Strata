@@ -8,10 +8,13 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SideOnly( Side.CLIENT )
 public class OreBlockModelLoader implements ICustomModelLoader
 {
     private static final String ResourcePattern = String.format( "^%s:(.+)%s#" , Strata.modid , OreBlock.RegistryNameSuffix );

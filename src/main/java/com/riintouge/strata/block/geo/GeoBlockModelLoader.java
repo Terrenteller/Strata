@@ -8,6 +8,8 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,6 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SideOnly( Side.CLIENT )
 public class GeoBlockModelLoader implements ICustomModelLoader
 {
     private static final String ResourcePattern = String.format( "^%s:(([a-z_]+?)(?:_([a-z]+))?)(?:#.+)$" , Strata.modid );

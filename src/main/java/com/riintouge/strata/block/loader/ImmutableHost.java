@@ -10,6 +10,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 {
@@ -118,6 +120,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     // IForgeRegistrable overrides
 
     @Override
+    @SideOnly( Side.CLIENT )
     public void stitchTextures( TextureMap textureMap )
     {
         modelTextureMap.stitchTextures( textureMap );

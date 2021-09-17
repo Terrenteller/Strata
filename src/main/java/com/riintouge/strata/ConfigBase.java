@@ -29,10 +29,23 @@ public abstract class ConfigBase
         propertyNames = null;
     }
 
+    protected String getLocalizedValue( String key )
+    {
+        try
+        {
+            return I18n.format( key + "Desc" );
+        }
+        catch( NoClassDefFoundError e )
+        {
+            // net.minecraft.client.resources.I18n doesn't exist server-side
+            return net.minecraft.util.text.translation.I18n.translateToLocal( key + "Desc" );
+        }
+    }
+
     protected boolean getBoolean( String variableName , boolean defaultValue )
     {
         String languageKey = "strata.config." + variableName;
-        Property prop = config.get( categoryName , variableName , defaultValue , I18n.format( languageKey + "Desc" ) );
+        Property prop = config.get( categoryName , variableName , defaultValue , getLocalizedValue( languageKey + "Desc" ) );
         prop.setLanguageKey( languageKey );
         propertyNames.add( prop.getName() );
         return prop.getBoolean( defaultValue );

@@ -15,19 +15,21 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@SideOnly( Side.CLIENT )
 public class OreParticleTextureManager
 {
     public static final OreParticleTextureManager INSTANCE = new OreParticleTextureManager();
 
     private static final Logger LOGGER = LogManager.getLogger();
     private boolean isInitialized = false;
-    private Map< ResourceLocation , IOreInfo > oreInfoMap = new HashMap<>();
     private Map< String , TextureAtlasSprite > generatedTextureMap = new HashMap<>();
 
     private OreParticleTextureManager()
@@ -38,11 +40,6 @@ public class OreParticleTextureManager
     public boolean isInitialized()
     {
         return isInitialized;
-    }
-
-    public void registerOre( ResourceLocation oreRegistryName , IOreInfo oreInfo )
-    {
-        oreInfoMap.put( oreRegistryName , oreInfo );
     }
 
     public TextureAtlasSprite findTexture(
@@ -75,9 +72,10 @@ public class OreParticleTextureManager
         if( hostInfoMap.size() == 0 )
             return;
 
-        for( ResourceLocation ore : INSTANCE.oreInfoMap.keySet() )
+        for( IOreTileSet oreTileSet : OreRegistry.INSTANCE.all() )
         {
-            IOreInfo oreInfo = INSTANCE.oreInfoMap.get( ore );
+            IOreInfo oreInfo = oreTileSet.getInfo();
+            ResourceLocation ore = Strata.resource( oreInfo.oreName() );
 
             for( ResourceLocation host : hostInfoMap.keySet() )
             {

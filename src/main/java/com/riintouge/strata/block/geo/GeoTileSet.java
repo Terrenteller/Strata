@@ -16,6 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -429,6 +431,7 @@ public class GeoTileSet implements IForgeRegistrable
     }
 
     @Override
+    @SideOnly( Side.CLIENT )
     public void stitchTextures( TextureMap textureMap )
     {
         // TODO: Don't generate a texture if a texture already exists, such as from a texture pack.

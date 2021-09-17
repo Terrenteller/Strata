@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class OreItemTextureManager
         return Strata.resource( "items/" + oreName );
     }
 
+    @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {

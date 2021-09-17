@@ -7,10 +7,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
@@ -26,8 +27,7 @@ public class GeoTileSetRegistry
 
     private GeoTileSetRegistry()
     {
-        ModelLoaderRegistry.registerLoader( new GeoBlockModelLoader() );
-        ModelLoaderRegistry.registerLoader( new GeoItemFragmentModelLoader() );
+        // Nothing to do
     }
 
     public Set< String > tileSetNames()
@@ -125,6 +125,7 @@ public class GeoTileSetRegistry
             tileSet.registerModels( event );
     }
 
+    @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {

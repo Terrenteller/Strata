@@ -2,14 +2,14 @@ package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.EventHandlers;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.geo.HostRegistry;
-import com.riintouge.strata.resource.DocsDir;
 import com.riintouge.strata.block.Blocks;
 import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.resource.ConfigDir;
+import com.riintouge.strata.resource.DocsDir;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;

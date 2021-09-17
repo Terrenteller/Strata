@@ -5,6 +5,7 @@ import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.GenericCubeTextureMap;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.StateUtil;
@@ -224,13 +225,13 @@ public class OreBlock extends BlockFalling
             MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
             GenericCubeTextureMap hostTextureMap = hostInfo.modelTextureMap();
-            IBakedModel hostModel = HostRegistry.INSTANCE.getBakedModel( host );
+            IBakedModel hostModel = BakedModelCache.INSTANCE.getBakedModel( host );
             TextureAtlasSprite hostParticleTexture = hostModel.getParticleTexture();
 
             String oreName = oreInfo.oreName();
             IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
             GenericCubeTextureMap oreTextureMap = oreInfo.modelTextureMap();
-            IBakedModel oreModel = OreRegistry.INSTANCE.getBakedModel( oreName );
+            IBakedModel oreModel = BakedModelCache.INSTANCE.getBakedOreModel( oreName );
             TextureAtlasSprite oreParticleTexture = oreModel.getParticleTexture();
 
             // This loop sampled from ParticleManager.addBlockDestroyEffects()
@@ -394,7 +395,7 @@ public class OreBlock extends BlockFalling
 
             texture = hostTextureMap != null
                 ? hostTextureMap.getTexture( target.sideHit )
-                : HostRegistry.INSTANCE.getBakedModel( host ).getParticleTexture();
+                : BakedModelCache.INSTANCE.getBakedModel( host ).getParticleTexture();
         }
         else
         {
@@ -404,7 +405,7 @@ public class OreBlock extends BlockFalling
 
             texture = oreTextureMap != null
                 ? oreTextureMap.getTexture( target.sideHit )
-                : OreRegistry.INSTANCE.getBakedModel( oreName ).getParticleTexture();
+                : BakedModelCache.INSTANCE.getBakedOreModel( oreName ).getParticleTexture();
         }
 
         if( texture != null )

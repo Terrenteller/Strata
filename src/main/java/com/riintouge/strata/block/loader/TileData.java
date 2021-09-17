@@ -5,7 +5,6 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
-import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;

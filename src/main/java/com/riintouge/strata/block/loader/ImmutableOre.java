@@ -16,6 +16,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -240,6 +242,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     // IForgeRegistrable overrides
 
     @Override
+    @SideOnly( Side.CLIENT )
     public void stitchTextures( TextureMap textureMap )
     {
         modelTextureMap.stitchTextures( textureMap );

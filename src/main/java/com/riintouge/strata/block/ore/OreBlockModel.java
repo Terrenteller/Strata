@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.MetaResourceLocation;
-import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -13,11 +13,14 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Vector;
 
+@SideOnly( Side.CLIENT )
 public class OreBlockModel implements IBakedModel
 {
     protected IOreTileSet oreTileSet;
@@ -44,7 +47,7 @@ public class OreBlockModel implements IBakedModel
         if( renderLayer == BlockRenderLayer.SOLID || renderLayer == null )
         {
             MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-            IBakedModel hostModel = HostRegistry.INSTANCE.getBakedModel( host );
+            IBakedModel hostModel = BakedModelCache.INSTANCE.getBakedModel( host );
             Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
             IBlockState hostState = hostBlock.getStateFromMeta( host.meta );
 

@@ -147,7 +147,6 @@ public class TileDataLoader
             }
 
             OreRegistry.INSTANCE.register( new OreTileSet( ore ) );
-            OreParticleTextureManager.INSTANCE.registerOre( Strata.resource( ore.oreName() ) , ore );
             OreItemTextureManager.INSTANCE.register( ore.oreName() , ore.oreItemTextureResource() );
         }
 

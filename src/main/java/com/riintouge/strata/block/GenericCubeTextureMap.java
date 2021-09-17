@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -18,7 +20,8 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
 {
     protected final String registryName;
     protected final LayeredTextureLayer[][] layerLayers = new LayeredTextureLayer[ Layer.values().length ][];
-    protected final TextureAtlasSprite[] layerTextures = new TextureAtlasSprite[ Layer.values().length ];
+    // FIXME: TextureAtlasSprite is client-side only but this has to exist in a server context
+    protected final Object[] layerTextures = new Object[ Layer.values().length ];
 
     public enum Layer
     {
@@ -88,6 +91,7 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         layerLayers[ layer.ordinal() ] = layers;
     }
 
+    @SideOnly( Side.CLIENT )
     public void stitchTextures( TextureMap textureMap )
     {
         for( Layer layer : Layer.values() )
@@ -121,13 +125,14 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
             : defaultValue;
     }
 
+    @SideOnly( Side.CLIENT )
     public TextureAtlasSprite getTexture( EnumFacing facing )
     {
         for( Layer layer = getDisplayLayer( facing ) ; layer != null ; layer = layer.parentLayer )
             if( layerLayers[ layer.ordinal() ] != null )
-                return layerTextures[ layer.ordinal() ];
+                return (TextureAtlasSprite)layerTextures[ layer.ordinal() ];
 
-        return layerTextures[ Layer.ALL.ordinal() ];
+        return (TextureAtlasSprite)layerTextures[ Layer.ALL.ordinal() ];
     }
 
     // IModelRetexturizerMap overrides

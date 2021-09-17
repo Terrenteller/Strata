@@ -11,12 +11,15 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.BlockStateMapper;
 import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.*;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+@SideOnly( Side.CLIENT )
 public class BakedModelStoreProxy implements InvocationHandler
 {
     protected IBakedModel missingModel;
