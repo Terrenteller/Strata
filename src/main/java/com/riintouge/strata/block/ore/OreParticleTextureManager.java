@@ -2,7 +2,7 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.image.LayeredTexture;
@@ -87,11 +87,11 @@ public class OreParticleTextureManager
                     if( hostInfo == null )
                         continue;
 
-                    for( GenericCubeTextureMap.Layer layer : GenericCubeTextureMap.Layer.values() )
-                    {
-                        GenericCubeTextureMap oreTextureMap = oreInfo.modelTextureMap();
-                        GenericCubeTextureMap hostTextureMap = hostInfo.modelTextureMap();
+                    ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
+                    ProtoBlockTextureMap hostTextureMap = hostInfo.modelTextureMap();
 
+                    for( ProtoBlockTextureMap.Layer layer : ProtoBlockTextureMap.Layer.values() )
+                    {
                         ResourceLocation oreTextureResource = oreTextureMap.getOrDefault( layer , null );
                         ResourceLocation hostTextureResource = hostTextureMap.getOrDefault( layer , null );
 

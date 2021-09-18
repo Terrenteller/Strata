@@ -1,6 +1,6 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.IModelRetexturizerMap;
+import com.riintouge.strata.block.IResourceLocationMap;
 import com.riintouge.strata.block.ModelRetexturizer;
 import com.riintouge.strata.Strata;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -45,7 +45,7 @@ public class OreBlockModelLoader implements ICustomModelLoader
         String oreName = matcher.group( ResourcePatternOreNameGroup );
         IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
         ModelResourceLocation templateModelResource = new ModelResourceLocation( oreInfo.blockstateResourceLocation() , null );
-        IModelRetexturizerMap textureMap = oreInfo.modelTextureMap();
+        IResourceLocationMap textureMap = oreInfo.modelTextureMap();
         return new ModelRetexturizer( templateModelResource , textureMap );
     }
 

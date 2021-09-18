@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.IModelRetexturizerMap;
+import com.riintouge.strata.block.IResourceLocationMap;
 import com.riintouge.strata.block.ModelRetexturizer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourceManager;
@@ -45,7 +45,7 @@ public class GeoBlockModelLoader implements ICustomModelLoader
         TileType tileType = stoneAndType.getRight();
         IGeoTileInfo tileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( stoneAndType.getLeft() , tileType );
         ModelResourceLocation templateModelResource = new ModelResourceLocation( tileInfo.blockstateResourceLocation() , modelResourceLocation.getVariant() );
-        IModelRetexturizerMap textureMap = tileInfo.modelTextureMap();
+        IResourceLocationMap textureMap = tileInfo.modelTextureMap();
         return new ModelRetexturizer( templateModelResource , textureMap );
     }
 

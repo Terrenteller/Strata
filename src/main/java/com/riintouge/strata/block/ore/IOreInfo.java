@@ -1,16 +1,16 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
-import com.riintouge.strata.block.geo.IGenericBlockProperties;
+import com.riintouge.strata.block.geo.ICommonBlockProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
+public interface IOreInfo extends ICommonBlockProperties, IForgeRegistrable
 {
     String oreName();
 
@@ -20,7 +20,7 @@ public interface IOreInfo extends IGenericBlockProperties , IForgeRegistrable
     @Nullable
     String itemOreDictionaryName();
 
-    GenericCubeTextureMap modelTextureMap();
+    ProtoBlockTextureMap modelTextureMap();
 
     ResourceLocation blockstateResourceLocation();
 

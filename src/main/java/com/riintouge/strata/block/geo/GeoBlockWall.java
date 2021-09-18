@@ -2,7 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.ReflectionUtil;
@@ -148,7 +148,7 @@ public class GeoBlockWall extends BlockWall
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        GenericCubeTextureMap hostTextureMap = info.modelTextureMap();
+        ProtoBlockTextureMap hostTextureMap = info.modelTextureMap();
         ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
 
         return true;
@@ -240,7 +240,7 @@ public class GeoBlockWall extends BlockWall
                             || ( north != aboveNorth ) || ( east != aboveEast ) || ( south != aboveSouth ) || ( west != aboveWest );
 
                         // If the wall above has any connections which match ours, all directions are considered "tall".
-                        // This dampens the model state combinatorial explosion in the "generic_wall" blockstate.
+                        // This dampens the model state combinatorial explosion in the "proto_wall" blockstate.
                         // Visual oddities will occur with certain arrangements, but the overall improvement
                         // is worth the edge cases. This might can be fixed if/when we can load a multipart model
                         // as a dependency. See the note in GeoTileSetRegistry.registerBlocks() for details.

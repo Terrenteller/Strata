@@ -2,7 +2,7 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.geo.BakedModelCache;
@@ -224,13 +224,13 @@ public class OreBlock extends BlockFalling
 
             MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            GenericCubeTextureMap hostTextureMap = hostInfo.modelTextureMap();
+            ProtoBlockTextureMap hostTextureMap = hostInfo.modelTextureMap();
             IBakedModel hostModel = BakedModelCache.INSTANCE.getBakedModel( host );
             TextureAtlasSprite hostParticleTexture = hostModel.getParticleTexture();
 
             String oreName = oreInfo.oreName();
             IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
-            GenericCubeTextureMap oreTextureMap = oreInfo.modelTextureMap();
+            ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
             IBakedModel oreModel = BakedModelCache.INSTANCE.getBakedOreModel( oreName );
             TextureAtlasSprite oreParticleTexture = oreModel.getParticleTexture();
 
@@ -391,7 +391,7 @@ public class OreBlock extends BlockFalling
         {
             MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            GenericCubeTextureMap hostTextureMap = hostInfo.modelTextureMap();
+            ProtoBlockTextureMap hostTextureMap = hostInfo.modelTextureMap();
 
             texture = hostTextureMap != null
                 ? hostTextureMap.getTexture( target.sideHit )
@@ -401,7 +401,7 @@ public class OreBlock extends BlockFalling
         {
             String oreName = oreInfo.oreName();
             IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
-            GenericCubeTextureMap oreTextureMap = oreInfo.modelTextureMap();
+            ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
 
             texture = oreTextureMap != null
                 ? oreTextureMap.getTexture( target.sideHit )

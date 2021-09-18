@@ -2,10 +2,12 @@ package com.riintouge.strata.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -18,12 +20,30 @@ import java.util.Random;
 @SideOnly( Side.CLIENT )
 public class ParticleHelper
 {
+    public static final int DefaultParticleColor = -16777216; // Taken from BlockFalling
+
+    public static int getParticleFallingColor( ResourceLocation textureResourceLocation )
+    {
+        TextureAtlasSprite texture = Minecraft.getMinecraft()
+            .getTextureMapBlocks()
+            .getTextureExtry( textureResourceLocation.toString() );
+
+        if( texture != null )
+        {
+            // Use the first pixel of the smallest mipmap as the average color
+            int[][] frameData = texture.getFrameTextureData( 0 );
+            return frameData[ frameData.length - 1 ][ 0 ];
+        }
+
+        return DefaultParticleColor;
+    }
+
     public static void addDestroyEffects(
         World world,
         BlockPos pos,
         ParticleManager manager,
         Random random,
-        GenericCubeTextureMap textureMap )
+        ProtoBlockTextureMap textureMap )
     {
         IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
         AxisAlignedBB AABB = state.getBoundingBox( world , pos );

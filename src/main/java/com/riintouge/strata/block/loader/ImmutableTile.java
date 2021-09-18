@@ -1,8 +1,8 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.MetaResourceLocation;
-import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
@@ -15,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -45,14 +46,14 @@ public final class ImmutableTile implements IGeoTileInfo
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = null; // Lazily evaluated
-    private GenericCubeTextureMap modelTextureMap;
+    private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
 
     // IHostInfo
     private ResourceLocation registryName;
     private Integer particleFallingColor = null; // Lazily evaluated
 
-    // IGenericBlockProperties
+    // ICommonBlockProperties
     private Material material;
     private SoundType soundType;
     private String harvestTool;
@@ -80,13 +81,13 @@ public final class ImmutableTile implements IGeoTileInfo
         this.fragmentFurnaceExp = tileData.fragmentFurnaceExp;
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
         this.sustainsPlantsSustainedByRaw = Util.lazyCoalesce( tileData.sustainsPlantsSustainedByRaw , ArrayList::new );
-        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
+        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.type.blockstate );
 
         // IHostInfo
         this.registryName = tileData.type.registryName( this.tileSetName );
 
-        // IGenericBlockProperties
+        // ICommonBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
         this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
         this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
@@ -230,7 +231,7 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public GenericCubeTextureMap modelTextureMap()
+    public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
     }
@@ -266,10 +267,10 @@ public final class ImmutableTile implements IGeoTileInfo
     {
         return particleFallingColor != null
             ? particleFallingColor
-            : ( particleFallingColor = HostRegistry.getParticleFallingColor( this ) );
+            : ( particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) ) );
     }
 
-    // IGenericBlockProperties overrides
+    // ICommonBlockProperties overrides
 
     @Override
     public Material material()

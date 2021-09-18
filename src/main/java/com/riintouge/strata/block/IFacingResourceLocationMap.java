@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public interface IFacingTextureMap
+public interface IFacingResourceLocationMap
 {
     @Nonnull
     ResourceLocation get( EnumFacing facing );

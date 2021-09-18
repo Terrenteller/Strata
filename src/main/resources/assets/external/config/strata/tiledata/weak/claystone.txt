@@ -3,7 +3,7 @@ host
 hardness 1.0
 texture strata:blocks/stone/weak/claystone
 textureCaps strata:blocks/stone/weak/claystone_caps
-blockstate strata:generic_cube_y
+blockstate strata:proto_cube_y
 lang.en Claystone
 
 generate claystone cobble

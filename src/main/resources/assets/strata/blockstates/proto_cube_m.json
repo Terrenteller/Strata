@@ -16,7 +16,8 @@
 	},
 	"variants": {
 		"normal": [
-			{ "model": "strata:generic_cube" }
+			{ "model": "strata:proto_cube" },
+			{ "model": "strata:proto_cube_m" }
 		]
 	}
 }

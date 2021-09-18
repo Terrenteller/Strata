@@ -1,11 +1,9 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.geo.GeoTileSet;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.TileType;
-import com.riintouge.strata.block.ore.OreParticleTextureManager;
 import com.riintouge.strata.block.ore.OreItemTextureManager;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.block.ore.OreTileSet;
@@ -13,7 +11,8 @@ import com.riintouge.strata.util.Util;
 
 import javax.naming.OperationNotSupportedException;
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TileDataLoader
 {

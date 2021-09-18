@@ -436,13 +436,13 @@ public class GeoTileSet implements IForgeRegistrable
 
         // Stitching the same texture multiple times leads to weird lookup failures.
         // No exceptions make it back to us, but we'll end up with (sometimes malformed) water and lava particles.
-        Set< GenericCubeTextureMap > textureMaps = new HashSet<>();
+        Set< ProtoBlockTextureMap > textureMaps = new HashSet<>();
 
         for( IGeoTileInfo tileInfo : tileInfos )
             if( tileInfo != null )
                 textureMaps.add( tileInfo.modelTextureMap() );
 
-        for( GenericCubeTextureMap tileTextureMap : textureMaps )
+        for( ProtoBlockTextureMap tileTextureMap : textureMaps )
             tileTextureMap.stitchTextures( textureMap );
     }
 }

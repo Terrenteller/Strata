@@ -1,14 +1,15 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
-import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,10 +18,10 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 {
     // IHostInfo
     private MetaResourceLocation hostMetaResource;
-    private GenericCubeTextureMap modelTextureMap;
+    private ProtoBlockTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
 
-    // IGenericBlockProperties
+    // ICommonBlockProperties
     private Material material;
     private SoundType soundType;
     private String harvestTool;
@@ -33,9 +34,9 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     {
         // IHostInfo
         this.hostMetaResource = Util.argumentNullCheck( tileData.hostMetaResource , "hostMetaResource" );
-        this.modelTextureMap = tileData.textureMap;
+        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
 
-        // IGenericBlockProperties
+        // ICommonBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
         this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
         this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
@@ -60,7 +61,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     }
 
     @Override
-    public GenericCubeTextureMap modelTextureMap()
+    public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
     }
@@ -70,10 +71,10 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     {
         return particleFallingColor != null
             ? particleFallingColor
-            : ( particleFallingColor = HostRegistry.getParticleFallingColor( this ) );
+            : ( particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) ) );
     }
 
-    // IGenericBlockProperties overrides
+    // ICommonBlockProperties overrides
 
     @Override
     public Material material()

@@ -4,7 +4,7 @@ harvestLevel 1
 hardness 2.0
 texture strata:blocks/stone/strong/sandstone
 textureCaps strata:blocks/stone/strong/sandstone_caps
-blockstate strata:generic_cube_y
+blockstate strata:proto_cube_y
 convertsTo minecraft:sandstone
 lang.en Sandstone
 

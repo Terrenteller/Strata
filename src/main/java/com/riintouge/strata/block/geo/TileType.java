@@ -15,38 +15,38 @@ import java.util.Map;
 public enum TileType
 {
     // Primaries
-    CLAY   ( true , "%s:%s" , Material.CLAY   , SoundType.GROUND , "shovel"  , null , "generic_cube_gimbal" , null ),
-    GRAVEL ( true , "%s:%s" , Material.SAND   , SoundType.GROUND , "shovel"  , null , "generic_cube_gimbal" , null ),
-    GROUND ( true , "%s:%s" , Material.GROUND , SoundType.GROUND , "shovel"  , null , "generic_cube_gimbal" , null ),
-    SAND   ( true , "%s:%s" , Material.SAND   , SoundType.SAND   , "shovel"  , null , "generic_cube_gimbal" , null ),
-    STONE  ( true , "%s:%s" , Material.ROCK   , SoundType.STONE  , "pickaxe" , null , "generic_cube_gimbal" , null ),
+    CLAY   ( true , "%s:%s" , Material.CLAY   , SoundType.GROUND , "shovel"  , null , "proto_cube_gimbal" , null ),
+    GRAVEL ( true , "%s:%s" , Material.SAND   , SoundType.GROUND , "shovel"  , null , "proto_cube_gimbal" , null ),
+    GROUND ( true , "%s:%s" , Material.GROUND , SoundType.GROUND , "shovel"  , null , "proto_cube_gimbal" , null ),
+    SAND   ( true , "%s:%s" , Material.SAND   , SoundType.SAND   , "shovel"  , null , "proto_cube_gimbal" , null ),
+    STONE  ( true , "%s:%s" , Material.ROCK   , SoundType.STONE  , "pickaxe" , null , "proto_cube_gimbal" , null ),
 
     // Secondaries - manually specified derivatives of a primary
-    COBBLE          ( false , "%s:%s_cobble"          , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
-    COBBLEMOSSY     ( false , "%s:%s_cobblemossy"     , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
-    STONEBRICK      ( false , "%s:%s_stonebrick"      , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
-    STONEBRICKMOSSY ( false , "%s:%s_stonebrickmossy" , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
-    STONEPOLISHED   ( false , "%s:%s_stonepolished"   , Material.ROCK , SoundType.STONE , "pickaxe" , null , "generic_cube" , null ),
+    COBBLE          ( false , "%s:%s_cobble"          , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
+    COBBLEMOSSY     ( false , "%s:%s_cobblemossy"     , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
+    STONEBRICK      ( false , "%s:%s_stonebrick"      , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
+    STONEBRICKMOSSY ( false , "%s:%s_stonebrickmossy" , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
+    STONEPOLISHED   ( false , "%s:%s_stonepolished"   , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
 
     // Tertiaries - manually* specified derivatives of a primary or secondary
     // * double slabs are special and should not be specified in config files
-    COBBLESTAIRS        ( false , "%s:%s_cobblestairs"        , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "generic_stairs"         , "facing=east,half=bottom,shape=straight" ),
-    STONESTAIRS         ( false , "%s:%s_stonestairs"         , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "generic_stairs"         , "facing=east,half=bottom,shape=straight" ),
-    STONEBRICKSTAIRS    ( false , "%s:%s_stonebrickstairs"    , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "generic_stairs"         , "facing=east,half=bottom,shape=straight" ),
-    COBBLESLAB          ( false , "%s:%s_cobbleslab"          , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "generic_slab"           , "half=bottom,variant=default"            ),
-    COBBLESLABS         ( false , "%s:%s_cobbleslabs"         , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "generic_slab"           , "half=bottom,variant=default"            ),
-    STONESLAB           ( false , "%s:%s_stoneslab"           , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "generic_slab"           , "half=bottom,variant=default"            ),
-    STONESLABS          ( false , "%s:%s_stoneslabs"          , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "generic_slab"           , "half=bottom,variant=default"            ),
-    STONEBRICKSLAB      ( false , "%s:%s_stonebrickslab"      , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "generic_slab"           , "half=bottom,variant=default"            ),
-    STONEBRICKSLABS     ( false , "%s:%s_stonebrickslabs"     , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "generic_slab"           , "half=bottom,variant=default"            ),
-    COBBLEWALL          ( false , "%s:%s_cobblewall"          , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "generic_wall"           , "inventory"                              ),
-    COBBLEWALLMOSSY     ( false , "%s:%s_cobblewallmossy"     , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLEMOSSY     , "generic_wall"           , "inventory"                              ),
-    STONEWALL           ( false , "%s:%s_stonewall"           , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "generic_wall"           , "inventory"                              ),
-    STONEBRICKWALL      ( false , "%s:%s_stonebrickwall"      , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "generic_wall"           , "inventory"                              ),
-    STONEBRICKWALLMOSSY ( false , "%s:%s_stonebrickwallmossy" , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICKMOSSY , "generic_wall"           , "inventory"                              ),
-    BUTTON              ( false , "%s:%s_button"              , Material.CIRCUITS , SoundType.STONE , "pickaxe" , STONE           , "generic_button"         , "inventory"                              ),
-    LEVER               ( false , "%s:%s_lever"               , Material.CIRCUITS , SoundType.WOOD  , "pickaxe" , COBBLE          , "generic_lever"          , "facing=up_z,powered=false"              ),
-    PRESSUREPLATE       ( false , "%s:%s_pressureplate"       , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "generic_pressure_plate" , "powered=false"                          );
+    COBBLESTAIRS        ( false , "%s:%s_cobblestairs"        , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "proto_stairs"         , "facing=east,half=bottom,shape=straight" ),
+    STONESTAIRS         ( false , "%s:%s_stonestairs"         , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "proto_stairs"         , "facing=east,half=bottom,shape=straight" ),
+    STONEBRICKSTAIRS    ( false , "%s:%s_stonebrickstairs"    , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "proto_stairs"         , "facing=east,half=bottom,shape=straight" ),
+    COBBLESLAB          ( false , "%s:%s_cobbleslab"          , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "proto_slab"           , "half=bottom,variant=default"            ),
+    COBBLESLABS         ( false , "%s:%s_cobbleslabs"         , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "proto_slab"           , "half=bottom,variant=default"            ),
+    STONESLAB           ( false , "%s:%s_stoneslab"           , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "proto_slab"           , "half=bottom,variant=default"            ),
+    STONESLABS          ( false , "%s:%s_stoneslabs"          , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "proto_slab"           , "half=bottom,variant=default"            ),
+    STONEBRICKSLAB      ( false , "%s:%s_stonebrickslab"      , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "proto_slab"           , "half=bottom,variant=default"            ),
+    STONEBRICKSLABS     ( false , "%s:%s_stonebrickslabs"     , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "proto_slab"           , "half=bottom,variant=default"            ),
+    COBBLEWALL          ( false , "%s:%s_cobblewall"          , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "proto_wall"           , "inventory"                              ),
+    COBBLEWALLMOSSY     ( false , "%s:%s_cobblewallmossy"     , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLEMOSSY     , "proto_wall"           , "inventory"                              ),
+    STONEWALL           ( false , "%s:%s_stonewall"           , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "proto_wall"           , "inventory"                              ),
+    STONEBRICKWALL      ( false , "%s:%s_stonebrickwall"      , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "proto_wall"           , "inventory"                              ),
+    STONEBRICKWALLMOSSY ( false , "%s:%s_stonebrickwallmossy" , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICKMOSSY , "proto_wall"           , "inventory"                              ),
+    BUTTON              ( false , "%s:%s_button"              , Material.CIRCUITS , SoundType.STONE , "pickaxe" , STONE           , "proto_button"         , "inventory"                              ),
+    LEVER               ( false , "%s:%s_lever"               , Material.CIRCUITS , SoundType.WOOD  , "pickaxe" , COBBLE          , "proto_lever"          , "facing=up_z,powered=false"              ),
+    PRESSUREPLATE       ( false , "%s:%s_pressureplate"       , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "proto_pressure_plate" , "powered=false"                          );
 
     // Cache to satisfy instance comparisons
     private static Map< TileType , ItemStack > ItemStackMap = new HashMap<>();

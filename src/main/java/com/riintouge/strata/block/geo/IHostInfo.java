@@ -1,15 +1,15 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import net.minecraft.util.ResourceLocation;
 
-public interface IHostInfo extends IGenericBlockProperties
+public interface IHostInfo extends ICommonBlockProperties
 {
     ResourceLocation registryName();
 
     int meta();
 
-    GenericCubeTextureMap modelTextureMap();
+    ProtoBlockTextureMap modelTextureMap();
 
     int particleFallingColor();
 }

@@ -1,6 +1,6 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.BlendMode;
@@ -45,7 +45,7 @@ public class TileData
     // IHostInfo
     public MetaResourceLocation hostMetaResource = null;
 
-    // IGenericBlockProperties
+    // ICommonBlockProperties
     public Material material = null;
     public SoundType soundType = null;
     public String harvestTool = null;
@@ -56,7 +56,8 @@ public class TileData
     // Shared / Special
     public boolean isHost = false;
     public ResourceLocation blockstateResourceLocation = null;
-    public GenericCubeTextureMap textureMap = null;
+    public ProtoBlockTextureMap textureMap = null;
+    public LayeredTextureLayer[][] layeredTextureLayers = null;
     public Map< String , String > languageMap = null;
 
     public boolean processKeyValue( String key , String value )
@@ -203,20 +204,18 @@ public class TileData
         if( key.startsWith( "texture" ) )
         {
             String facingString = key.substring( "texture".length() ).toUpperCase();
-            GenericCubeTextureMap.Layer facing = EnumUtils.isValidEnum( GenericCubeTextureMap.Layer.class , facingString )
-                ? GenericCubeTextureMap.Layer.valueOf( facingString )
+            ProtoBlockTextureMap.Layer layer = EnumUtils.isValidEnum( ProtoBlockTextureMap.Layer.class , facingString )
+                ? ProtoBlockTextureMap.Layer.valueOf( facingString )
                 : facingString.isEmpty()
-                    ? GenericCubeTextureMap.Layer.ALL
+                    ? ProtoBlockTextureMap.Layer.ALL
                     : null;
 
-            if( facing != null )
+            if( layer != null )
             {
-                List< LayeredTextureLayer > layers = parseTextureLayers( value );
-                LayeredTextureLayer[] layerArray = new LayeredTextureLayer[ layers.size() ];
-                layers.toArray( layerArray );
-
-                if( textureMap == null )
+                if( layeredTextureLayers == null )
                 {
+                    layeredTextureLayers = new LayeredTextureLayer[ ProtoBlockTextureMap.Layer.values().length ][];
+
                     // FIXME: Using tileSetName, oreName, and type here violates the assumption that lines can be in any order
                     String registryName = tileSetName != null
                         ? type.registryName( tileSetName ).getResourcePath()
@@ -224,10 +223,11 @@ public class TileData
                             ? type.registryName( oreName ).getResourcePath()
                             : String.format( "%s_%d" , hostMetaResource.resourceLocation.getResourcePath() , hostMetaResource.meta );
 
-                    textureMap = new GenericCubeTextureMap( registryName );
+                    textureMap = new ProtoBlockTextureMap( registryName , layeredTextureLayers );
                 }
 
-                textureMap.set( facing , layerArray );
+                List< LayeredTextureLayer > layers = parseTextureLayers( value );
+                layeredTextureLayers[ layer.ordinal() ] = layers.toArray( new LayeredTextureLayer[ layers.size() ] );
                 return true;
             }
         }

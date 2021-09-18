@@ -147,7 +147,7 @@ hardness 4.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/strong/banded_iron
 textureCaps strata:blocks/ore/strong/banded_iron_caps
-blockstate strata:generic_cube_y_overlay
+blockstate strata:proto_cube_y_overlay
 lang.en Banded Iron (Iron Ore)
 
 ore cassiterite

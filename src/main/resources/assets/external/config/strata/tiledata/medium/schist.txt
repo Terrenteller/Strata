@@ -2,7 +2,7 @@ generate schist stone
 host
 hardness 1.5
 texture strata:blocks/stone/medium/schist
-blockstate strata:generic_cube
+blockstate strata:proto_cube
 lang.en Schist
 
 generate schist cobble

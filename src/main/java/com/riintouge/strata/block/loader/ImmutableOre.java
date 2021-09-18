@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ore.IOreInfo;
@@ -32,7 +32,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private String oreName;
     private String blockOreDictionaryName;
     private String itemOreDictionaryName;
-    private GenericCubeTextureMap modelTextureMap;
+    private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
     private ResourceLocation oreItemTextureResource;
     private MetaResourceLocation equivalentItemResourceLocation;
@@ -46,7 +46,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private int baseExp;
     private String bonusExpExpr;
 
-    // IGenericBlockProperties
+    // ICommonBlockProperties
     private Material material;
     private SoundType soundType;
     private String harvestTool;
@@ -63,8 +63,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.oreName = Util.argumentNullCheck( tileData.oreName , "oreName" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.itemOreDictionaryName = tileData.itemOreDictionaryName;
-        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "textureMap" );
-        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , Strata.resource( "generic_cube_gimbal_overlay" ) );
+        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
+        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , Strata.resource( "proto_cube_gimbal_overlay" ) );
         this.oreItemTextureResource = this.modelTextureMap.get( (EnumFacing)null );
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.furnaceResult = tileData.furnaceResult;
@@ -75,7 +75,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.baseExp = Util.coalesce( tileData.baseExp , 0 );
         this.bonusExpExpr = tileData.bonusExpExpr;
 
-        // IGenericBlockProperties
+        // ICommonBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
         this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
         this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
@@ -108,7 +108,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     }
 
     @Override
-    public GenericCubeTextureMap modelTextureMap()
+    public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
     }
@@ -177,7 +177,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return LocalizationRegistry.INSTANCE.get( this );
     }
 
-    // IGenericBlockProperties overrides
+    // ICommonBlockProperties overrides
 
     @Override
     public Material material()

@@ -17,7 +17,7 @@ public class ModelRetexturizer implements IModel
 {
     private final ResourceLocation templateModelResource;
     private final ResourceLocation textureResource;
-    private final IModelRetexturizerMap textureMap;
+    private final IResourceLocationMap textureMap;
 
     public ModelRetexturizer( ResourceLocation templateModelResource , ResourceLocation textureResource )
     {
@@ -26,7 +26,7 @@ public class ModelRetexturizer implements IModel
         this.textureResource = textureResource;
     }
 
-    public ModelRetexturizer( ResourceLocation templateModelResource , IModelRetexturizerMap textureMap )
+    public ModelRetexturizer( ResourceLocation templateModelResource , IResourceLocationMap textureMap )
     {
         this.templateModelResource = templateModelResource;
         this.textureMap = textureMap;
@@ -62,6 +62,6 @@ public class ModelRetexturizer implements IModel
             format,
             textureResource != null
                 ? ( resourceLocation ) -> bakedTextureGetter.apply( textureResource )
-                : ( resourceLocation ) -> bakedTextureGetter.apply( textureMap.getOrDefault( resourceLocation ) ) );
+                : ( resourceLocation ) -> bakedTextureGetter.apply( textureMap.get( resourceLocation ) ) );
     }
 }

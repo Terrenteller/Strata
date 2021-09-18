@@ -1,6 +1,6 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.GenericCubeTextureMap;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.image.LayeredTextureLayer;
@@ -51,7 +51,7 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 
     ArrayList< IBlockState > sustainsPlantsSustainedBy();
 
-    GenericCubeTextureMap modelTextureMap();
+    ProtoBlockTextureMap modelTextureMap();
 
     ResourceLocation blockstateResourceLocation();
 

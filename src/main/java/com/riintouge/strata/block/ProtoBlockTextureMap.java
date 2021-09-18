@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-// TODO: This class needs an interface. Too many things know about what it really is.
-public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTextureMap
+public class ProtoBlockTextureMap implements
+    IMultiFacingResourceMap< ProtoBlockTextureMap.Layer >,
+    IResourceLocationMap,
+    IFacingResourceLocationMap
 {
-    protected final String registryName;
-    protected final LayeredTextureLayer[][] layerLayers = new LayeredTextureLayer[ Layer.values().length ][];
+    protected final String baseRegistryName;
+    protected final LayeredTextureLayer[][] layerLayers;
     // FIXME: TextureAtlasSprite is client-side only but this has to exist in a server context
     protected final Object[] layerTextures = new Object[ Layer.values().length ];
 
@@ -61,34 +63,16 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         }
     }
 
-    public GenericCubeTextureMap( String registryName )
+    public ProtoBlockTextureMap( String baseRegistryName , LayeredTextureLayer[][] layerLayers )
     {
-        this.registryName = registryName;
+        this.baseRegistryName = baseRegistryName;
+        this.layerLayers = layerLayers;
     }
 
-    public Layer getDisplayLayer( Layer layer )
+    @SideOnly( Side.CLIENT )
+    public TextureAtlasSprite getTexture( EnumFacing facing )
     {
-        for( Layer displayLayer = layer ; displayLayer != null ; displayLayer = displayLayer.parentLayer )
-            if( layerLayers[ displayLayer.ordinal() ] != null )
-                return displayLayer;
-
-        return Layer.ALL;
-    }
-
-    public Layer getDisplayLayer( EnumFacing facing )
-    {
-        if( facing != null )
-            for( Layer layer : Layer.values() )
-                if( layer.facing == facing )
-                    return layer;
-
-        return Layer.ALL;
-    }
-
-    // TODO: move to constructor
-    public void set( Layer layer , LayeredTextureLayer[] layers )
-    {
-        layerLayers[ layer.ordinal() ] = layers;
+        return (TextureAtlasSprite)layerTextures[ getActualMultiFacing( facing ).ordinal() ];
     }
 
     @SideOnly( Side.CLIENT )
@@ -99,9 +83,9 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
             LayeredTextureLayer[] textureLayers = layerLayers[ layer.ordinal() ];
             if( textureLayers != null )
             {
-                System.out.println( "Stitching " + registryName + layer.resourceLocationSuffix() );
+                System.out.println( "Stitching " + baseRegistryName + layer.resourceLocationSuffix() );
                 LayeredTexture layerTexture = new LayeredTexture(
-                    new ResourceLocation( Strata.modid , registryName + layer.resourceLocationSuffix() ),
+                    new ResourceLocation( Strata.modid , baseRegistryName + layer.resourceLocationSuffix() ),
                     textureLayers );
                 layerTextures[ layer.ordinal() ] = layerTexture;
                 textureMap.setTextureEntry( layerTexture );
@@ -109,43 +93,67 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         }
     }
 
-    @Nonnull
-    public ResourceLocation get( Layer layer )
-    {
-        ResourceLocation resourceLocation = getOrDefault( layer , null );
-        return resourceLocation != null
-            ? resourceLocation
-            : new ResourceLocation( Strata.modid , registryName + GenericCubeTextureMap.Layer.ALL.resourceLocationSuffix() );
-    }
-
-    public ResourceLocation getOrDefault( Layer layer , ResourceLocation defaultValue )
-    {
-        return layerLayers[ layer.ordinal() ] != null
-            ? new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() )
-            : defaultValue;
-    }
-
-    @SideOnly( Side.CLIENT )
-    public TextureAtlasSprite getTexture( EnumFacing facing )
-    {
-        for( Layer layer = getDisplayLayer( facing ) ; layer != null ; layer = layer.parentLayer )
-            if( layerLayers[ layer.ordinal() ] != null )
-                return (TextureAtlasSprite)layerTextures[ layer.ordinal() ];
-
-        return (TextureAtlasSprite)layerTextures[ Layer.ALL.ordinal() ];
-    }
-
-    // IModelRetexturizerMap overrides
+    // IMultiFacingResourceMap overrides
 
     @Nonnull
     @Override
-    public ResourceLocation getOrDefault( ResourceLocation modelTextureLocationIn )
+    public Layer getActualMultiFacing( Layer multiFacing )
+    {
+        for( Layer displayLayer = multiFacing ; displayLayer != null ; displayLayer = displayLayer.parentLayer )
+            if( layerLayers[ displayLayer.ordinal() ] != null )
+                return displayLayer;
+
+        return Layer.ALL;
+    }
+
+    @Nonnull
+    @Override
+    public Layer getActualMultiFacing( EnumFacing facing )
+    {
+        if( facing != null )
+            for( Layer layer : Layer.values() )
+                if( layer.facing == facing )
+                    return getActualMultiFacing( layer );
+
+        return Layer.ALL;
+    }
+
+    @Nonnull
+    @Override
+    public ResourceLocation get( Layer multiFacing )
+    {
+        ResourceLocation resourceLocation = getOrDefault( multiFacing , null );
+        return resourceLocation != null
+            ? resourceLocation
+            : new ResourceLocation( Strata.modid , baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
+    }
+
+    @Override
+    public ResourceLocation getOrDefault( Layer multiFacing , ResourceLocation defaultValue )
+    {
+        return layerLayers[ multiFacing.ordinal() ] != null
+            ? new ResourceLocation( Strata.modid , baseRegistryName + getActualMultiFacing( multiFacing ).resourceLocationSuffix() )
+            : defaultValue;
+    }
+
+    // IResourceLocationMap overrides
+
+    @Nonnull
+    @Override
+    public ResourceLocation get( ResourceLocation resourceLocation )
+    {
+        // Unlike other getters, we don't want to re-map resources we're not meant to
+        return getOrDefault( resourceLocation , resourceLocation );
+    }
+
+    @Override
+    public ResourceLocation getOrDefault( ResourceLocation resourceLocation , ResourceLocation defaultValue )
     {
         for( Layer layer : Layer.values() )
-            if( modelTextureLocationIn.equals( layer.resourceLocation ) )
-                return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() );
+            if( resourceLocation.equals( layer.resourceLocation ) )
+                return new ResourceLocation( Strata.modid , baseRegistryName + getActualMultiFacing( layer ).resourceLocationSuffix() );
 
-        return modelTextureLocationIn;
+        return defaultValue;
     }
 
     @Nonnull
@@ -155,12 +163,12 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         List< ResourceLocation > resourceLocations = new ArrayList<>();
         for( Layer layer : Layer.values() )
             if( layerLayers[ layer.ordinal() ] != null )
-                resourceLocations.add( new ResourceLocation( Strata.modid , registryName + layer.resourceLocationSuffix() ) );
+                resourceLocations.add( new ResourceLocation( Strata.modid , baseRegistryName + layer.resourceLocationSuffix() ) );
 
         return resourceLocations;
     }
 
-    // IFacingTextureMap overrides
+    // IFacingResourceLocationMap overrides
 
     @Nonnull
     @Override
@@ -169,7 +177,7 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         ResourceLocation resourceLocation = getOrDefault( facing , null );
         return resourceLocation != null
             ? resourceLocation
-            : new ResourceLocation( Strata.modid , registryName + GenericCubeTextureMap.Layer.ALL.resourceLocationSuffix() );
+            : new ResourceLocation( Strata.modid , baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
     }
 
     @Override
@@ -178,7 +186,7 @@ public class GenericCubeTextureMap implements IModelRetexturizerMap , IFacingTex
         if( facing != null )
             for( Layer layer : Layer.values() )
                 if( layer.facing == facing )
-                    return new ResourceLocation( Strata.modid , registryName + getDisplayLayer( layer ).resourceLocationSuffix() );
+                    return new ResourceLocation( Strata.modid , baseRegistryName + getActualMultiFacing( layer ).resourceLocationSuffix() );
 
         return defaultValue;
     }
