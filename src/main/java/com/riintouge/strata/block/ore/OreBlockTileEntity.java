@@ -2,15 +2,23 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.StateUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class OreBlockTileEntity extends TileEntity
 {
@@ -75,11 +83,81 @@ public class OreBlockTileEntity extends TileEntity
         if( !hostRock.equals( UnlistedPropertyHostRock.DEFAULT ) )
             return; // Host has been determined
 
-        hostRock = UnlistedPropertyHostRock.findHost( world , pos );
+        hostRock = findHost( world , pos );
         if( hostRock.equals( UnlistedPropertyHostRock.DEFAULT ) )
             return; // No host found. Wait for something to update us or try again later.
 
         update();
+    }
+
+    public MetaResourceLocation findHost( IBlockAccess worldIn , BlockPos pos )
+    {
+        Map< MetaResourceLocation , Float > hostWeight = new HashMap<>();
+
+        for( EnumFacing facing : EnumFacing.VALUES )
+        {
+            MetaResourceLocation host = getAdjacentHost( worldIn , pos , facing );
+            IHostInfo hostInfo = host != null ? HostRegistry.INSTANCE.find( host ) : null;
+            if( hostInfo == null )
+                continue;
+
+            float weight = 1;
+
+            if( host.equals( UnlistedPropertyHostRock.DEFAULT ) )
+            {
+                // Never prioritize the default (which should really be null)
+                weight = 0;
+            }
+            else
+            {
+                // Give a bonus to horizontal facings since most rock is found in layers
+                weight *= facing.getAxis().isHorizontal() ? 2 : 1;
+
+                // Give a bonus for hosts which match the ore's material
+                Block block = worldIn.getBlockState( pos ).getBlock();
+                OreBlock oreBlock = block instanceof OreBlock ? (OreBlock)block : null;
+                if( oreBlock != null && hostInfo.material() == oreBlock.oreInfo.material() )
+                    weight *= 2;
+                else
+                    weight /= 2;
+            }
+
+            // FIXME: Find and use a map that bases key equality on equals()
+            boolean updated = false;
+            for( Map.Entry< MetaResourceLocation , Float > entry : hostWeight.entrySet() )
+            {
+                if( entry.getKey().equals( host ) )
+                {
+                    entry.setValue( entry.getValue() + weight );
+                    updated = true;
+                    break;
+                }
+            }
+
+            if( !updated )
+                hostWeight.put( host , hostWeight.getOrDefault( host , 0.0f ) + weight );
+        }
+
+        Map.Entry< MetaResourceLocation , Float > bestEntry = null;
+        for( Map.Entry< MetaResourceLocation , Float > entry : hostWeight.entrySet() )
+            if( bestEntry == null || entry.getValue() > bestEntry.getValue() )
+                bestEntry = entry;
+
+        return bestEntry != null ? bestEntry.getKey() : UnlistedPropertyHostRock.DEFAULT;
+    }
+
+    public MetaResourceLocation getAdjacentHost( IBlockAccess worldIn , BlockPos pos , EnumFacing facing )
+    {
+        BlockPos adjPos = pos.offset( facing );
+        IBlockState adjState = worldIn.getBlockState( adjPos );
+        Block adjBlock = adjState.getBlock();
+        ResourceLocation adjRegistryName = adjBlock.getRegistryName();
+        int adjMeta = adjBlock.getMetaFromState( adjState );
+
+        MetaResourceLocation possibleHost = new MetaResourceLocation( adjRegistryName , adjMeta );
+        return HostRegistry.INSTANCE.find( adjRegistryName , adjMeta ) != null
+            ? possibleHost
+            : StateUtil.getValue( adjState , worldIn , adjPos , UnlistedPropertyHostRock.PROPERTY , null );
     }
 
     protected void update()
