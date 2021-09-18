@@ -7,6 +7,7 @@ import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import org.apache.commons.lang3.EnumUtils;
@@ -52,7 +53,7 @@ public class TileData
     public Float hardness = null;
     public Float explosionResistance = null;
 
-    // Shared
+    // Shared / Special
     public boolean isHost = false;
     public ResourceLocation blockstateResourceLocation = null;
     public GenericCubeTextureMap textureMap = null;
@@ -74,7 +75,9 @@ public class TileData
             }
             case "convertsTo":
             {
-                equivalentItemResourceLocation = new MetaResourceLocation( value );
+                equivalentItemResourceLocation = value.equals( "-" )
+                    ? new MetaResourceLocation( Blocks.AIR.getRegistryName() , 0 )
+                    : new MetaResourceLocation( value );
                 return true;
             }
             case "drops":

@@ -389,13 +389,10 @@ public class GeoTileSet implements IForgeRegistrable
 
             ItemStack equivalentItem = tileInfo.equivalentItemStack();
             if( equivalentItem != null && !equivalentItem.isEmpty() )
+            {
                 RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( itemBlock ) );
-
-            ItemStack vanillaItemStack = type.vanillaItemStack();
-            if( vanillaItemStack != null && !vanillaItemStack.isEmpty() )
-                RecipeReplicator.INSTANCE.register( vanillaItemStack , new ItemStack( itemBlock ) );
-
-            createEquivalentItemConversionRecipe( registryName , itemBlock , equivalentItem != null ? equivalentItem : vanillaItemStack );
+                createEquivalentItemConversionRecipe( registryName , itemBlock , equivalentItem );
+            }
         }
     }
 

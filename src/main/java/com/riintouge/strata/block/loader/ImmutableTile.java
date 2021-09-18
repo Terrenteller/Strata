@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -126,13 +127,22 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public ItemStack equivalentItemStack()
     {
+        if( equivalentItemResourceLocation == null )
+            return type.vanillaItemStack();
+
         // Deferred resolution until reasonably sure the item has been created
-        if( equivalentItemResourceLocation != null )
+        if( equivalentItemStack == null )
         {
-            Item equivalentItem = Item.REGISTRY.getObject( equivalentItemResourceLocation.resourceLocation );
-            if( equivalentItem != null )
-                equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
-            equivalentItemResourceLocation = null;
+            if( equivalentItemResourceLocation.resourceLocation.equals( Blocks.AIR.getRegistryName() ) )
+            {
+                equivalentItemStack = ItemStack.EMPTY;
+            }
+            else
+            {
+                Item equivalentItem = Item.REGISTRY.getObject( equivalentItemResourceLocation.resourceLocation );
+                if( equivalentItem != null )
+                    equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
+            }
         }
 
         return equivalentItemStack;

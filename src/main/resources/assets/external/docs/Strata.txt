@@ -20,7 +20,8 @@ Key: host
 Value: <ResourceLocation>[:<meta>]
 Description:
 	Register the block as one from which ores may acquire various properties. Does not generate actual blocks or items.
-	When used with "generate", the Value (not Key!) is ignored and only applies to primary tile types.
+	When used with "generate", the Value (not Key!) is ignored.
+	Only applies to primary tile types.
 
 Key: ore
 Value: <name>
@@ -99,8 +100,8 @@ Description:
 Key: convertsTo
 Value: <ResourceLocation>[:<meta>]
 Description:
-	One-way, one-to-one conversion to another item for compatibility purposes.
-	Some tile types have an automatic vanilla equivalent.
+	One-way, one-to-one conversion to another item for compatibility purposes. Also used in recipe replication.
+	Some tile types have a pre-determined, vanilla equivalent. Use a hyphen to ignore it.
 	For ores, this applies to the ore item, not the creative mode item block.
 
 Key: furnaceResult

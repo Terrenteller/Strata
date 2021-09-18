@@ -3,32 +3,38 @@
 generate borax stone
 hardness 2.0
 texture strata:blocks/ore/weak/borax
+convertsTo -
 lang.en Borax
 
 generate salt stone
 oreDict oreSalt
 hardness 2.0
 texture strata:blocks/ore/weak/salt
+convertsTo -
 lang.en Salt
 
 generate salitre stone
 hardness 2.0
 texture strata:blocks/ore/weak/salitre
+convertsTo -
 lang.en Salitre
 
 generate graphite stone
 hardness 2.0
 texture strata:blocks/ore/weak/graphite
+convertsTo -
 lang.en Graphite
 
 generate gypsum stone
 hardness 2.0
 texture strata:blocks/ore/weak/gypsum
+convertsTo -
 lang.en Gypsum
 
 generate mirabilite stone
 hardness 2.0
 texture strata:blocks/ore/weak/mirabilite
+convertsTo -
 lang.en Mirabilite
 
 ore mica
@@ -50,6 +56,7 @@ hardness 2.0
 texture strata:blocks/ore/weak/trona
 textureCaps strata:blocks/ore/weak/trona_caps
 blockstate strata:generic_cube_ym
+convertsTo -
 lang.en Trona
 
 # Medium
@@ -69,11 +76,13 @@ lang.en Fluorite
 generate wollastonite stone
 hardness 3.0
 texture strata:blocks/ore/medium/wollastonite
+convertsTo -
 lang.en Wollastonite
 
 generate zeolite stone
 hardness 3.0
 texture strata:blocks/ore/medium/zeolite
+convertsTo -
 lang.en Zeolite
 
 # Strong
@@ -101,6 +110,7 @@ lang.en Perlite
 generate pumice stone
 hardness 4.0
 texture strata:blocks/ore/strong/pumice
+convertsTo -
 lang.en Pumice
 
 ore pyrite
@@ -114,4 +124,5 @@ lang.en Pyrite
 generate oil_shale stone
 hardness 3.0
 texture strata:blocks/ore/crude/oil_shale
+convertsTo -
 lang.en Oil Shale

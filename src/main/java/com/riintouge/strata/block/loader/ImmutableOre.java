@@ -12,6 +12,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -130,8 +131,13 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         // Deferred resolution until reasonably sure the item has been created
         if( equivalentItemResourceLocation != null )
         {
-            Item equivalentItem = Item.REGISTRY.getObject( equivalentItemResourceLocation.resourceLocation );
-            equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
+            if( !equivalentItemResourceLocation.resourceLocation.equals( Blocks.AIR.getRegistryName() ) )
+            {
+                Item equivalentItem = Item.REGISTRY.getObject( equivalentItemResourceLocation.resourceLocation );
+                if( equivalentItem != null )
+                    equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
+            }
+
             equivalentItemResourceLocation = null;
         }
 
