@@ -171,6 +171,16 @@ public class TileDataLoader
                         continue;
 
                     // All tertiary types are meant to be defined in config files, but double slabs are special
+                    switch( type )
+                    {
+                        case COBBLESLABS:
+                        case STONESLABS:
+                        case STONEBRICKSLABS:
+                            break;
+                        default:
+                            continue;
+                    }
+
                     try
                     {
                         TileData parentData = tileDataMap.get( type.parentType );
