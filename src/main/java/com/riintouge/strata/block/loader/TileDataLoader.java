@@ -60,8 +60,7 @@ public class TileDataLoader
                 else if( line.charAt( 0 ) != '#' )
                 {
                     String[] kv = Util.splitKV( line );
-                    data.processKeyValue( kv[ 0 ] , kv[ 1 ] );
-                    meaningfulLineProcessed = true;
+                    meaningfulLineProcessed = data.processKeyValue( kv[ 0 ] , kv[ 1 ] );
                 }
             }
             buffer.close();
@@ -79,16 +78,16 @@ public class TileDataLoader
 
     protected void processTileData( TileData tileData )
     {
-        if( tileData.tileSetName != null && tileData.type != null )
+        if( tileData.tileSetName != null && tileData.tileType != null )
         {
             String tileSetName = tileData.tileSetName.toLowerCase();
             Map< TileType , TileData > tileDataMap = tileSetTileDataMap.computeIfAbsent( tileSetName , x -> new HashMap<>() );
 
-            for( TileType parentType = tileData.type.parentType ; parentType != null ; parentType = parentType.parentType )
+            for( TileType parentType = tileData.tileType.parentType ; parentType != null ; parentType = parentType.parentType )
             {
                 TileData parentData = tileDataMap.getOrDefault( parentType , null );
                 if( parentData == null )
-                    throw new UnsupportedOperationException( String.format( "'%s' child type '%s' loaded before parent type '%s'!" , tileData.tileSetName , tileData.type.toString() , parentType.toString() ) );
+                    throw new UnsupportedOperationException( String.format( "'%s' child type '%s' loaded before parent type '%s'!" , tileData.tileSetName , tileData.tileType.toString() , parentType.toString() ) );
 
                 // Only select KVs make sense to propagate from parent to child
                 if( tileData.harvestLevel == null )
@@ -104,7 +103,7 @@ public class TileDataLoader
                     tileData.textureMap = parentData.textureMap;
             }
 
-            tileDataMap.put( tileData.type , tileData );
+            tileDataMap.put( tileData.tileType , tileData );
         }
         else if( tileData.hostMetaResource != null )
         {
@@ -161,16 +160,16 @@ public class TileDataLoader
             GeoTileSet tileSet = tileSetMap.computeIfAbsent( tileSetName , x -> new GeoTileSet() );
             Map< TileType , TileData > tileDataMap = tileSetTileDataMap.get( tileSetName );
 
-            for( TileType type : TileType.values() )
+            for( TileType tileType : TileType.values() )
             {
-                TileData tileData = tileDataMap.getOrDefault( type , null );
+                TileData tileData = tileDataMap.getOrDefault( tileType , null );
                 if( tileData == null )
                 {
-                    if( type.parentType == null )
+                    if( tileType.parentType == null )
                         continue;
 
                     // All tertiary types are meant to be defined in config files, but double slabs are special
-                    switch( type )
+                    switch( tileType )
                     {
                         case COBBLESLABS:
                         case STONESLABS:
@@ -182,9 +181,9 @@ public class TileDataLoader
 
                     try
                     {
-                        TileData parentData = tileDataMap.get( type.parentType );
+                        TileData parentData = tileDataMap.get( tileType.parentType );
                         if( parentData != null )
-                            tileDataMap.put( type , tileData = parentData.createMissingChildType( type ) );
+                            tileDataMap.put( tileType , tileData = parentData.createMissingChildType( tileType ) );
                         else
                             continue;
                     }
@@ -203,7 +202,7 @@ public class TileDataLoader
                 {
                     String informativeMessage = String.format(
                         "Failed to create '%s' for '%s' with invalid '%s'!",
-                        tileData.type.toString(),
+                        tileData.tileType.toString(),
                         tileSetName,
                         e.getMessage() );
 
@@ -211,7 +210,7 @@ public class TileDataLoader
                 }
 
                 tileSet.addTile( tile );
-                if( tileData.isHost && tileData.type.isPrimary )
+                if( tileData.isHost && tileData.tileType.isPrimary )
                     HostRegistry.INSTANCE.register( tile.registryName() , tile.meta() , tile );
             }
         }

@@ -7,6 +7,7 @@ import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -46,11 +47,13 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
             localeProperties2.putIfAbsent( unlocalizedKey , currentString );
     }
 
+    @Nullable
     public String get( Object object )
     {
         return currentStrings.getOrDefault( object , null );
     }
 
+    @Nullable
     private String getInternal( Object object )
     {
         Map< String , String > languageMap = objectLocalizationMaps.get( object );
@@ -66,9 +69,10 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
         if( localizedName != null )
             return localizedName;
 
-        return unlocalizedKeys.get( object );
+        return unlocalizedKeys.getOrDefault( object , null );
     }
 
+    @SuppressWarnings( "unchecked" )
     private void reacquireLocaleLocalizationMaps()
     {
         // Not all code paths traverse Block.getLocalizedName() or Item.getLocalizedName(), such as tooltips

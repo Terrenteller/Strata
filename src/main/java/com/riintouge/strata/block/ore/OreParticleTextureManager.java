@@ -17,18 +17,16 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
 @SideOnly( Side.CLIENT )
-public class OreParticleTextureManager
+public final class OreParticleTextureManager
 {
     public static final OreParticleTextureManager INSTANCE = new OreParticleTextureManager();
 
-    private static final Logger LOGGER = LogManager.getLogger();
     private boolean isInitialized = false;
     private Map< String , TextureAtlasSprite > generatedTextureMap = new HashMap<>();
 
@@ -42,12 +40,8 @@ public class OreParticleTextureManager
         return isInitialized;
     }
 
-    public TextureAtlasSprite findTexture(
-        String orePath,
-        String hostDomain,
-        String hostPath,
-        int hostMeta,
-        EnumFacing facing )
+    @Nonnull
+    public TextureAtlasSprite findTexture( String orePath , String hostDomain , String hostPath , int hostMeta , EnumFacing facing )
     {
         String resourcePath = getGeneratedResourceLocation( orePath , hostDomain , hostPath , hostMeta , facing.getName2() ).getResourcePath();
         TextureAtlasSprite texture = generatedTextureMap.getOrDefault( resourcePath , null );

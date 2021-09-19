@@ -7,6 +7,7 @@ import net.minecraftforge.fml.client.config.DummyConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class StrataConfigGui extends GuiConfig
         super( parentScreen , getConfigElements() , Strata.modid , false , false , I18n.format( "strata.config.main" ) );
     }
 
+    @Nonnull
     private static List< IConfigElement > getConfigElements()
     {
         List< IConfigElement > list = new ArrayList<>();

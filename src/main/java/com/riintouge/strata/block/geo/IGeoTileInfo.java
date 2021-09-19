@@ -9,13 +9,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 {
+    @Nonnull
     String tileSetName();
 
+    @Nonnull
     TileType type();
 
     @Nullable
@@ -33,7 +36,7 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     @Nullable
     Float furnaceExp();
 
-    Boolean hasFragment();
+    boolean hasFragment();
 
     @Nullable
     LayeredTextureLayer[] fragmentTextureLayers();
@@ -47,13 +50,15 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     @Nullable
     Float fragmentFurnaceExp();
 
+    @Nonnull
     ArrayList< EnumPlantType > sustainedPlantTypes();
 
+    @Nonnull
     ArrayList< IBlockState > sustainsPlantsSustainedBy();
 
-    ProtoBlockTextureMap modelTextureMap();
-
+    @Nonnull
     ResourceLocation blockstateResourceLocation();
 
+    @Nullable
     String localizedName();
 }

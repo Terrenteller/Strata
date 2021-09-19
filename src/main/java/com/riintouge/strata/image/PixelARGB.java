@@ -2,10 +2,10 @@ package com.riintouge.strata.image;
 
 public class PixelARGB
 {
-    private final static int ALPHA = 0;
-    private final static int RED = 1;
-    private final static int GREEN = 2;
-    private final static int BLUE = 3;
+    private static final int ALPHA = 0;
+    private static final int RED = 1;
+    private static final int GREEN = 2;
+    private static final int BLUE = 3;
 
     private int argb[] = new int[ 4 ];
 

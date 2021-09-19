@@ -46,9 +46,9 @@ public class GeoTileSet implements IForgeRegistrable
         tileInfos[ tileInfo.type().ordinal() ] = tileInfo;
     }
 
-    public IGeoTileInfo find( TileType type )
+    public IGeoTileInfo find( TileType tileType )
     {
-        return tileInfos[ type.ordinal() ];
+        return tileInfos[ tileType.ordinal() ];
     }
 
     protected void createEquivalentItemConversionRecipe( ResourceLocation registryName , Item item , ItemStack equivalentItem )
@@ -68,20 +68,20 @@ public class GeoTileSet implements IForgeRegistrable
     @Override
     public void registerBlocks( IForgeRegistry< Block > blockRegistry )
     {
-        for( TileType type : TileType.values() )
+        for( TileType tileType : TileType.values() )
         {
-            int typeIndex = type.ordinal();
+            int typeIndex = tileType.ordinal();
             IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
             if( tileInfo == null )
                 continue;
 
             Block block;
-            switch( type )
+            switch( tileType )
             {
                 case COBBLESTAIRS:
                 case STONESTAIRS:
                 case STONEBRICKSTAIRS:
-                    block = new GeoBlockStairs( tileInfo , blocks[ type.parentType.ordinal() ].getDefaultState() );
+                    block = new GeoBlockStairs( tileInfo , blocks[ tileType.parentType.ordinal() ].getDefaultState() );
                     break;
                 case COBBLESLAB:
                 case STONESLAB:
@@ -98,7 +98,7 @@ public class GeoTileSet implements IForgeRegistrable
                 case STONEWALL:
                 case STONEBRICKWALL:
                 case STONEBRICKWALLMOSSY:
-                    block = new GeoBlockWall( tileInfo , blocks[ type.parentType.ordinal() ] );
+                    block = new GeoBlockWall( tileInfo , blocks[ tileType.parentType.ordinal() ] );
                     break;
                 case BUTTON:
                     block = new GeoBlockButton( tileInfo );
@@ -121,9 +121,9 @@ public class GeoTileSet implements IForgeRegistrable
     @Override
     public void registerItems( IForgeRegistry< Item > itemRegistry )
     {
-        for( TileType type : TileType.values() )
+        for( TileType tileType : TileType.values() )
         {
-            int typeIndex = type.ordinal();
+            int typeIndex = tileType.ordinal();
             IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
             if( tileInfo == null )
                 continue;
@@ -139,15 +139,15 @@ public class GeoTileSet implements IForgeRegistrable
             }
 
             ItemBlock itemBlock;
-            switch( type )
+            switch( tileType )
             {
                 case COBBLESLAB:
                 case STONESLAB:
                 case STONEBRICKSLAB:
                     itemBlock = new GeoItemBlockSlab(
                         tileInfo,
-                        (GeoBlockSlab)blocks[ type.ordinal() ],
-                        (GeoBlockSlab)blocks[ type.ordinal() + 1 ] );
+                        (GeoBlockSlab)blocks[ tileType.ordinal() ],
+                        (GeoBlockSlab)blocks[ tileType.ordinal() + 1 ] );
                     break;
                 case COBBLESLABS:
                 case STONESLABS:
@@ -168,17 +168,17 @@ public class GeoTileSet implements IForgeRegistrable
     @Override
     public void registerRecipes( IForgeRegistry< IRecipe > recipeRegistry )
     {
-        for( TileType type : TileType.values() )
+        for( TileType tileType : TileType.values() )
         {
-            int typeIndex = type.ordinal();
+            int typeIndex = tileType.ordinal();
             IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
-            ItemBlock itemBlock = itemBlocks[ type.ordinal() ];
+            ItemBlock itemBlock = itemBlocks[ tileType.ordinal() ];
             if( tileInfo == null || itemBlock == null )
                 continue;
 
             ResourceLocation registryName = tileInfo.registryName();
-            ItemBlock parentItemBlock = type.parentType != null ? itemBlocks[ type.parentType.ordinal() ] : null;
-            GeoItemFragment fragment = fragmentItems[ type.ordinal() ];
+            ItemBlock parentItemBlock = tileType.parentType != null ? itemBlocks[ tileType.parentType.ordinal() ] : null;
+            GeoItemFragment fragment = fragmentItems[ tileType.ordinal() ];
 
             if( fragment != null )
             {
@@ -197,7 +197,7 @@ public class GeoTileSet implements IForgeRegistrable
                     createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tileInfo ) , fragment , equivalentFragmentItem );
             }
 
-            switch( type )
+            switch( tileType )
             {
                 case STONE:
                 {
@@ -321,9 +321,9 @@ public class GeoTileSet implements IForgeRegistrable
                     }
 
                     ItemBlock mossyWall = null;
-                    if( type == COBBLEWALL )
+                    if( tileType == COBBLEWALL )
                         mossyWall = itemBlocks[ COBBLEWALLMOSSY.ordinal() ];
-                    else if( type == STONEBRICKWALL )
+                    else if( tileType == STONEBRICKWALL )
                         mossyWall = itemBlocks[ STONEBRICKWALLMOSSY.ordinal() ];
 
                     if( mossyWall != null )
@@ -399,9 +399,9 @@ public class GeoTileSet implements IForgeRegistrable
     @Override
     public void registerModels( ModelRegistryEvent event )
     {
-        for( TileType type : TileType.values() )
+        for( TileType tileType : TileType.values() )
         {
-            int typeIndex = type.ordinal();
+            int typeIndex = tileType.ordinal();
             IGeoTileInfo tileInfo = tileInfos[ typeIndex ];
             if( tileInfo == null )
                 continue;
@@ -422,7 +422,7 @@ public class GeoTileSet implements IForgeRegistrable
                 ModelLoader.setCustomModelResourceLocation(
                     itemBlock,
                     tileInfo.meta(),
-                    new ModelResourceLocation( itemBlock.getRegistryName() , type.defaultVariant ) );
+                    new ModelResourceLocation( itemBlock.getRegistryName() , tileType.defaultVariant ) );
             }
         }
     }

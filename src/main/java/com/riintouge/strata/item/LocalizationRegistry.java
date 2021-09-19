@@ -2,6 +2,7 @@ package com.riintouge.strata.item;
 
 import net.minecraftforge.fml.common.SidedProxy;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public abstract class LocalizationRegistry
@@ -14,5 +15,6 @@ public abstract class LocalizationRegistry
 
     public abstract void register( Object object , String unlocalizedKey , Map< String , String > languageMap );
 
+    @Nullable
     public abstract String get( Object object );
 }

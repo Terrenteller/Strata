@@ -29,7 +29,7 @@ public class GeoBlockSlab extends BlockSlab
     protected static final int TOP_META_BIT = 0x8;
     protected static final PropertyEnum< GeoBlockSlab.Variant > VARIANT = PropertyEnum.create( "variant" , GeoBlockSlab.Variant.class );
 
-    protected IGeoTileInfo info;
+    protected IGeoTileInfo tileInfo;
     protected final GeoBlockSlab singleSlab;
 
     // Mandatory to fulfill the abstract class but useless for our purposes
@@ -43,20 +43,20 @@ public class GeoBlockSlab extends BlockSlab
         }
     }
 
-    public GeoBlockSlab( IGeoTileInfo info )
+    public GeoBlockSlab( IGeoTileInfo tileInfo )
     {
-        this( info , null );
+        this( tileInfo , null );
     }
 
-    protected GeoBlockSlab( IGeoTileInfo info , GeoBlockSlab singleSlab )
+    protected GeoBlockSlab( IGeoTileInfo tileInfo , GeoBlockSlab singleSlab )
     {
         super( Material.ROCK , MapColor.STONE );
-        this.info = info;
+        this.tileInfo = tileInfo;
         this.singleSlab = singleSlab != null ? singleSlab : this;
         // This is what Forge does for BlockSlab in Block.registerBlocks()
         this.useNeighborBrightness = true;
 
-        ResourceLocation registryName = info.registryName();
+        ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BUILDING_BLOCK_TAB );
@@ -66,10 +66,10 @@ public class GeoBlockSlab extends BlockSlab
             blockState = blockState.withProperty( HALF , BlockSlab.EnumBlockHalf.BOTTOM );
         setDefaultState( blockState.withProperty( VARIANT , GeoBlockSlab.Variant.DEFAULT ) );
 
-        setHarvestLevel( info.harvestTool() , info.harvestLevel() );
-        setSoundType( info.soundType() );
-        setHardness( info.hardness() );
-        setResistance( info.explosionResistance() );
+        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
+        setSoundType( tileInfo.soundType() );
+        setHardness( tileInfo.hardness() );
+        setResistance( tileInfo.explosionResistance() );
     }
 
     // BlockSlab overrides
@@ -106,7 +106,7 @@ public class GeoBlockSlab extends BlockSlab
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = info.modelTextureMap();
+        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
         ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
 
         return true;
@@ -116,7 +116,7 @@ public class GeoBlockSlab extends BlockSlab
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
-        TextureAtlasSprite texture = info.modelTextureMap().getTexture( target.sideHit );
+        TextureAtlasSprite texture = tileInfo.modelTextureMap().getTexture( target.sideHit );
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;

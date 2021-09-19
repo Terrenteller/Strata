@@ -14,6 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 {
     // IHostInfo
@@ -48,6 +50,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 
     // IHostInfo overrides
 
+    @Nonnull
     @Override
     public ResourceLocation registryName()
     {
@@ -60,6 +63,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
         return hostMetaResource.meta;
     }
 
+    @Nonnull
     @Override
     public ProtoBlockTextureMap modelTextureMap()
     {
@@ -76,18 +80,21 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 
     // ICommonBlockProperties overrides
 
+    @Nonnull
     @Override
     public Material material()
     {
         return material;
     }
 
+    @Nonnull
     @Override
     public SoundType soundType()
     {
         return soundType;
     }
 
+    @Nonnull
     @Override
     public String harvestTool()
     {

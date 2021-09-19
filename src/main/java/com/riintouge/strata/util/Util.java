@@ -1,5 +1,7 @@
 package com.riintouge.strata.util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class Util
@@ -17,17 +19,20 @@ public class Util
             : new String[] { index == 0 ? "" : line.substring( 0 , index ) , line.substring( index + 1 ) };
     }
 
-    public static < T > T coalesce( T a , T b )
+    @Nullable
+    public static < T > T coalesce( @Nullable T a , @Nullable T b )
     {
         return a != null ? a : b;
     }
 
-    public static < T > T lazyCoalesce( T a , Supplier< T > b )
+    @Nullable
+    public static < T > T lazyCoalesce( @Nullable T a , @Nonnull Supplier< T > b )
     {
         return a != null ? a : b.get();
     }
 
-    public static < T > T argumentNullCheck( T value , String name )
+    @Nonnull
+    public static < T > T argumentNullCheck( @Nullable T value , @Nonnull String name )
     {
         if( value != null )
             return value;

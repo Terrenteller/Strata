@@ -8,15 +8,18 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class StateUtil
 {
+    @Nullable
     public static IExtendedBlockState getCompleteBlockState( IBlockState state , IBlockAccess blockAccess , BlockPos pos )
     {
         return state instanceof IExtendedBlockState ? (IExtendedBlockState)state.getBlock().getExtendedState( state , blockAccess , pos ) : null;
     }
 
+    @Nullable
     public static < T extends Comparable< T > >
     T getValue( IBlockState blockState , IProperty< T > property )
     {
@@ -26,6 +29,7 @@ public class StateUtil
         return (T)blockState.getProperties().get( property );
     }
 
+    @Nullable
     public static < T extends Comparable< T > >
     T getValue( IBlockState blockState , IProperty< T > property , T defaultValue )
     {
@@ -35,6 +39,7 @@ public class StateUtil
         return (T)blockState.getProperties().getOrDefault( property , defaultValue );
     }
 
+    @Nullable
     public static < T > T getValue( IBlockState blockState , PropertyEnum< ? > property , T defaultValue )
     {
         if( blockState == null || property == null )
@@ -44,6 +49,7 @@ public class StateUtil
         return optionalValue != null ? optionalValue : defaultValue;
     }
 
+    @Nullable
     public static < T > T getValue( IBlockState blockState , IBlockAccess blockAccess , BlockPos pos , IUnlistedProperty< T > property )
     {
         if( blockState instanceof IExtendedBlockState && property != null )
@@ -57,11 +63,13 @@ public class StateUtil
         return null;
     }
 
+    @Nullable
     public static < T > T getValue( IBlockState blockState , IUnlistedProperty< T > property )
     {
         return getValue( blockState , property , null );
     }
 
+    @Nullable
     public static < T > T getValue( IBlockState blockState , IUnlistedProperty< T > property , T defaultValue )
     {
         if( blockState instanceof IExtendedBlockState && property != null )
@@ -76,6 +84,7 @@ public class StateUtil
         return defaultValue;
     }
 
+    @Nullable
     public static < T > T getValue( IBlockState blockState , IBlockAccess blockAccess , BlockPos pos , IUnlistedProperty< T > property , T defaultValue )
     {
         if( blockState instanceof IExtendedBlockState && property != null )
@@ -90,12 +99,14 @@ public class StateUtil
         return defaultValue;
     }
 
+    @Nullable
     public static < T extends Comparable< T > , V extends T >
     IBlockState withValue( IBlockState state , IProperty< T > property , V value )
     {
         return state.withProperty( property , value );
     }
 
+    @Nullable
     public static < T > IBlockState withValue( IBlockState state , IUnlistedProperty< T > unlistedProperty , T value )
     {
         if( !( state instanceof IExtendedBlockState ) )

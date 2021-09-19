@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly( Side.CLIENT )
-public class OreItemModelLoader implements ICustomModelLoader
+public final class OreItemModelLoader implements ICustomModelLoader
 {
     private static final String ModelResourceBasePath = "models/item/";
     private static final String DomainResourcePrefix = Strata.resource( ModelResourceBasePath ).toString();

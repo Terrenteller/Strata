@@ -1,5 +1,6 @@
 package com.riintouge.strata.resource;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
@@ -23,6 +24,7 @@ public class JarResourceHelper
         resourcePaths = getResources( JarResourceHelper.class );
     }
 
+    @Nonnull
     public List< String > find( Function< String , Boolean > predicate )
     {
         List< String > matches = new Vector<>();

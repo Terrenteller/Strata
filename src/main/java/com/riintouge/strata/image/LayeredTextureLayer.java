@@ -4,9 +4,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class LayeredTextureLayer
 {
-    public ResourceLocation resource;
-    public BlendMode blendMode;
-    public float opacity;
+    public final ResourceLocation resource;
+    public final BlendMode blendMode;
+    public final float opacity;
 
     public LayeredTextureLayer( ResourceLocation resource )
     {

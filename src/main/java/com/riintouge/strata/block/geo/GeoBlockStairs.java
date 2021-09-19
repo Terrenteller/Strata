@@ -16,16 +16,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GeoBlockStairs extends BlockStairs
 {
-    protected IGeoTileInfo info;
+    protected IGeoTileInfo tileInfo;
 
-    public GeoBlockStairs( IGeoTileInfo info , IBlockState blockState )
+    public GeoBlockStairs( IGeoTileInfo tileInfo , IBlockState blockState )
     {
         super( blockState );
-        this.info = info;
+        this.tileInfo = tileInfo;
         // This is what Forge does for BlockStairs in Block.registerBlocks()
         this.useNeighborBrightness = true;
 
-        ResourceLocation registryName = info.registryName();
+        ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BUILDING_BLOCK_TAB );
@@ -37,7 +37,7 @@ public class GeoBlockStairs extends BlockStairs
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = info.modelTextureMap();
+        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
         ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
 
         return true;
@@ -47,7 +47,7 @@ public class GeoBlockStairs extends BlockStairs
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
-        TextureAtlasSprite texture = info.modelTextureMap().getTexture( target.sideHit );
+        TextureAtlasSprite texture = tileInfo.modelTextureMap().getTexture( target.sideHit );
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;

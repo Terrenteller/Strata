@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Optional;
 
@@ -70,6 +71,7 @@ public enum StrataItemCameraTransform
     
     // Statics
 
+    @Nonnull
     public static ImmutableMap< ItemCameraTransforms.TransformType , TRSRTransformation > getTransforms( IModelState state )
     {
         EnumMap< ItemCameraTransforms.TransformType , TRSRTransformation > map = new EnumMap<>( ItemCameraTransforms.TransformType.class );

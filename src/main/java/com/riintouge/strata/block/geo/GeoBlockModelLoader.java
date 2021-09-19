@@ -14,11 +14,12 @@ import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SideOnly( Side.CLIENT )
-public class GeoBlockModelLoader implements ICustomModelLoader
+public final class GeoBlockModelLoader implements ICustomModelLoader
 {
     private static final String ResourcePattern = String.format( "^%s:(([a-z_]+?)(?:_([a-z]+))?)(?:#.+)$" , Strata.modid );
     private static final int ResourcePatternResourceLocationPathGroup = 1;
@@ -59,6 +60,7 @@ public class GeoBlockModelLoader implements ICustomModelLoader
 
     // Statics
 
+    @Nullable
     private static TileType findTileType( String tileSetName , String type )
     {
         if( !GeoTileSetRegistry.INSTANCE.contains( tileSetName ) )
@@ -85,6 +87,7 @@ public class GeoBlockModelLoader implements ICustomModelLoader
         return tileInfo != null ? tileInfo.type() : null;
     }
 
+    @Nullable
     private static Pair< String , TileType > getNameAndTileTypeFromLocation( ResourceLocation modelLocation )
     {
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );

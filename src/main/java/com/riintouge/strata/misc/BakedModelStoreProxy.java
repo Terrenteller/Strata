@@ -15,12 +15,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
 @SideOnly( Side.CLIENT )
-public class BakedModelStoreProxy implements InvocationHandler
+public final class BakedModelStoreProxy implements InvocationHandler
 {
     protected IBakedModel missingModel;
     protected Map< IBlockState , IBakedModel > bakedModelStore;
@@ -39,6 +41,7 @@ public class BakedModelStoreProxy implements InvocationHandler
             .getMissingModel();
     }
 
+    @Nullable
     @SuppressWarnings( "unchecked" )
     protected Map< Block , IStateMapper > getBlockStateMapperMap()
     {
@@ -65,6 +68,7 @@ public class BakedModelStoreProxy implements InvocationHandler
         return null;
     }
 
+    @Nonnull
     public IBakedModel getModelForStateFromMapper( IBlockState state )
     {
         try

@@ -16,22 +16,22 @@
 	},
 	"variants": {
 		"normal": [
-			{ "model": "strata:proto_cube", "y":   0, "x":   0 },
-			{ "model": "strata:proto_cube", "y":   0, "x":  90 },
-			{ "model": "strata:proto_cube", "y":   0, "x": 180 },
-			{ "model": "strata:proto_cube", "y":   0, "x": 270 },
-			{ "model": "strata:proto_cube", "y":  90, "x":   0 },
-			{ "model": "strata:proto_cube", "y":  90, "x":  90 },
-			{ "model": "strata:proto_cube", "y":  90, "x": 180 },
-			{ "model": "strata:proto_cube", "y":  90, "x": 270 },
-			{ "model": "strata:proto_cube", "y": 180, "x":   0 },
-			{ "model": "strata:proto_cube", "y": 180, "x":  90 },
-			{ "model": "strata:proto_cube", "y": 180, "x": 180 },
-			{ "model": "strata:proto_cube", "y": 180, "x": 270 },
-			{ "model": "strata:proto_cube", "y": 270, "x":   0 },
-			{ "model": "strata:proto_cube", "y": 270, "x":  90 },
-			{ "model": "strata:proto_cube", "y": 270, "x": 180 },
-			{ "model": "strata:proto_cube", "y": 270, "x": 270 }
+			{ "model": "strata:proto_cube" , "y":   0 , "x":   0 },
+			{ "model": "strata:proto_cube" , "y":   0 , "x":  90 },
+			{ "model": "strata:proto_cube" , "y":   0 , "x": 180 },
+			{ "model": "strata:proto_cube" , "y":   0 , "x": 270 },
+			{ "model": "strata:proto_cube" , "y":  90 , "x":   0 },
+			{ "model": "strata:proto_cube" , "y":  90 , "x":  90 },
+			{ "model": "strata:proto_cube" , "y":  90 , "x": 180 },
+			{ "model": "strata:proto_cube" , "y":  90 , "x": 270 },
+			{ "model": "strata:proto_cube" , "y": 180 , "x":   0 },
+			{ "model": "strata:proto_cube" , "y": 180 , "x":  90 },
+			{ "model": "strata:proto_cube" , "y": 180 , "x": 180 },
+			{ "model": "strata:proto_cube" , "y": 180 , "x": 270 },
+			{ "model": "strata:proto_cube" , "y": 270 , "x":   0 },
+			{ "model": "strata:proto_cube" , "y": 270 , "x":  90 },
+			{ "model": "strata:proto_cube" , "y": 270 , "x": 180 },
+			{ "model": "strata:proto_cube" , "y": 270 , "x": 270 }
 		]
 	}
 }

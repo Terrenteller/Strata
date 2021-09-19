@@ -2,9 +2,9 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
@@ -18,7 +18,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -29,6 +28,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -44,6 +44,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.Stack;
@@ -131,6 +132,7 @@ public class OreBlock extends BlockFalling
         return 0;
     }
 
+    @Nonnull
     public IExtendedBlockState getCompleteExtendedState( OreBlockTileEntity entity , IBlockState state , IBlockAccess world , BlockPos pos )
     {
         IExtendedBlockState extendedState = getDefaultExtendedState( state );
@@ -139,34 +141,39 @@ public class OreBlock extends BlockFalling
             : extendedState;
     }
 
+    @Nonnull
     public IExtendedBlockState getDefaultExtendedState( IBlockState state )
     {
         return ( (IExtendedBlockState)state )
             .withProperty( UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
     }
 
+    @Nonnull
     public MetaResourceLocation getHost( IBlockAccess world , BlockPos pos )
     {
         OreBlockTileEntity tileEntity = getTileEntity( world , pos );
         return tileEntity != null ? tileEntity.getHostRock() : UnlistedPropertyHostRock.DEFAULT;
     }
 
+    @Nullable
     public IHostInfo getHostInfo( IBlockState actualState )
     {
         MetaResourceLocation hostResource = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
         return hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
     }
 
+    @Nonnull
     public IOreInfo getOreInfo()
     {
         return oreInfo;
     }
 
+    @Nullable
     public OreBlockTileEntity getTileEntity( IBlockAccess world , BlockPos pos )
     {
         // This may be called before the tile entity is created
         TileEntity tileEntity = world.getTileEntity( pos );
-        return tileEntity instanceof OreBlockTileEntity ? (OreBlockTileEntity) tileEntity : null;
+        return tileEntity instanceof OreBlockTileEntity ? (OreBlockTileEntity)tileEntity : null;
     }
 
     public boolean isToolActuallyEffective( ItemStack tool , Material hostMaterial , Material oreMaterial )
@@ -224,15 +231,11 @@ public class OreBlock extends BlockFalling
 
             MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            ProtoBlockTextureMap hostTextureMap = hostInfo.modelTextureMap();
-            IBakedModel hostModel = BakedModelCache.INSTANCE.getBakedModel( host );
-            TextureAtlasSprite hostParticleTexture = hostModel.getParticleTexture();
+            ProtoBlockTextureMap hostTextureMap = hostInfo != null ? hostInfo.modelTextureMap() : null;
 
             String oreName = oreInfo.oreName();
-            IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
-            ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
-            IBakedModel oreModel = BakedModelCache.INSTANCE.getBakedOreModel( oreName );
-            TextureAtlasSprite oreParticleTexture = oreModel.getParticleTexture();
+            IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
+            ProtoBlockTextureMap oreTextureMap = oreTileSet != null ? oreTileSet.getInfo().modelTextureMap() : null;
 
             // This loop sampled from ParticleManager.addBlockDestroyEffects()
             for( int x = 0 ; x < 4 ; ++x )
@@ -248,6 +251,7 @@ public class OreBlock extends BlockFalling
                         double d2 = ( (double)z + 0.5d ) / 4.0d;
 
                         // Spawn host particles like normal...
+                        if( hostTextureMap != null )
                         {
                             ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
                                 0, // unused
@@ -260,16 +264,14 @@ public class OreBlock extends BlockFalling
                                 d2 - 0.5d,
                                 blockId );
 
-                            TextureAtlasSprite texture = hostTextureMap != null
-                                ? hostTextureMap.getTexture( EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] )
-                                : hostParticleTexture;
-
+                            EnumFacing facing = EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ];
+                            TextureAtlasSprite texture = hostTextureMap.getTexture( facing );
                             particleDigging.setBlockPos( pos ).setParticleTexture( texture );
                             manager.addEffect( particleDigging );
                         }
 
                         // ...and ore particles in-between
-                        if( x != 3 && y != 3 && z != 3 )
+                        if( oreTextureMap != null && x != 3 && y != 3 && z != 3 )
                         {
                             ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
                                 0, // unused
@@ -282,10 +284,8 @@ public class OreBlock extends BlockFalling
                                 d2 - 0.5d,
                                 blockId );
 
-                            TextureAtlasSprite texture = oreTextureMap != null
-                                    ? oreTextureMap.getTexture( EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] )
-                                    : oreParticleTexture;
-
+                            EnumFacing facing = EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ];
+                            TextureAtlasSprite texture = oreTextureMap.getTexture( facing );
                             particleDigging.setBlockPos( pos ).setParticleTexture( texture );
                             manager.addEffect( particleDigging );
                         }
@@ -314,6 +314,9 @@ public class OreBlock extends BlockFalling
             TextureAtlasSprite baseTextures[] = new TextureAtlasSprite[ EnumFacing.values().length ];
             String oreName = oreInfo.oreName();
             MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
+            if( host == null )
+                return false;
+
             String hostResourceDomain = host.resourceLocation.getResourceDomain();
             String hostResourceLocation = host.resourceLocation.getResourcePath();
 
@@ -340,7 +343,7 @@ public class OreBlock extends BlockFalling
                     {
                         double d2 = ( (double)z + 0.5d ) / 4.0d;
 
-                        ParticleDigging particleDigging = (ParticleDigging) new ParticleDigging.Factory().createParticle(
+                        ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
                             0, // unused
                             world,
                             (double)pos.getX() + d0,
@@ -379,6 +382,8 @@ public class OreBlock extends BlockFalling
         if( StrataConfig.usePrecomputedOreParticles && OreParticleTextureManager.INSTANCE.isInitialized() )
         {
             MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
+            if( host == null )
+                return false;
 
             texture = OreParticleTextureManager.INSTANCE.findTexture(
                 oreInfo.oreName(),
@@ -391,7 +396,7 @@ public class OreBlock extends BlockFalling
         {
             MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            ProtoBlockTextureMap hostTextureMap = hostInfo.modelTextureMap();
+            ProtoBlockTextureMap hostTextureMap = hostInfo != null ? hostInfo.modelTextureMap() : null;
 
             texture = hostTextureMap != null
                 ? hostTextureMap.getTexture( target.sideHit )
@@ -400,8 +405,8 @@ public class OreBlock extends BlockFalling
         else
         {
             String oreName = oreInfo.oreName();
-            IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
-            ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
+            IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
+            ProtoBlockTextureMap oreTextureMap = oreTileSet != null ? oreTileSet.getInfo().modelTextureMap() : null;
 
             texture = oreTextureMap != null
                 ? oreTextureMap.getTexture( target.sideHit )
@@ -427,8 +432,7 @@ public class OreBlock extends BlockFalling
     public boolean canSilkHarvest( World world , BlockPos pos , IBlockState state , EntityPlayer player )
     {
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
-        IOreInfo oreInfo = oreTileSet.getInfo();
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        IBlockState proxyBlockState = oreTileSet != null ? oreTileSet.getInfo().proxyBlockState() : null;
 
         // The consequences of silk touch only applies to proxy blocks since we should never drop ourself as an item
         return proxyBlockState != null && proxyBlockState.getBlock().canSilkHarvest( world , pos , proxyBlockState , player );
@@ -450,8 +454,7 @@ public class OreBlock extends BlockFalling
             return true;
 
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
-        IOreInfo oreInfo = oreTileSet.getInfo();
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        IBlockState proxyBlockState = oreTileSet != null ? oreTileSet.getInfo().proxyBlockState() : null;
         if( proxyBlockState != null )
         {
             if( proxyBlockState.getBlock().canSustainPlant( proxyBlockState , world , pos , direction , plantable ) )
@@ -513,14 +516,13 @@ public class OreBlock extends BlockFalling
     {
         MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
         IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-        if( !isToolActuallyEffective( harvestTool.get() , hostInfo.material() , oreInfo.material() ) )
+        if( hostInfo == null || !isToolActuallyEffective( harvestTool.get() , hostInfo.material() , oreInfo.material() ) )
             return;
 
         ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
-        Block hostBlock = host != null ? Block.REGISTRY.getObject( host.resourceLocation ) : null;
+        Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
         IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
-        IOreInfo oreInfo = oreTileSet.getInfo();
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        IBlockState proxyBlockState = oreTileSet != null ? oreTileSet.getInfo().proxyBlockState() : null;
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
 
         if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestToolOrEmpty ) > 0 )
@@ -536,7 +538,7 @@ public class OreBlock extends BlockFalling
                 proxyBlock.getDrops( drops , world , pos , proxyBlockState , fortune );
         }
 
-        if( proxyBlock == null )
+        if( proxyBlock == null && oreTileSet != null )
         {
             int bonus = calculateBonusExpr( oreInfo.bonusDropExpr() , fortune );
             int dropCount = Math.max( 0 , oreInfo.baseDropAmount() + bonus );
@@ -644,7 +646,9 @@ public class OreBlock extends BlockFalling
         // Most of this method is unfortunately copied from Block.harvestBlock().
         // Fun Fact: In 1.12.2, chopping any kind of wood log shows up in the statistics page as oak because the
         // unlocalized name is the same for all wooden log blocks. The items are localized correctly, of course.
-        player.addStat( StatList.getBlockStats( this ) );
+        StatBase blockStats = StatList.getBlockStats( this );
+        if( blockStats != null )
+            player.addStat( blockStats );
         player.addExhaustion( 0.005F );
 
         try

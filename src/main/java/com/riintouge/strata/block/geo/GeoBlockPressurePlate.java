@@ -16,15 +16,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GeoBlockPressurePlate extends BlockPressurePlate
 {
-    protected IGeoTileInfo info;
+    protected IGeoTileInfo tileInfo;
 
-    public GeoBlockPressurePlate( IGeoTileInfo info )
+    public GeoBlockPressurePlate( IGeoTileInfo tileInfo )
     {
         // Match vanilla stone pressure plate sensitivity
-        super( info.material() , Sensitivity.MOBS );
-        this.info = info;
+        super( tileInfo.material() , Sensitivity.MOBS );
+        this.tileInfo = tileInfo;
 
-        ResourceLocation registryName = info.registryName();
+        ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.MISC_BLOCK_TAB );
@@ -32,10 +32,10 @@ public class GeoBlockPressurePlate extends BlockPressurePlate
         // Vanilla sets a precedent with gold pressure plates.
         // Gold blocks require an iron pick or higher to mine but any level pick will break the plate.
         // This justification is extended to Strata buttons and levers as well.
-        setHarvestLevel( info.harvestTool() , 0 );
-        setSoundType( info.soundType() );
-        setHardness( info.hardness() );
-        setResistance( info.explosionResistance() );
+        setHarvestLevel( tileInfo.harvestTool() , 0 );
+        setSoundType( tileInfo.soundType() );
+        setHardness( tileInfo.hardness() );
+        setResistance( tileInfo.explosionResistance() );
     }
 
     // Block overrides
@@ -44,7 +44,7 @@ public class GeoBlockPressurePlate extends BlockPressurePlate
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = info.modelTextureMap();
+        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
         ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
 
         return true;
@@ -54,7 +54,7 @@ public class GeoBlockPressurePlate extends BlockPressurePlate
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
-        TextureAtlasSprite texture = info.modelTextureMap().getTexture( target.sideHit );
+        TextureAtlasSprite texture = tileInfo.modelTextureMap().getTexture( target.sideHit );
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;

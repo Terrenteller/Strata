@@ -8,10 +8,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface IOreInfo extends ICommonBlockProperties, IForgeRegistrable
+public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
 {
+    @Nonnull
     String oreName();
 
     @Nullable
@@ -20,10 +22,13 @@ public interface IOreInfo extends ICommonBlockProperties, IForgeRegistrable
     @Nullable
     String itemOreDictionaryName();
 
+    @Nonnull
     ProtoBlockTextureMap modelTextureMap();
 
+    @Nonnull
     ResourceLocation blockstateResourceLocation();
 
+    @Nonnull
     ResourceLocation oreItemTextureResource();
 
     @Nullable
@@ -48,5 +53,6 @@ public interface IOreInfo extends ICommonBlockProperties, IForgeRegistrable
     @Nullable
     String bonusExpExpr();
 
+    @Nullable
     String localizedName();
 }

@@ -19,7 +19,7 @@ public class TileData
 {
     // IGeoTileInfo
     public String tileSetName = null;
-    public TileType type = null;
+    public TileType tileType = null;
     public MetaResourceLocation equivalentItemResourceLocation = null;
     public MetaResourceLocation furnaceResult = null;
     public Float furnaceExp = null;
@@ -191,12 +191,12 @@ public class TileData
             }
             case "type":
             {
-                type = TileType.valueOf( value.toUpperCase() );
-                harvestTool = type.harvestTool;
+                tileType = TileType.valueOf( value.toUpperCase() );
+                harvestTool = tileType.harvestTool;
                 // Obsfucation prevents us from using reflection
                 // to get non-enum Material and SoundType values from distinct KVs
-                material = type.material;
-                soundType = type.soundType;
+                material = tileType.material;
+                soundType = tileType.soundType;
                 return true;
             }
         }
@@ -218,16 +218,16 @@ public class TileData
 
                     // FIXME: Using tileSetName, oreName, and type here violates the assumption that lines can be in any order
                     String registryName = tileSetName != null
-                        ? type.registryName( tileSetName ).getResourcePath()
+                        ? tileType.registryName( tileSetName ).getResourcePath()
                         : oreName != null
-                            ? type.registryName( oreName ).getResourcePath()
+                            ? tileType.registryName( oreName ).getResourcePath()
                             : String.format( "%s_%d" , hostMetaResource.resourceLocation.getResourcePath() , hostMetaResource.meta );
 
                     textureMap = new ProtoBlockTextureMap( registryName , layeredTextureLayers );
                 }
 
                 List< LayeredTextureLayer > layers = parseTextureLayers( value );
-                layeredTextureLayers[ layer.ordinal() ] = layers.toArray( new LayeredTextureLayer[ layers.size() ] );
+                layeredTextureLayers[ layer.ordinal() ] = layers.toArray( new LayeredTextureLayer[ 0 ] );
                 return true;
             }
         }
@@ -243,17 +243,17 @@ public class TileData
         return false;
     }
 
-    public TileData createMissingChildType( TileType type ) throws OperationNotSupportedException
+    public TileData createMissingChildType( TileType tileType ) throws OperationNotSupportedException
     {
-        if( this.tileSetName == null || this.type == null || type.parentType != this.type )
+        if( this.tileSetName == null || this.tileType == null || tileType.parentType != this.tileType )
             throw new OperationNotSupportedException();
 
         TileData child = new TileData();
         child.tileSetName = this.tileSetName;
-        child.type = type;
-        child.material = type.material;
-        child.soundType = type.soundType;
-        child.harvestTool = type.harvestTool;
+        child.tileType = tileType;
+        child.material = tileType.material;
+        child.soundType = tileType.soundType;
+        child.harvestTool = tileType.harvestTool;
         child.harvestLevel = this.harvestLevel;
         child.hardness = this.hardness;
         child.explosionResistance = this.explosionResistance;

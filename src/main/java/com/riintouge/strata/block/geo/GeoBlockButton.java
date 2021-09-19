@@ -16,21 +16,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GeoBlockButton extends BlockButtonStone
 {
-    protected IGeoTileInfo info;
+    protected IGeoTileInfo tileInfo;
 
-    public GeoBlockButton( IGeoTileInfo info )
+    public GeoBlockButton( IGeoTileInfo tileInfo )
     {
-        this.info = info;
+        this.tileInfo = tileInfo;
 
-        ResourceLocation registryName = info.registryName();
+        ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.MISC_BLOCK_TAB );
 
-        setHarvestLevel( info.harvestTool() , 0 );
-        setSoundType( info.soundType() );
-        setHardness( info.hardness() );
-        setResistance( info.explosionResistance() );
+        setHarvestLevel( tileInfo.harvestTool() , 0 );
+        setSoundType( tileInfo.soundType() );
+        setHardness( tileInfo.hardness() );
+        setResistance( tileInfo.explosionResistance() );
     }
 
     // Block overrides
@@ -39,7 +39,7 @@ public class GeoBlockButton extends BlockButtonStone
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = info.modelTextureMap();
+        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
         ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
 
         return true;
@@ -49,7 +49,7 @@ public class GeoBlockButton extends BlockButtonStone
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
-        TextureAtlasSprite texture = info.modelTextureMap().getTexture( target.sideHit );
+        TextureAtlasSprite texture = tileInfo.modelTextureMap().getTexture( target.sideHit );
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;

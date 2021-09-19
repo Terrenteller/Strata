@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 
+import javax.annotation.Nonnull;
+
 public class OreTileSet implements IOreTileSet
 {
     protected IOreInfo oreInfo;
@@ -26,24 +28,28 @@ public class OreTileSet implements IOreTileSet
 
     // IOreTileSet overrides
 
+    @Nonnull
     @Override
     public IOreInfo getInfo()
     {
         return oreInfo;
     }
 
+    @Nonnull
     @Override
     public Block getBlock()
     {
         return block;
     }
 
+    @Nonnull
     @Override
     public ItemBlock getItemBlock()
     {
         return itemBlock;
     }
 
+    @Nonnull
     @Override
     public Item getItem()
     {

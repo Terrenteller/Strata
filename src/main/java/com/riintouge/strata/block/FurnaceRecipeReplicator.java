@@ -27,7 +27,7 @@ public class FurnaceRecipeReplicator
             return;
 
         ItemStack furnaceResult = targetMetaResource.toItemStack();
-        if( furnaceResult != null )
+        if( furnaceResult != null && !furnaceResult.isEmpty() )
         {
             Float exp = experience != null ? experience : FurnaceRecipes.instance().getSmeltingExperience( furnaceResult );
             GameRegistry.addSmelting( source , furnaceResult , exp );

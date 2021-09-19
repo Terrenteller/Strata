@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,8 +18,8 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     private static final int PathGroup = 2;
     private static final int MetaGroup = 3;
 
-    public ResourceLocation resourceLocation;
-    public int meta = 0;
+    public final ResourceLocation resourceLocation;
+    public final int meta;
 
     public MetaResourceLocation( String resourceLocation , int meta )
     {
@@ -47,6 +48,8 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
             if( this.meta < 0 || this.meta > 15 )
                 throw new IllegalArgumentException( resourceString );
         }
+        else
+            this.meta = 0;
     }
 
     public boolean equals( MetaResourceLocation other )
@@ -54,17 +57,18 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
         return compareTo( other ) == 0;
     }
 
+    @Nullable
     public ItemStack toItemStack()
     {
         Block resultBlock = Block.REGISTRY.getObject( resourceLocation );
-        if( resultBlock != null && resultBlock != Blocks.AIR )
+        if( resultBlock != Blocks.AIR )
             return new ItemStack( resultBlock , 1 , meta );
 
         Item resultItem = Item.REGISTRY.getObject( resourceLocation );
         if( resultItem != null && resultItem != Items.AIR )
             return new ItemStack( resultItem , 1 , meta );
 
-        return ItemStack.EMPTY;
+        return null;
     }
 
     // Comparable overrides
@@ -85,6 +89,18 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     }
 
     // Object overrides
+
+    @Override
+    public boolean equals( Object other )
+    {
+        return other instanceof MetaResourceLocation && equals( (MetaResourceLocation)other );
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return resourceLocation.hashCode() + meta;
+    }
 
     @Override
     public String toString()

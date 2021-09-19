@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OreItemTextureManager
+public final class OreItemTextureManager
 {
     public static final OreItemTextureManager INSTANCE = new OreItemTextureManager();
 

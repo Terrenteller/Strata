@@ -25,6 +25,8 @@ public class StrataItemModel implements IModel
         this.fragmentTextureLocation = fragmentTextureLocation;
     }
 
+    // IModel overrides
+
     @Override
     public Collection< ResourceLocation > getTextures()
     {

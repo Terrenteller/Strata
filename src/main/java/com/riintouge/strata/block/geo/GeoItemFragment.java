@@ -7,21 +7,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class GeoItemFragment extends Item
 {
     public static final String Ball = "ball";
 
-    protected IGeoTileInfo geoTileInfo;
+    protected IGeoTileInfo tileInfo;
 
-    public GeoItemFragment( IGeoTileInfo geoTileInfo )
+    public GeoItemFragment( IGeoTileInfo tileInfo )
     {
-        this.geoTileInfo = geoTileInfo;
+        this.tileInfo = tileInfo;
 
-        String type = getTypeForMaterial( geoTileInfo.material() );
+        String type = getTypeForMaterial( tileInfo.material() );
         if( type == null )
-            throw new NotImplementedException( "No fragment for material " + geoTileInfo.material().toString() );
+            throw new NotImplementedException( "No fragment for material " + tileInfo.material().toString() );
 
-        ResourceLocation resource = getResourceLocation( geoTileInfo );
+        ResourceLocation resource = getResourceLocation( tileInfo );
         setRegistryName( resource );
         setUnlocalizedName( resource.toString() );
 
@@ -33,7 +36,7 @@ public class GeoItemFragment extends Item
     @Override
     public String getItemStackDisplayName( ItemStack stack )
     {
-        return geoTileInfo.localizedName();
+        return tileInfo.localizedName();
     }
 
     @Override
@@ -41,7 +44,7 @@ public class GeoItemFragment extends Item
     {
         // Strata localization doesn't make a distinction between blocks and items.
         // Fragments will also use their block's name. This is consistent with vanilla clay.
-        return geoTileInfo.registryName().toString();
+        return tileInfo.registryName().toString();
     }
 
     @Override
@@ -52,19 +55,22 @@ public class GeoItemFragment extends Item
 
     // Statics
 
+    @Nullable
     public static Material getMaterialForType( String type )
     {
         if( type.equals( Ball ) )
             return Material.CLAY;
 
-        return Material.AIR;
+        return null;
     }
 
-    public static ResourceLocation getResourceLocation( IGeoTileInfo info )
+    @Nonnull
+    public static ResourceLocation getResourceLocation( IGeoTileInfo tileInfo )
     {
-        return Strata.resource( String.format( "%s_%s" , info.tileSetName() , getTypeForMaterial( info.material() ) ) );
+        return Strata.resource( String.format( "%s_%s" , tileInfo.tileSetName() , getTypeForMaterial( tileInfo.material() ) ) );
     }
 
+    @Nullable
     public static String getTypeForMaterial( Material material )
     {
         if( material == Material.CLAY )

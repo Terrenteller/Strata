@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -128,6 +129,7 @@ public class ProtoBlockTextureMap implements
             : new ResourceLocation( Strata.modid , baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
     }
 
+    @Nullable
     @Override
     public ResourceLocation getOrDefault( Layer multiFacing , ResourceLocation defaultValue )
     {
@@ -146,6 +148,7 @@ public class ProtoBlockTextureMap implements
         return getOrDefault( resourceLocation , resourceLocation );
     }
 
+    @Nullable
     @Override
     public ResourceLocation getOrDefault( ResourceLocation resourceLocation , ResourceLocation defaultValue )
     {
@@ -180,6 +183,7 @@ public class ProtoBlockTextureMap implements
             : new ResourceLocation( Strata.modid , baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
     }
 
+    @Nullable
     @Override
     public ResourceLocation getOrDefault( EnumFacing facing , ResourceLocation defaultValue )
     {

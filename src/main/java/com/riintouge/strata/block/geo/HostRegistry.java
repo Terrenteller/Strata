@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,28 +28,30 @@ public final class HostRegistry
         // Nothing to do
     }
 
-    public void register( ResourceLocation registryName , int meta , IHostInfo info )
+    public void register( ResourceLocation registryName , int meta , IHostInfo hostInfo )
     {
         IHostInfo[] metaInfos = hostInfos.getOrDefault( registryName , null );
 
         if( metaInfos == null )
             hostInfos.put( registryName , metaInfos = new IHostInfo[ 16 ] );
 
-        metaInfos[ meta ] = info;
+        metaInfos[ meta ] = hostInfo;
     }
 
+    @Nullable
     public IHostInfo find( ResourceLocation registryName , int meta )
     {
         IHostInfo[] metaInfos = hostInfos.getOrDefault( registryName , null );
         return metaInfos != null ? metaInfos[ meta ] : null;
     }
 
-    public IHostInfo find( MetaResourceLocation registryNameMeta )
+    @Nullable
+    public IHostInfo find( @Nullable MetaResourceLocation registryNameMeta )
     {
-        IHostInfo[] metaInfos = hostInfos.getOrDefault( registryNameMeta.resourceLocation , null );
-        return metaInfos != null ? metaInfos[ registryNameMeta.meta ] : null;
+        return registryNameMeta != null ? find( registryNameMeta.resourceLocation , registryNameMeta.meta ) : null;
     }
 
+    @Nonnull
     public Map< ResourceLocation , IHostInfo[] > allHosts()
     {
         return Collections.unmodifiableMap( hostInfos );

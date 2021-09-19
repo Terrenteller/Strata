@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly( Side.CLIENT )
-public class GeoItemFragmentTextureManager
+public final class GeoItemFragmentTextureManager
 {
     public static ResourceLocation getTextureLocation( IHostInfo hostInfo , TileType fragmentType )
     {
@@ -32,24 +32,28 @@ public class GeoItemFragmentTextureManager
         GeoTileSetRegistry tileSetRegistry = GeoTileSetRegistry.INSTANCE;
         for( String tileSetName : tileSetRegistry.tileSetNames() )
         {
-            for( TileType type : TileType.values() )
+            for( TileType tileType : TileType.values() )
             {
-                if( !type.isPrimary )
+                if( !tileType.isPrimary )
                     continue;
 
-                IGeoTileInfo tileSet = tileSetRegistry.findTileInfo( tileSetName , type );
-                if( tileSet != null && tileSet.hasFragment() )
-                {
-                    String fragmentType = GeoItemFragment.getTypeForMaterial( tileSet.material() );
-                    if( fragmentType == null )
-                        continue;
+                IGeoTileInfo tileSet = tileSetRegistry.findTileInfo( tileSetName , tileType );
+                if( tileSet == null || !tileSet.hasFragment() )
+                    continue;
 
-                    TextureAtlasSprite generatedTexture = new LayeredTexture(
-                        getTextureLocation( tileSet , type ),
-                        tileSet.fragmentTextureLayers() );
+                String fragmentType = GeoItemFragment.getTypeForMaterial( tileSet.material() );
+                if( fragmentType == null )
+                    continue;
 
-                    textureMap.setTextureEntry( generatedTexture );
-                }
+                ResourceLocation textureLocation = getTextureLocation( tileSet , tileType );
+                if( textureLocation == null )
+                    continue;
+
+                TextureAtlasSprite generatedTexture = new LayeredTexture(
+                    textureLocation,
+                    tileSet.fragmentTextureLayers() );
+
+                textureMap.setTextureEntry( generatedTexture );
             }
         }
     }

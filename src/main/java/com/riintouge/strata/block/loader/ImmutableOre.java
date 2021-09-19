@@ -20,14 +20,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.Map;
 
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
-    private Map< String , String > languageMap;
-
     // IOreInfo
     private String oreName;
     private String blockOreDictionaryName;
@@ -57,8 +55,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     public ImmutableOre( TileData tileData ) throws IllegalArgumentException
     {
-        this.languageMap = Util.lazyCoalesce( tileData.languageMap , HashMap::new );
-
         // IOreInfo
         this.oreName = Util.argumentNullCheck( tileData.oreName , "oreName" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
@@ -84,41 +80,50 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.explosionResistance = Util.coalesce( tileData.explosionResistance , 1.7f * this.hardness );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
 
-        LocalizationRegistry.INSTANCE.register( this , Strata.resource( oreName ).toString() + ".name" , this.languageMap );
+        LocalizationRegistry.INSTANCE.register(
+            this,
+            Strata.resource( oreName ).toString() + ".name",
+            Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
     }
 
     // IOreInfo overrides
 
+    @Nonnull
     @Override
     public String oreName()
     {
         return oreName;
     }
 
+    @Nullable
     @Override
     public String blockOreDictionaryName()
     {
         return blockOreDictionaryName;
     }
 
+    @Nullable
     @Override
     public String itemOreDictionaryName()
     {
         return itemOreDictionaryName;
     }
 
+    @Nonnull
     @Override
     public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
     }
 
+    @Nonnull
     @Override
     public ResourceLocation blockstateResourceLocation()
     {
         return blockstateResourceLocation;
     }
 
+    @Nonnull
     @Override
     public ResourceLocation oreItemTextureResource()
     {
@@ -157,6 +162,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return furnaceExp;
     }
 
+    @Nullable
     @Override
     public IBlockState proxyBlockState()
     {
@@ -171,6 +177,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return proxyBlockState;
     }
 
+    @Nullable
     @Override
     public String localizedName()
     {
@@ -179,18 +186,21 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     // ICommonBlockProperties overrides
 
+    @Nonnull
     @Override
     public Material material()
     {
         return material;
     }
 
+    @Nonnull
     @Override
     public SoundType soundType()
     {
         return soundType;
     }
 
+    @Nonnull
     @Override
     public String harvestTool()
     {

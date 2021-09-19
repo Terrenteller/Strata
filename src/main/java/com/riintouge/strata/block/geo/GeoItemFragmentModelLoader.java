@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @SideOnly( Side.CLIENT )
-public class GeoItemFragmentModelLoader implements ICustomModelLoader
+public final class GeoItemFragmentModelLoader implements ICustomModelLoader
 {
     private static final String ResourcePattern = String.format( "^%s:models/item/(.+)_([^_]+)$" , Strata.modid );
     private static final int ResourcePatternHostNameGroup = 1;

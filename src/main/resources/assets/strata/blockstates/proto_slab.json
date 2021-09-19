@@ -13,8 +13,8 @@
         "uvlock": true
     },
     "variants": {
-        "variant=default": { "model": "strata:proto_cube" },
-        "half=bottom,variant=default": { "model": "strata:proto_slab" },
-        "half=top,variant=default": { "model": "strata:proto_upper_slab" }
+        "variant=default":             { "model": "strata:proto_cube"       },
+        "half=bottom,variant=default": { "model": "strata:proto_slab"       },
+        "half=top,variant=default":    { "model": "strata:proto_upper_slab" }
     }
 }

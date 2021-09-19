@@ -27,31 +27,30 @@ public class GeoBlock extends BlockFalling
 {
     public static InitializedThreadLocal< Boolean > canSustainPlantEventOverride = new InitializedThreadLocal<>( false );
 
-    protected IGeoTileInfo info;
-    protected Integer particleColour = null;
+    protected IGeoTileInfo tileInfo;
 
-    public GeoBlock( IGeoTileInfo info )
+    public GeoBlock( IGeoTileInfo tileInfo )
     {
-        super( info.material() );
-        this.info = info;
+        super( tileInfo.material() );
+        this.tileInfo = tileInfo;
 
-        ResourceLocation registryName = info.registryName();
+        ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        if( info.type().isPrimary || info.type() == TileType.COBBLE )
+        if( tileInfo.type().isPrimary || tileInfo.type() == TileType.COBBLE )
             setCreativeTab( Strata.BLOCK_TAB );
         else
             setCreativeTab( Strata.BUILDING_BLOCK_TAB );
 
-        setHarvestLevel( info.harvestTool() , info.harvestLevel() );
-        setSoundType( info.soundType() );
-        setHardness( info.hardness() );
-        setResistance( info.explosionResistance() );
+        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
+        setSoundType( tileInfo.soundType() );
+        setHardness( tileInfo.hardness() );
+        setResistance( tileInfo.explosionResistance() );
     }
 
     public boolean canFall()
     {
-        return info.type() == TileType.SAND;
+        return tileInfo.type() == TileType.SAND;
     }
 
     // BlockFalling overrides
@@ -60,13 +59,7 @@ public class GeoBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public int getDustColor( IBlockState state )
     {
-        if( particleColour == null )
-        {
-            int color = info.particleFallingColor();
-            particleColour = color != ParticleHelper.DefaultParticleColor ? color : super.getDustColor( state );
-        }
-
-        return particleColour;
+        return tileInfo.particleFallingColor();
     }
 
     @Override
@@ -83,7 +76,7 @@ public class GeoBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = info.modelTextureMap();
+        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
         ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
 
         return true;
@@ -93,7 +86,7 @@ public class GeoBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
-        TextureAtlasSprite texture = info.modelTextureMap().getTexture( target.sideHit );
+        TextureAtlasSprite texture = tileInfo.modelTextureMap().getTexture( target.sideHit );
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;
@@ -108,15 +101,15 @@ public class GeoBlock extends BlockFalling
         // Event handlers must enforce actual restrictions.
         if( !canSustainPlantEventOverride.get() )
             return true;
-        else if( !info.type().isPrimary )
+        else if( !tileInfo.type().isPrimary )
             return false;
 
         // FIXME: What if there is already a plant at pos which is replaceable?
         EnumPlantType plantType = plantable.getPlantType( world , pos );
-        if( info.sustainedPlantTypes().contains( plantType ) )
+        if( tileInfo.sustainedPlantTypes().contains( plantType ) )
             return true;
 
-        for( IBlockState otherState : info.sustainsPlantsSustainedBy() )
+        for( IBlockState otherState : tileInfo.sustainsPlantsSustainedBy() )
             if( otherState.getBlock().canSustainPlant( otherState , world , pos , direction , plantable ) )
                 return true;
 
@@ -130,9 +123,9 @@ public class GeoBlock extends BlockFalling
 
         try
         {
-            item = info.type() == TileType.STONE
-                ? Item.REGISTRY.getObject( TileType.COBBLE.registryName( info.tileSetName() ) )
-                : Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( info ) );
+            item = tileInfo.type() == TileType.STONE
+                ? Item.REGISTRY.getObject( TileType.COBBLE.registryName( tileInfo.tileSetName() ) )
+                : Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( tileInfo ) );
         }
         catch( NullPointerException e )
         {
@@ -145,7 +138,7 @@ public class GeoBlock extends BlockFalling
     @Override
     public String getLocalizedName()
     {
-        return info.localizedName();
+        return tileInfo.localizedName();
     }
 
     @Override
@@ -165,13 +158,13 @@ public class GeoBlock extends BlockFalling
     @Override
     public int quantityDropped( Random random )
     {
-        return Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( info ) ) != null ? 4 : 1;
+        return Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( tileInfo ) ) != null ? 4 : 1;
     }
 
     @Override
     public int tickRate( World worldIn )
     {
-        // 10 is the default from Block. We can't call Block.tickRate() from here because Java
+        // 10 is the default from Block. We can't call Block.tickRate() from here because Java.
         return canFall() ? super.tickRate( worldIn ) : 10;
     }
 

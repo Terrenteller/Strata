@@ -20,7 +20,6 @@ public class LayeredTexture extends TextureAtlasSprite
     public LayeredTexture( ResourceLocation registryName , LayeredTextureLayer[] layers )
     {
         super( registryName.toString() );
-
         this.layers = layers;
     }
 

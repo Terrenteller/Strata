@@ -1,5 +1,6 @@
 package com.riintouge.strata.util;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -8,6 +9,7 @@ import java.util.IdentityHashMap;
 
 public class ReflectionUtil
 {
+    @Nullable
     public static Field findFieldByType( Class clazz , Class type , boolean allowAssignable )
     {
         for( Class curClazz = clazz ; curClazz != Object.class ; curClazz = curClazz.getSuperclass() )
@@ -25,6 +27,7 @@ public class ReflectionUtil
         return null;
     }
 
+    @Nullable
     public static Method findMethodByTypes(
         Class< ? > clazz,
         Class< ? > returnType,
@@ -65,6 +68,7 @@ public class ReflectionUtil
         return null;
     }
 
+    @Nullable
     public static Boolean unfinalizeField( Field field )
     {
         Boolean wasFinal = null;

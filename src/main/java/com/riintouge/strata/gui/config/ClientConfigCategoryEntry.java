@@ -4,6 +4,8 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
+import javax.annotation.Nonnull;
+
 import static com.riintouge.strata.StrataConfig.CATEGORY_CLIENT;
 
 public class ClientConfigCategoryEntry extends BaseConfigCategoryEntry
@@ -15,6 +17,7 @@ public class ClientConfigCategoryEntry extends BaseConfigCategoryEntry
 
     // BaseConfigCategoryEntry overrides
 
+    @Nonnull
     @Override
     public String category()
     {

@@ -18,6 +18,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +64,7 @@ public class OreBlockTileEntity extends TileEntity
         }
     }
 
+    @Nonnull
     public MetaResourceLocation getHostRock()
     {
         return hostRock;
@@ -91,6 +94,7 @@ public class OreBlockTileEntity extends TileEntity
         update();
     }
 
+    @Nonnull
     public MetaResourceLocation findHost( IBlockAccess worldIn , BlockPos pos )
     {
         Map< MetaResourceLocation , Float > hostWeight = new HashMap<>();
@@ -123,20 +127,7 @@ public class OreBlockTileEntity extends TileEntity
                     weight /= 2;
             }
 
-            // FIXME: Find and use a map that bases key equality on equals()
-            boolean updated = false;
-            for( Map.Entry< MetaResourceLocation , Float > entry : hostWeight.entrySet() )
-            {
-                if( entry.getKey().equals( host ) )
-                {
-                    entry.setValue( entry.getValue() + weight );
-                    updated = true;
-                    break;
-                }
-            }
-
-            if( !updated )
-                hostWeight.put( host , hostWeight.getOrDefault( host , 0.0f ) + weight );
+            hostWeight.put( host , hostWeight.getOrDefault( host , 0.0f ) + weight );
         }
 
         Map.Entry< MetaResourceLocation , Float > bestEntry = null;
@@ -147,6 +138,7 @@ public class OreBlockTileEntity extends TileEntity
         return bestEntry != null ? bestEntry.getKey() : UnlistedPropertyHostRock.DEFAULT;
     }
 
+    @Nullable
     public MetaResourceLocation getAdjacentHost( IBlockAccess worldIn , BlockPos pos , EnumFacing facing )
     {
         BlockPos adjPos = pos.offset( facing );

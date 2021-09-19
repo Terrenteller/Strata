@@ -37,27 +37,27 @@ public class GeoBlockWall extends BlockWall
     public static final PropertyBool TALL = PropertyBool.create( "tall" );
     protected static InitializedThreadLocal< Boolean > IsRecursingUp = new InitializedThreadLocal<>( false );
 
-    protected IGeoTileInfo info;
+    protected IGeoTileInfo tileInfo;
     // The logic for this hack MUST respect the default boolean value.
     // A default of true will not be set until after it is too late.
     private boolean createRealBlockState;
 
-    public GeoBlockWall( IGeoTileInfo info , Block block )
+    public GeoBlockWall( IGeoTileInfo tileInfo , Block block )
     {
         super( block );
-        this.info = info;
+        this.tileInfo = tileInfo;
 
         RemoveBlockWallVariantFromBlockState();
 
-        ResourceLocation registryName = info.registryName();
+        ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BUILDING_BLOCK_TAB );
 
-        setHarvestLevel( info.harvestTool() , info.harvestLevel() );
-        setSoundType( info.soundType() );
-        setHardness( info.hardness() );
-        setResistance( info.explosionResistance() );
+        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
+        setSoundType( tileInfo.soundType() );
+        setHardness( tileInfo.hardness() );
+        setResistance( tileInfo.explosionResistance() );
     }
 
     private void RemoveBlockWallVariantFromBlockState()
@@ -70,7 +70,6 @@ public class GeoBlockWall extends BlockWall
             Field field = ReflectionUtil.findFieldByType( Block.class , BlockStateContainer.class , false );
             field.setAccessible( true );
             field.set( this , createBlockState() );
-            field.setAccessible( false );
 
             setDefaultState( blockState.getBaseState()
                 .withProperty( UP , Boolean.FALSE )
@@ -99,15 +98,15 @@ public class GeoBlockWall extends BlockWall
         if( otherBlock instanceof GeoBlockWall )
         {
             GeoBlockWall otherWall = (GeoBlockWall)otherBlock;
-            if( info.tileSetName().compareTo( otherWall.info.tileSetName() ) != 0 )
+            if( tileInfo.tileSetName().compareTo( otherWall.tileInfo.tileSetName() ) != 0 )
                 return false;
 
-            switch( info.type() )
+            switch( tileInfo.type() )
             {
                 case COBBLEWALL:
                 case COBBLEWALLMOSSY:
                 {
-                    switch( otherWall.info.type() )
+                    switch( otherWall.tileInfo.type() )
                     {
                         case COBBLEWALL:
                         case COBBLEWALLMOSSY:
@@ -117,11 +116,11 @@ public class GeoBlockWall extends BlockWall
                     break;
                 }
                 case STONEWALL:
-                    return otherWall.info.type() == TileType.STONEWALL;
+                    return otherWall.tileInfo.type() == TileType.STONEWALL;
                 case STONEBRICKWALL:
                 case STONEBRICKWALLMOSSY:
                 {
-                    switch( otherWall.info.type() )
+                    switch( otherWall.tileInfo.type() )
                     {
                         case STONEBRICKWALL:
                         case STONEBRICKWALLMOSSY:
@@ -148,7 +147,7 @@ public class GeoBlockWall extends BlockWall
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = info.modelTextureMap();
+        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
         ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
 
         return true;
@@ -158,7 +157,7 @@ public class GeoBlockWall extends BlockWall
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
-        TextureAtlasSprite texture = info.modelTextureMap().getTexture( target.sideHit );
+        TextureAtlasSprite texture = tileInfo.modelTextureMap().getTexture( target.sideHit );
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;

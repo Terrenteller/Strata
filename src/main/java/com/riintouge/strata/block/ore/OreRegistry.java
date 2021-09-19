@@ -30,6 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,17 +52,19 @@ public final class OreRegistry
         oreTileSetMap.put( tileSet.getInfo().oreName() , tileSet );
     }
 
-    public IOreTileSet find( String oreName )
+    @Nullable
+    public IOreTileSet find( @Nullable String oreName )
     {
         // TODO: toLower here and elsewhere? ResourceLocation overload?
         return oreTileSetMap.getOrDefault( oreName , null );
     }
 
-    public boolean contains( String oreName )
+    public boolean contains( @Nullable String oreName )
     {
         return oreTileSetMap.getOrDefault( oreName , null ) != null;
     }
 
+    @Nonnull
     public Collection< IOreTileSet > all()
     {
         return oreTileSetMap.values();
@@ -199,7 +203,7 @@ public final class OreRegistry
             if( existingModel != null )
             {
                 IBakedModel bakedOreModel = new OreBlockModel( tileSet , existingModel );
-                BakedModelCache.INSTANCE.registerOreBakedModel( tileSet.getInfo().oreName() , bakedOreModel );
+                BakedModelCache.INSTANCE.registerBakedOreModel( tileSet.getInfo().oreName() , bakedOreModel );
                 modelRegistry.putObject( modelVariantResource , bakedOreModel );
             }
         }

@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 
+import javax.annotation.Nonnull;
 import javax.vecmath.Vector3f;
 import java.awt.*;
 
@@ -12,46 +13,46 @@ import java.awt.*;
 
 public class BakedQuadUtil
 {
-    public final static float AXIS_MIN = 0.0f;
-    public final static float AXIS_MAX = 1.0f;
+    public static final float AXIS_MIN = 0.0f;
+    public static final float AXIS_MAX = 1.0f;
 
-    public final static Vector3f TOP_LEFT_FRONT     = new Vector3f( AXIS_MIN , AXIS_MAX , AXIS_MAX );
-    public final static Vector3f TOP_LEFT_BACK      = new Vector3f( AXIS_MIN , AXIS_MAX , AXIS_MIN );
-    public final static Vector3f BOTTOM_LEFT_FRONT  = new Vector3f( AXIS_MIN , AXIS_MIN , AXIS_MAX );
-    public final static Vector3f BOTTOM_LEFT_BACK   = new Vector3f( AXIS_MIN , AXIS_MIN , AXIS_MIN );
-    public final static Vector3f BOTTOM_RIGHT_FRONT = new Vector3f( AXIS_MAX , AXIS_MIN , AXIS_MAX );
-    public final static Vector3f BOTTOM_RIGHT_BACK  = new Vector3f( AXIS_MAX , AXIS_MIN , AXIS_MIN );
-    public final static Vector3f TOP_RIGHT_FRONT    = new Vector3f( AXIS_MAX , AXIS_MAX , AXIS_MAX );
-    public final static Vector3f TOP_RIGHT_BACK     = new Vector3f( AXIS_MAX , AXIS_MAX , AXIS_MIN );
+    public static final Vector3f TOP_LEFT_FRONT     = new Vector3f( AXIS_MIN , AXIS_MAX , AXIS_MAX );
+    public static final Vector3f TOP_LEFT_BACK      = new Vector3f( AXIS_MIN , AXIS_MAX , AXIS_MIN );
+    public static final Vector3f BOTTOM_LEFT_FRONT  = new Vector3f( AXIS_MIN , AXIS_MIN , AXIS_MAX );
+    public static final Vector3f BOTTOM_LEFT_BACK   = new Vector3f( AXIS_MIN , AXIS_MIN , AXIS_MIN );
+    public static final Vector3f BOTTOM_RIGHT_FRONT = new Vector3f( AXIS_MAX , AXIS_MIN , AXIS_MAX );
+    public static final Vector3f BOTTOM_RIGHT_BACK  = new Vector3f( AXIS_MAX , AXIS_MIN , AXIS_MIN );
+    public static final Vector3f TOP_RIGHT_FRONT    = new Vector3f( AXIS_MAX , AXIS_MAX , AXIS_MAX );
+    public static final Vector3f TOP_RIGHT_BACK     = new Vector3f( AXIS_MAX , AXIS_MAX , AXIS_MIN );
 
-    public final static int[] RAW_TOP_LEFT_FRONT     = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) };
-    public final static int[] RAW_TOP_LEFT_BACK      = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) };
-    public final static int[] RAW_BOTTOM_LEFT_FRONT  = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) };
-    public final static int[] RAW_BOTTOM_LEFT_BACK   = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) };
-    public final static int[] RAW_BOTTOM_RIGHT_FRONT = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) };
-    public final static int[] RAW_BOTTOM_RIGHT_BACK  = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) };
-    public final static int[] RAW_TOP_RIGHT_FRONT    = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) };
-    public final static int[] RAW_TOP_RIGHT_BACK     = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) };
+    public static final int[] RAW_TOP_LEFT_FRONT     = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) };
+    public static final int[] RAW_TOP_LEFT_BACK      = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) };
+    public static final int[] RAW_BOTTOM_LEFT_FRONT  = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) };
+    public static final int[] RAW_BOTTOM_LEFT_BACK   = new int[] { Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) };
+    public static final int[] RAW_BOTTOM_RIGHT_FRONT = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MAX ) };
+    public static final int[] RAW_BOTTOM_RIGHT_BACK  = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) , Float.floatToRawIntBits( AXIS_MIN ) };
+    public static final int[] RAW_TOP_RIGHT_FRONT    = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) };
+    public static final int[] RAW_TOP_RIGHT_BACK     = new int[] { Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MAX ) , Float.floatToRawIntBits( AXIS_MIN ) };
 
     // In order of EnumFacing: down up north south west east
     // Points are in order counter-clockwise starting from the top left
-    public final static Vector3f[] SIDE_DOWN  = new Vector3f[] { BOTTOM_LEFT_FRONT , BOTTOM_LEFT_BACK   , BOTTOM_RIGHT_BACK  , BOTTOM_RIGHT_FRONT };
-    public final static Vector3f[] SIDE_UP    = new Vector3f[] { TOP_LEFT_BACK     , TOP_LEFT_FRONT     , TOP_RIGHT_FRONT    , TOP_RIGHT_BACK     };
-    public final static Vector3f[] SIDE_NORTH = new Vector3f[] { TOP_RIGHT_BACK    , BOTTOM_RIGHT_BACK  , BOTTOM_LEFT_BACK   , TOP_LEFT_BACK      };
-    public final static Vector3f[] SIDE_SOUTH = new Vector3f[] { TOP_LEFT_FRONT    , BOTTOM_LEFT_FRONT  , BOTTOM_RIGHT_FRONT , TOP_RIGHT_FRONT    };
-    public final static Vector3f[] SIDE_WEST  = new Vector3f[] { TOP_LEFT_BACK     , BOTTOM_LEFT_BACK   , BOTTOM_LEFT_FRONT  , TOP_LEFT_FRONT     };
-    public final static Vector3f[] SIDE_EAST  = new Vector3f[] { TOP_RIGHT_FRONT   , BOTTOM_RIGHT_FRONT , BOTTOM_RIGHT_BACK  , TOP_RIGHT_BACK     };
-    public final static Vector3f[][] SIDE_POINTS = new Vector3f[][] { SIDE_DOWN , SIDE_UP , SIDE_NORTH , SIDE_SOUTH , SIDE_WEST , SIDE_EAST };
+    public static final Vector3f[] SIDE_DOWN  = new Vector3f[] { BOTTOM_LEFT_FRONT , BOTTOM_LEFT_BACK   , BOTTOM_RIGHT_BACK  , BOTTOM_RIGHT_FRONT };
+    public static final Vector3f[] SIDE_UP    = new Vector3f[] { TOP_LEFT_BACK     , TOP_LEFT_FRONT     , TOP_RIGHT_FRONT    , TOP_RIGHT_BACK     };
+    public static final Vector3f[] SIDE_NORTH = new Vector3f[] { TOP_RIGHT_BACK    , BOTTOM_RIGHT_BACK  , BOTTOM_LEFT_BACK   , TOP_LEFT_BACK      };
+    public static final Vector3f[] SIDE_SOUTH = new Vector3f[] { TOP_LEFT_FRONT    , BOTTOM_LEFT_FRONT  , BOTTOM_RIGHT_FRONT , TOP_RIGHT_FRONT    };
+    public static final Vector3f[] SIDE_WEST  = new Vector3f[] { TOP_LEFT_BACK     , BOTTOM_LEFT_BACK   , BOTTOM_LEFT_FRONT  , TOP_LEFT_FRONT     };
+    public static final Vector3f[] SIDE_EAST  = new Vector3f[] { TOP_RIGHT_FRONT   , BOTTOM_RIGHT_FRONT , BOTTOM_RIGHT_BACK  , TOP_RIGHT_BACK     };
+    public static final Vector3f[][] SIDE_POINTS = new Vector3f[][] { SIDE_DOWN , SIDE_UP , SIDE_NORTH , SIDE_SOUTH , SIDE_WEST , SIDE_EAST };
 
-    public final static int[][] RAW_SIDE_DOWN  = new int[][] { RAW_BOTTOM_LEFT_FRONT , RAW_BOTTOM_LEFT_BACK   , RAW_BOTTOM_RIGHT_BACK  , RAW_BOTTOM_RIGHT_FRONT };
-    public final static int[][] RAW_SIDE_UP    = new int[][] { RAW_TOP_LEFT_BACK     , RAW_TOP_LEFT_FRONT     , RAW_TOP_RIGHT_FRONT    , RAW_TOP_RIGHT_BACK     };
-    public final static int[][] RAW_SIDE_NORTH = new int[][] { RAW_TOP_RIGHT_BACK    , RAW_BOTTOM_RIGHT_BACK  , RAW_BOTTOM_LEFT_BACK   , RAW_TOP_LEFT_BACK      };
-    public final static int[][] RAW_SIDE_SOUTH = new int[][] { RAW_TOP_LEFT_FRONT    , RAW_BOTTOM_LEFT_FRONT  , RAW_BOTTOM_RIGHT_FRONT , RAW_TOP_RIGHT_FRONT    };
-    public final static int[][] RAW_SIDE_WEST  = new int[][] { RAW_TOP_LEFT_BACK     , RAW_BOTTOM_LEFT_BACK   , RAW_BOTTOM_LEFT_FRONT  , RAW_TOP_LEFT_FRONT     };
-    public final static int[][] RAW_SIDE_EAST  = new int[][] { RAW_TOP_RIGHT_FRONT   , RAW_BOTTOM_RIGHT_FRONT , RAW_BOTTOM_RIGHT_BACK  , RAW_TOP_RIGHT_BACK     };
-    public final static int[][][] RAW_SIDE_POINTS = new int[][][] { RAW_SIDE_DOWN , RAW_SIDE_UP , RAW_SIDE_NORTH , RAW_SIDE_SOUTH , RAW_SIDE_WEST , RAW_SIDE_EAST };
+    public static final int[][] RAW_SIDE_DOWN  = new int[][] { RAW_BOTTOM_LEFT_FRONT , RAW_BOTTOM_LEFT_BACK   , RAW_BOTTOM_RIGHT_BACK  , RAW_BOTTOM_RIGHT_FRONT };
+    public static final int[][] RAW_SIDE_UP    = new int[][] { RAW_TOP_LEFT_BACK     , RAW_TOP_LEFT_FRONT     , RAW_TOP_RIGHT_FRONT    , RAW_TOP_RIGHT_BACK     };
+    public static final int[][] RAW_SIDE_NORTH = new int[][] { RAW_TOP_RIGHT_BACK    , RAW_BOTTOM_RIGHT_BACK  , RAW_BOTTOM_LEFT_BACK   , RAW_TOP_LEFT_BACK      };
+    public static final int[][] RAW_SIDE_SOUTH = new int[][] { RAW_TOP_LEFT_FRONT    , RAW_BOTTOM_LEFT_FRONT  , RAW_BOTTOM_RIGHT_FRONT , RAW_TOP_RIGHT_FRONT    };
+    public static final int[][] RAW_SIDE_WEST  = new int[][] { RAW_TOP_LEFT_BACK     , RAW_BOTTOM_LEFT_BACK   , RAW_BOTTOM_LEFT_FRONT  , RAW_TOP_LEFT_FRONT     };
+    public static final int[][] RAW_SIDE_EAST  = new int[][] { RAW_TOP_RIGHT_FRONT   , RAW_BOTTOM_RIGHT_FRONT , RAW_BOTTOM_RIGHT_BACK  , RAW_TOP_RIGHT_BACK     };
+    public static final int[][][] RAW_SIDE_POINTS = new int[][][] { RAW_SIDE_DOWN , RAW_SIDE_UP , RAW_SIDE_NORTH , RAW_SIDE_SOUTH , RAW_SIDE_WEST , RAW_SIDE_EAST };
 
-    public final static int[] PACKED_NORMALS = new int[] { 0x8100 , 0x7F00 , 0x810000 , 0x7F0000 , 0x81 , 0x7F };
+    public static final int[] PACKED_NORMALS = new int[] { 0x8100 , 0x7F00 , 0x810000 , 0x7F0000 , 0x81 , 0x7F };
 
     public static BakedQuad createBakedQuadForFace( int itemRenderLayer , TextureAtlasSprite texture , EnumFacing face )
     {
@@ -64,6 +65,7 @@ public class BakedQuadUtil
             net.minecraft.client.renderer.vertex.DefaultVertexFormats.ITEM );
     }
 
+    @Nonnull
     public static int[] sideToVertexData( EnumFacing face , TextureAtlasSprite texture )
     {
         int[][] rawSidePoints = RAW_SIDE_POINTS[ face.getIndex() ];
@@ -82,11 +84,13 @@ public class BakedQuadUtil
         };
     }
 
+    @Nonnull
     public static int[] vertexToInts( Vector3f vec , int color , TextureAtlasSprite texture , float u , float v , int packedNormal )
     {
         return vertexToInts( vec.x , vec.y , vec.z , color , texture , u , v , packedNormal );
     }
 
+    @Nonnull
     public static int[] vertexToInts( float x , float y , float z , int color , TextureAtlasSprite texture , float u , float v , int packedNormal )
     {
         return new int[] {
@@ -102,6 +106,7 @@ public class BakedQuadUtil
 
     // Calculate the normal vector based on four input coordinates.
     // Assumes that the quad is coplanar but should produce a 'reasonable' answer even if not.
+    @Nonnull
     public static int computePackedNormal( Vector3f topLeft , Vector3f bottomLeft , Vector3f bottomRight , Vector3f topRight )
     {
         Vector3f cornerAverage1 = new Vector3f( bottomRight );

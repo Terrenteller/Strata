@@ -13,11 +13,13 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 @SideOnly( Side.CLIENT )
-public class BakedModelCache implements IResourceManagerReloadListener
+public final class BakedModelCache implements IResourceManagerReloadListener
 {
     public static final BakedModelCache INSTANCE = new BakedModelCache();
 
@@ -29,23 +31,24 @@ public class BakedModelCache implements IResourceManagerReloadListener
         ( (IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager() ).registerReloadListener( this );
     }
 
-    public void registerOreBakedModel( String oreName , IBakedModel oreBakedModel )
+    public void registerBakedOreModel( String oreName , IBakedModel bakedOreModel )
     {
-        bakedOreModelMap.put( oreName , oreBakedModel );
+        bakedOreModelMap.put( oreName , bakedOreModel );
     }
 
+    @Nonnull
     public IBakedModel getBakedModel( MetaResourceLocation metaResourceLocation )
     {
         IBakedModel hostModel = hostBakedModelMap.getOrDefault( metaResourceLocation , null );
         if( hostModel == null )
         {
-            ModelManager modelManager = Minecraft.getMinecraft()
+             ModelManager modelManager = Minecraft.getMinecraft()
                 .getBlockRendererDispatcher()
                 .getBlockModelShapes()
                 .getModelManager();
 
             Block hostBlock = Block.REGISTRY.getObject( metaResourceLocation.resourceLocation );
-            Map< IBlockState, ModelResourceLocation > variants = modelManager.getBlockModelShapes()
+            Map< IBlockState , ModelResourceLocation > variants = modelManager.getBlockModelShapes()
                 .getBlockStateMapper()
                 .getVariants( hostBlock );
 
@@ -57,6 +60,7 @@ public class BakedModelCache implements IResourceManagerReloadListener
         return hostModel;
     }
 
+    @Nullable
     public IBakedModel getBakedOreModel( String oreName )
     {
         return bakedOreModelMap.getOrDefault( oreName , null );

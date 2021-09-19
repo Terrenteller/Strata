@@ -33,6 +33,8 @@ public class ModelRetexturizer implements IModel
         this.textureResource = null;
     }
 
+    // IModel overrides
+
     @Override
     public Collection< ResourceLocation > getDependencies()
     {

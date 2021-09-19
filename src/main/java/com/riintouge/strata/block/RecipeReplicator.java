@@ -18,6 +18,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -113,6 +115,7 @@ public class RecipeReplicator
         return false;
     }
 
+    @Nullable
     public IRecipe replicate( IRecipe recipe )
     {
         if( !canReplicate( recipe ) )
@@ -125,6 +128,7 @@ public class RecipeReplicator
         return replicator.replicate( recipe ).setRegistryName( replicatedResourceLocation( recipe.getRegistryName() ) );
     }
 
+    @Nonnull
     public ResourceLocation replicatedResourceLocation( ResourceLocation resourceLocation )
     {
         if( resourceLocation.getResourceDomain().equals( Strata.modid ) )
@@ -133,6 +137,7 @@ public class RecipeReplicator
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
     }
 
+    @Nonnull
     protected Ingredient getTargetIngredient( ItemStack original )
     {
         Pair< List< ItemStack > , Ingredient > targetPair = megaMap.get( original );
@@ -140,13 +145,14 @@ public class RecipeReplicator
         if( ing == null )
         {
             List< ItemStack > itemStacks = targetPair.getKey();
-            ing = Ingredient.fromStacks( itemStacks.toArray( new ItemStack[ itemStacks.size() ] ) );
+            ing = Ingredient.fromStacks( itemStacks.toArray( new ItemStack[ 0 ] ) );
             targetPair.setValue( ing );
         }
 
         return ing;
     }
 
+    @Nonnull
     protected NonNullList< Ingredient > substitute( NonNullList< Ingredient > ings )
     {
         NonNullList< Ingredient > replacedIngredients = NonNullList.create();

@@ -9,6 +9,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,16 +82,19 @@ public enum TileType
         this.defaultVariant = defaultVariant;
     }
 
+    @Nonnull
     public ResourceLocation registryName( ResourceLocation baseLocation )
     {
         return new ResourceLocation( String.format( resourceLocationFormat , baseLocation.getResourceDomain() , baseLocation.getResourcePath() ) );
     }
 
+    @Nonnull
     public ResourceLocation registryName( String tileSetName )
     {
         return new ResourceLocation( String.format( resourceLocationFormat , Strata.modid , tileSetName ) );
     }
 
+    @Nullable
     public ItemStack vanillaItemStack()
     {
         ItemStack vanillaItem = ItemStackMap.getOrDefault( this , null );

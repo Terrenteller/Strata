@@ -16,16 +16,16 @@
 
         "facing=up,powered=false":    { "model": "strata:proto_button" , "uvlock": true },
         "facing=down,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x": 180 },
-        "facing=north,powered=false": { "model": "strata:proto_button" , "uvlock": true , "x": 90 },
-        "facing=south,powered=false": { "model": "strata:proto_button" , "uvlock": true , "x": 90 , "y": 180 },
-        "facing=east,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x": 90 , "y": 90 },
-        "facing=west,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x": 90 , "y": 270 },
+        "facing=north,powered=false": { "model": "strata:proto_button" , "uvlock": true , "x":  90 },
+        "facing=south,powered=false": { "model": "strata:proto_button" , "uvlock": true , "x":  90 , "y": 180 },
+        "facing=east,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x":  90 , "y":  90 },
+        "facing=west,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x":  90 , "y": 270 },
 
         "facing=up,powered=true":    { "model": "strata:proto_button_pressed" , "uvlock": true },
         "facing=down,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x": 180 },
-        "facing=north,powered=true": { "model": "strata:proto_button_pressed" , "uvlock": true , "x": 90 },
-        "facing=south,powered=true": { "model": "strata:proto_button_pressed" , "uvlock": true , "x": 90 , "y": 180 },
-        "facing=east,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x": 90 , "y": 90 },
-        "facing=west,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x": 90 , "y": 270 }
+        "facing=north,powered=true": { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 },
+        "facing=south,powered=true": { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 , "y": 180 },
+        "facing=east,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 , "y":  90 },
+        "facing=west,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 , "y": 270 }
     }
 }

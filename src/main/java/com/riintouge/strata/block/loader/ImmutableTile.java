@@ -20,18 +20,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public final class ImmutableTile implements IGeoTileInfo
 {
-    private Map< String , String > languageMap;
-
     // IGeoTileInfo
     private String tileSetName;
-    private TileType type;
+    private TileType tileType;
     private String blockOreDictionaryName;
     private String fragmentItemOreDictionaryName;
     private MetaResourceLocation equivalentItemResourceLocation;
@@ -45,7 +43,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private Float fragmentFurnaceExp;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
-    private ArrayList< IBlockState > sustainsPlantsSustainedBy = null; // Lazily evaluated
+    private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
     private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
 
@@ -64,11 +62,9 @@ public final class ImmutableTile implements IGeoTileInfo
 
     public ImmutableTile( TileData tileData ) throws IllegalArgumentException
     {
-        this.languageMap = Util.lazyCoalesce( tileData.languageMap , HashMap::new );
-
         // IGeoTileInfo
         this.tileSetName = Util.argumentNullCheck( tileData.tileSetName , "tileSetName" );
-        this.type = Util.argumentNullCheck( tileData.type , "type" );
+        this.tileType = Util.argumentNullCheck( tileData.tileType , "type" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.fragmentItemOreDictionaryName = tileData.fragmentItemOreDictionaryName;
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
@@ -80,12 +76,11 @@ public final class ImmutableTile implements IGeoTileInfo
         this.fragmentFurnaceResult = tileData.fragmentFurnaceResult;
         this.fragmentFurnaceExp = tileData.fragmentFurnaceExp;
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
-        this.sustainsPlantsSustainedByRaw = Util.lazyCoalesce( tileData.sustainsPlantsSustainedByRaw , ArrayList::new );
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
-        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.type.blockstate );
+        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
 
         // IHostInfo
-        this.registryName = tileData.type.registryName( this.tileSetName );
+        this.registryName = tileData.tileType.registryName( this.tileSetName );
 
         // ICommonBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
@@ -96,40 +91,48 @@ public final class ImmutableTile implements IGeoTileInfo
         this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f * this.hardness );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
 
-        LocalizationRegistry.INSTANCE.register( this , registryName.toString() + ".name" , this.languageMap );
+        LocalizationRegistry.INSTANCE.register(
+            this,
+            registryName.toString() + ".name",
+            Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
     }
 
     // IGeoTileInfo overrides
 
+    @Nonnull
     @Override
     public String tileSetName()
     {
         return tileSetName;
     }
 
+    @Nonnull
     @Override
     public TileType type()
     {
-        return type;
+        return tileType;
     }
 
+    @Nullable
     @Override
     public String blockOreDictionaryName()
     {
         return blockOreDictionaryName;
     }
 
+    @Nullable
     @Override
     public String fragmentItemOreDictionaryName()
     {
         return fragmentItemOreDictionaryName;
     }
 
+    @Nullable
     @Override
     public ItemStack equivalentItemStack()
     {
         if( equivalentItemResourceLocation == null )
-            return type.vanillaItemStack();
+            return tileType.vanillaItemStack();
 
         // Deferred resolution until reasonably sure the item has been created
         if( equivalentItemStack == null )
@@ -156,6 +159,7 @@ public final class ImmutableTile implements IGeoTileInfo
         return furnaceResult;
     }
 
+    @Nullable
     @Override
     public Float furnaceExp()
     {
@@ -163,17 +167,19 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
-    public Boolean hasFragment()
+    public boolean hasFragment()
     {
         return fragmentTextureLayers != null;
     }
 
+    @Nullable
     @Override
     public LayeredTextureLayer[] fragmentTextureLayers()
     {
         return fragmentTextureLayers;
     }
 
+    @Nullable
     @Override
     public ItemStack equivalentFragmentItemStack()
     {
@@ -200,25 +206,27 @@ public final class ImmutableTile implements IGeoTileInfo
         return fragmentFurnaceResult;
     }
 
+    @Nullable
     @Override
     public Float fragmentFurnaceExp()
     {
         return fragmentFurnaceExp;
     }
 
+    @Nonnull
     @Override
     public ArrayList< EnumPlantType > sustainedPlantTypes()
     {
         return sustainedPlantTypes;
     }
 
+    @Nonnull
     @Override
     public ArrayList< IBlockState > sustainsPlantsSustainedBy()
     {
         // Deferred resolution until reasonably sure the block(s) have been created
         if( sustainsPlantsSustainedByRaw != null )
         {
-            sustainsPlantsSustainedBy = new ArrayList<>();
             for( MetaResourceLocation metaResourceLocation : sustainsPlantsSustainedByRaw )
             {
                 Block otherBlock = ForgeRegistries.BLOCKS.getValue( metaResourceLocation.resourceLocation );
@@ -230,18 +238,21 @@ public final class ImmutableTile implements IGeoTileInfo
         return sustainsPlantsSustainedBy;
     }
 
+    @Nonnull
     @Override
     public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
     }
 
+    @Nonnull
     @Override
     public ResourceLocation blockstateResourceLocation()
     {
         return blockstateResourceLocation;
     }
 
+    @Nullable
     @Override
     public String localizedName()
     {
@@ -250,6 +261,7 @@ public final class ImmutableTile implements IGeoTileInfo
 
     // IHostInfo overrides
 
+    @Nonnull
     @Override
     public ResourceLocation registryName()
     {
@@ -272,18 +284,21 @@ public final class ImmutableTile implements IGeoTileInfo
 
     // ICommonBlockProperties overrides
 
+    @Nonnull
     @Override
     public Material material()
     {
         return material;
     }
 
+    @Nonnull
     @Override
     public SoundType soundType()
     {
         return soundType;
     }
 
+    @Nonnull
     @Override
     public String harvestTool()
     {

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class GeoTileSetRegistry
         // Nothing to do
     }
 
+    @Nonnull
     public Set< String > tileSetNames()
     {
         return tileSets.keySet();
@@ -45,10 +47,11 @@ public class GeoTileSetRegistry
         return tileSets.getOrDefault( tileSetName , null ) != null;
     }
 
-    public IGeoTileInfo findTileInfo( String tileSetName , TileType type )
+    @Nullable
+    public IGeoTileInfo findTileInfo( String tileSetName , TileType tileType )
     {
         GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
-        return tileSet != null ? tileSet.find( type ) : null;
+        return tileSet != null ? tileSet.find( tileType ) : null;
     }
 
     @Nullable
@@ -71,9 +74,9 @@ public class GeoTileSetRegistry
         {
             if( tileType.isPrimary )
             {
-                IGeoTileInfo info = INSTANCE.findTileInfo( tileSetName , tileType );
-                if( info != null )
-                    return info;
+                IGeoTileInfo tileInfo = INSTANCE.findTileInfo( tileSetName , tileType );
+                if( tileInfo != null )
+                    return tileInfo;
             }
         }
 

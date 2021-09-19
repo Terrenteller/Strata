@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class RedstoneOreBlock extends OreBlock
@@ -50,6 +51,7 @@ public class RedstoneOreBlock extends OreBlock
 
     // OreBlock overrides
 
+    @Nonnull
     @Override
     public IExtendedBlockState getCompleteExtendedState(
         OreBlockTileEntity entity,
@@ -61,6 +63,7 @@ public class RedstoneOreBlock extends OreBlock
             .withProperty( UnlistedPropertyActiveState.PROPERTY , entity != null && entity.isActive() );
     }
 
+    @Nonnull
     @Override
     public IExtendedBlockState getDefaultExtendedState( IBlockState state )
     {

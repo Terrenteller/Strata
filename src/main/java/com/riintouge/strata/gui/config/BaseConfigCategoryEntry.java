@@ -9,6 +9,8 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
+import javax.annotation.Nonnull;
+
 public abstract class BaseConfigCategoryEntry extends GuiConfigEntries.CategoryEntry
 {
     public BaseConfigCategoryEntry( GuiConfig owningScreen , GuiConfigEntries owningEntryList , IConfigElement prop )
@@ -16,6 +18,7 @@ public abstract class BaseConfigCategoryEntry extends GuiConfigEntries.CategoryE
         super( owningScreen , owningEntryList , prop );
     }
 
+    @Nonnull
     public abstract String category();
 
     // GuiConfigEntries.CategoryEntry overrides

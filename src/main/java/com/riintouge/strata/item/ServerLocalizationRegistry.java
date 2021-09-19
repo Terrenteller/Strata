@@ -3,6 +3,7 @@ package com.riintouge.strata.item;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ public final class ServerLocalizationRegistry extends LocalizationRegistry
         unlocalizedKeys.put( object , unlocalizedKey );
     }
 
+    @Nullable
     public String get( Object object )
     {
         return unlocalizedKeys.getOrDefault( object , null );
