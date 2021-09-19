@@ -39,18 +39,12 @@ public class StrataGuiFactory implements IModGuiFactory
     // Forge has a method by the same name that makes bad assumptions
     public static String getAbridgedConfigPath( String path )
     {
-        Minecraft minecraft = Minecraft.getMinecraft();
-        String absoluteDataDir = minecraft.mcDataDir.getAbsolutePath();
-        if( absoluteDataDir.endsWith( "." ) )
-            absoluteDataDir = absoluteDataDir.substring( 0 , absoluteDataDir.length() - 1 );
-
         String homeDir = System.getProperty( "user.home" );
         if( homeDir.endsWith( File.separator ) )
             homeDir = homeDir.substring( 0 , homeDir.length() - 1 );
 
-        // Life is like a box of path separators. You never know what you're gonna get.
-        return path.replace( "\\" , "/")
-            .replace( "/" , File.separator )
-            .replaceFirst( absoluteDataDir , absoluteDataDir.replaceFirst( homeDir , "~" ) );
+        return path.startsWith( homeDir )
+            ? String.format( "~%s" , path.substring( homeDir.length() ) )
+            : path;
     }
 }
