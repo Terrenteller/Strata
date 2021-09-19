@@ -26,3 +26,8 @@ itemGroup.strataMiscObjectsTab=Strata Misc. Objects
 itemGroup.strataBlockFragmentsTab=Strata Block Fragments
 itemGroup.strataOreBlocksTab=Strata Ore Blocks
 itemGroup.strataOreItemsTab=Strata Ore Items
+
+### Miscellaneous
+
+strata.multiplayer.disconnect.closed=Connection closed by Strata
+strata.multiplayer.disconnect.unknownhostrock=Server reported unknown host '%s' for ore!

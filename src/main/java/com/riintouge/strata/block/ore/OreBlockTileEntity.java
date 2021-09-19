@@ -3,6 +3,7 @@ package com.riintouge.strata.block.ore;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.network.ConnectionHelper;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -245,11 +246,12 @@ public class OreBlockTileEntity extends TileEntity
             MetaResourceLocation host = new MetaResourceLocation( propertyString );
             if( !host.equals( hostRock ) )
             {
-                if( HostRegistry.INSTANCE.find( hostRock ) == null )
+                if( HostRegistry.INSTANCE.find( host ) == null )
                 {
                     // The client must have known about the block to get this far, but not that it was a host.
-                    // Visual discrepancies aside, the ore will not know the real properties bestowed upon it.
-                    throw new IllegalStateException( String.format( "Server reported unknown host '%s'" , host.toString() ) );
+                    // Visual discrepancies aside, the ore will not know the real properties bestowed upon it
+                    // which may lead to client/server de-synchronization.
+                    ConnectionHelper.disconnectBecause( "strata.multiplayer.disconnect.unknownhostrock" , host.toString() );
                 }
 
                 hostRock = host;
