@@ -7,17 +7,19 @@ convertsTo -
 lang.en Borax
 
 generate salt stone
+host
 oreDict oreSalt
 hardness 2.0
 texture strata:blocks/ore/weak/salt
 convertsTo -
 lang.en Salt
 
-generate salitre stone
+generate nitratine stone
+host
 hardness 2.0
-texture strata:blocks/ore/weak/salitre
+texture strata:blocks/ore/weak/nitratine
 convertsTo -
-lang.en Salitre
+lang.en Nitratine
 
 generate graphite stone
 hardness 2.0
@@ -25,11 +27,12 @@ texture strata:blocks/ore/weak/graphite
 convertsTo -
 lang.en Graphite
 
-generate gypsum stone
+generate alabaster stone
+host
 hardness 2.0
-texture strata:blocks/ore/weak/gypsum
+texture strata:blocks/ore/weak/alabaster
 convertsTo -
-lang.en Gypsum
+lang.en Alabaster
 
 generate mirabilite stone
 hardness 2.0
@@ -62,12 +65,14 @@ lang.en Trona
 # Medium
 
 ore bastnasite
+oreDict oreBastnasite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/bastnasite
-lang.en Bastnasite
+lang.en Bastnäsite
 
 ore fluorite
+oreDict oreFluorite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/fluorite
@@ -88,6 +93,7 @@ lang.en Zeolite
 # Strong
 
 ore quartz
+oreDict oreQuartz
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/quartz
@@ -114,6 +120,7 @@ convertsTo -
 lang.en Pumice
 
 ore pyrite
+oreDict orePyrite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/pyrite
