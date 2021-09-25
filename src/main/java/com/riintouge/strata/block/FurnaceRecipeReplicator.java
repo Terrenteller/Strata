@@ -37,7 +37,7 @@ public class FurnaceRecipeReplicator
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
     {
-        System.out.println( "FurnaceRecipeReplicator::registerRecipes()" );
+        Strata.LOGGER.trace( "FurnaceRecipeReplicator::registerRecipes()" );
 
         FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance();
         for( String oreName : OreDictionary.getOreNames() )

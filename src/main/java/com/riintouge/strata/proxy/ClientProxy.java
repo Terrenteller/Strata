@@ -1,5 +1,6 @@
 package com.riintouge.strata.proxy;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.GeoBlockModelLoader;
 import com.riintouge.strata.block.geo.GeoItemFragmentModelLoader;
@@ -24,7 +25,7 @@ public class ClientProxy extends CommonProxy
     public void preInit( FMLPreInitializationEvent event )
     {
         super.preInit( event );
-        System.out.println( "ClientProxy::preInit()" );
+        Strata.LOGGER.trace( "ClientProxy::preInit()" );
 
         MinecraftForge.EVENT_BUS.register( GeoItemFragmentTextureManager.class );
         MinecraftForge.EVENT_BUS.register( OreParticleTextureManager.class );
@@ -41,7 +42,7 @@ public class ClientProxy extends CommonProxy
     public void init( FMLInitializationEvent event )
     {
         super.init( event );
-        System.out.println( "ClientProxy::init()" );
+        Strata.LOGGER.trace( "ClientProxy::init()" );
 
         BakedModelStoreProxy.inject();
     }
@@ -50,6 +51,5 @@ public class ClientProxy extends CommonProxy
     public void postInit( FMLPostInitializationEvent event )
     {
         super.postInit( event );
-        System.out.println( "ClientProxy::postInit()" );
     }
 }

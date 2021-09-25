@@ -48,14 +48,14 @@ public final class OreParticleTextureManager
         if( texture != null )
             return texture;
 
-        //System.out.println( String.format( "No texture was generated for \"%s\"!" , resourcePath ) );
+        Strata.LOGGER.warn( String.format( "No texture was generated for \"%s\"!" , resourcePath ) );
         return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
-        System.out.println( "OreParticleTextureManager::onEvent( TextureStitchEvent.Pre )" );
+        Strata.LOGGER.trace( "OreParticleTextureManager::stitchTextures()" );
 
         if( !StrataConfig.usePrecomputedOreParticles )
             return;
@@ -98,7 +98,7 @@ public final class OreParticleTextureManager
                             host.getResourcePath(),
                             hostMeta,
                             layer.toString().toLowerCase() );
-                        System.out.println( "Stitching " + facingResource.toString() );
+                        Strata.LOGGER.trace( "Stitching " + facingResource.toString() );
 
                         LayeredTextureLayer oreLayer = new LayeredTextureLayer( oreTextureResource != null ? oreTextureResource : oreTextureMap.get( layer ) );
                         LayeredTextureLayer hostLayer = new LayeredTextureLayer( hostTextureResource != null ? hostTextureResource : hostTextureMap.get( layer ) );

@@ -1,5 +1,6 @@
 package com.riintouge.strata.item;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.ReflectionUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.*;
@@ -91,7 +92,7 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
         }
         catch( Exception e )
         {
-            System.out.println( "Failed to acquire the resources/I18n localization dictionary for direct injection! Some strings may appear unlocalized." );
+            Strata.LOGGER.warn( "Failed to acquire the resources/I18n localization dictionary for direct injection! Some strings may appear unlocalized." );
         }
 
         // Item tooltips use the following localization map
@@ -107,7 +108,7 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
         }
         catch( Exception e )
         {
-            System.out.println( "Failed to acquire the translation/I18n localization dictionary for direct injection! Some strings may appear unlocalized." );
+            Strata.LOGGER.warn( "Failed to acquire the translation/I18n localization dictionary for direct injection! Some strings may appear unlocalized." );
         }
     }
 

@@ -1,6 +1,7 @@
 package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.EventHandlers;
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.Blocks;
 import com.riintouge.strata.block.FurnaceRecipeReplicator;
@@ -18,8 +19,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class CommonProxy
 {
     public void preInit( FMLPreInitializationEvent event )
-    {
-        System.out.println( "CommonProxy::preInit()" );
+    { 
+        Strata.LOGGER.trace( "CommonProxy::preInit()" );
 
         StrataConfig.INSTANCE.getConfig(); // Ignore return for initialization
         ConfigDir.INSTANCE.extractMissingResourceFiles();

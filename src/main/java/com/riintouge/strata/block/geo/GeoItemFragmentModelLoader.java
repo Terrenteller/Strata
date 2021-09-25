@@ -42,7 +42,7 @@ public final class GeoItemFragmentModelLoader implements ICustomModelLoader
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        System.out.println( String.format( "GeoItemFragmentModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        Strata.LOGGER.trace( String.format( "GeoItemFragmentModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
         matcher.find();

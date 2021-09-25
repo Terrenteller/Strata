@@ -75,7 +75,7 @@ public final class OreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerBlocks( RegistryEvent.Register< Block > event )
     {
-        System.out.println( "OreRegistry::registerBlocks()" );
+        Strata.LOGGER.trace( "OreRegistry::registerBlocks()" );
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
@@ -85,7 +85,7 @@ public final class OreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerItems( RegistryEvent.Register< Item > event )
     {
-        System.out.println( "OreRegistry::registerItems()" );
+        Strata.LOGGER.trace( "OreRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
@@ -105,7 +105,7 @@ public final class OreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
     {
-        System.out.println( "OreRegistry::registerRecipes()" );
+        Strata.LOGGER.trace( "OreRegistry::registerRecipes()" );
 
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
@@ -149,7 +149,7 @@ public final class OreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerModels( ModelRegistryEvent event )
     {
-        System.out.println( "OreRegistry::registerModels()" );
+        Strata.LOGGER.trace( "OreRegistry::registerModels()" );
 
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
@@ -182,7 +182,7 @@ public final class OreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
-        System.out.println( "OreRegistry::stitchTextures()" );
+        Strata.LOGGER.trace( "OreRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
@@ -193,6 +193,8 @@ public final class OreRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void bakeModels( ModelBakeEvent event )
     {
+        Strata.LOGGER.trace( "OreRegistry::bakeModels()" );
+
         IRegistry< ModelResourceLocation , IBakedModel > modelRegistry = event.getModelRegistry();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {

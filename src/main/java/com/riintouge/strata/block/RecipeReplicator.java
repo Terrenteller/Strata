@@ -193,7 +193,7 @@ public class RecipeReplicator
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
     {
-        System.out.println( "RecipeReplicator::registerRecipes()" );
+        Strata.LOGGER.trace( "RecipeReplicator::registerRecipes()" );
 
         loadConfiguration();
 

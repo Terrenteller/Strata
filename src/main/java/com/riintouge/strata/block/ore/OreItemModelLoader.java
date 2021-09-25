@@ -27,7 +27,7 @@ public final class OreItemModelLoader implements ICustomModelLoader
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        System.out.println( String.format( "OreItemModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        Strata.LOGGER.trace( String.format( "OreItemModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
         String oreName = modelLocation.getResourcePath().replaceFirst( ModelResourceBasePath , "" );
         return new StrataItemModel( OreItemTextureManager.getTextureLocation( oreName ) );

@@ -1,5 +1,6 @@
 package com.riintouge.strata.image;
 
+import com.mojang.authlib.minecraft.InsecureTextureException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResourceManager;
@@ -9,6 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.MissingResourceException;
 import java.util.Vector;
 import java.util.function.Function;
 
@@ -71,8 +73,8 @@ public class LayeredTexture extends TextureAtlasSprite
                 }
                 catch( IndexOutOfBoundsException ex )
                 {
-                    System.out.println( String.format( "Missing layered texture resource \"%s\"" , layerResource.toString() ) );
-                    throw ex;
+                    String message = String.format( "Missing layered texture resource \"%s\"" , layerResource.toString() );
+                    throw new IllegalStateException( message , ex );
                 }
 
                 if( index == layers.length - 1 )

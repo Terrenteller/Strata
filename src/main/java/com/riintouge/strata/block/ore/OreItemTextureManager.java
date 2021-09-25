@@ -28,7 +28,7 @@ public final class OreItemTextureManager
 
     public void register( String ore , ResourceLocation resourceLocation )
     {
-        System.out.println( String.format( "OreItemTextureManager::register( \"%s\" , \"%s\" )" , ore , resourceLocation.toString() ) );
+        Strata.LOGGER.trace( String.format( "OreItemTextureManager::register( \"%s\" , \"%s\" )" , ore , resourceLocation.toString() ) );
         if( !oreNameToTextureResourceMap.containsKey( ore ) )
             oreNameToTextureResourceMap.put( ore , resourceLocation );
     }
@@ -44,7 +44,7 @@ public final class OreItemTextureManager
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
-        System.out.println( "OreItemTextureManager::onEvent( TextureStitchEvent.Pre )" );
+        Strata.LOGGER.trace( "OreItemTextureManager::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
 
@@ -52,7 +52,7 @@ public final class OreItemTextureManager
         {
             ResourceLocation textureResource = INSTANCE.oreNameToTextureResourceMap.get( oreName );
             ResourceLocation generatedResourceLocation = getTextureLocation( oreName );
-            //System.out.println( "Stitching " + generatedResourceLocation.toString() );
+            Strata.LOGGER.trace( "Stitching " + generatedResourceLocation.toString() );
 
             LayeredTextureLayer oreLayer = new LayeredTextureLayer( textureResource );
             TextureAtlasSprite generatedTexture = new LayeredTexture(

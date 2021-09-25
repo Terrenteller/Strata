@@ -84,7 +84,7 @@ public class ProtoBlockTextureMap implements
             LayeredTextureLayer[] textureLayers = layerLayers[ layer.ordinal() ];
             if( textureLayers != null )
             {
-                System.out.println( "Stitching " + baseRegistryName + layer.resourceLocationSuffix() );
+                Strata.LOGGER.trace( "Stitching " + baseRegistryName + layer.resourceLocationSuffix() );
                 LayeredTexture layerTexture = new LayeredTexture(
                     new ResourceLocation( Strata.modid , baseRegistryName + layer.resourceLocationSuffix() ),
                     textureLayers );

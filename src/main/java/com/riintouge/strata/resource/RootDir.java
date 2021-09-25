@@ -48,7 +48,6 @@ public class RootDir
     @Nonnull
     public List< String > allIn( String subDirPath , boolean recursive ) throws IOException
     {
-        System.out.println( resolve( subDirPath ).toString() );
         FileSelector fileSelector = new FileSelector( s -> true , recursive );
         Files.walkFileTree( resolve( subDirPath ) , fileSelector );
 

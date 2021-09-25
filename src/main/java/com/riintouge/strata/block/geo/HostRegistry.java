@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.loader.ImmutableTile;
@@ -63,7 +64,7 @@ public final class HostRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
-        System.out.println( "HostRegistry::stitchTextures()" );
+        Strata.LOGGER.trace( "HostRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
         for( IHostInfo[] hostInfos : INSTANCE.hostInfos.values() )

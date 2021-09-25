@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod( modid = Strata.modid , name = Strata.name , version = Strata.internalVersion , guiFactory = "com.riintouge.strata.gui.StrataGuiFactory" )
 public class Strata
@@ -28,6 +30,8 @@ public class Strata
     public static final StrataOreBlocksTab ORE_BLOCK_TAB = new StrataOreBlocksTab();
     public static final StrataOreItemsTab ORE_ITEM_TAB = new StrataOreItemsTab();
 
+    public static Logger LOGGER = LogManager.getLogger( modid );
+
     @Mod.Instance( modid )
     public static Strata instance = new Strata();
 
@@ -37,6 +41,7 @@ public class Strata
     @EventHandler
     public void preInit( FMLPreInitializationEvent event )
     {
+        LOGGER = event.getModLog();
         proxy.preInit( event );
     }
 

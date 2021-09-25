@@ -7,6 +7,7 @@ import com.riintouge.strata.resource.ConfigDir;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -14,10 +15,10 @@ import java.io.IOException;
 
 public class Blocks
 {
-    @SubscribeEvent
-    public static void onEvent( RegistryEvent.Register< Block > event ) throws IOException
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void registerBlocks( RegistryEvent.Register< Block > event ) throws IOException
     {
-        System.out.println( "Blocks::registerBlocks()" );
+        Strata.LOGGER.trace( "Blocks::registerBlocks()" );
 
         TileDataLoader tileDataLoader = new TileDataLoader();
         for( String path : ConfigDir.INSTANCE.allIn( Strata.modid + "/tiledata" , true ) )

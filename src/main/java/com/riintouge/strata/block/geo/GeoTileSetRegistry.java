@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.IForgeRegistrable;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -88,7 +89,7 @@ public class GeoTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerBlocks( RegistryEvent.Register< Block > event )
     {
-        System.out.println( "GeoTileSetRegistry::registerBlocks()" );
+        Strata.LOGGER.trace( "GeoTileSetRegistry::registerBlocks()" );
 
         // NOTE: Multipart models used as dependencies do not seem to get loaded by the
         // recursive model loading. In the future if necessary, create a new block using
@@ -102,7 +103,7 @@ public class GeoTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerItems( RegistryEvent.Register< Item > event )
     {
-        System.out.println( "GeoTileSetRegistry::registerItems()" );
+        Strata.LOGGER.trace( "GeoTileSetRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
@@ -112,7 +113,7 @@ public class GeoTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
     {
-        System.out.println( "GeoTileSetRegistry::registerRecipes()" );
+        Strata.LOGGER.trace( "GeoTileSetRegistry::registerRecipes()" );
 
         IForgeRegistry< IRecipe > recipeRegistry = event.getRegistry();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
@@ -122,7 +123,7 @@ public class GeoTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerModels( ModelRegistryEvent event )
     {
-        System.out.println( "GeoTileSetRegistry::registerModels()" );
+        Strata.LOGGER.trace( "GeoTileSetRegistry::registerModels()" );
 
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
             tileSet.registerModels( event );
@@ -132,7 +133,7 @@ public class GeoTileSetRegistry
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void stitchTextures( TextureStitchEvent.Pre event )
     {
-        System.out.println( "GeoTileSetRegistry::stitchTextures()" );
+        Strata.LOGGER.trace( "GeoTileSetRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
         for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )

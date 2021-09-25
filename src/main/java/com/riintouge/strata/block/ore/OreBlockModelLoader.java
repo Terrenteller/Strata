@@ -37,7 +37,7 @@ public final class OreBlockModelLoader implements ICustomModelLoader
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        System.out.println( String.format( "OreBlockModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        Strata.LOGGER.trace( String.format( "OreBlockModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
 
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
         matcher.find();

@@ -40,7 +40,7 @@ public final class GeoBlockModelLoader implements ICustomModelLoader
     public IModel loadModel( ResourceLocation modelLocation )
     {
         ModelResourceLocation modelResourceLocation = (ModelResourceLocation)modelLocation;
-        System.out.println( String.format( "GeoBlockModelLoader::loadModel( \"%s\" )" , modelResourceLocation.toString() ) );
+        Strata.LOGGER.trace( String.format( "GeoBlockModelLoader::loadModel( \"%s\" )" , modelResourceLocation.toString() ) );
 
         Pair< String , TileType > stoneAndType = getNameAndTileTypeFromLocation( modelLocation );
         TileType tileType = stoneAndType.getRight();
