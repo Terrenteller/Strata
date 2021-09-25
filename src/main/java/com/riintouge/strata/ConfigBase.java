@@ -1,6 +1,5 @@
 package com.riintouge.strata;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -12,6 +11,7 @@ public abstract class ConfigBase
     private Configuration config = null;
     private String categoryName = null;
     private List< String > propertyNames = null;
+    private boolean useDeprecatedTranslator = false;
 
     protected void pushCategory( Configuration config , String categoryName )
     {
@@ -31,14 +31,18 @@ public abstract class ConfigBase
 
     protected String getLocalizedValue( String key )
     {
+        if( useDeprecatedTranslator )
+            return net.minecraft.util.text.translation.I18n.translateToLocal( key );
+
         try
         {
-            return I18n.format( key + "Desc" );
+            return net.minecraft.client.resources.I18n.format( key );
         }
         catch( NoClassDefFoundError e )
         {
             // net.minecraft.client.resources.I18n doesn't exist server-side
-            return net.minecraft.util.text.translation.I18n.translateToLocal( key + "Desc" );
+            useDeprecatedTranslator = true;
+            return getLocalizedValue( key );
         }
     }
 
