@@ -55,6 +55,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     public ImmutableOre( TileData tileData ) throws IllegalArgumentException
     {
+        Util.argumentNullCheck( tileData , "tileData" );
+
         // IOreInfo
         this.oreName = Util.argumentNullCheck( tileData.oreName , "oreName" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
@@ -111,6 +113,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     @Nonnull
     @Override
+    @SideOnly( Side.CLIENT )
     public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;

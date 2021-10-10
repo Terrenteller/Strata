@@ -60,7 +60,7 @@ public class TileDataLoader
                 else if( line.charAt( 0 ) != '#' )
                 {
                     String[] kv = Util.splitKV( line );
-                    meaningfulLineProcessed = data.processKeyValue( kv[ 0 ] , kv[ 1 ] );
+                    meaningfulLineProcessed |= data.processKeyValue( kv[ 0 ] , kv[ 1 ] );
                 }
             }
             buffer.close();

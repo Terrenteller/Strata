@@ -222,7 +222,8 @@ public class OreBlock extends BlockFalling
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
         if( StrataConfig.usePrecomputedOreParticles && OreParticleTextureManager.INSTANCE.isInitialized() )
-            return addPrecomputedDestroyEffects( world , pos , manager );
+            if( addPrecomputedDestroyEffects( world , pos , manager ) )
+                return true;
 
         try
         {
@@ -236,6 +237,13 @@ public class OreBlock extends BlockFalling
             String oreName = oreInfo.oreName();
             IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
             ProtoBlockTextureMap oreTextureMap = oreTileSet != null ? oreTileSet.getInfo().modelTextureMap() : null;
+
+            if( hostTextureMap == null && host != null )
+            {
+                Block hostBlock = Block.getBlockFromName( host.resourceLocation.toString() );
+                if( hostBlock != null )
+                    hostBlock.addDestroyEffects( world , pos , manager );
+            }
 
             // This loop sampled from ParticleManager.addBlockDestroyEffects()
             for( int x = 0 ; x < 4 ; ++x )
@@ -317,12 +325,16 @@ public class OreBlock extends BlockFalling
             if( host == null )
                 return false;
 
+            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
+            if( hostInfo == null || hostInfo.modelTextureMap() == null )
+                return false;
+
             String hostResourceDomain = host.resourceLocation.getResourceDomain();
             String hostResourceLocation = host.resourceLocation.getResourcePath();
 
             for( EnumFacing facing : EnumFacing.values() )
             {
-                baseTextures[ facing.ordinal() ] = OreParticleTextureManager.INSTANCE.findTexture(
+                baseTextures[ facing.ordinal() ] = OreParticleTextureManager.INSTANCE.findTextureOrMissing(
                     oreName,
                     hostResourceDomain,
                     hostResourceLocation,
@@ -377,7 +389,7 @@ public class OreBlock extends BlockFalling
     {
         BlockPos blockPos = target.getBlockPos();
         IBlockState actualState = worldObj.getBlockState( blockPos ).getActualState( worldObj , blockPos );
-        TextureAtlasSprite texture;
+        TextureAtlasSprite texture = null;
 
         if( StrataConfig.usePrecomputedOreParticles && OreParticleTextureManager.INSTANCE.isInitialized() )
         {
@@ -385,32 +397,40 @@ public class OreBlock extends BlockFalling
             if( host == null )
                 return false;
 
-            texture = OreParticleTextureManager.INSTANCE.findTexture(
-                oreInfo.oreName(),
-                host.resourceLocation.getResourceDomain(),
-                host.resourceLocation.getResourcePath(),
-                host.meta,
-                target.sideHit );
-        }
-        else if( RANDOM.nextBoolean() )
-        {
-            MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            ProtoBlockTextureMap hostTextureMap = hostInfo != null ? hostInfo.modelTextureMap() : null;
-
-            texture = hostTextureMap != null
-                ? hostTextureMap.getTexture( target.sideHit )
-                : BakedModelCache.INSTANCE.getBakedModel( host ).getParticleTexture();
+            if( hostInfo != null && hostInfo.modelTextureMap() != null )
+            {
+                texture = OreParticleTextureManager.INSTANCE.findTextureOrNull(
+                    oreInfo.oreName(),
+                    host.resourceLocation.getResourceDomain(),
+                    host.resourceLocation.getResourcePath(),
+                    host.meta,
+                    target.sideHit );
+            }
         }
-        else
-        {
-            String oreName = oreInfo.oreName();
-            IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
-            ProtoBlockTextureMap oreTextureMap = oreTileSet != null ? oreTileSet.getInfo().modelTextureMap() : null;
 
-            texture = oreTextureMap != null
-                ? oreTextureMap.getTexture( target.sideHit )
-                : BakedModelCache.INSTANCE.getBakedOreModel( oreName ).getParticleTexture();
+        if( texture == null )
+        {
+            if( RANDOM.nextBoolean() )
+            {
+                MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
+                IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
+                ProtoBlockTextureMap hostTextureMap = hostInfo != null ? hostInfo.modelTextureMap() : null;
+
+                texture = hostTextureMap != null
+                    ? hostTextureMap.getTexture( target.sideHit )
+                    : BakedModelCache.INSTANCE.getBakedModel( host ).getParticleTexture();
+            }
+            else
+            {
+                String oreName = oreInfo.oreName();
+                IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
+                ProtoBlockTextureMap oreTextureMap = oreTileSet != null ? oreTileSet.getInfo().modelTextureMap() : null;
+
+                texture = oreTextureMap != null
+                    ? oreTextureMap.getTexture( target.sideHit )
+                    : BakedModelCache.INSTANCE.getBakedOreModel( oreName ).getParticleTexture();
+            }
         }
 
         if( texture != null )

@@ -19,6 +19,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,6 +64,8 @@ public final class ImmutableTile implements IGeoTileInfo
 
     public ImmutableTile( TileData tileData ) throws IllegalArgumentException
     {
+        Util.argumentNullCheck( tileData , "tileData" );
+
         // IGeoTileInfo
         this.tileSetName = Util.argumentNullCheck( tileData.tileSetName , "tileSetName" );
         this.tileType = Util.argumentNullCheck( tileData.tileType , "type" );
@@ -238,8 +242,8 @@ public final class ImmutableTile implements IGeoTileInfo
         return sustainsPlantsSustainedBy;
     }
 
-    @Nonnull
     @Override
+    @SideOnly( Side.CLIENT )
     public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
@@ -275,6 +279,7 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
+    @SideOnly( Side.CLIENT )
     public int particleFallingColor()
     {
         return particleFallingColor != null

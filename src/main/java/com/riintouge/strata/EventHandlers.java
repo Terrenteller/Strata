@@ -59,7 +59,7 @@ public class EventHandlers
         // and Block.getHarvestLevel() are skipped. This complicates requirement checks and speed boosts.
         // Instead of having OreBlock gamble on an answer, it always reports true for tool effectiveness
         // and relies on this event handler to apply a penalty where applicable.
-        if( !oreBlock.isToolActuallyEffective( tool , hostInfo.material() , oreInfo.material() ) )
+        if( hostInfo != null && !oreBlock.isToolActuallyEffective( tool , hostInfo.material() , oreInfo.material() ) )
         {
             Block hostBlock = Block.getBlockFromName( hostInfo.registryName().toString() );
             float hostDestroySpeed = tool.getDestroySpeed( hostBlock.getStateFromMeta( hostInfo.meta() ) );

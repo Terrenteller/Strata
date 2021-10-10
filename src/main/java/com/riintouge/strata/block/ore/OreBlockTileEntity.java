@@ -3,7 +3,6 @@ package com.riintouge.strata.block.ore;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
-import com.riintouge.strata.network.ConnectionHelper;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -31,7 +30,7 @@ public class OreBlockTileEntity extends TileEntity
 
     public OreBlockTileEntity()
     {
-        // Nothing to do
+        // Nothing to do, but required
     }
 
     public OreBlockTileEntity( IBlockState state )
@@ -238,13 +237,9 @@ public class OreBlockTileEntity extends TileEntity
             MetaResourceLocation host = new MetaResourceLocation( propertyString );
             if( !host.equals( hostRock ) )
             {
-                if( HostRegistry.INSTANCE.find( host ) == null )
-                {
-                    // The client must have known about the block to get this far, but not that it was a host.
-                    // Visual discrepancies aside, the ore will not know the real properties bestowed upon it
-                    // which may lead to client/server de-synchronization.
-                    ConnectionHelper.disconnectBecause( "strata.multiplayer.disconnect.unknownhostrock" , host.toString() );
-                }
+                // The client may not know about the host as a host, but to get this far the client must know
+                // about the block. The game would have hung in a nasty way otherwise (at least with 1.12.2).
+                // Strata is visually functional in this state, but breaking blocks will likely cause de-syncs.
 
                 hostRock = host;
                 hasUpdates = true;

@@ -7,6 +7,8 @@ import com.riintouge.strata.block.geo.ICommonBlockProperties;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,6 +25,7 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     String itemOreDictionaryName();
 
     @Nonnull
+    @SideOnly( Side.CLIENT )
     ProtoBlockTextureMap modelTextureMap();
 
     @Nonnull

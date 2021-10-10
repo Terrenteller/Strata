@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class CommonProxy
 {
     public void preInit( FMLPreInitializationEvent event )
-    { 
+    {
         Strata.LOGGER.trace( "CommonProxy::preInit()" );
 
         StrataConfig.INSTANCE.getConfig(); // Ignore return for initialization

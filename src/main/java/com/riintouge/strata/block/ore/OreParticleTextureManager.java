@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +41,15 @@ public final class OreParticleTextureManager
         return isInitialized;
     }
 
+    @Nullable
+    public TextureAtlasSprite findTextureOrNull( String orePath , String hostDomain , String hostPath , int hostMeta , EnumFacing facing )
+    {
+        String resourcePath = getGeneratedResourceLocation( orePath , hostDomain , hostPath , hostMeta , facing.getName2() ).getResourcePath();
+        return generatedTextureMap.getOrDefault( resourcePath , null );
+    }
+
     @Nonnull
-    public TextureAtlasSprite findTexture( String orePath , String hostDomain , String hostPath , int hostMeta , EnumFacing facing )
+    public TextureAtlasSprite findTextureOrMissing( String orePath , String hostDomain , String hostPath , int hostMeta , EnumFacing facing )
     {
         String resourcePath = getGeneratedResourceLocation( orePath , hostDomain , hostPath , hostMeta , facing.getName2() ).getResourcePath();
         TextureAtlasSprite texture = generatedTextureMap.getOrDefault( resourcePath , null );
@@ -83,6 +91,9 @@ public final class OreParticleTextureManager
 
                     ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
                     ProtoBlockTextureMap hostTextureMap = hostInfo.modelTextureMap();
+
+                    if( oreTextureMap == null || hostTextureMap == null )
+                        continue;
 
                     for( ProtoBlockTextureMap.Layer layer : ProtoBlockTextureMap.Layer.values() )
                     {

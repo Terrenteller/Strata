@@ -1,6 +1,5 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.image.LayeredTextureLayer;

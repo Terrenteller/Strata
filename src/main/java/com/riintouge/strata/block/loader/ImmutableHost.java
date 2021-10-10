@@ -1,9 +1,9 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
@@ -34,6 +34,8 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 
     public ImmutableHost( TileData tileData ) throws IllegalArgumentException
     {
+        Util.argumentNullCheck( tileData , "tileData" );
+
         // IHostInfo
         this.hostMetaResource = Util.argumentNullCheck( tileData.hostMetaResource , "hostMetaResource" );
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
@@ -63,14 +65,15 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
         return hostMetaResource.meta;
     }
 
-    @Nonnull
     @Override
+    @SideOnly( Side.CLIENT )
     public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
     }
 
     @Override
+    @SideOnly( Side.CLIENT )
     public int particleFallingColor()
     {
         return particleFallingColor != null
