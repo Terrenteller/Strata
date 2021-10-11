@@ -18,6 +18,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,6 +54,13 @@ public class GeoTileSetRegistry
     {
         GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
         return tileSet != null ? tileSet.find( tileType ) : null;
+    }
+
+    @Nullable
+    public List< IGeoTileInfo > findTileInfos( String tileSetName )
+    {
+        GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
+        return tileSet != null ? tileSet.tileInfos() : null;
     }
 
     @Nullable

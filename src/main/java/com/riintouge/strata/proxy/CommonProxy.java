@@ -9,6 +9,8 @@ import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
+import com.riintouge.strata.network.NetworkEventHandlers;
+import com.riintouge.strata.network.StrataNetworkManager;
 import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.resource.DocsDir;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,9 +28,12 @@ public class CommonProxy
         ConfigDir.INSTANCE.extractMissingResourceFiles();
         DocsDir.INSTANCE.extractMissingResourceFiles();
 
+        StrataNetworkManager.init();
+
         MinecraftForge.EVENT_BUS.register( StrataConfig.class );
         MinecraftForge.EVENT_BUS.register( Blocks.class );
         MinecraftForge.EVENT_BUS.register( EventHandlers.class );
+        MinecraftForge.EVENT_BUS.register( NetworkEventHandlers.class );
         MinecraftForge.EVENT_BUS.register( FurnaceRecipeReplicator.class );
         MinecraftForge.EVENT_BUS.register( HostRegistry.class );
         MinecraftForge.EVENT_BUS.register( GeoTileSetRegistry.class );

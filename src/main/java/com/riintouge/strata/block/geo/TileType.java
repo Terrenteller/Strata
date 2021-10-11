@@ -153,4 +153,18 @@ public enum TileType
         ItemStackMap.put( this , vanillaItem );
         return vanillaItem;
     }
+
+    // Statics
+
+    public static TileType tryValueOf( String value )
+    {
+        try
+        {
+            return TileType.valueOf( value );
+        }
+        catch( IllegalArgumentException e )
+        {
+            return null;
+        }
+    }
 }

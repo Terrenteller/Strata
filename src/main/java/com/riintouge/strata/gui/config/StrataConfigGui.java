@@ -23,6 +23,7 @@ public class StrataConfigGui extends GuiConfig
     {
         List< IConfigElement > list = new ArrayList<>();
         list.add( new DummyConfigElement.DummyCategoryElement( "strataClientConfig" , "strata.config.clientCategory" , ClientConfigCategoryEntry.class ) );
+        list.add( new DummyConfigElement.DummyCategoryElement( "strataServerConfig" , "strata.config.serverCategory" , ServerConfigCategoryEntry.class ) );
 
         return list;
     }

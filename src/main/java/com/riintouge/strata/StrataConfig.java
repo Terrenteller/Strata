@@ -13,10 +13,12 @@ public final class StrataConfig extends ConfigBase
 {
     public static final StrataConfig INSTANCE = new StrataConfig();
 
-    // Client Settings
     public static final String CATEGORY_CLIENT = "client";
     public static Boolean useModernWallStyle;
     public static Boolean usePrecomputedOreParticles;
+
+    public static final String CATEGORY_SERVER = "server";
+    public static Boolean enforceClientSynchronization;
 
     private final Configuration config;
 
@@ -40,6 +42,10 @@ public final class StrataConfig extends ConfigBase
         pushCategory( config , CATEGORY_CLIENT );
         useModernWallStyle = getBoolean( "useModernWallStyle" , true );
         usePrecomputedOreParticles = getBoolean( "usePrecomputedOreParticles" , true );
+        popCategory();
+
+        pushCategory( config , CATEGORY_SERVER );
+        enforceClientSynchronization = getBoolean( "enforceClientSynchronization" , true );
         popCategory();
 
         // TODO: remove any property we don't recognize?

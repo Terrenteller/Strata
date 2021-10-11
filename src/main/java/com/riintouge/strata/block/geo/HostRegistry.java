@@ -14,9 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class HostRegistry
 {
@@ -56,6 +54,19 @@ public final class HostRegistry
     public Map< ResourceLocation , IHostInfo[] > allHosts()
     {
         return Collections.unmodifiableMap( hostInfos );
+    }
+
+    @Nonnull
+    public Set< MetaResourceLocation > allHostResources()
+    {
+        Set< MetaResourceLocation > hostResources = new HashSet<>();
+
+        for( Map.Entry< ResourceLocation , IHostInfo[] > entry : hostInfos.entrySet() )
+            for( int index = 0 ; index < entry.getValue().length ; index++ )
+                if( entry.getValue()[ index ] != null )
+                    hostResources.add( new MetaResourceLocation( entry.getKey() , index ) );
+
+        return hostResources;
     }
 
     // Statics

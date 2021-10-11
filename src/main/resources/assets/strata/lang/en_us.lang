@@ -7,7 +7,7 @@
 strata.config.main=Strata Configuration
 
 strata.config.clientCategory=Client Settings
-strata.config.clientCategory.tooltip=Client-side settings which don't affect gameplay
+strata.config.clientCategory.tooltip=(which don't affect gameplay... much)
 
 strata.config.useModernWallStyle=Emulate 1.16+ Wall Style
 strata.config.useModernWallStyleDesc=Comes with minor visual discrepancies. Vanilla blocks are not designed for this. Changes will take effect as chunks are re-built.
@@ -18,6 +18,12 @@ strata.config.usePrecomputedOreParticlesDesc=Improves ore particles at the cost 
 #strata.config.requeryStatemapper=Re-query Statemapper
 #strata.config.requeryStatemapperDesc=Re-query a block's StateMapperBase on a BlockModelShapes cache miss. This also allows ore blocks to be pushed (but not pulled) by pistons.
 
+strata.config.serverCategory=Server Settings
+strata.config.serverCategory.tooltip=(which affect gameplay and connectivity)
+
+strata.config.enforceClientSynchronization=Enforce Client Synchronization
+strata.config.enforceClientSynchronizationDesc=Kick players whose block properties would lead to desynchronization on their client.\n§cIF THE CLIENT IS MISSING BLOCKS OR ITEMS, THE CLIENT WILL HANG IN FORGE CODE BEFORE STRATA HAS ANY SAY.
+
 ### Creative Tabs
 
 itemGroup.strataBlocksTab=Strata Blocks
@@ -26,3 +32,8 @@ itemGroup.strataMiscObjectsTab=Strata Misc. Objects
 itemGroup.strataBlockFragmentsTab=Strata Block Fragments
 itemGroup.strataOreBlocksTab=Strata Ore Blocks
 itemGroup.strataOreItemsTab=Strata Ore Items
+
+### Miscellaneous
+
+strata.multiplayer.disconnect.missinghosts=Client is missing host '%s' and %d other(s)!
+strata.multiplayer.disconnect.unsynchronizedproperties=Client block properties are out-of-sync with '%s' and %d other(s)!

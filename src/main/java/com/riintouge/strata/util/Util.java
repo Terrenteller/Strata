@@ -3,9 +3,12 @@ package com.riintouge.strata.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
+import java.util.zip.CRC32;
 
 public class Util
 {
+    private static CRC32 crc32 = new CRC32();
+
     public static boolean isPowerOfTwo( int value )
     {
         return value > 0 && ( value & ( value - 1 ) ) == 0;
@@ -38,5 +41,12 @@ public class Util
             return value;
 
         throw new IllegalArgumentException( name );
+    }
+
+    public static synchronized long getCRC32( byte[] value )
+    {
+        crc32.reset();
+        crc32.update( value );
+        return crc32.getValue();
     }
 }

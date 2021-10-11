@@ -7,9 +7,9 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 
 import javax.annotation.Nonnull;
 
-public class ClientConfigCategoryEntry extends BaseConfigCategoryEntry
+public class ServerConfigCategoryEntry extends BaseConfigCategoryEntry
 {
-    public ClientConfigCategoryEntry( GuiConfig owningScreen , GuiConfigEntries owningEntryList , IConfigElement prop )
+    public ServerConfigCategoryEntry( GuiConfig owningScreen , GuiConfigEntries owningEntryList , IConfigElement prop )
     {
         super( owningScreen , owningEntryList , prop );
     }
@@ -20,6 +20,6 @@ public class ClientConfigCategoryEntry extends BaseConfigCategoryEntry
     @Override
     public String category()
     {
-        return StrataConfig.CATEGORY_CLIENT;
+        return StrataConfig.CATEGORY_SERVER;
     }
 }

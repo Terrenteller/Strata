@@ -46,6 +46,17 @@ public class GeoTileSet implements IForgeRegistrable
         tileInfos[ tileInfo.type().ordinal() ] = tileInfo;
     }
 
+    public List< IGeoTileInfo > tileInfos()
+    {
+        List< IGeoTileInfo > types = new ArrayList<>();
+
+        for( IGeoTileInfo tileInfo : tileInfos )
+            if( tileInfo != null )
+                types.add( tileInfo );
+
+        return types;
+    }
+
     public IGeoTileInfo find( TileType tileType )
     {
         return tileInfos[ tileType.ordinal() ];
