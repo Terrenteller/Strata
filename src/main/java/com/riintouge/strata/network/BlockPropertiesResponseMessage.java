@@ -11,7 +11,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -192,18 +191,29 @@ public final class BlockPropertiesResponseMessage implements IMessage
 
     // Nested classes
 
-    public static class Handler implements IMessageHandler< BlockPropertiesResponseMessage , IMessage >
+    public static final class Handler extends ObservableMessageHandler< BlockPropertiesResponseMessage , IMessage >
     {
+        public static final Handler INSTANCE = new Handler();
+
+        private Handler()
+        {
+            // Nothing to do
+        }
+
+        // ObservableMessageHandler overrides
+
         @Override
         public IMessage onMessage( BlockPropertiesResponseMessage message , MessageContext ctx )
         {
+            notifyObservers( message , ctx , message.mismatches == 0 );
+
             if( message.mismatches > 0 )
             {
                 // Why does TextComponentTranslation not localize here?
                 ctx.getServerHandler().player.connection.disconnect(
                     new TextComponentString(
                         String.format(
-                            net.minecraft.util.text.translation.I18n.translateToLocal( "strata.multiplayer.disconnect.unsynchronizedproperties" ),
+                            net.minecraft.util.text.translation.I18n.translateToLocal( "strata.multiplayer.disconnect.unsynchronizedProperties" ),
                             message.firstMismatch,
                             message.mismatches - 1 ) ) );
             }

@@ -35,5 +35,7 @@ itemGroup.strataOreItemsTab=Strata Ore Items
 
 ### Miscellaneous
 
-strata.multiplayer.disconnect.missinghosts=Client is missing host '%s' and %d other(s)!
-strata.multiplayer.disconnect.unsynchronizedproperties=Client block properties are out-of-sync with '%s' and %d other(s)!
+strata.multiplayer.disconnect.missingHosts=[Strata] Client is missing host '%s' and %d other(s)
+strata.multiplayer.disconnect.unsynchronizedProperties=[Strata] Client block properties are out-of-sync with '%s' and %d other(s)
+strata.multiplayer.disconnect.unexpectedHandshakeError=[Strata] The server encountered an error during client negotiation
+strata.multiplayer.disconnect.noResponse=[Strata] Client did not reply to the server's handshake

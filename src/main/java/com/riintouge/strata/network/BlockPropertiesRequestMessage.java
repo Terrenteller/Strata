@@ -28,7 +28,7 @@ public final class BlockPropertiesRequestMessage implements IMessage
 
     // Nested classes
 
-    public static class Handler implements IMessageHandler< BlockPropertiesRequestMessage , IMessage >
+    public static final class Handler implements IMessageHandler< BlockPropertiesRequestMessage , IMessage >
     {
         @Override
         public IMessage onMessage( BlockPropertiesRequestMessage message , MessageContext ctx )

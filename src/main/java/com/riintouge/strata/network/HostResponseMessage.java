@@ -6,7 +6,6 @@ import com.riintouge.strata.misc.ByteBufStream;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.HashSet;
@@ -47,13 +46,23 @@ public final class HostResponseMessage implements IMessage
 
     // Nested classes
 
-    public static class Handler implements IMessageHandler< HostResponseMessage , IMessage >
+    public static final class Handler extends ObservableMessageHandler< HostResponseMessage , IMessage >
     {
+        public static final Handler INSTANCE = new Handler();
+
+        private Handler()
+        {
+            // Nothing to do
+        }
+
+        // ObservableMessageHandler overrides
+
         @Override
         public IMessage onMessage( HostResponseMessage message , MessageContext ctx )
         {
             Set< MetaResourceLocation > serverHosts = HostRegistry.INSTANCE.allHostResources();
             serverHosts.removeAll( message.hosts );
+            notifyObservers( message , ctx , serverHosts.isEmpty() );
 
             if( !serverHosts.isEmpty() )
             {
@@ -61,14 +70,12 @@ public final class HostResponseMessage implements IMessage
                 ctx.getServerHandler().player.connection.disconnect(
                     new TextComponentString(
                         String.format(
-                            net.minecraft.util.text.translation.I18n.translateToLocal( "strata.multiplayer.disconnect.missinghosts" ),
+                            net.minecraft.util.text.translation.I18n.translateToLocal( "strata.multiplayer.disconnect.missingHosts" ),
                             serverHosts.iterator().next(),
                             serverHosts.size() - 1 ) ) );
-
-                return null;
             }
 
-            return new BlockPropertiesRequestMessage();
+            return null;
         }
     }
 }

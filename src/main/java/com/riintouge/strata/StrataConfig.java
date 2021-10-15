@@ -25,7 +25,10 @@ public final class StrataConfig extends ConfigBase
     public StrataConfig()
     {
         config = new Configuration( new File( Loader.instance().getConfigDir() , Strata.modid + ".cfg" ) );
+    }
 
+    public void init()
+    {
         sync( true );
     }
 

@@ -28,7 +28,7 @@ public final class HostRequestMessage implements IMessage
 
     // Nested classes
 
-    public static class Handler implements IMessageHandler< HostRequestMessage , IMessage >
+    public static final class Handler implements IMessageHandler< HostRequestMessage , IMessage >
     {
         @Override
         public IMessage onMessage( HostRequestMessage message , MessageContext ctx )
