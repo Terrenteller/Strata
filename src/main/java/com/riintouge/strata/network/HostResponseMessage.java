@@ -1,5 +1,7 @@
 package com.riintouge.strata.network;
 
+import com.riintouge.strata.Strata;
+import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.misc.ByteBufStream;
@@ -60,21 +62,32 @@ public final class HostResponseMessage implements IMessage
         @Override
         public IMessage onMessage( HostResponseMessage message , MessageContext ctx )
         {
+            Strata.LOGGER.trace( "HostResponseMessage::Handler::onMessage()" );
+
             Set< MetaResourceLocation > serverHosts = HostRegistry.INSTANCE.allHostResources();
             serverHosts.removeAll( message.hosts );
-            notifyObservers( message , ctx , serverHosts.isEmpty() );
-
-            if( !serverHosts.isEmpty() )
+            if( serverHosts.isEmpty() )
             {
-                // Why does TextComponentTranslation not localize here?
-                ctx.getServerHandler().player.connection.disconnect(
-                    new TextComponentString(
-                        String.format(
-                            net.minecraft.util.text.translation.I18n.translateToLocal( "strata.multiplayer.disconnect.missingHosts" ),
-                            serverHosts.iterator().next(),
-                            serverHosts.size() - 1 ) ) );
+                notifyObservers( message , ctx , true );
+                return null;
             }
 
+            // Why does TextComponentTranslation not localize here?
+            TextComponentString text = new TextComponentString(
+                String.format(
+                    net.minecraft.util.text.translation.I18n.translateToLocal(
+                        StrataConfig.enforceClientSynchronization
+                            ? "strata.multiplayer.disconnect.missingHosts"
+                            : "strata.multiplayer.warning.missingHosts" ),
+                    serverHosts.iterator().next(),
+                    serverHosts.size() - 1 ) );
+
+            if( StrataConfig.enforceClientSynchronization )
+                ctx.getServerHandler().player.connection.disconnect( text );
+            else
+                ctx.getServerHandler().player.sendMessage( text );
+
+            notifyObservers( message , ctx , !StrataConfig.enforceClientSynchronization );
             return null;
         }
     }

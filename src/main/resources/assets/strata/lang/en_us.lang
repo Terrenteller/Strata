@@ -39,3 +39,8 @@ strata.multiplayer.disconnect.missingHosts=[Strata] Client is missing host '%s' 
 strata.multiplayer.disconnect.unsynchronizedProperties=[Strata] Client block properties are out-of-sync with '%s' and %d other(s)
 strata.multiplayer.disconnect.unexpectedHandshakeError=[Strata] The server encountered an error during client negotiation
 strata.multiplayer.disconnect.noResponse=[Strata] Client did not reply to the server's handshake
+
+strata.multiplayer.warning.missingHosts=[Strata] §cClient is missing host '%s' and %d other(s)!
+strata.multiplayer.warning.unsynchronizedProperties=[Strata] §cClient block properties are out-of-sync with '%s' and %d other(s)!
+strata.multiplayer.warning.unexpectedHandshakeError=[Strata] §eThe server encountered an error during client negotiation. Client may be out-of-sync.
+strata.multiplayer.warning.noResponse=[Strata] §eClient did not reply to the server's handshake. Client may be out-of-sync.

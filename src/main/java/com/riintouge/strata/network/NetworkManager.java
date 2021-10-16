@@ -18,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.CancellationException;
 
 public final class NetworkManager
 {
@@ -41,7 +42,14 @@ public final class NetworkManager
 
         if( side == Side.SERVER )
         {
-            handshakeExecutor = new HandshakeExecutor( NetworkWrapper , 3 , 3000 , 0 );
+            // FIXME: We have to add a delay before the handshake to give the client time to connect
+            // and reach a stable state. Kicking them too swiftly intermittently causes the client to
+            // not receive (or display?) the message we supply because netty may throw an exception on the client.
+            // [Netty Epoll Client IO #1/ERROR]: NetworkDispatcher exception
+            // io.netty.channel.unix.Errors$NativeIoException: syscall:write(..) failed: Broken pipe
+            //     at io.netty.channel.unix.FileDescriptor.writeAddress(..)(Unknown Source) ~[FileDescriptor.class:4.1.9.Final]
+            // Netty 4.1.68.Final behaves similarly.
+            handshakeExecutor = new HandshakeExecutor( NetworkWrapper , 5000 , 3 , 3000 , 0 );
             handshakeExecutor.register( HostRequestMessage.class , HostResponseMessage.Handler.INSTANCE );
             handshakeExecutor.register( BlockPropertiesRequestMessage.class , BlockPropertiesResponseMessage.Handler.INSTANCE );
         }
@@ -69,49 +77,57 @@ public final class NetworkManager
     {
         //Strata.LOGGER.trace( "NetworkManager.playerLoggedInEvent()" );
 
-        if( StrataConfig.enforceClientSynchronization && event.player instanceof EntityPlayerMP )
+        if( !( event.player instanceof EntityPlayerMP ) )
+            return;
+
+        EntityPlayerMP serverPlayer = (EntityPlayerMP)event.player;
+        ListenableFuture< HandshakeExecutor.HandshakeResult > handshake = INSTANCE.handshakeExecutor.initiate( serverPlayer );
+        Futures.addCallback( handshake , new FutureCallback< HandshakeExecutor.HandshakeResult >()
         {
-            EntityPlayerMP serverPlayer = (EntityPlayerMP)event.player;
-            ListenableFuture< HandshakeExecutor.HandshakeResult > handshake = INSTANCE.handshakeExecutor.initiate( serverPlayer );
-            Futures.addCallback( handshake , new FutureCallback< HandshakeExecutor.HandshakeResult >()
+            @Override
+            public void onSuccess( @Nullable HandshakeExecutor.HandshakeResult result )
             {
-                @Override
-                public void onSuccess( @Nullable HandshakeExecutor.HandshakeResult result )
+                if( result == null )
+                    result = HandshakeExecutor.HandshakeResult.InternalError;
+
+                String disconnectMessage = null;
+                switch( result )
                 {
-                    if( result == null )
-                        result = HandshakeExecutor.HandshakeResult.InternalError;
+                    case Success:
+                    case Failure: // The message handlers will have already taken action
+                    case Disconnected: // The client kicked themselves
+                        return;
+                    case NoResponse:
+                        disconnectMessage = "strata.multiplayer.disconnect.noResponse";
+                        break;
+                    case Interrupted:
+                    case Terminated:
+                    case InternalError:
+                        disconnectMessage = "strata.multiplayer.disconnect.unexpectedHandshakeError";
+                        break;
+                }
 
-                    String disconnectMessage = null;
-                    switch( result )
-                    {
-                        case Success:
-                        case Failure: // The message handlers will have already kicked with an accurate message
-                        case Disconnected: // The client kicked themselves
-                            return;
-                        case Interrupted:
-                        case Terminated:
-                        case InternalError:
-                            disconnectMessage = "strata.multiplayer.disconnect.unexpectedHandshakeError";
-                            break;
-                        case NoResponse:
-                            disconnectMessage = "strata.multiplayer.disconnect.noResponse";
-                            break;
-                    }
-
-                    // Why does TextComponentTranslation not localize here?
+                // Why does TextComponentTranslation not localize here?
+                if( !serverPlayer.hasDisconnected() )
                     serverPlayer.connection.disconnect(
                         new TextComponentString(
                             net.minecraft.util.text.translation.I18n.translateToLocal( disconnectMessage ) ) );
-                }
+            }
 
-                @Override
-                public void onFailure( @Nonnull Throwable t )
+            @Override
+            public void onFailure( @Nonnull Throwable t )
+            {
+                if( t instanceof CancellationException )
+                {
+                    onSuccess( HandshakeExecutor.HandshakeResult.Interrupted );
+                }
+                else
                 {
                     t.printStackTrace();
                     onSuccess( HandshakeExecutor.HandshakeResult.InternalError );
                 }
-            } );
-        }
+            }
+        } );
     }
 
     @SideOnly( Side.CLIENT ) // Fired when either side initiates a disconnection

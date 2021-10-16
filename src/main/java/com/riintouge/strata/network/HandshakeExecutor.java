@@ -22,6 +22,7 @@ public final class HandshakeExecutor implements Observer
     private final Map< UUID , Pair< ListenableFuture< HandshakeResult > , MessageContainer > > handshakePairs = new HashMap<>();
 
     private final SimpleNetworkWrapper networkWrapper;
+    private final long initialDelayMillis;
     private final long maxAttempts;
     private final long baseTimeoutMillis;
     private final long additionalMillisPerAttempt;
@@ -39,11 +40,13 @@ public final class HandshakeExecutor implements Observer
 
     public HandshakeExecutor(
         SimpleNetworkWrapper networkWrapper,
+        long initialDelayMillis,
         long maxAttempts,
         long baseTimeoutMillis,
         long additionalMillisPerAttempt )
     {
         this.networkWrapper = networkWrapper;
+        this.initialDelayMillis = Math.max( 0 , initialDelayMillis );
         this.maxAttempts = Math.max( 0 , maxAttempts );
         this.baseTimeoutMillis = Math.max( 0 , baseTimeoutMillis );
         this.additionalMillisPerAttempt = Math.max( 0 , additionalMillisPerAttempt );
@@ -92,6 +95,8 @@ public final class HandshakeExecutor implements Observer
 
             synchronized( messageContainer )
             {
+                messageContainer.wait( initialDelayMillis );
+
                 for( Pair< Class< ? extends IMessage > , ObservableMessageHandler > reqReplyPair : localReqReplyPairs )
                 {
                     int attempt = 0;
