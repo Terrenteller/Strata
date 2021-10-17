@@ -1,0 +1,9 @@
+* text eol=lf
+*.gradle text eol=crlf
+*.java text
+*.json text
+*.txt text
+*.xml text
+
+*.png binary
+*.xcf binary
