@@ -25,13 +25,18 @@ Strata will unpack the following on start (if missing):
 
 ## "Why" is Strata?
 
-Once upon a time, there was a mod called [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) that fell by the wayside. Disappointed with the thought of what might never be, I took it upon myself to recreate the "Geologica" part of the PFAA triad, leaving Chemica and Fabrica to other tech mods like Mekanism and Immersive Engineering.
+Once upon a time, there was a mod called [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) that fell by the wayside. Disappointed with the thought of what might never be, I took it upon myself to re-imagine the "Geologica" part of the PFAA triad, leaving Chemica and Fabrica to other tech mods like Mekanism and Immersive Engineering.
 
 ## Legal stuff
 
-[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
-[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
-[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
+Strata is licenced under [LGPL 3.0](LICENCE.md) unless where otherwise stated.
 
-This work is licensed under a
-[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
+Original and remixed [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) assets were, and are still, licenced under [The Artistic License 2.0](artistic-v2.0.md).
+
+- Changes (stated as required) include, but may not be limited to:
+    - Resizing to 16x16
+    - Tiling/edge resynthesis
+    - Transparency adjustments
+    - Recolouring of some or all of the image
+
+A few images (ore texture cutouts, grayscale textures for procedural asset creation, etc.) constitute derivative works of Minecraft, owned by Mojang, a subsidiary of Microsoft. These derivatives are used without explicit permission or ill intent, and remain property of Mojang. Redistribution of this content is understood to be acceptable per Mojang's 'EXTENDED FUNCTIONALITY AND “MODS”' subsection of their [Commercial Usage Guidelines](https://account.mojang.com/terms?ref=ft#commercial). NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.
