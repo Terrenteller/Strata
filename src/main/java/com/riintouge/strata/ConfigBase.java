@@ -1,10 +1,13 @@
 package com.riintouge.strata;
 
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class ConfigBase
 {
@@ -20,8 +23,21 @@ public abstract class ConfigBase
         propertyNames = new ArrayList<>();
     }
 
-    protected void popCategory()
+    protected void popCategory( boolean removeUnusedProperties )
     {
+        if( removeUnusedProperties )
+        {
+            Set< String > unusedPropertyNames = new HashSet<>( config.getCategory( categoryName ).getValues().keySet() );
+            unusedPropertyNames.removeAll( propertyNames );
+
+            if( unusedPropertyNames.size() > 0 )
+            {
+                ConfigCategory category = config.getCategory( categoryName );
+                for( String unusedProperty : unusedPropertyNames )
+                    category.remove( unusedProperty );
+            }
+        }
+
         config.setCategoryPropertyOrder( categoryName , propertyNames );
 
         config = null;

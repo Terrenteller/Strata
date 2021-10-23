@@ -45,13 +45,11 @@ public final class StrataConfig extends ConfigBase
         pushCategory( config , CATEGORY_CLIENT );
         useModernWallStyle = getBoolean( "useModernWallStyle" , true );
         usePrecomputedOreParticles = getBoolean( "usePrecomputedOreParticles" , true );
-        popCategory();
+        popCategory( true );
 
         pushCategory( config , CATEGORY_SERVER );
         enforceClientSynchronization = getBoolean( "enforceClientSynchronization" , true );
-        popCategory();
-
-        // TODO: remove any property we don't recognize?
+        popCategory( true );
 
         if( config.hasChanged() )
             config.save();
