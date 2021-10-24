@@ -268,7 +268,7 @@ public class TileData
     {
         List< LayeredTextureLayer > layers = new Vector<>();
 
-        String[] components = value.split( " " );
+        String[] components = value.toLowerCase().split( " " );
         if( ( ( components.length - 1 ) % 3 ) != 0 )
             return layers;
 

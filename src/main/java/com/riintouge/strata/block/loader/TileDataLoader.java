@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.loader;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.geo.GeoTileSet;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.geo.HostRegistry;
@@ -83,6 +84,12 @@ public class TileDataLoader
             String tileSetName = tileData.tileSetName.toLowerCase();
             Map< TileType , TileData > tileDataMap = tileSetTileDataMap.computeIfAbsent( tileSetName , x -> new HashMap<>() );
 
+            if( tileDataMap.containsKey( tileData.tileType ) )
+            {
+                Strata.LOGGER.warn( String.format( "Tile '%s' (%s) already loaded. Skipping!" , tileData.tileSetName , tileData.tileType.toString().toLowerCase() ) );
+                return;
+            }
+
             for( TileType parentType = tileData.tileType.parentType ; parentType != null ; parentType = parentType.parentType )
             {
                 TileData parentData = tileDataMap.getOrDefault( parentType , null );
@@ -107,6 +114,12 @@ public class TileDataLoader
         }
         else if( tileData.hostMetaResource != null )
         {
+            if( HostRegistry.INSTANCE.find( tileData.hostMetaResource ) != null )
+            {
+                Strata.LOGGER.warn( String.format( "Host '%s' already registered. Skipping!" , tileData.hostMetaResource.toString() ) );
+                return;
+            }
+
             ImmutableHost host;
 
             try
@@ -128,6 +141,12 @@ public class TileDataLoader
         }
         else if( tileData.oreName != null )
         {
+            if( OreRegistry.INSTANCE.find( tileData.oreName ) != null )
+            {
+                Strata.LOGGER.warn( String.format( "Ore '%s' already registered. Skipping!" , tileData.oreName ) );
+                return;
+            }
+
             ImmutableOre ore;
 
             try

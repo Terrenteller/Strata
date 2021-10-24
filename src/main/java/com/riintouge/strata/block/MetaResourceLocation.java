@@ -35,7 +35,7 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
 
     public MetaResourceLocation( String resourceString )
     {
-        Matcher matcher = ResourceRegex.matcher( resourceString );
+        Matcher matcher = ResourceRegex.matcher( resourceString.toLowerCase() );
         if( !matcher.find() )
             throw new IllegalArgumentException( resourceString );
 

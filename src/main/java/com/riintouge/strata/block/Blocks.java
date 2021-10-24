@@ -23,11 +23,19 @@ public class Blocks
         Strata.LOGGER.trace( "Blocks::registerBlocks()" );
 
         TileDataLoader tileDataLoader = new TileDataLoader();
+        String tileDataDir = String.format( "%s/tiledata/%s" , Strata.modid , Strata.modid );
+        for( String path : ConfigDir.INSTANCE.allIn( tileDataDir , true ) )
+            tileDataLoader.loadFile( path );
+
         for( ModContainer mod : Loader.instance().getIndexedModList().values() )
         {
-            String modTileDataPath = String.format( "%s/tiledata/%s" , Strata.modid , mod.getModId() );
-            for( String path : ConfigDir.INSTANCE.allIn( modTileDataPath , true ) )
-                tileDataLoader.loadFile( path );
+            String modID = mod.getModId();
+            if( !modID.equals( Strata.modid ) )
+            {
+                tileDataDir = String.format( "%s/tiledata/%s" , Strata.modid , modID );
+                for( String path : ConfigDir.INSTANCE.allIn( tileDataDir , true ) )
+                    tileDataLoader.loadFile( path );
+            }
         }
 
         GameRegistry.registerTileEntity(
