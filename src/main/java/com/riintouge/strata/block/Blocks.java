@@ -7,6 +7,8 @@ import com.riintouge.strata.resource.ConfigDir;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -21,8 +23,12 @@ public class Blocks
         Strata.LOGGER.trace( "Blocks::registerBlocks()" );
 
         TileDataLoader tileDataLoader = new TileDataLoader();
-        for( String path : ConfigDir.INSTANCE.allIn( Strata.modid + "/tiledata" , true ) )
-            tileDataLoader.loadFile( path );
+        for( ModContainer mod : Loader.instance().getIndexedModList().values() )
+        {
+            String modTileDataPath = String.format( "%s/tiledata/%s" , Strata.modid , mod.getModId() );
+            for( String path : ConfigDir.INSTANCE.allIn( modTileDataPath , true ) )
+                tileDataLoader.loadFile( path );
+        }
 
         GameRegistry.registerTileEntity(
             OreBlockTileEntity.class,

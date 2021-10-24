@@ -21,10 +21,12 @@ Strata will have little to no gameplay effect outside of creative mode without a
 
 ## How do I use Strata to create my own content?
 
-Strata will unpack the following on start (if missing):
-- `docs/Strata.txt` contains tiledata keyvalue documentation for the current version.
-- `config/strata/tiledata` contains block/item configuration files. Use these as a starting point for any new blocks you wish to add. You are encouraged to put new configuration files in a subdirectory named after the mod/modpack/etc. for organization. The client can know about things the server doesn't, but **the client must know about everything the server does**.
-- `config/strata/recipe/replication` contains recipe replication configuration files.
+- `docs/Strata.txt` describes tiledata keyvalues for the current version.
+- `config/strata/tiledata/<modid>` directories contain block/item configuration files.
+    - **The client must know about everything the server does else the client will hang on connect**.
+- `config/strata/recipe/<modid>/blacklist.txt` restricts recipe replication.
+
+`<modid>` directories are only processed if a mod with that ID is present. Strata will extract its own configuration into corresponding directories on start but will not overwrite them. 
 
 ## "Why" is Strata?
 

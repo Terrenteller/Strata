@@ -1,7 +1,7 @@
 package com.riintouge.strata.block;
 
-import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.util.Util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -12,6 +12,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -20,10 +22,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -216,11 +215,12 @@ public class RecipeReplicator
         if( ConfigurationLoaded )
             return;
 
-        try
+        for( ModContainer mod : Loader.instance().getIndexedModList().values() )
         {
-            for( String path : ConfigDir.INSTANCE.allIn( Strata.modid + "/recipe/replication" , false ) )
+            try
             {
-                InputStream stream = new FileInputStream( path );
+                String blacklistFilePath = String.format( "%s/recipe/%s/blacklist.txt" , Strata.modid , mod.getModId() );
+                InputStream stream = new FileInputStream( ConfigDir.INSTANCE.resolve( blacklistFilePath ).toString() );
                 BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );
                 while( buffer.ready() )
                 {
@@ -238,11 +238,16 @@ public class RecipeReplicator
                 }
 
                 buffer.close();
+                stream.close();
             }
-        }
-        catch( java.io.IOException ex )
-        {
-            // Ignore
+            catch( FileNotFoundException e )
+            {
+                // Most mods probably won't have a blacklist
+            }
+            catch( IOException e )
+            {
+                e.printStackTrace();
+            }
         }
 
         ConfigurationLoaded = true;

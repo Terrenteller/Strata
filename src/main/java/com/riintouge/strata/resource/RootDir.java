@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 import java.util.function.Function;
@@ -48,20 +49,27 @@ public class RootDir
     @Nonnull
     public List< String > allIn( String subDirPath , boolean recursive ) throws IOException
     {
-        FileSelector fileSelector = new FileSelector( s -> true , recursive );
-        Files.walkFileTree( resolve( subDirPath ) , fileSelector );
-
-        return fileSelector.selectedFiles();
+        try
+        {
+            FileSelector fileSelector = new FileSelector( s -> true , recursive );
+            Files.walkFileTree( resolve( subDirPath ) , fileSelector );
+            return fileSelector.selectedFiles();
+        }
+        catch( NoSuchFileException e )
+        {
+            // No files in a path which doesn't exist
+            return Collections.emptyList();
+        }
     }
 
-    public void extractMissingResourceFiles()
+    public void extractResourceFiles( boolean overwrite )
     {
         String internalJarDir = String.format( "%s/%s/" , JarExternalDir , rootSubdirectory ).replaceAll( "\\\\" , JarResourceHelper.Separator );
         for( String path : JarResourceHelper.INSTANCE.find( s -> s.startsWith( internalJarDir ) ) )
         {
             String resourcePath = path.substring( internalJarDir.length() );
             File targetFile = new File( externalPath.resolve( resourcePath ).toString() );
-            if( targetFile.exists() )
+            if( targetFile.exists() && !overwrite )
                 continue;
 
             targetFile.getParentFile().mkdirs();

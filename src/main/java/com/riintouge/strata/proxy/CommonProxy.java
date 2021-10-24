@@ -24,8 +24,8 @@ public class CommonProxy
         Strata.LOGGER.trace( "CommonProxy::preInit()" );
 
         StrataConfig.INSTANCE.init();
-        ConfigDir.INSTANCE.extractMissingResourceFiles();
-        DocsDir.INSTANCE.extractMissingResourceFiles();
+        ConfigDir.INSTANCE.extractResourceFiles( false );
+        DocsDir.INSTANCE.extractResourceFiles( true );
         NetworkManager.INSTANCE.init( event.getSide() );
 
         MinecraftForge.EVENT_BUS.register( StrataConfig.class );
