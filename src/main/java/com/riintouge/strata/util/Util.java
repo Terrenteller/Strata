@@ -14,6 +14,21 @@ public class Util
         return value > 0 && ( value & ( value - 1 ) ) == 0;
     }
 
+    public static int whichPowerOfTwo( int value )
+    {
+        if( value > 0 )
+            for( int power = 0 ; power != 32 ; power++ )
+                if( value == ( 1 << power ) )
+                    return power;
+
+        throw new IllegalArgumentException( String.format( "%d is not a power of two!" , value ) );
+    }
+
+    public static int squareRootOfPowerOfTwo( int value )
+    {
+        return 1 << ( whichPowerOfTwo( value ) >>> 1 );
+    }
+
     public static String[] splitKV( String line )
     {
         int index = line.indexOf( ' ' );

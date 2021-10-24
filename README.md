@@ -4,13 +4,16 @@ Strata is a Forge-based, rock and ore generation mod for Minecraft with a focus 
 
 ## What makes Strata special?
 
-_Flexibility_ and **correctness**.
+_Flexibility_ and **integration**.
 
-- Strata is not a world generation mod. Ideally, with no conflict of interest, Strata is compatible with all of them!
-- Plain-text configuration files allow anyone can create their own Strata-powered content without a line of code!
+- Strata is not a world generation mod. Ideally, Strata is compatible with all of them!
+- Plain-text configuration files allow anyone to create their own Strata-powered content without a line of code!
 - Tilesets make it easy to define entire suites of stone blocks and their derivatives. Just add textures!
-- Strata's two-in-one ore and host rock system facilitates mod content cross-pollination!
+- Strata's two-in-one ore-in-host-rock system welcomes mod content cross-pollination and texture packs!
 - Ores take on the appearance and properties of their host and drop both when mined!
+- Strata will replicate existing recipes using its own content!
+- Ores support the same plants as their hosts! (technical exceptions withstanding)
+- Strata's redstone ore acts like vanilla redstone ore! (yes, this is important)
 
 ## How do I use Strata?
 

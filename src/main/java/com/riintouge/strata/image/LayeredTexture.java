@@ -1,6 +1,8 @@
 package com.riintouge.strata.image;
 
-import com.mojang.authlib.minecraft.InsecureTextureException;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.riintouge.strata.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.IResourceManager;
@@ -10,19 +12,46 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.MissingResourceException;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @SideOnly( Side.CLIENT )
 public class LayeredTexture extends TextureAtlasSprite
 {
-    private LayeredTextureLayer[] layers;
+    protected static final Cache< ResourceLocation , SquareMipmapHelper > MIPMAP_CACHE = CacheBuilder.newBuilder()
+        .expireAfterWrite( 1 , TimeUnit.MINUTES )
+        .build();
+
+    protected final LayeredTextureLayer[] layers;
 
     public LayeredTexture( ResourceLocation registryName , LayeredTextureLayer[] layers )
     {
         super( registryName.toString() );
         this.layers = layers;
+    }
+
+    public SquareMipmapHelper getOrCreateMipmapHelper( ResourceLocation resourceLocation , int[][] originalMipmaps )
+    {
+        SquareMipmapHelper mipmapHelper = MIPMAP_CACHE.getIfPresent( resourceLocation );
+        if( mipmapHelper == null )
+        {
+            mipmapHelper = new SquareMipmapHelper( originalMipmaps );
+            MIPMAP_CACHE.put( resourceLocation , mipmapHelper );
+        }
+
+        return mipmapHelper;
+    }
+
+    protected int[] blend( BlendMode blendMode , int[] top , float opacity , int[] bottom )
+    {
+        assert top.length == bottom.length : "Cannot blend pixel data of different lengths!";
+
+        int[] blendedPixels = new int[ bottom.length ];
+        for( int index = 0 ; index < bottom.length ; index++ )
+            blendedPixels[ index ] = blendMode.blend( top[ index ] , opacity , bottom[ index ] );
+
+        return blendedPixels;
     }
 
     // TextureAtlasSprite overrides
@@ -51,7 +80,7 @@ public class LayeredTexture extends TextureAtlasSprite
     {
         if( layers.length == 1 )
         {
-            final TextureAtlasSprite texture = textureGetter.apply( layers[ 0 ].resource );
+            TextureAtlasSprite texture = textureGetter.apply( layers[ 0 ].resource );
             width = texture.getIconWidth();
             height = texture.getIconHeight();
 
@@ -61,49 +90,50 @@ public class LayeredTexture extends TextureAtlasSprite
         }
         else if( layers.length > 1 )
         {
-            final int[][][] rawLayers = new int[ layers.length ][][];
+            SquareMipmapHelper[] mipmapHelpers = new SquareMipmapHelper[ layers.length ];
 
             for( int index = 0 ; index < layers.length ; index++ )
             {
                 ResourceLocation layerResource = layers[ index ].resource;
                 TextureAtlasSprite layerTexture = textureGetter.apply( layerResource );
-                try
-                {
-                    rawLayers[ index ] = layerTexture.getFrameTextureData( 0 );
-                }
-                catch( IndexOutOfBoundsException ex )
-                {
-                    String message = String.format( "Missing layered texture resource \"%s\"" , layerResource.toString() );
-                    throw new IllegalStateException( message , ex );
-                }
 
-                if( index == layers.length - 1 )
-                {
-                    width = layerTexture.getIconWidth();
-                    height = layerTexture.getIconHeight();
-                }
+                if( layerTexture.getFrameCount() == 0 )
+                    throw new IllegalArgumentException(
+                        String.format(
+                            "Layered texture resource \"%s\" has no frames!",
+                            layerResource.toString() ) );
+
+                if( layerTexture.getIconWidth() != layerTexture.getIconHeight() )
+                    throw new IllegalArgumentException(
+                        String.format(
+                            "Layered texture resource \"%s\" must be square!",
+                            layerResource.toString() ) );
+
+                if( !Util.isPowerOfTwo( layerTexture.getIconWidth() ) )
+                    throw new IllegalArgumentException(
+                        String.format(
+                            "Layered texture resource \"%s\" size must be a power of two!",
+                            layerResource.toString() ) );
+
+                width = height = ( index == 0 ? layerTexture.getIconWidth() : Math.min( width , layerTexture.getIconWidth() ) );
+                mipmapHelpers[ index ] = getOrCreateMipmapHelper( layerResource , layerTexture.getFrameTextureData( 0 ) );
             }
 
-            final int[][] pixels = new int[ Minecraft.getMinecraft().gameSettings.mipmapLevels + 1 ][];
-            pixels[ 0 ] = new int[ width * height ];
+            SquareMipmapHelper baseLayerMipmapHelper = mipmapHelpers[ layers.length - 1 ];
+            int[][] result = new int[ Minecraft.getMinecraft().gameSettings.mipmapLevels + 1 ][];
+            result[ 0 ] = baseLayerMipmapHelper.mipmapForEdgeLength( width );
 
-            for( int pixel = 0 ; pixel < width * height ; pixel++ )
+            for( int overlayIndex = layers.length - 2 ; overlayIndex >= 0 ; overlayIndex-- )
             {
-                int blendPixel = rawLayers[ rawLayers.length - 1 ][ 0 ][ pixel ];
-
-                for( int layer = rawLayers.length - 2 ; layer >= 0 ; layer-- )
-                {
-                    blendPixel = layers[ layer ].blendMode.blend(
-                        rawLayers[ layer ][ 0 ][ pixel ],
-                        layers[ layer ].opacity,
-                        blendPixel );
-                }
-
-                pixels[ 0 ][ pixel ] = blendPixel;
+                result[ 0 ] = blend(
+                    layers[ overlayIndex ].blendMode,
+                    mipmapHelpers[ overlayIndex ].mipmapForEdgeLength( width ),
+                    layers[ overlayIndex ].opacity,
+                    result[ 0 ] );
             }
 
             this.clearFramesTextureData();
-            this.framesTextureData.add( pixels );
+            this.framesTextureData.add( result );
         }
 
         // What does it mean for this to be stitched or not?
