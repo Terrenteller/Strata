@@ -104,10 +104,15 @@ public class TileDataLoader
                 if( tileData.explosionResistance == null )
                     tileData.explosionResistance = parentData.explosionResistance;
 
-                // Surprising as it may be, the the texture map is also inheritable.
+                // Surprising as it may be, the texture map is also inheritable.
                 // It will have already been initialized with the owner's registry name which prevents duplication.
                 if( tileData.textureMap == null )
                     tileData.textureMap = parentData.textureMap;
+
+                // If our sound type matches what the parent would normally use, use whatever the parent actually is.
+                // The sound type should never be null as it initially comes from the tile type.
+                if( tileData.soundType == parentType.soundType )
+                    tileData.soundType = parentData.soundType;
             }
 
             tileDataMap.put( tileData.tileType , tileData );

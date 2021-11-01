@@ -655,9 +655,14 @@ public class OreBlock extends BlockFalling
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
         IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
-        return hostProperties != null ?
-            ( RANDOM.nextBoolean() ? hostProperties.soundType() : oreInfo.soundType() )
-            : oreInfo.soundType();
+        if( hostProperties != null && RANDOM.nextBoolean() )
+        {
+            MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
+            return hostBlock.getSoundType( state , world , pos , null );
+        }
+
+        return oreInfo.soundType();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.sound.SoundTypeHelper;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -199,6 +200,32 @@ public class TileData
                 soundType = tileType.soundType;
                 return true;
             }
+            case "soundEvents":
+            {
+                String[] values = value.split( " " );
+                if( values.length == 7 )
+                {
+                    soundType = SoundTypeHelper.INSTANCE.create(
+                        Float.parseFloat( values[ 0 ] ),
+                        Float.parseFloat( values[ 1 ] ),
+                        values[ 2 ],
+                        values[ 3 ],
+                        values[ 4 ],
+                        values[ 5 ],
+                        values[ 6 ] );
+                }
+                else if( values.length == 5 )
+                {
+                    soundType = SoundTypeHelper.INSTANCE.create(
+                        1.0f,
+                        1.0f,
+                        values[ 0 ],
+                        values[ 1 ],
+                        values[ 2 ],
+                        values[ 3 ],
+                        values[ 4 ] );
+                }
+            }
         }
 
         if( key.startsWith( "texture" ) )
@@ -251,9 +278,9 @@ public class TileData
         TileData child = new TileData();
         child.tileSetName = this.tileSetName;
         child.tileType = tileType;
-        child.material = tileType.material;
-        child.soundType = tileType.soundType;
-        child.harvestTool = tileType.harvestTool;
+        child.material = this.material;
+        child.soundType = this.soundType;
+        child.harvestTool = this.harvestTool;
         child.harvestLevel = this.harvestLevel;
         child.hardness = this.hardness;
         child.explosionResistance = this.explosionResistance;

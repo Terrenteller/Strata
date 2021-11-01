@@ -13,20 +13,20 @@ Key: generate
 Value: <tileSetName> <TileType>
 Description:
     Register a tile set's tile type to be generated.
-	Recipes, drops, and other properties are determined using tiles in the same set.
-	Double slabs are special and should not be explicitly defined.
+    Recipes, drops, and other properties are determined using tiles in the same set.
+    Double slabs are special and should not be explicitly defined.
 
 Key: host
 Value: <ResourceLocation>[:<meta>]
 Description:
-	Register the block as one from which ores may acquire various properties. Does not generate actual blocks or items.
-	When used with "generate", the Value (not Key!) is ignored.
-	Only applies to primary tile types.
+    Register the block as one from which ores may acquire various properties. Does not generate actual blocks or items.
+    When used with "generate", the Value (not Key!) is ignored.
+    Only applies to primary tile types.
 
 Key: ore
 Value: <name>
 Description:
-	Register an ore to be generated.
+    Register an ore to be generated.
 
 Key: oreDict
 Value: <itemBlockOreDictionaryName> [itemOreDictionaryName] [fragmentItemOreDictionaryName]
@@ -42,29 +42,29 @@ Description:
 Key: type
 Value: <TileType>
 Description:
-	Defines common block properties such as harvest tool, sound type, and block model.
-	Value is redundant with "generate".
+    Defines common block properties such as harvest tool, sound type, and block model.
+    Value is redundant with "generate".
 
 Key: harvestLevel
 Value: <int>
 Default: 0
 Description:
-	Level of tool required for harvest. The tool itself is defined by the tile type.
-	If the tile type has a parent, the parent's value takes priority as the default.
+    Level of tool required for harvest. The tool itself is defined by the tile type.
+    If the tile type has a parent, the parent's value takes priority as the default.
 
 Key: hardness
 Value: <float>
 Default: 1.0
 Description:
-	Harvest difficulty. For reference, vanilla stone has a hardness of 1.5.
-	If the tile type has a parent, the parent's value takes priority as the default.
+    Harvest difficulty. For reference, vanilla stone has a hardness of 1.5.
+    If the tile type has a parent, the parent's value takes priority as the default.
 
 Key: resistance
 Value: <float>
 Default: 1.7 * hardness if ore, 5.0 * hardness otherwise
 Description:
-	Explosion resistance. For reference, vanilla stone has a resistance of 10.
-	If the tile type has a parent, the parent's value takes priority as the default.
+    Explosion resistance. For reference, vanilla stone has a resistance of 10.
+    If the tile type has a parent, the parent's value takes priority as the default.
 
 Key: sustains
 Value: <<EnumPlantType>|<ResourceLocation>[:<meta>]>+
@@ -85,11 +85,21 @@ Description:
 Key: texture[Caps|Sides|Up|Down|North|South|East|West]
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:
-	Generate a texture for the block model using an optional array of layers blended onto a required base.
-	If the tile type has a parent, the parent's complete texture map will be used by default.
-	Any of these keys will cause a new texture map to be created.
-	Although Strata does not generate host blocks, these textures are used for their particles.
-	Must come after a "generate", "host", or "ore" line.
+    Generate a texture for the block model using an optional array of layers blended onto a required base.
+    If the tile type has a parent, the parent's complete texture map will be used by default.
+    Any of these keys will cause a new texture map to be created.
+    Although Strata does not generate host blocks, these textures are used for their particles.
+    Must come after a "generate", "host", or "ore" line.
+
+Key: soundEvents
+Value: [<volume:float> <pitch:float>] <breakResource> <fallResource> <hitResource> <placeResource> <stepResource>
+Description:
+    Create and use a SoundType composed of entries defined in "sounds.json" from any installed mod or resource pack.
+    SoundEvent resources in non-Strata namespaces are expected to be registered by the owner of that namespace.
+    This value will propagate to child tile types which normally share the same sound type as their parent.
+    For example, LEVER derives from COBBLE but the value will not propagate since LEVER uses a different sound type.
+    Must come after a "generate" line.
+    Does not apply to ores or hosts.
 
 Key: blockstate
 Value: <ResourceLocation>
@@ -100,9 +110,9 @@ Description:
 Key: convertsTo
 Value: <ResourceLocation>[:<meta>]
 Description:
-	One-way, one-to-one conversion to another item for compatibility purposes. Also used in recipe replication.
-	Some tile types have a pre-determined, vanilla equivalent. Use a hyphen to ignore it.
-	For ores, this applies to the ore item, not the creative mode item block.
+    One-way, one-to-one conversion to another item for compatibility purposes. Also used in recipe replication.
+    Some tile types have a pre-determined, vanilla equivalent. Use a hyphen to ignore it.
+    For ores, this applies to the ore item, not the creative mode item block.
 
 Key: furnaceResult
 Value: <ResourceLocation>[:<meta>]
@@ -121,14 +131,14 @@ Description:
 Key: fragmentTexture
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:
-	Generate a texture for the fragment item using an optional array of layers blended onto a required base.
-	This KV implies a fragment will be created. A dedicated key is redundant.
-	Only applies to some primary tile types.
+    Generate a texture for the fragment item using an optional array of layers blended onto a required base.
+    This KV implies a fragment will be created. A dedicated key is redundant.
+    Only applies to some primary tile types.
 
 Key: fragmentConvertsTo
 Value: <ResourceLocation>[:<meta>]
 Description:
-	One-way, one-to-one conversion to another item for compatibility purposes.
+    One-way, one-to-one conversion to another item for compatibility purposes.
 
 Key: fragmentFurnaceResult
 Value: <ResourceLocation>[:<meta>]
