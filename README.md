@@ -7,9 +7,10 @@ Strata is a Forge-based, rock and ore generation mod for Minecraft with a focus 
 _Flexibility_ and **integration**.
 
 - Strata is not a world generation mod. Ideally, Strata is compatible with all of them!
-- Plain-text configuration files allow anyone to create their own Strata-powered content without a line of code!
+- Plain-text configuration files allow anyone to create custom content without a line of code!
 - Tilesets make it easy to define entire suites of stone blocks and their derivatives. Just add textures!
-- Strata's two-in-one ore-in-host-rock system welcomes mod content cross-pollination and texture packs!
+- Strata will load tile data from resource packs on both client and server. No loose files!
+- Strata's two-in-one ore-in-host-rock system welcomes mod content cross-pollination and resource packs!
 - Ores take on the appearance and properties of their host and drop both when mined!
 - Strata will replicate existing recipes using its own content!
 - Ores support the same plants as their hosts! (technical exceptions withstanding)
@@ -26,11 +27,11 @@ Strata will have little to no gameplay effect outside of creative mode without a
     - **The client must know about everything the server does else the client will hang on connect**.
 - `config/strata/recipe/<modid>/blacklist.txt` restricts recipe replication.
 
-`<modid>` directories are only processed if a mod with that ID is present. Strata will extract its own configuration into corresponding directories on start but will not overwrite them. 
+`<modid>` directories are only processed if a mod with that ID is present. Strata will extract its own configuration into corresponding directories on start but will not overwrite them.
 
 ## "Why" is Strata?
 
-Once upon a time, there was a mod called [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) that fell by the wayside. Disappointed with the thought of what might never be, I took it upon myself to re-imagine the "Geologica" part of the PFAA triad, leaving Chemica and Fabrica to other tech mods like Mekanism and Immersive Engineering.
+Once upon a time, there was a mod called [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) that fell by the wayside. Disappointed with the thought of what might never be, I took it upon myself to re-imagine the "Geologica" part of the PFAA triad, leaving Chemica and Fabrica to established tech mods like Mekanism and Immersive Engineering.
 
 ## Legal stuff
 

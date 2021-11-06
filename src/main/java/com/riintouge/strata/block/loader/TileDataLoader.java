@@ -24,15 +24,13 @@ public class TileDataLoader
         // Nothing to do
     }
 
-    public void loadResource( String path ) throws IOException
-    {
-        InputStream stream = getClass().getClassLoader().getResourceAsStream( path );
-        load( new BufferedReader( new InputStreamReader( stream , "UTF-8" ) ) );
-    }
-
     public void loadFile( String path ) throws IOException
     {
-        InputStream stream = new FileInputStream( path );
+        loadStream( new FileInputStream( path ) );
+    }
+
+    public void loadStream( InputStream stream ) throws IOException
+    {
         load( new BufferedReader( new InputStreamReader( stream , "UTF-8" ) ) );
     }
 

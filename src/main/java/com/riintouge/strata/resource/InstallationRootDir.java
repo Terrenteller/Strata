@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.function.Function;
 
-public class RootDir
+public class InstallationRootDir
 {
     private static final String JarExternalDir = "assets/external";
 
@@ -22,19 +22,19 @@ public class RootDir
     private String rootSubdirectory;
     private Path externalPath;
 
-    public RootDir( @Nullable String subdirectory )
+    public InstallationRootDir( @Nullable String subdirectory )
     {
         this.rootSubdirectory = subdirectory;
 
         if( GameRootDir == null )
             GameRootDir = Paths.get( Loader.instance().getConfigDir().getParentFile().getAbsolutePath() );
 
-        externalPath = rootSubdirectory == null ? GameRootDir : GameRootDir.resolve( rootSubdirectory );
+        externalPath = ( rootSubdirectory == null ? GameRootDir : GameRootDir.resolve( rootSubdirectory ) ).normalize();
     }
 
-    public Path resolve( String relativePath )
+    public Path path()
     {
-        return externalPath.resolve( relativePath );
+        return externalPath;
     }
 
     @Nonnull
@@ -42,7 +42,6 @@ public class RootDir
     {
         FileSelector fileSelector = new FileSelector( predicate , recursive );
         Files.walkFileTree( externalPath , fileSelector );
-
         return fileSelector.selectedFiles();
     }
 
@@ -52,7 +51,7 @@ public class RootDir
         try
         {
             FileSelector fileSelector = new FileSelector( s -> true , recursive );
-            Files.walkFileTree( resolve( subDirPath ) , fileSelector );
+            Files.walkFileTree( externalPath.resolve( subDirPath ) , fileSelector );
             return fileSelector.selectedFiles();
         }
         catch( NoSuchFileException e )
@@ -73,7 +72,7 @@ public class RootDir
                 continue;
 
             targetFile.getParentFile().mkdirs();
-            InputStream stream = RootDir.class.getClassLoader().getResourceAsStream( path );
+            InputStream stream = InstallationRootDir.class.getClassLoader().getResourceAsStream( path );
 
             try
             {

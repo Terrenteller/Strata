@@ -95,7 +95,7 @@ Key: soundEvents
 Value: [<volume:float> <pitch:float>] <breakResource> <fallResource> <hitResource> <placeResource> <stepResource>
 Description:
     Create and use a SoundType composed of entries defined in "sounds.json" from any installed mod or resource pack.
-    SoundEvent resources in non-Strata namespaces are expected to be registered by the owner of that namespace.
+    SoundEvent resources in non-Strata domains are expected to be registered by the owner of that domain.
     This value will propagate to child tile types which normally share the same sound type as their parent.
     For example, LEVER derives from COBBLE but the value will not propagate since LEVER uses a different sound type.
     Must come after a "generate" line.

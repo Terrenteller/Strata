@@ -220,7 +220,7 @@ public class RecipeReplicator
             try
             {
                 String blacklistFilePath = String.format( "%s/recipe/%s/blacklist.txt" , Strata.modid , mod.getModId() );
-                InputStream stream = new FileInputStream( ConfigDir.INSTANCE.resolve( blacklistFilePath ).toString() );
+                InputStream stream = new FileInputStream( ConfigDir.INSTANCE.path().resolve( blacklistFilePath ).toString() );
                 BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );
                 while( buffer.ready() )
                 {

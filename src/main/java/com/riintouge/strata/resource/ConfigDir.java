@@ -1,6 +1,6 @@
 package com.riintouge.strata.resource;
 
-public class ConfigDir extends RootDir
+public class ConfigDir extends InstallationRootDir
 {
     public static final ConfigDir INSTANCE = new ConfigDir();
 
