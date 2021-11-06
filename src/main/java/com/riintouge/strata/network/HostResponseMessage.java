@@ -4,16 +4,17 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.HostRegistry;
-import com.riintouge.strata.misc.ByteBufStream;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class HostResponseMessage implements IMessage
+public final class HostResponseMessage extends ZipMessage
 {
     private Set< MetaResourceLocation > hosts = null;
 
@@ -25,25 +26,23 @@ public final class HostResponseMessage implements IMessage
     // IMessage overrides
 
     @Override
-    public void toBytes( ByteBuf buf )
+    public void toBytes( DataOutputStream stream ) throws IOException
     {
-        ByteBufStream stream = new ByteBufStream( buf );
         hosts = HostRegistry.INSTANCE.allHostResources();
 
-        stream.write( hosts.size() );
+        stream.writeInt( hosts.size() );
         for( MetaResourceLocation metaResource : hosts )
-            stream.write( metaResource.toString() );
+            stream.writeUTF( metaResource.toString() );
     }
 
     @Override
-    public void fromBytes( ByteBuf buf )
+    public void fromBytes( DataInputStream stream ) throws IOException
     {
-        ByteBufStream stream = new ByteBufStream( buf );
         hosts = new HashSet<>();
 
         int hostCount = stream.readInt();
         for( int index = 0 ; index < hostCount ; index++ )
-            hosts.add( new MetaResourceLocation( stream.readString() ) );
+            hosts.add( new MetaResourceLocation( stream.readUTF() ) );
     }
 
     // Nested classes
@@ -63,6 +62,12 @@ public final class HostResponseMessage implements IMessage
         public IMessage onMessage( HostResponseMessage message , MessageContext ctx )
         {
             Strata.LOGGER.trace( "HostResponseMessage::Handler::onMessage()" );
+
+            if( message.caughtException != null )
+            {
+                notifyObservers( message , ctx , message.caughtException );
+                return null;
+            }
 
             Set< MetaResourceLocation > serverHosts = HostRegistry.INSTANCE.allHostResources();
             serverHosts.removeAll( message.hosts );

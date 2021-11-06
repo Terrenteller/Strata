@@ -101,6 +101,7 @@ public final class NetworkManager
                         disconnectMessage = "strata.multiplayer.disconnect.noResponse";
                         break;
                     case Interrupted:
+                    case Exception:
                     case Terminated:
                     case InternalError:
                         disconnectMessage = "strata.multiplayer.disconnect.unexpectedHandshakeError";

@@ -16,7 +16,13 @@ public abstract class ObservableMessageHandler< REQ extends IMessage , REPLY ext
     protected void notifyObservers( REQ message , MessageContext ctx , boolean success )
     {
         setChanged();
-        notifyObservers( new Data( message , ctx , success ) );
+        notifyObservers( new Data( message , ctx , success , null ) );
+    }
+
+    protected void notifyObservers( REQ message , MessageContext ctx , Exception exception )
+    {
+        setChanged();
+        notifyObservers( new Data( message , ctx , false , exception ) );
     }
 
     @Nullable
@@ -42,8 +48,9 @@ public abstract class ObservableMessageHandler< REQ extends IMessage , REPLY ext
         public final MessageContext ctx;
         public final UUID playerID;
         public final boolean success;
+        public final Exception exception;
 
-        public Data( REQ message , MessageContext ctx , boolean success )
+        public Data( REQ message , MessageContext ctx , boolean success , Exception exception )
         {
             this.message = message;
             this.ctx = ctx;
@@ -51,6 +58,7 @@ public abstract class ObservableMessageHandler< REQ extends IMessage , REPLY ext
                 ? ctx.getClientHandler().getGameProfile().getId()
                 : ctx.getServerHandler().player.getGameProfile().getId();
             this.success = success;
+            this.exception = exception;
         }
     }
 }

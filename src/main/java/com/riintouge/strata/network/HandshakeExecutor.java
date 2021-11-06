@@ -34,6 +34,7 @@ public final class HandshakeExecutor implements Observer
         Disconnected,
         NoResponse,
         Interrupted,
+        Exception,
         Terminated,
         InternalError
     }
@@ -120,7 +121,9 @@ public final class HandshakeExecutor implements Observer
                         ObservableMessageHandler.Data data = reqReplyPair.getValue().decode( messageContainer.takeData() );
                         if( data != null )
                         {
-                            if( !data.success )
+                            if( data.exception != null )
+                                throw data.exception;
+                            else if( !data.success )
                                 return HandshakeResult.Failure;
                             else
                                 break;
@@ -142,6 +145,11 @@ public final class HandshakeExecutor implements Observer
         {
             e.printStackTrace();
             return HandshakeResult.InternalError;
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+            return HandshakeResult.Exception;
         }
     }
 
