@@ -509,8 +509,9 @@ public class OreBlock extends BlockFalling
     public IBlockState getActualState( IBlockState state , IBlockAccess worldIn , BlockPos pos )
     {
         // BlockRendererDispatcher.renderBlock() calls BlockModelShapes.getModelForState()
-        // which queries an IdentityHashMap populated by valid states of the block. Because this block has no metadata
-        // properties, only unlisted, there is only one valid state: the unmodified default.
+        // which queries an IdentityHashMap populated by valid states of the block.
+        // Because this block has no metadata properties, only unlisted,
+        // there is only one valid state: the unmodified default.
 
         // Option 1: Accept reality and deal with the consequences
         //return super.getActualState( state , worldIn , pos );
@@ -668,7 +669,10 @@ public class OreBlock extends BlockFalling
             return hostBlock.getSoundType( state , world , pos , null );
         }
 
-        return oreInfo.soundType();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        return proxyBlockState != null
+            ? proxyBlockState.getBlock().getSoundType( oreInfo.proxyBlockState() , world , pos , entity )
+            : oreInfo.soundType();
     }
 
     @Override
@@ -755,7 +759,6 @@ public class OreBlock extends BlockFalling
     {
         // Do not call super.updateTick() so the ore block will not fall. The idea is the ore provides
         // the "structure" to remain suspended. BlockFalling.checkFallable() is private for no good reason.
-        // Why BlockFalling then? It provides enough useful infrastructure.
         // TODO: Revisit this should sandy ores be added.
 
         if( !worldIn.isRemote )

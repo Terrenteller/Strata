@@ -92,7 +92,7 @@ Description:
     Must come after a "generate", "host", or "ore" line.
 
 Key: soundEvents
-Value: [<volume:normal> <pitch:normal>] <breakResource> <fallResource> <hitResource> <placeResource> <stepResource>
+Value: [<volume:normal> <pitch:normal>] <breakResource> <stepResource> <placeResource> <hitResource> <fallResource>
 Description:
     Create and use a SoundType composed of entries defined in "sounds.json" from any installed mod or resource pack.
     SoundEvent resources in non-Strata domains are expected to be registered by the owner of that domain.

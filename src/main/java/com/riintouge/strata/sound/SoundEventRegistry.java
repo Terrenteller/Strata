@@ -30,19 +30,19 @@ public final class SoundEventRegistry
         float volume,
         float pitch,
         String breakResource,
-        String fallResource,
-        String hitResource,
+        String stepResource,
         String placeResource,
-        String stepResource )
+        String hitResource,
+        String fallResource )
     {
         return new SoundType(
             volume,
             pitch,
             register( breakResource ),
-            register( fallResource ),
-            register( hitResource ),
+            register( stepResource ),
             register( placeResource ),
-            register( stepResource ) );
+            register( hitResource ),
+            register( fallResource ) );
     }
 
     // Statics

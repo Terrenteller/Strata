@@ -54,6 +54,11 @@ public class GeoBlock extends BlockFalling
         return tileInfo.type() == TileType.SAND;
     }
 
+    public IGeoTileInfo getTileInfo()
+    {
+        return tileInfo;
+    }
+
     // BlockFalling overrides
 
     @Override

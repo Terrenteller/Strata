@@ -5,15 +5,19 @@ import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.OreBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlockSpecial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -146,5 +150,43 @@ public class EventHandlers
 
         event.setUseItem( Event.Result.DENY );
         event.setCancellationResult( EnumActionResult.FAIL );
+    }
+
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void projectileImpactEvent( ProjectileImpactEvent event )
+    {
+        if( event.getRayTraceResult().typeOfHit != RayTraceResult.Type.BLOCK )
+            return;
+
+        World world = event.getEntity().world;
+        if( world == null )
+            return;
+
+        SoundType soundType = null;
+        BlockPos pos = event.getRayTraceResult().getBlockPos();
+        IBlockState blockState = world.getBlockState( pos );
+        if( blockState.getBlock() instanceof GeoBlock )
+        {
+            GeoBlock geoBlock = (GeoBlock)blockState.getBlock();
+            soundType = geoBlock.getTileInfo().soundType();
+        }
+        else if( blockState.getBlock() instanceof OreBlock )
+        {
+            OreBlock oreBlock = (OreBlock)blockState.getBlock();
+            soundType = oreBlock.getOreInfo().soundType();
+        }
+
+        if( soundType != null )
+        {
+            world.playSound(
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                soundType.getHitSound(),
+                SoundCategory.NEUTRAL,
+                soundType.volume,
+                soundType.pitch,
+                false );
+        }
     }
 }
