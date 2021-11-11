@@ -8,6 +8,7 @@ import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -202,6 +203,11 @@ public class OreBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
     {
+        // Hosts are not expected to have an ambient sound.
+        // We can do without the overhead of a lookup here given how often this method is called.
+        if( oreInfo.ambientSound() != null )
+            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , oreInfo.ambientSound() );
+
         // Cheap sanity check
         if( !canFallThrough( worldIn.getBlockState( pos.down() ) ) )
             return;

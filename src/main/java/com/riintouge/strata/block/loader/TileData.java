@@ -5,7 +5,8 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
-import com.riintouge.strata.sound.SoundTypeHelper;
+import com.riintouge.strata.sound.SoundEventTuple;
+import com.riintouge.strata.sound.SoundEventRegistry;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -49,6 +50,7 @@ public class TileData
     // ICommonBlockProperties
     public Material material = null;
     public SoundType soundType = null;
+    public SoundEventTuple ambientSound = null;
     public String harvestTool = null;
     public Integer harvestLevel = null;
     public Float hardness = null;
@@ -61,10 +63,32 @@ public class TileData
     public LayeredTextureLayer[][] layeredTextureLayers = null;
     public Map< String , String > languageMap = null;
 
+    // It is imperative that documentation in Strata.txt stay up-to-date with this method!
     public boolean processKeyValue( String key , String value )
     {
         switch( key )
         {
+            case "ambientSound":
+            {
+                String[] values = value.split( " " );
+                switch( values.length )
+                {
+                    case 1:
+                    {
+                        ambientSound = new SoundEventTuple(
+                            SoundEventRegistry.INSTANCE.register( value ) );
+                        return true;
+                    }
+                    case 3:
+                    {
+                        ambientSound = new SoundEventTuple(
+                            Float.parseFloat( values[ 0 ] ),
+                            Float.parseFloat( values[ 1 ] ),
+                            SoundEventRegistry.INSTANCE.register( values[ 2 ] ) );
+                        return true;
+                    }
+                }
+            }
             case "blockstate":
             {
                 blockstateResourceLocation = new ResourceLocation( value );
@@ -203,27 +227,32 @@ public class TileData
             case "soundEvents":
             {
                 String[] values = value.split( " " );
-                if( values.length == 7 )
+                switch( values.length )
                 {
-                    soundType = SoundTypeHelper.INSTANCE.create(
-                        Float.parseFloat( values[ 0 ] ),
-                        Float.parseFloat( values[ 1 ] ),
-                        values[ 2 ],
-                        values[ 3 ],
-                        values[ 4 ],
-                        values[ 5 ],
-                        values[ 6 ] );
-                }
-                else if( values.length == 5 )
-                {
-                    soundType = SoundTypeHelper.INSTANCE.create(
-                        1.0f,
-                        1.0f,
-                        values[ 0 ],
-                        values[ 1 ],
-                        values[ 2 ],
-                        values[ 3 ],
-                        values[ 4 ] );
+                    case 5:
+                    {
+                        soundType = SoundEventRegistry.INSTANCE.registerAndCreate(
+                            1.0f,
+                            1.0f,
+                            values[ 0 ],
+                            values[ 1 ],
+                            values[ 2 ],
+                            values[ 3 ],
+                            values[ 4 ] );
+                        return true;
+                    }
+                    case 7:
+                    {
+                        soundType = SoundEventRegistry.INSTANCE.registerAndCreate(
+                            Float.parseFloat( values[ 0 ] ),
+                            Float.parseFloat( values[ 1 ] ),
+                            values[ 2 ],
+                            values[ 3 ],
+                            values[ 4 ],
+                            values[ 5 ],
+                            values[ 6 ] );
+                        return true;
+                    }
                 }
             }
         }

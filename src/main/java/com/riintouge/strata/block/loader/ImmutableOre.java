@@ -1,11 +1,12 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.item.LocalizationRegistry;
+import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -47,6 +48,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     // ICommonBlockProperties
     private Material material;
     private SoundType soundType;
+    private SoundEventTuple ambientSound;
     private String harvestTool;
     private int harvestLevel;
     private float hardness;
@@ -68,6 +70,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.furnaceResult = tileData.furnaceResult;
         this.furnaceExp = tileData.furnaceExp;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
+        this.ambientSound = tileData.ambientSound;
         this.baseDropAmount = Util.coalesce( tileData.baseDropAmount , 1 );
         this.bonusDropExpr = tileData.bonusDropExpr;
         this.baseExp = Util.coalesce( tileData.baseExp , 0 );
@@ -178,6 +181,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         }
 
         return proxyBlockState;
+    }
+
+    @Override
+    public SoundEventTuple ambientSound()
+    {
+        return ambientSound;
     }
 
     @Nullable

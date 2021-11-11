@@ -1,12 +1,13 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.LocalizationRegistry;
+import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -56,6 +57,7 @@ public final class ImmutableTile implements IGeoTileInfo
     // ICommonBlockProperties
     private Material material;
     private SoundType soundType;
+    private SoundEventTuple ambientSound;
     private String harvestTool;
     private int harvestLevel;
     private float hardness;
@@ -82,6 +84,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
+        this.ambientSound = tileData.ambientSound;
 
         // IHostInfo
         this.registryName = tileData.tileType.registryName( this.tileSetName );
@@ -254,6 +257,12 @@ public final class ImmutableTile implements IGeoTileInfo
     public ResourceLocation blockstateResourceLocation()
     {
         return blockstateResourceLocation;
+    }
+
+    @Override
+    public SoundEventTuple ambientSound()
+    {
+        return ambientSound;
     }
 
     @Nullable

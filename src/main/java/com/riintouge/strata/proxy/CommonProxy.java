@@ -12,7 +12,7 @@ import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.network.NetworkManager;
 import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.resource.DocsDir;
-import com.riintouge.strata.sound.SoundTypeHelper;
+import com.riintouge.strata.sound.SoundEventRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -38,7 +38,7 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register( GeoTileSetRegistry.class );
         MinecraftForge.EVENT_BUS.register( OreRegistry.class );
         MinecraftForge.EVENT_BUS.register( RecipeReplicator.class );
-        MinecraftForge.EVENT_BUS.register( SoundTypeHelper.class );
+        MinecraftForge.EVENT_BUS.register( SoundEventRegistry.class );
     }
 
     public void init( FMLInitializationEvent event )

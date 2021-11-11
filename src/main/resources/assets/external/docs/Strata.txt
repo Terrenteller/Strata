@@ -92,14 +92,22 @@ Description:
     Must come after a "generate", "host", or "ore" line.
 
 Key: soundEvents
-Value: [<volume:float> <pitch:float>] <breakResource> <fallResource> <hitResource> <placeResource> <stepResource>
+Value: [<volume:normal> <pitch:normal>] <breakResource> <fallResource> <hitResource> <placeResource> <stepResource>
 Description:
     Create and use a SoundType composed of entries defined in "sounds.json" from any installed mod or resource pack.
     SoundEvent resources in non-Strata domains are expected to be registered by the owner of that domain.
     This value will propagate to child tile types which normally share the same sound type as their parent.
     For example, LEVER derives from COBBLE but the value will not propagate since LEVER uses a different sound type.
+    volume and pitch default to 1.0.
     Must come after a "generate" line.
     Does not apply to ores or hosts.
+
+Key: ambientSound
+Value: [<volume:normal> <pitch:normal>] <ResourceLocation>
+Description:
+    Randomly play a SoundEvent from the block like the crackle of an active furnace (but a lot less often).
+    volume and pitch default to 1.0.
+    Does not apply to hosts.
 
 Key: blockstate
 Value: <ResourceLocation>

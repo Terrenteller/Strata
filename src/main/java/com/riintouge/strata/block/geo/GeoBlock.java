@@ -4,6 +4,7 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.misc.InitializedThreadLocal;
+import com.riintouge.strata.sound.AmbientSoundHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;
@@ -66,6 +67,9 @@ public class GeoBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
     {
+        if( tileInfo.ambientSound() != null )
+            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , tileInfo.ambientSound() );
+
         if( canFall() )
             super.randomDisplayTick( stateIn , worldIn , pos , rand );
     }

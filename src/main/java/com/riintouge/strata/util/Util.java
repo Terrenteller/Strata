@@ -29,6 +29,16 @@ public class Util
         return 1 << ( whichPowerOfTwo( value ) >>> 1 );
     }
 
+    public static float clampNormal( float normal )
+    {
+        if( normal < 0.0f )
+            return 0.0f;
+        else if( normal > 1.0f )
+            return 1.0f;
+
+        return normal;
+    }
+
     public static String[] splitKV( String line )
     {
         int index = line.indexOf( ' ' );
