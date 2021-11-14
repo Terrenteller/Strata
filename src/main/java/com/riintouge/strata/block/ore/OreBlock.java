@@ -8,8 +8,10 @@ import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.StateUtil;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
@@ -44,11 +46,11 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
-import java.util.Stack;
 
 public class OreBlock extends BlockFalling
 {
@@ -79,58 +81,6 @@ public class OreBlock extends BlockFalling
         setResistance( oreInfo.explosionResistance() );
 
         setCreativeTab( Strata.ORE_BLOCK_TAB );
-    }
-
-    protected int calculateBonusExpr( String bonusExpr , int fortune )
-    {
-        if( bonusExpr != null )
-        {
-            Stack< Double > bonusStack = new Stack<>();
-            try
-            {
-                for( String bonusToken : bonusExpr.split( " " ) )
-                {
-                    switch( bonusToken )
-                    {
-                        case "f":
-                            bonusStack.push( (double)fortune );
-                            break;
-                        case "+":
-                            bonusStack.push( bonusStack.pop() + bonusStack.pop() );
-                            break;
-                        case "-":
-                        {
-                            double right = bonusStack.pop();
-                            bonusStack.push( bonusStack.pop() - right );
-                            break;
-                        }
-                        case "*":
-                            bonusStack.push( bonusStack.pop() * bonusStack.pop() );
-                            break;
-                        case "/":
-                        {
-                            double right = bonusStack.pop();
-                            bonusStack.push( bonusStack.pop() / right );
-                            break;
-                        }
-                        default:
-                        {
-                            bonusStack.push( Double.parseDouble( bonusToken ) );
-                        }
-                    }
-                }
-            }
-            catch( Exception e )
-            {
-                // TODO: warn
-                return 0;
-            }
-
-            // +1 to offset exclusion
-            return RANDOM.nextInt( (int)Math.round( bonusStack.peek() ) + 1 );
-        }
-
-        return 0;
     }
 
     @Nonnull
@@ -567,13 +517,11 @@ public class OreBlock extends BlockFalling
 
         if( proxyBlock == null && oreTileSet != null )
         {
-            int bonus = calculateBonusExpr( oreInfo.bonusDropExpr() , fortune );
-            int dropCount = Math.max( 0 , oreInfo.baseDropAmount() + bonus );
-            if( dropCount > 0 )
-            {
-                Item oreItem = oreTileSet.getItem();
-                drops.add( new ItemStack( oreItem , Math.min( oreItem.getItemStackLimit() , dropCount ) ) );
-            }
+            WeightedDropCollections weightedDropCollections = oreInfo.weightedDropGroups();
+            if( weightedDropCollections != null )
+                drops.addAll( weightedDropCollections.collectRandomDrops( RANDOM , fortune ) );
+            else
+                drops.add( new ItemStack( oreTileSet.getItem() ) );
         }
     }
 
@@ -581,9 +529,12 @@ public class OreBlock extends BlockFalling
     public int getExpDrop( IBlockState state , IBlockAccess world , BlockPos pos , int fortune )
     {
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        return proxyBlockState != null
-            ? proxyBlockState.getBlock().getExpDrop( proxyBlockState , world , pos , fortune )
-            : oreInfo.baseExp() + calculateBonusExpr( oreInfo.bonusExpExpr() , fortune );
+        if( proxyBlockState != null )
+            return proxyBlockState.getBlock().getExpDrop( proxyBlockState , world , pos , fortune );
+
+        return oreInfo.bonusExpExpr() != null
+            ? oreInfo.baseExp() + (int)Math.round( Util.evaluateRPN( oreInfo.bonusExpExpr() , new ImmutablePair<>( "f" , (double)fortune ) ) )
+            : oreInfo.baseExp();
     }
 
     @Override

@@ -1,24 +1,39 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.block.ProtoBlockTextureMap;
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
-import com.riintouge.strata.sound.SoundEventTuple;
+import com.riintouge.strata.item.*;
 import com.riintouge.strata.sound.SoundEventRegistry;
+import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
 import org.apache.commons.lang3.EnumUtils;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TileData
 {
+    private static final String DropGroupPattern = "^(?:([0-9]+) )?([a-z_:0-9]+|-|\\*)(?: ([0-9]+)(?:-([0-9]+))?)?$";
+    private static final int DropGroupWeightGroup = 1;
+    private static final int DropGroupMetaResourceLocationGroup = 2;
+    private static final int DropGroupMinimumAmountGroup = 3;
+    private static final int DropGroupMaximumAmountGroup = 4;
+    private static final Pattern DropGroupRegex = Pattern.compile( DropGroupPattern );
+    private static final String RPNDropGroupPattern = "^(?:([0-9]+) )?([a-z_:0-9]+|-|\\*) ([0-9]+)\\+ ([0-9f+\\-*/ ]+)$";
+    private static final int RPNDropGroupExprGroup = 4;
+    private static final Pattern RPNDropGroupRegex = Pattern.compile( RPNDropGroupPattern );
+
     // IGeoTileInfo
     public String tileSetName = null;
     public TileType tileType = null;
@@ -43,6 +58,7 @@ public class TileData
     public String bonusDropExpr = null;
     public Integer baseExp = null;
     public String bonusExpExpr = null;
+    public WeightedDropCollections weightedDropCollections = null;
 
     // IHostInfo
     public MetaResourceLocation hostMetaResource = null;
@@ -178,7 +194,8 @@ public class TileData
             }
             case "ore":
             {
-                oreName = value;
+                String[] values = value.split( " " );
+                oreName = values[ 0 ];
                 return true;
             }
             case "oreDict":
@@ -257,7 +274,79 @@ public class TileData
             }
         }
 
-        if( key.startsWith( "texture" ) )
+        if( key.startsWith( "dropGroup." ) )
+        {
+            String dropGroupKey = key.substring( "dropGroup.".length() );
+            if( dropGroupKey.length() <= 0 )
+                return false;
+
+            String weight , metaResource , minimum , maximum = null , rpnExpr = null;
+            Matcher matcher = DropGroupRegex.matcher( value );
+            if( matcher.find() )
+            {
+                weight = matcher.group( DropGroupWeightGroup );
+                metaResource = matcher.group( DropGroupMetaResourceLocationGroup );
+                minimum = matcher.group( DropGroupMinimumAmountGroup );
+                maximum = matcher.group( DropGroupMaximumAmountGroup );
+            }
+            else
+            {
+                matcher = RPNDropGroupRegex.matcher( value );
+                if( matcher.find() )
+                {
+                    weight = matcher.group( DropGroupWeightGroup );
+                    metaResource = matcher.group( DropGroupMetaResourceLocationGroup );
+                    minimum = matcher.group( DropGroupMinimumAmountGroup );
+                    rpnExpr = matcher.group( RPNDropGroupExprGroup );
+                }
+                else
+                    return false;
+            }
+
+            MetaResourceLocation metaResourceLocation;
+            switch( metaResource )
+            {
+                case "*":
+                    metaResourceLocation = new MetaResourceLocation( Strata.resource( oreName ) , 0 );
+                    break;
+                case "-":
+                    metaResourceLocation = new MetaResourceLocation( Items.AIR.getRegistryName() , 0 );
+                    break;
+                default:
+                    metaResourceLocation = new MetaResourceLocation( metaResource );
+                    break;
+            }
+            int numericMinimum = minimum != null ? Math.max( 0 , Integer.parseInt( minimum ) ) : 1;
+            int numericMaximum = maximum != null ? Math.max( numericMinimum , Integer.parseInt( maximum ) ) : numericMinimum;
+
+            IFortuneDistribution fortuneDistribution;
+            if( rpnExpr != null )
+                fortuneDistribution = new RPNFortuneDistribution( numericMinimum , rpnExpr );
+            else if( numericMinimum == numericMaximum )
+                fortuneDistribution = new StaticFortuneDistribution( numericMinimum );
+            else
+                fortuneDistribution = new VanillaFortuneDistribution( numericMinimum , numericMaximum );
+
+            if( weightedDropCollections == null )
+                weightedDropCollections = new WeightedDropCollections();
+
+            weightedDropCollections.addDropToGroup(
+                metaResourceLocation,
+                fortuneDistribution,
+                weight != null ? Math.max( 0 , Integer.parseInt( weight ) ) : 100,
+                dropGroupKey );
+
+            return true;
+        }
+        else if( key.startsWith( "lang." ) )
+        {
+            if( languageMap == null )
+                languageMap = new HashMap<>();
+
+            languageMap.put( key.substring( "lang.".length() ) , value );
+            return true;
+        }
+        else if( key.startsWith( "texture" ) )
         {
             String facingString = key.substring( "texture".length() ).toUpperCase();
             ProtoBlockTextureMap.Layer layer = EnumUtils.isValidEnum( ProtoBlockTextureMap.Layer.class , facingString )
@@ -286,14 +375,6 @@ public class TileData
                 layeredTextureLayers[ layer.ordinal() ] = layers.toArray( new LayeredTextureLayer[ 0 ] );
                 return true;
             }
-        }
-        else if( key.startsWith( "lang." ) )
-        {
-            if( languageMap == null )
-                languageMap = new HashMap<>();
-
-            languageMap.put( key.substring( "lang.".length() ) , value );
-            return true;
         }
 
         return false;

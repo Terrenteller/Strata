@@ -4,11 +4,11 @@ import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.ICommonBlockProperties;
+import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,10 +50,8 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
 
     SoundEventTuple ambientSound();
 
-    int baseDropAmount();
-
     @Nullable
-    String bonusDropExpr();
+    WeightedDropCollections weightedDropGroups();
 
     int baseExp();
 

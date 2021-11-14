@@ -6,6 +6,7 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.item.LocalizationRegistry;
+import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
@@ -40,8 +41,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
-    private int baseDropAmount;
-    private String bonusDropExpr;
+    private WeightedDropCollections weightedDropCollections;
     private int baseExp;
     private String bonusExpExpr;
 
@@ -71,8 +71,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.furnaceExp = tileData.furnaceExp;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
         this.ambientSound = tileData.ambientSound;
-        this.baseDropAmount = Util.coalesce( tileData.baseDropAmount , 1 );
-        this.bonusDropExpr = tileData.bonusDropExpr;
+        this.weightedDropCollections = tileData.weightedDropCollections;
         this.baseExp = Util.coalesce( tileData.baseExp , 0 );
         this.bonusExpExpr = tileData.bonusExpExpr;
 
@@ -243,16 +242,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return burnTime;
     }
 
+    @Nullable
     @Override
-    public int baseDropAmount()
+    public WeightedDropCollections weightedDropGroups()
     {
-        return baseDropAmount;
-    }
-
-    @Override
-    public String bonusDropExpr()
-    {
-        return bonusDropExpr;
+        return weightedDropCollections;
     }
 
     @Override

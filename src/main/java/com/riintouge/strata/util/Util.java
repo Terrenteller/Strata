@@ -1,7 +1,10 @@
 package com.riintouge.strata.util;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Stack;
 import java.util.function.Supplier;
 import java.util.zip.CRC32;
 
@@ -14,7 +17,7 @@ public class Util
         return value > 0 && ( value & ( value - 1 ) ) == 0;
     }
 
-    public static int whichPowerOfTwo( int value )
+    public static int whichPowerOfTwo( int value ) throws IllegalArgumentException
     {
         if( value > 0 )
             for( int power = 0 ; power != 32 ; power++ )
@@ -27,6 +30,16 @@ public class Util
     public static int squareRootOfPowerOfTwo( int value )
     {
         return 1 << ( whichPowerOfTwo( value ) >>> 1 );
+    }
+
+    public static int clamp( int min , int value , int max )
+    {
+        if( value < min )
+            return min;
+        else if( value > max )
+            return max;
+
+        return value;
     }
 
     public static float clampNormal( float normal )
@@ -60,7 +73,7 @@ public class Util
     }
 
     @Nonnull
-    public static < T > T argumentNullCheck( @Nullable T value , @Nonnull String name )
+    public static < T > T argumentNullCheck( @Nullable T value , @Nonnull String name ) throws IllegalArgumentException
     {
         if( value != null )
             return value;
@@ -73,5 +86,58 @@ public class Util
         crc32.reset();
         crc32.update( value );
         return crc32.getValue();
+    }
+
+    public static double evaluateRPN( String expr , Pair< String , Double > ... variables ) throws NumberFormatException
+    {
+        Stack< Double > rpnStack = new Stack<>();
+
+        for( String exprToken : expr.split( " " ) )
+        {
+            switch( exprToken )
+            {
+                case "+":
+                {
+                    rpnStack.push( rpnStack.pop() + rpnStack.pop() );
+                    break;
+                }
+                case "-":
+                {
+                    double right = rpnStack.pop();
+                    double left = rpnStack.pop();
+                    rpnStack.push( left - right );
+                    break;
+                }
+                case "*":
+                {
+                    rpnStack.push( rpnStack.pop() * rpnStack.pop() );
+                    break;
+                }
+                case "/":
+                {
+                    double right = rpnStack.pop();
+                    double left = rpnStack.pop();
+                    rpnStack.push( left / right );
+                    break;
+                }
+                default:
+                {
+                    boolean wasVariable = false;
+                    for( Pair< String , Double > variable : variables )
+                    {
+                        if( exprToken.equals( variable.getKey() ) )
+                        {
+                            rpnStack.push( variable.getValue() );
+                            wasVariable = true;
+                        }
+                    }
+
+                    if( !wasVariable )
+                        rpnStack.push( Double.parseDouble( exprToken ) );
+                }
+            }
+        }
+
+        return rpnStack.peek();
     }
 }

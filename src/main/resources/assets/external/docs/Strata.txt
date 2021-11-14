@@ -167,20 +167,26 @@ Description:
     Drop the drops, sustain the plants, etc. of the specified block instead.
     Only applies to ores.
 
-Key: drops
-Value: <baseDropAmount> [maxBonusDropExpr]
-Default: 1
+Key: dropGroup.<groupName>
+Value: [weight:int] <ResourceLocation> [minimum:int[-<maximum:int>]]
+OR: [weight:int] <ResourceLocation> <minimum:int>+ <maxBonusDropExpr>
 Description:
-    Controls the number of items dropped by an ore.
-    Will always drop baseDropAmount with a random bonus of zero to the result of maxBonusDropExpr, inclusive.
+    Customizes the probability and amount of what items an ore can drop.
+    weight controls how likely a drop is within the group and defaults to 100. The sum of weights can exceed 100.
+    ResourceLocation refers to the item that will drop.
+    ResourceLocation may also be '*' to represent the ore's own item or '-' to represent to no item at all (no drop).
+    The "minimum-maximum" form (e.g. "4-9" for lapis) will use vanilla's standard fortune formula.
+    The "minimum+ bonus" form (e.g. "1+ f 2 *") will use a discrete uniform distribution (all values equally probable).
     maxBonusDropExpr shall be a simple expression in Reverse Polish Notation. Operators +, -, *, and / are available.
-    The value of fortune is provided as the variable 'f'.
+    The result of maxBonusDropExpr defines the upper bound (inclusive) of the random amount to drop.
     The result of maxBonusDropExpr is rounded to the nearest integer.
-    For example, "drops 0 0.2 f *" will only give a 50% chance of dropping an ore with Fortune III.
-    Never drops more than a full stack.
+    The level of fortune is provided as the variable 'f'.
+    For example, "0+ 0.2 f *" will only give a 50% chance of dropping an item with Fortune III.
+    All groups are evaluated independently to provide multiple drops at once.
+    Never drops more than a full stack from each group.
 
 Key: exp
-Value: <baseExp> [maxBonusExpExpr]
+Value: <baseExp:int> [maxBonusExpExpr]
 Default: 0
 Description:
     Controls the amount of experience dropped by an ore.
