@@ -35,7 +35,7 @@ Description:
     Each may be registered independently. Omit, or use a hyphen, to skip that object's registration.
     itemOreDictionaryName defaults to itemBlockOreDictionaryName.
     itemOreDictionaryName does not apply when used with "generate".
-    Ores with an itemBlockOreDictionaryName of "oreRedstone" will make the block behave like vanilla redstone ore.
+    Ores with an itemBlockOreDictionaryName of "oreRedstone" will behave like vanilla redstone ore.
     For each entry, Strata will replicate the first furnace recipe found as provided by vanilla or another mod.
     Only applies to ores and primary tile types.
 
@@ -50,6 +50,7 @@ Value: <int>
 Default: 0
 Description:
     Level of tool required for harvest. The tool itself is defined by the tile type.
+    For ores, the value will factor into block break speed but harvest checks will use the host's harvest level.
     If the tile type has a parent, the parent's value takes priority as the default.
 
 Key: hardness
@@ -57,6 +58,7 @@ Value: <float>
 Default: 1.0
 Description:
     Harvest difficulty. For reference, vanilla stone has a hardness of 1.5.
+    For ores, the hardness of the host will also play a role.
     If the tile type has a parent, the parent's value takes priority as the default.
 
 Key: resistance

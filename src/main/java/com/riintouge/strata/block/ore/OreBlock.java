@@ -29,7 +29,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
@@ -125,18 +124,6 @@ public class OreBlock extends BlockFalling
         // This may be called before the tile entity is created
         TileEntity tileEntity = world.getTileEntity( pos );
         return tileEntity instanceof OreBlockTileEntity ? (OreBlockTileEntity)tileEntity : null;
-    }
-
-    public boolean isToolActuallyEffective( ItemStack tool , Material hostMaterial , Material oreMaterial )
-    {
-        // A null ItemStack means getDrops() was called directly, such as by explosion
-        if( tool == null )
-            return true;
-
-        // A tool can be effective without meeting harvest level requirements
-        return tool.getItem() instanceof ItemPickaxe
-            ? hostMaterial == Material.ROCK || oreMaterial == Material.ROCK
-            : hostMaterial != Material.ROCK;
     }
 
     // BlockFalling overrides
@@ -485,7 +472,9 @@ public class OreBlock extends BlockFalling
     public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
     {
         IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
-        return hostProperties != null ? hostProperties.hardness() + 1.5f : oreInfo.hardness();
+        return hostProperties != null
+            ? ( hostProperties.hardness() + oreInfo.hardness() ) / 2.0f
+            : oreInfo.hardness();
     }
 
     @Override
@@ -493,7 +482,7 @@ public class OreBlock extends BlockFalling
     {
         MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
         IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-        if( hostInfo == null || !isToolActuallyEffective( harvestTool.get() , hostInfo.material() , oreInfo.material() ) )
+        if( hostInfo == null )
             return;
 
         ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
@@ -549,7 +538,13 @@ public class OreBlock extends BlockFalling
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
         IHostInfo hostProperties = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
-        return hostProperties != null ? hostProperties.harvestLevel() : oreInfo.harvestLevel();
+        if( hostProperties == null )
+            return oreInfo.harvestLevel();
+
+        // The harvest level of the ore doesn't matter if a tool is not required to remove the host from around the ore.
+        // For example, a tool is not required for digging rocks out of a garden but it sure does make things faster.
+        // Alternatively, let the harvest level be that of the host given the same reasoning.
+        return hostProperties.material().isToolNotRequired() ? 0 : hostProperties.harvestLevel();
     }
 
     @Nullable
@@ -666,7 +661,7 @@ public class OreBlock extends BlockFalling
     public boolean isToolEffective( String type , IBlockState state )
     {
         // Assume the best case scenario because state is unlikely to have unlisted property data.
-        // Strata will apply a penalty to PlayerEvent.BreakSpeed where appropriate.
+        // Let PlayerEvent.BreakSpeed figure it out.
         return true;
     }
 

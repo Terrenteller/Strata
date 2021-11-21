@@ -7,6 +7,8 @@ import com.riintouge.strata.block.ore.OreBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlockSpecial;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventBusSubscriber
 public class EventHandlers
 {
+    public static final float unharvestablePenalty = 30f / 100f; // Derived from ForgeHooks.blockStrength()
+    public static final float halfUnharvestablePenalty = unharvestablePenalty + ( ( 1.0f - unharvestablePenalty ) / 2.0f );
+
     /*
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void blockPlace( BlockEvent.PlaceEvent event )
@@ -44,32 +49,118 @@ public class EventHandlers
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void breakSpeed( PlayerEvent.BreakSpeed event )
     {
-        IBlockState state = event.getState();
-        Block block = state.getBlock();
-        if( !( block instanceof OreBlock ) )
-            return;
-
-        World world = event.getEntityPlayer().world;
-        if( world == null )
-            return;
-
-        OreBlock oreBlock = (OreBlock)block;
-        ItemStack tool = event.getEntityPlayer().getHeldItemMainhand();
-        state = block.getActualState( state , world , event.getPos() );
-        IHostInfo hostInfo = oreBlock.getHostInfo( state );
-        IOreInfo oreInfo = oreBlock.getOreInfo();
-
         // When the host material does not require a tool, methods like Block.getHarvestTool()
         // and Block.getHarvestLevel() are skipped. This complicates requirement checks and speed boosts.
         // Instead of having OreBlock gamble on an answer, it always reports true for tool effectiveness
-        // and relies on this event handler to apply a penalty where applicable.
-        if( hostInfo != null && !oreBlock.isToolActuallyEffective( tool , hostInfo.material() , oreInfo.material() ) )
+        // and relies on this event handler to do what it cannot. No penalty is applied here for hosts.
+        // ForgeHooks.blockStrength() already does that.
+
+        EntityPlayer player = event.getEntityPlayer();
+        World world = player.world;
+        if( world == null )
+            return;
+
+        IBlockState oreBlockState = event.getState();
+        Block block = oreBlockState.getBlock();
+        if( !( block instanceof OreBlock ) )
+            return;
+
+        OreBlock oreBlock = (OreBlock)block;
+        oreBlockState = block.getActualState( oreBlockState , world , event.getPos() );
+        IHostInfo hostInfo = oreBlock.getHostInfo( oreBlockState );
+        if( hostInfo == null )
+            return;
+
+        ItemStack tool = player.getHeldItemMainhand();
+        Block hostBlock = Block.getBlockFromName( hostInfo.registryName().toString() );
+        IBlockState hostBlockState = hostBlock.getStateFromMeta( hostInfo.meta() );
+        String hostHarvestTool = hostBlock.getHarvestTool( hostBlockState );
+        int hostToolLevel = tool.getItem().getHarvestLevel( tool , hostHarvestTool , player , hostBlockState );
+        boolean isToolEffectiveOnHost = hostToolLevel != -1;
+        boolean canToolHarvestHost = isToolEffectiveOnHost && hostToolLevel >= hostInfo.harvestLevel();
+
+        // Strong stone ore in a weak stone host with a weak pickaxe?
+        // Just because the tool can't harvest the host doesn't mean it's not effective (and retains its speed).
+        if( !isToolEffectiveOnHost )
         {
-            Block hostBlock = Block.getBlockFromName( hostInfo.registryName().toString() );
-            float hostDestroySpeed = tool.getDestroySpeed( hostBlock.getStateFromMeta( hostInfo.meta() ) );
-            float forgeHookHarvestPenalty = 30f / 100f; // Inverse of the "bonus" in ForgeHooks.blockStrength()
-            event.setNewSpeed( hostDestroySpeed * forgeHookHarvestPenalty );
+            // Stone in stone with a shovel? Clay in sand with an axe?
+            // It doesn't work in the base case. Remove the speed boost applied in EntityPlayer.getDigSpeed()
+            // because OreBlock.isToolEffective() always returns true.
+            event.setNewSpeed( event.getNewSpeed() / getEfficientDestroySpeed( player , oreBlockState ) );
         }
+
+        // No need to penalize an unharvestable host here. ForgeHooks.blockStrength() will do that.
+        // Don't stop here either. We may have more penalties to apply.
+
+        // The ore often defers to the host to satisfy Forge logic. We need the real info here.
+        IOreInfo oreInfo = oreBlock.getOreInfo();
+        String oreHarvestTool = oreInfo.harvestTool();
+        int oreToolLevel = tool.getItem().getHarvestLevel( tool , oreHarvestTool , player , oreBlockState );
+        boolean isToolEffectiveOnOre = oreToolLevel != -1;
+        boolean canToolHarvestOre = isToolEffectiveOnOre && oreToolLevel >= oreInfo.harvestLevel();
+        if( canToolHarvestHost )
+        {
+            if( canToolHarvestOre )
+            {
+                // Stone in stone with a pickaxe? Clay in sand with a shovel?
+                // It just works.
+                return;
+            }
+            else if( oreInfo.material().isToolNotRequired() )
+            {
+                // Clay in stone with a pickaxe?
+                // It doesn't "just work" but it doesn't meet the bar for a penalty.
+                return;
+            }
+            else if( isToolEffectiveOnOre )
+            {
+                // Strong stone ore in weak stone host with an average pickaxe?
+                // A weak harvest penalty will do.
+                event.setNewSpeed( event.getNewSpeed() * halfUnharvestablePenalty );
+                return;
+            }
+            else
+            {
+                // Stone in sand with a shovel?
+                // Retain the tool efficiency speed boost but apply a harvest penalty.
+                if( hostToolLevel >= oreInfo.harvestLevel() )
+                    event.setNewSpeed( event.getNewSpeed() * halfUnharvestablePenalty );
+                else
+                    event.setNewSpeed( event.getNewSpeed() * unharvestablePenalty );
+                return;
+            }
+        }
+        else if( canToolHarvestOre )
+        {
+            // Stone in sand with a pickaxe?
+            // The ineffective host tool speed nerf above is sufficient.
+            return;
+        }
+        else if( oreInfo.material().isToolNotRequired() )
+        {
+            // Clay in sand with a pickaxe?
+            // The ineffective host tool speed nerf makes sense for both host and ore.
+            return;
+        }
+
+        // Strong stone in sand with a weak pickaxe? Stone in sand with an axe?
+        // Whatever the case, you're going to have a bad time.
+        event.setNewSpeed( event.getNewSpeed() * unharvestablePenalty );
+    }
+
+    // Taken from EntityPlayer.getDigSpeed()
+    public static float getEfficientDestroySpeed( EntityPlayer player , IBlockState state )
+    {
+        ItemStack tool = player.getHeldItemMainhand();
+        float destroySpeed = player.inventory.getDestroySpeed( state );
+        if( !tool.isEmpty() && destroySpeed > 1.0f )
+        {
+            int efficiency = EnchantmentHelper.getEfficiencyModifier( player );
+            if( efficiency > 0 )
+                destroySpeed += (float)( efficiency * efficiency + 1 );
+        }
+
+        return destroySpeed;
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
