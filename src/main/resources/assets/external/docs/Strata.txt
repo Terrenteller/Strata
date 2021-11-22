@@ -45,6 +45,12 @@ Description:
     Defines common block properties such as harvest tool, sound type, and block model.
     Value is redundant with "generate".
 
+Key: harvestTool
+Value: <String>
+Description:
+    Set the effective tool for the block or use a hyphen to remove it.
+    Overrides what "generate" and "type" provide by default.
+
 Key: harvestLevel
 Value: <int>
 Default: 0

@@ -185,6 +185,11 @@ public class TileData
                 harvestLevel = Integer.parseInt( value );
                 return true;
             }
+            case "harvestTool":
+            {
+                harvestTool = value.equalsIgnoreCase( "-" ) ? "" : value;
+                return true;
+            }
             case "host":
             {
                 isHost = true;
@@ -234,11 +239,13 @@ public class TileData
             case "type":
             {
                 tileType = TileType.valueOf( value.toUpperCase() );
-                harvestTool = tileType.harvestTool;
+                if( harvestTool == null )
+                    harvestTool = tileType.harvestTool;
                 // Obsfucation prevents us from using reflection
                 // to get non-enum Material and SoundType values from distinct KVs
                 material = tileType.material;
-                soundType = tileType.soundType;
+                if( soundType == null )
+                    soundType = tileType.soundType;
                 return true;
             }
             case "soundEvents":
