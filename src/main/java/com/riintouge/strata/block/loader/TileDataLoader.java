@@ -187,6 +187,7 @@ public class TileDataLoader
                 TileData tileData = tileDataMap.getOrDefault( tileType , null );
                 if( tileData == null )
                 {
+                    // Types with no parent type cannot be created if missing
                     if( tileType.parentType == null )
                         continue;
 
