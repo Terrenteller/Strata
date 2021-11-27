@@ -100,7 +100,7 @@ public class LayeredTexture extends TextureAtlasSprite
                 if( layerTexture.getFrameCount() == 0 )
                     throw new IllegalArgumentException(
                         String.format(
-                            "Layered texture resource \"%s\" has no frames!",
+                            "Layered texture resource \"%s\" has no frames! Does the resource exist?",
                             layerResource.toString() ) );
 
                 if( layerTexture.getIconWidth() != layerTexture.getIconHeight() )

@@ -5,6 +5,7 @@ import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ore.IOreInfo;
+import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.LocalizationRegistry;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.SoundEventTuple;
@@ -17,7 +18,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
@@ -34,7 +35,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private String itemOreDictionaryName;
     private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
-    private ResourceLocation oreItemTextureResource;
+    private List< LayeredTextureLayer > oreItemTextureLayers;
     private MetaResourceLocation equivalentItemResourceLocation;
     private MetaResourceLocation furnaceResult;
     private Float furnaceExp;
@@ -65,7 +66,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.itemOreDictionaryName = tileData.itemOreDictionaryName;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , Strata.resource( "proto_cube_gimbal_overlay" ) );
-        this.oreItemTextureResource = this.modelTextureMap.get( (EnumFacing)null );
+        this.oreItemTextureLayers = tileData.oreItemTextureLayers;
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.furnaceResult = tileData.furnaceResult;
         this.furnaceExp = tileData.furnaceExp;
@@ -128,11 +129,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return blockstateResourceLocation;
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public ResourceLocation oreItemTextureResource()
+    @SideOnly( Side.CLIENT )
+    public List< LayeredTextureLayer > oreItemTextureLayers()
     {
-        return oreItemTextureResource;
+        return oreItemTextureLayers;
     }
 
     @Override

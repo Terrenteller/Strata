@@ -53,6 +53,7 @@ public class TileData
     public String itemOreDictionaryName = null;
     public String fragmentItemOreDictionaryName = null;
     public MetaResourceLocation proxyOreResourceLocation = null;
+    public List< LayeredTextureLayer > oreItemTextureLayers = null;
     public Integer burnTime = null;
     public Integer baseDropAmount = null;
     public String bonusDropExpr = null;
@@ -209,6 +210,11 @@ public class TileData
                 blockOreDictionaryName = values[ 0 ].equals( "-" ) ? null : values[ 0 ];
                 itemOreDictionaryName = values.length > 1 ? ( values[ 1 ].equals( "-" ) ? null : values[ 1 ] ) : blockOreDictionaryName;
                 fragmentItemOreDictionaryName = values.length > 2 && !values[ 2 ].equals( "-" ) ? values[ 2 ] : null;
+                return true;
+            }
+            case "oreItemTexture":
+            {
+                oreItemTextureLayers = parseTextureLayers( value );
                 return true;
             }
             case "proxy":

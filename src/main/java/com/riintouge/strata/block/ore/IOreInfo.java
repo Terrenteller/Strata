@@ -4,6 +4,7 @@ import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.ICommonBlockProperties;
+import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
 {
@@ -33,8 +35,9 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nonnull
     ResourceLocation blockstateResourceLocation();
 
-    @Nonnull
-    ResourceLocation oreItemTextureResource();
+    @Nullable
+    @SideOnly( Side.CLIENT )
+    List< LayeredTextureLayer > oreItemTextureLayers();
 
     @Nullable
     ItemStack equivalentItemStack();
