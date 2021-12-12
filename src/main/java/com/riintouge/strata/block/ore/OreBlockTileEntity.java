@@ -20,6 +20,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OreBlockTileEntity extends TileEntity
@@ -96,7 +97,15 @@ public class OreBlockTileEntity extends TileEntity
     @Nonnull
     public MetaResourceLocation findHost( IBlockAccess worldIn , BlockPos pos )
     {
+        IBlockState state = world.getBlockState( pos );
+        OreBlock oreBlock = (OreBlock)state.getBlock();
+        MetaResourceLocation forcedHost = oreBlock.getOreInfo().forcedHost();
+        if( forcedHost != null && HostRegistry.INSTANCE.find( forcedHost ) != null )
+            return forcedHost;
+
         Map< MetaResourceLocation , Float > hostWeight = new HashMap<>();
+        List< MetaResourceLocation > hostAffinities = oreBlock.getOreInfo().hostAffinities();
+        int mostAffinitizedHostIndex = -1;
 
         for( EnumFacing facing : EnumFacing.VALUES )
         {
@@ -104,6 +113,13 @@ public class OreBlockTileEntity extends TileEntity
             IHostInfo hostInfo = host != null ? HostRegistry.INSTANCE.find( host ) : null;
             if( hostInfo == null )
                 continue;
+
+            if( hostAffinities != null )
+            {
+                int affinityIndex = hostAffinities.indexOf( host );
+                if( affinityIndex >= 0 && ( affinityIndex < mostAffinitizedHostIndex || mostAffinitizedHostIndex == -1 ) )
+                    mostAffinitizedHostIndex = affinityIndex; 
+            }
 
             float weight = 1;
 
@@ -118,21 +134,24 @@ public class OreBlockTileEntity extends TileEntity
                 weight *= facing.getAxis().isHorizontal() ? 2 : 1;
 
                 // Give a bonus for hosts which match the ore's material
-                Block block = worldIn.getBlockState( pos ).getBlock();
-                OreBlock oreBlock = block instanceof OreBlock ? (OreBlock)block : null;
-                if( oreBlock != null && hostInfo.material() == oreBlock.oreInfo.material() )
-                    weight *= 2;
-                else
-                    weight /= 2;
+                weight *= hostInfo.material() == oreBlock.oreInfo.material() ? 2.0f : 0.5f;
             }
 
             hostWeight.put( host , hostWeight.getOrDefault( host , 0.0f ) + weight );
+        }
+        
+        if( mostAffinitizedHostIndex != -1 )
+        {
+            MetaResourceLocation mostAffinitizedHost = hostAffinities.get( mostAffinitizedHostIndex );
+            if( HostRegistry.INSTANCE.find( mostAffinitizedHost ) != null )
+                return mostAffinitizedHost;
         }
 
         Map.Entry< MetaResourceLocation , Float > bestEntry = null;
         for( Map.Entry< MetaResourceLocation , Float > entry : hostWeight.entrySet() )
             if( bestEntry == null || entry.getValue() > bestEntry.getValue() )
-                bestEntry = entry;
+                if( HostRegistry.INSTANCE.find( entry.getKey() ) != null )
+                    bestEntry = entry;
 
         return bestEntry != null ? bestEntry.getKey() : UnlistedPropertyHostRock.DEFAULT;
     }

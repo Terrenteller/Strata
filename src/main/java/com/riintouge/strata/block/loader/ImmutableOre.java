@@ -43,6 +43,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
     private WeightedDropCollections weightedDropCollections;
+    public MetaResourceLocation forcedHost;
+    public List< MetaResourceLocation > hostAffinities;
     private int baseExp;
     private String bonusExpExpr;
 
@@ -73,6 +75,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
         this.ambientSound = tileData.ambientSound;
         this.weightedDropCollections = tileData.weightedDropCollections;
+        this.forcedHost = tileData.forcedHost;
+        this.hostAffinities = tileData.hostAffinities;
         this.baseExp = Util.coalesce( tileData.baseExp , 0 );
         this.bonusExpExpr = tileData.bonusExpExpr;
 
@@ -249,6 +253,20 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public WeightedDropCollections weightedDropGroups()
     {
         return weightedDropCollections;
+    }
+
+    @Nullable
+    @Override
+    public MetaResourceLocation forcedHost()
+    {
+        return forcedHost;
+    }
+
+    @Nullable
+    @Override
+    public List< MetaResourceLocation > hostAffinities()
+    {
+        return hostAffinities;
     }
 
     @Override

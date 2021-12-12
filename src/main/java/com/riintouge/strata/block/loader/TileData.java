@@ -60,6 +60,8 @@ public class TileData
     public Integer baseExp = null;
     public String bonusExpExpr = null;
     public WeightedDropCollections weightedDropCollections = null;
+    public MetaResourceLocation forcedHost = null;
+    public List< MetaResourceLocation > hostAffinities = null;
 
     // IHostInfo
     public MetaResourceLocation hostMetaResource = null;
@@ -139,6 +141,11 @@ public class TileData
                     bonusExpExpr = values[ 1 ];
                 return true;
             }
+            case "forceHost":
+            {
+                forcedHost = new MetaResourceLocation( value );
+                return true;
+            }
             case "fragmentConvertsTo":
             {
                 equivalentFragmentItemResourceLocation = new MetaResourceLocation( value );
@@ -196,6 +203,14 @@ public class TileData
                 isHost = true;
                 if( !value.isEmpty() )
                     hostMetaResource = new MetaResourceLocation( value );
+                return true;
+            }
+            case "hostAffinities":
+            {
+                if( hostAffinities == null )
+                    hostAffinities = new ArrayList<>();
+                for( String hostValue : value.split( " " ) )
+                    hostAffinities.add( new MetaResourceLocation( hostValue ) );
                 return true;
             }
             case "ore":

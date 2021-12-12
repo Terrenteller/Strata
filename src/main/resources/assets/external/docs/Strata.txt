@@ -183,6 +183,19 @@ Description:
     Drop the drops, sustain the plants, etc. of the specified block instead.
     Only applies to ores.
 
+Key: hostAffinities
+Value: <<ResourceLocation>[:<meta>]>+
+Description:
+    Prioritize one or more hosts for an ore in descending order.
+    Default host selection heuristics apply if the ore is not adjacent to any given host.
+
+Key: forceHost
+Value: <ResourceLocation>[:<meta>]
+Description:
+    Force the ore to use a specific host.
+    This keyvalue will be ignored if the host does not exist.
+    This may be useful for compatibility but is not what Strata was designed for.
+
 Key: dropGroup.<groupName>
 Value: [weight:int] <ResourceLocation> [minimum:int[-<maximum:int>]]
 OR: [weight:int] <ResourceLocation> <minimum:int>+ <maxBonusDropExpr>

@@ -56,6 +56,12 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nullable
     WeightedDropCollections weightedDropGroups();
 
+    @Nullable
+    MetaResourceLocation forcedHost();
+
+    @Nullable
+    List< MetaResourceLocation > hostAffinities();
+
     int baseExp();
 
     @Nullable
