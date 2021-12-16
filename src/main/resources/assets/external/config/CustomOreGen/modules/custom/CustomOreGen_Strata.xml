@@ -629,7 +629,7 @@
 
     </ConfigSection>
 
-    <!-- Ore to stone -->
+    <!-- Ore replacement -->
     <ConfigSection>
 
       <!-- When a substitute preset inherits from another and specifies block replacements, inherited replacements
@@ -645,187 +645,445 @@
 
       <IfCondition condition=":=?StrataVanillaOreOverride">
         <IfCondition condition=":=?StrataGenCoal">
-          <Substitute name="CoalToStone" block="minecraft:stone">
-            <ReplacesOre block="oreCoal" />
-          </Substitute>
+          <Then>
+            <Substitute name="CoalToStone" block="minecraft:stone">
+              <ReplacesOre block="oreCoal" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="CoalToStrata" block="strata:coal_ore">
+              <ReplacesOre block="oreCoal" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenDiamond">
-          <Substitute name="DiamondToStone" block="minecraft:stone">
-            <ReplacesOre block="oreDiamond" />
-          </Substitute>
+          <Then>
+            <Substitute name="DiamondToStone" block="minecraft:stone">
+              <ReplacesOre block="oreDiamond" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="DiamondToStrata" block="strata:diamond_ore">
+              <ReplacesOre block="oreDiamond" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenEmerald">
-          <Substitute name="EmeraldToStone" block="minecraft:stone">
-            <ReplacesOre block="oreEmerald" />
-          </Substitute>
+          <Then>
+            <Substitute name="EmeraldToStone" block="minecraft:stone">
+              <ReplacesOre block="oreEmerald" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="EmeraldToStrata" block="strata:emerald_ore">
+              <ReplacesOre block="oreEmerald" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenGold">
-          <Substitute name="GoldToStone" block="minecraft:stone">
-            <ReplacesOre block="oreGold" />
-          </Substitute>
+          <Then>
+            <Substitute name="GoldToStone" block="minecraft:stone">
+              <ReplacesOre block="oreGold" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="GoldToStrata" block="strata:gold_ore">
+              <ReplacesOre block="oreGold" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenIron">
-          <Substitute name="IronToStone" block="minecraft:stone">
-            <ReplacesOre block="oreIron" />
-          </Substitute>
+          <Then>
+            <Substitute name="IronToStone" block="minecraft:stone">
+              <ReplacesOre block="oreIron" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="IronToStrata" block="strata:iron_ore">
+              <Replaces block="minecraft:iron_ore" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenLapis">
-          <Substitute name="LapisToStone" block="minecraft:stone">
-            <ReplacesOre block="oreLapis" />
-          </Substitute>
+          <Then>
+            <Substitute name="LapisToStone" block="minecraft:stone">
+              <ReplacesOre block="oreLapis" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="LapisToStrata" block="strata:lapis_ore">
+              <ReplacesOre block="oreLapis" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenRedstone">
-          <Substitute name="RedstoneToStone" block="minecraft:stone">
-            <ReplacesOre block="oreRedstone" />
-          </Substitute>
+          <Then>
+            <Substitute name="RedstoneToStone" block="minecraft:stone">
+              <ReplacesOre block="oreRedstone" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="RedstoneToStrata" block="strata:redstone_ore">
+              <ReplacesOre block="oreRedstone" />
+            </Substitute>
+          </Else>
         </IfCondition>
       </IfCondition>
 
       <IfCondition condition=":=?StrataCustomOreOverride">
         <IfCondition condition=":=?StrataGenAluminum">
-          <Substitute name="AluminumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreBauxite" />
-          </Substitute>
+          <Then>
+            <Substitute name="AluminumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreBauxite" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="AluminumToStrata">
+              <OreBlock block="strata:alunite_ore" weight="0.5"/>
+              <OreBlock block="strata:bauxite_ore" weight="0.5"/>
+              <ReplacesOre block="oreBauxite" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenAntimony">
-          <Substitute name="ChromiumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreAntimony" />
-          </Substitute>
+          <Then>
+            <Substitute name="ChromiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreAntimony" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="ChromiumToStrata" block="strata:stibnite_ore">
+              <ReplacesOre block="oreAntimony" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenApatite">
-          <Substitute name="ApatiteToStone" block="minecraft:stone">
-            <ReplacesOre block="oreApatite" />
-          </Substitute>
+          <Then>
+            <Substitute name="ApatiteToStone" block="minecraft:stone">
+              <ReplacesOre block="oreApatite" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="ApatiteToStrata" block="strata:apatite_ore">
+              <ReplacesOre block="oreApatite" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenArsenic">
-          <Substitute name="ArsenicToStone" block="minecraft:stone">
-            <ReplacesOre block="oreArsenic" />
-          </Substitute>
+          <Then>
+            <Substitute name="ArsenicToStone" block="minecraft:stone">
+              <ReplacesOre block="oreArsenic" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="ArsenicToStrata" block="strata:realgar_ore">
+              <ReplacesOre block="oreArsenic" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenAsbestos">
-          <Substitute name="AsbestosToStone" block="minecraft:stone">
-            <ReplacesOre block="oreAsbestos" />
-          </Substitute>
+          <Then>
+            <Substitute name="AsbestosToStone" block="minecraft:stone">
+              <ReplacesOre block="oreAsbestos" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="AsbestosToStrata" block="strata:chrysotile_ore">
+              <ReplacesOre block="oreAsbestos" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenBarium">
-          <Substitute name="BariumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreBarium" />
-          </Substitute>
+          <Then>
+            <Substitute name="BariumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreBarium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="BariumToStrata" block="strata:barite_ore">
+              <ReplacesOre block="oreBarium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenBastnasite">
-          <Substitute name="BastnasiteToStone" block="minecraft:stone">
-            <ReplacesOre block="oreBastnasite" />
-          </Substitute>
+          <Then>
+            <Substitute name="BastnasiteToStone" block="minecraft:stone">
+              <ReplacesOre block="oreBastnasite" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="BastnasiteToStrata" block="strata:bastnasite_ore">
+              <ReplacesOre block="oreBastnasite" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenCaesium">
-          <Substitute name="CaesiumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreCaesium" />
-          </Substitute>
+          <Then>
+            <Substitute name="CaesiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreCaesium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="CaesiumToStrata" block="strata:pollucite_ore">
+              <ReplacesOre block="oreCaesium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenChromium">
-          <Substitute name="ChromiumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreChromium" />
-          </Substitute>
+          <Then>
+            <Substitute name="ChromiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreChromium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="ChromiumToStrata" block="strata:chromite_ore">
+              <ReplacesOre block="oreChromium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenCopper">
-          <Substitute name="CopperToStone" block="minecraft:stone">
-            <ReplacesOre block="oreCopper" />
-          </Substitute>
+          <Then>
+            <Substitute name="CopperToStone" block="minecraft:stone">
+              <ReplacesOre block="oreCopper" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="CopperToStrata" block="strata:chalcopyrite_ore">
+              <ReplacesOre block="oreCopper" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenFluorite">
-          <Substitute name="FluoriteToStone" block="minecraft:stone">
-            <ReplacesOre block="oreFluorite" />
-          </Substitute>
+          <Then>
+            <Substitute name="FluoriteToStone" block="minecraft:stone">
+              <ReplacesOre block="oreFluorite" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="FluoriteToStrata" block="strata:fluorite_ore">
+              <ReplacesOre block="oreFluorite" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenLead">
-          <Substitute name="LeadToStone" block="minecraft:stone">
-            <ReplacesOre block="oreLead" />
-          </Substitute>
+          <Then>
+            <Substitute name="LeadToStone" block="minecraft:stone">
+              <ReplacesOre block="oreLead" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="LeadToStrata" block="strata:galena_ore">
+              <ReplacesOre block="oreLead" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenLithium">
-          <Substitute name="LithiumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreLithium" />
-          </Substitute>
+          <Then>
+            <Substitute name="LithiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreLithium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="LithiumToStrata" block="strata:spodumene_ore">
+              <ReplacesOre block="oreLithium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenMagnesium">
-          <Substitute name="MagnesiumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreMagnesium" />
-          </Substitute>
+          <Then>
+            <Substitute name="MagnesiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreMagnesium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="MagnesiumToStrata" block="strata:magnesite_ore">
+              <ReplacesOre block="oreMagnesium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenManganese">
-          <Substitute name="ManganeseToStone" block="minecraft:stone">
-            <ReplacesOre block="oreManganese" />
-          </Substitute>
+          <Then>
+            <Substitute name="ManganeseToStone" block="minecraft:stone">
+              <ReplacesOre block="oreManganese" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="ManganeseToStrata" block="strata:pyrolusite_ore">
+              <ReplacesOre block="oreManganese" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenMercury">
-          <Substitute name="MercuryToStone" block="minecraft:stone">
-            <ReplacesOre block="oreCinnabar" />
-          </Substitute>
+          <Then>
+            <Substitute name="MercuryToStone" block="minecraft:stone">
+              <ReplacesOre block="oreCinnabar" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="MercuryToStrata" block="strata:cinnabar_ore">
+              <ReplacesOre block="oreCinnabar" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenMolybdenum">
-          <Substitute name="MolybdenumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreMolybdenum" />
-          </Substitute>
+          <Then>
+            <Substitute name="MolybdenumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreMolybdenum" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="MolybdenumToStrata" block="strata:molybdenite_ore">
+              <ReplacesOre block="oreMolybdenum" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenNickel">
-          <Substitute name="NickelToStone" block="minecraft:stone">
-            <ReplacesOre block="oreNickel" />
-          </Substitute>
+          <Then>
+            <Substitute name="NickelToStone" block="minecraft:stone">
+              <ReplacesOre block="oreNickel" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="NickelToStrata">
+              <OreBlock block="strata:garnierite_ore" weight="0.5"/>
+              <OreBlock block="strata:pentlandite_ore" weight="0.5"/>
+              <ReplacesOre block="oreNickel" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenPyrite">
-          <Substitute name="PyriteToStone" block="minecraft:stone">
-            <ReplacesOre block="orePyrite" />
-          </Substitute>
+          <Then>
+            <Substitute name="PyriteToStone" block="minecraft:stone">
+              <ReplacesOre block="orePyrite" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="PyriteToStrata" block="strata:pyrite_ore">
+              <ReplacesOre block="orePyrite" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenSalt">
-          <Substitute name="SaltToStone" block="minecraft:stone">
-            <ReplacesOre block="oreSalt" />
-          </Substitute>
+          <Then>
+            <Substitute name="SaltToStone" block="minecraft:stone">
+              <ReplacesOre block="oreSalt" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="SaltToStrata" block="strata:salt">
+              <ReplacesOre block="oreSalt" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenStrontium">
-          <Substitute name="StrontiumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreStrontium" />
-          </Substitute>
+          <Then>
+            <Substitute name="StrontiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreStrontium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="StrontiumToStrata" block="strata:celestine_ore">
+              <ReplacesOre block="oreStrontium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenTantalum">
-          <Substitute name="TantalumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreTantalum" />
-          </Substitute>
+          <Then>
+            <Substitute name="TantalumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreTantalum" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="TantalumToStrata" block="strata:tantalite_ore">
+              <ReplacesOre block="oreTantalum" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenTin">
-          <Substitute name="TinToStone" block="minecraft:stone">
-            <ReplacesOre block="oreTin" />
-          </Substitute>
+          <Then>
+            <Substitute name="TinToStone" block="minecraft:stone">
+              <ReplacesOre block="oreTin" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="TinToStrata" block="strata:cassiterite_ore">
+              <ReplacesOre block="oreTin" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenTitanium">
-          <Substitute name="TitaniumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreTitanium" />
-          </Substitute>
+          <Then>
+            <Substitute name="TitaniumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreTitanium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="TitaniumToStrata" block="strata:ilmenite_ore">
+              <ReplacesOre block="oreTitanium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenTungsten">
-          <Substitute name="TungstenToStone" block="minecraft:stone">
-            <ReplacesOre block="oreTungsten" />
-          </Substitute>
+          <Then>
+            <Substitute name="TungstenToStone" block="minecraft:stone">
+              <ReplacesOre block="oreTungsten" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="TungstenToStrata">
+              <OreBlock block="strata:scheelite_ore" weight="0.5"/>
+              <OreBlock block="strata:wolframite_ore" weight="0.5"/>
+              <ReplacesOre block="oreTungsten" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenUranium">
-          <Substitute name="UraniumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreUranium" />
-          </Substitute>
+          <Then>
+            <Substitute name="UraniumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreUranium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="UraniumToStrata" block="strata:pitchblende_ore">
+              <ReplacesOre block="oreUranium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenQuartz">
-          <Substitute name="QuartzToStone" block="minecraft:stone">
-            <ReplacesOre block="oreQuartz" />
-          </Substitute>
+          <Then>
+            <Substitute name="QuartzToStone" block="minecraft:stone">
+              <ReplacesOre block="oreQuartz" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="QuartzToStrata" block="strata:quartz_ore">
+              <ReplacesOre block="oreQuartz" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenVanadium">
-          <Substitute name="VanadiumToStone" block="minecraft:stone">
-            <ReplacesOre block="oreVanadium" />
-          </Substitute>
+          <Then>
+            <Substitute name="VanadiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreVanadium" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="VanadiumToStrata" block="strata:vanadium_magnetite_ore">
+              <ReplacesOre block="oreVanadium" />
+            </Substitute>
+          </Else>
         </IfCondition>
         <IfCondition condition=":=?StrataGenZinc">
-          <Substitute name="LeadZincToStone" block="minecraft:stone">
-            <ReplacesOre block="oreZinc" />
-          </Substitute>
+          <Then>
+            <Substitute name="LeadZincToStone" block="minecraft:stone">
+              <ReplacesOre block="oreZinc" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="LeadZincToStrata" block="strata:sphalerite_ore">
+              <ReplacesOre block="oreZinc" />
+            </Substitute>
+          </Else>
         </IfCondition>
       </IfCondition>
 
@@ -3339,206 +3597,6 @@
       <Veins name="RedstoneVeins" inherits="PresetRedstoneVeins" />
 
     </IfCondition>
-
-    <!-- In-place ore replacement -->
-    <ConfigSection>
-
-      <!-- This is the alternative to "ore to stone" found far above. Do this last to ensure whatever
-      Strata blocks that are going to be put in the world are in the world for these ores to find. -->
-
-      <IfCondition condition=":=?StrataVanillaOreOverride">
-        <IfCondition condition=":=!?StrataGenCoal">
-          <Substitute name="VanillaCoalReplacement" block="strata:coal_ore">
-            <ReplacesOre block="oreCoal" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenDiamond">
-          <Substitute name="VanillaDiamondReplacement" block="strata:diamond_ore">
-            <ReplacesOre block="oreDiamond" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenEmerald">
-          <Substitute name="VanillaEmeraldReplacement" block="strata:emerald_ore">
-            <ReplacesOre block="oreEmerald" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenGold">
-          <Substitute name="VanillaGoldReplacement" block="strata:gold_ore">
-            <ReplacesOre block="oreGold" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenIron">
-          <Substitute name="VanillaIronReplacement" block="strata:iron_ore">
-            <Replaces block="minecraft:iron_ore" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenLapis">
-          <Substitute name="VanillaLapisReplacement" block="strata:lapis_ore">
-            <ReplacesOre block="oreLapis" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenRedstone">
-          <Substitute name="VanillaRedstoneReplacement" block="strata:redstone_ore">
-            <ReplacesOre block="oreRedstone" />
-          </Substitute>
-        </IfCondition>
-      </IfCondition>
-
-      <IfCondition condition=":=?StrataCustomOreOverride">
-        <IfCondition condition=":=!?StrataGenAluminum">
-          <Substitute name="CustomAluminumReplacement">
-            <OreBlock block="strata:alunite_ore" weight="0.5"/>
-            <OreBlock block="strata:bauxite_ore" weight="0.5"/>
-            <ReplacesOre block="oreBauxite" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenAntimony">
-          <Substitute name="CustomChromiumReplacement" block="strata:stibnite_ore">
-            <ReplacesOre block="oreAntimony" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenApatite">
-          <Substitute name="CustomApatiteReplacement" block="strata:apatite_ore">
-            <ReplacesOre block="oreApatite" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenArsenic">
-          <Substitute name="CustomArsenicReplacement" block="strata:realgar_ore">
-            <ReplacesOre block="oreArsenic" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenAsbestos">
-          <Substitute name="CustomAsbestosReplacement" block="strata:chrysotile_ore">
-            <ReplacesOre block="oreAsbestos" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenBarium">
-          <Substitute name="CustomBariumReplacement" block="strata:barite_ore">
-            <ReplacesOre block="oreBarium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenBastnasite">
-          <Substitute name="CustomBastnasiteReplacement" block="strata:bastnasite_ore">
-            <ReplacesOre block="oreBastnasite" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenCaesium">
-          <Substitute name="CustomCaesiumReplacement" block="strata:pollucite_ore">
-            <ReplacesOre block="oreCaesium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenChromium">
-          <Substitute name="CustomChromiumReplacement" block="strata:chromite_ore">
-            <ReplacesOre block="oreChromium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenCopper">
-          <Substitute name="CustomCopperReplacement" block="strata:chalcopyrite_ore">
-            <ReplacesOre block="oreCopper" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenFluorite">
-          <Substitute name="CustomFluoriteReplacement" block="strata:fluorite_ore">
-            <ReplacesOre block="oreFluorite" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenLead">
-          <Substitute name="CustomLeadReplacement" block="strata:galena_ore">
-            <ReplacesOre block="oreLead" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenLithium">
-          <Substitute name="CustomLithiumReplacement" block="strata:spodumene_ore">
-            <ReplacesOre block="oreLithium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenMagnesium">
-          <Substitute name="CustomMagnesiumReplacement" block="strata:magnesite_ore">
-            <ReplacesOre block="oreMagnesium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenManganese">
-          <Substitute name="CustomManganeseReplacement" block="strata:pyrolusite_ore">
-            <ReplacesOre block="oreManganese" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenMercury">
-          <Substitute name="CustomMercuryReplacement" block="strata:cinnabar_ore">
-            <ReplacesOre block="oreCinnabar" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenMolybdenum">
-          <Substitute name="CustomMolybdenumReplacement" block="strata:molybdenite_ore">
-            <ReplacesOre block="oreMolybdenum" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenNickel">
-          <Substitute name="CustomNickelReplacement">
-            <OreBlock block="strata:garnierite_ore" weight="0.5"/>
-            <OreBlock block="strata:pentlandite_ore" weight="0.5"/>
-            <ReplacesOre block="oreNickel" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenPyrite">
-          <Substitute name="CustomPyriteReplacement" block="strata:pyrite_ore">
-            <ReplacesOre block="orePyrite" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenSalt">
-          <Substitute name="CustomSaltReplacement" block="strata:salt">
-            <ReplacesOre block="oreSalt" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenStrontium">
-          <Substitute name="CustomStrontiumReplacement" block="strata:celestine_ore">
-            <ReplacesOre block="oreStrontium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenTantalum">
-          <Substitute name="CustomTantalumReplacement" block="strata:tantalite_ore">
-            <ReplacesOre block="oreTantalum" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenTin">
-          <Substitute name="CustomTinReplacement" block="strata:cassiterite_ore">
-            <ReplacesOre block="oreTin" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenTitanium">
-          <Substitute name="CustomTitaniumReplacement" block="strata:ilmenite_ore">
-            <ReplacesOre block="oreTitanium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenTungsten">
-          <Substitute name="CustomTungstenReplacement">
-            <OreBlock block="strata:scheelite_ore" weight="0.5"/>
-            <OreBlock block="strata:wolframite_ore" weight="0.5"/>
-            <ReplacesOre block="oreTungsten" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenUranium">
-          <Substitute name="CustomUraniumReplacement" block="strata:pitchblende_ore">
-            <ReplacesOre block="oreUranium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenQuartz">
-          <Substitute name="CustomQuartzReplacement" block="strata:quartz_ore">
-            <ReplacesOre block="oreQuartz" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenVanadium">
-          <Substitute name="CustomVanadiumReplacement" block="strata:vanadium_magnetite_ore">
-            <ReplacesOre block="oreVanadium" />
-          </Substitute>
-        </IfCondition>
-        <IfCondition condition=":=!?StrataGenZinc">
-          <Substitute name="CustomLeadZincReplacement" block="strata:sphalerite_ore">
-            <ReplacesOre block="oreZinc" />
-          </Substitute>
-        </IfCondition>
-      </IfCondition>
-
-    </ConfigSection>
 
   </IfCondition>
 
