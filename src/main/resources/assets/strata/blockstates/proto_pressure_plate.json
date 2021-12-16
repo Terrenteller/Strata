@@ -12,7 +12,7 @@
         }
     },
     "variants": {
-        "powered=false": { "model": "strata:proto_pressure_plate" },
+        "powered=false": { "model": "strata:proto_pressure_plate"         },
         "powered=true":  { "model": "strata:proto_pressure_plate_pressed" }
     }
 }

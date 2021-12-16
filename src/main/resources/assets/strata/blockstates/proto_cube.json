@@ -15,8 +15,22 @@
 		}
 	},
 	"variants": {
-		"normal": [
-			{ "model": "strata:proto_cube" }
-		]
+		"normal":                 { "model": "strata:proto_cube" , "x":   0 , "y":  90 },
+		"orientation=natural":    { "model": "strata:proto_cube" , "x":   0 , "y":   0 },
+
+		"orientation=up_north":   { "model": "strata:proto_cube" , "x":   0 , "y":   0 },
+		"orientation=up_east":    { "model": "strata:proto_cube" , "x":   0 , "y":  90 },
+		"orientation=up_south":   { "model": "strata:proto_cube" , "x":   0 , "y": 180 },
+		"orientation=up_west":    { "model": "strata:proto_cube" , "x":   0 , "y": 270 },
+
+		"orientation=side_north": { "model": "strata:proto_cube" , "x":  90 , "y":   0 },
+		"orientation=side_east":  { "model": "strata:proto_cube" , "x":  90 , "y":  90 },
+		"orientation=side_south": { "model": "strata:proto_cube" , "x":  90 , "y": 180 },
+		"orientation=side_west":  { "model": "strata:proto_cube" , "x":  90 , "y": 270 },
+
+		"orientation=down_north": { "model": "strata:proto_cube" , "x": 180 , "y":   0 },
+		"orientation=down_east":  { "model": "strata:proto_cube" , "x": 180 , "y":  90 },
+		"orientation=down_south": { "model": "strata:proto_cube" , "x": 180 , "y": 180 },
+		"orientation=down_west":  { "model": "strata:proto_cube" , "x": 180 , "y": 270 }
 	}
 }

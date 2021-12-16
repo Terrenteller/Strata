@@ -1,18 +1,23 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -27,6 +32,7 @@ import java.util.Random;
 public class GeoBlock extends BlockFalling
 {
     public static InitializedThreadLocal< Boolean > canSustainPlantEventOverride = new InitializedThreadLocal<>( false );
+    protected static final PropertyEnum< EnumGeoOrientation > ORIENTATION = PropertyEnum.create( "orientation" , EnumGeoOrientation.class );
 
     protected IGeoTileInfo tileInfo;
 
@@ -126,6 +132,12 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer( this , ORIENTATION );
+    }
+
+    @Override
     public Item getItemDropped( IBlockState state , Random rand , int fortune )
     {
         Item item = null;
@@ -151,6 +163,34 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public int getMetaFromState( IBlockState state )
+    {
+        return ( state.getValue( ORIENTATION ) ).meta;
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(
+        World worldIn,
+        BlockPos pos,
+        EnumFacing facing,
+        float hitX,
+        float hitY,
+        float hitZ,
+        int meta,
+        EntityLivingBase placer )
+    {
+        return this.getDefaultState()
+            .withProperty( ORIENTATION , EnumGeoOrientation.placedAgainst( facing , placer.getHorizontalFacing() ) );
+    }
+
+    @Override
+    public IBlockState getStateFromMeta( int meta )
+    {
+        return this.getDefaultState()
+            .withProperty( ORIENTATION , EnumGeoOrientation.VALUES[ meta ] );
+    }
+
+    @Override
     public void neighborChanged( IBlockState state , World worldIn , BlockPos pos , Block blockIn , BlockPos fromPos )
     {
         if( canFall() )
@@ -171,6 +211,18 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public boolean rotateBlock( World world , BlockPos pos , EnumFacing axis )
+    {
+        IBlockState state = world.getBlockState( pos );
+        EnumGeoOrientation rotatedOrientation = state.getValue( ORIENTATION ).rotate( axis );
+        if( rotatedOrientation == null )
+            return false;
+
+        world.setBlockState( pos , state.withProperty( ORIENTATION , rotatedOrientation ) );
+        return true;
+    }
+
+    @Override
     public int tickRate( World worldIn )
     {
         // 10 is the default from Block. We can't call Block.tickRate() from here because Java.
@@ -182,5 +234,17 @@ public class GeoBlock extends BlockFalling
     {
         if( canFall() )
             super.updateTick( worldIn , pos , state , rand );
+    }
+
+    @Override
+    public IBlockState withMirror( IBlockState state , Mirror mirrorIn )
+    {
+        return state.withProperty( ORIENTATION , state.getValue( ORIENTATION ).mirror( mirrorIn ) );
+    }
+
+    @Override
+    public IBlockState withRotation( IBlockState state , Rotation rot )
+    {
+        return state.withProperty( ORIENTATION , state.getValue( ORIENTATION ).rotate( rot ) );
     }
 }

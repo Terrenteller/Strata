@@ -14,18 +14,22 @@
     "variants": {
         "inventory": { "model": "strata:proto_button_inventory" },
 
-        "facing=up,powered=false":    { "model": "strata:proto_button" , "uvlock": true },
-        "facing=down,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x": 180 },
-        "facing=north,powered=false": { "model": "strata:proto_button" , "uvlock": true , "x":  90 },
-        "facing=south,powered=false": { "model": "strata:proto_button" , "uvlock": true , "x":  90 , "y": 180 },
-        "facing=east,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x":  90 , "y":  90 },
-        "facing=west,powered=false":  { "model": "strata:proto_button" , "uvlock": true , "x":  90 , "y": 270 },
+        "facing=up,powered=false":    { "model": "strata:proto_button"         , "x":   0 , "y":   0 , "uvlock": true },
+        "facing=up,powered=true":     { "model": "strata:proto_button_pressed" , "x":   0 , "y":   0 , "uvlock": true },
 
-        "facing=up,powered=true":    { "model": "strata:proto_button_pressed" , "uvlock": true },
-        "facing=down,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x": 180 },
-        "facing=north,powered=true": { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 },
-        "facing=south,powered=true": { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 , "y": 180 },
-        "facing=east,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 , "y":  90 },
-        "facing=west,powered=true":  { "model": "strata:proto_button_pressed" , "uvlock": true , "x":  90 , "y": 270 }
+        "facing=down,powered=false":  { "model": "strata:proto_button"         , "x": 180 , "y":   0 , "uvlock": true },
+        "facing=down,powered=true":   { "model": "strata:proto_button_pressed" , "x": 180 , "y":   0 , "uvlock": true },
+
+        "facing=north,powered=false": { "model": "strata:proto_button"         , "x":  90 , "y":   0 , "uvlock": true },
+        "facing=north,powered=true":  { "model": "strata:proto_button_pressed" , "x":  90 , "y":   0 , "uvlock": true },
+
+        "facing=east,powered=false":  { "model": "strata:proto_button"         , "x":  90 , "y":  90 , "uvlock": true },
+        "facing=east,powered=true":   { "model": "strata:proto_button_pressed" , "x":  90 , "y":  90 , "uvlock": true },
+
+        "facing=south,powered=false": { "model": "strata:proto_button"         , "x":  90 , "y": 180 , "uvlock": true },
+        "facing=south,powered=true":  { "model": "strata:proto_button_pressed" , "x":  90 , "y": 180 , "uvlock": true },
+
+        "facing=west,powered=false":  { "model": "strata:proto_button"         , "x":  90 , "y": 270 , "uvlock": true },
+        "facing=west,powered=true":   { "model": "strata:proto_button_pressed" , "x":  90 , "y": 270 , "uvlock": true }
     }
 }

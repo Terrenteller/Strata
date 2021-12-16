@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.geo.GeoBlock;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.StateUtil;
@@ -163,11 +164,11 @@ public class OreBlockTileEntity extends TileEntity
         IBlockState adjState = worldIn.getBlockState( adjPos );
         Block adjBlock = adjState.getBlock();
         ResourceLocation adjRegistryName = adjBlock.getRegistryName();
-        int adjMeta = adjBlock.getMetaFromState( adjState );
+        // Strata uses the meta for direction and rotation, not a unique block variant
+        int adjMeta = adjBlock instanceof GeoBlock ? 0 : adjBlock.getMetaFromState( adjState );
 
-        MetaResourceLocation possibleHost = new MetaResourceLocation( adjRegistryName , adjMeta );
         return HostRegistry.INSTANCE.find( adjRegistryName , adjMeta ) != null
-            ? possibleHost
+            ? new MetaResourceLocation( adjRegistryName , adjMeta )
             : StateUtil.getValue( adjState , worldIn , adjPos , UnlistedPropertyHostRock.PROPERTY , null );
     }
 
