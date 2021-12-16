@@ -242,49 +242,49 @@
           <Choice value="false" displayValue="No" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenCoal" default=":=?StrataGenRocks &amp; ?StrataVanillaOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenCoal" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace coal.</Description>
           <DisplayName>Coal ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenDiamond" default=":=?StrataGenRocks &amp; ?StrataVanillaOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenDiamond" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace diamonds.</Description>
           <DisplayName>Diamond ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenEmerald" default=":=?StrataGenRocks &amp; ?StrataVanillaOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenEmerald" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace emeralds.</Description>
           <DisplayName>Emerald ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenGold" default=":=?StrataGenRocks &amp; ?StrataVanillaOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenGold" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace gold.</Description>
           <DisplayName>Gold ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenIron" default=":=?StrataGenRocks &amp; ?StrataVanillaOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenIron" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace iron.</Description>
           <DisplayName>Iron ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenLapis" default=":=?StrataGenRocks &amp; ?StrataVanillaOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenLapis" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace lapis lazuli.</Description>
           <DisplayName>Lapis Lazuli ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenRedstone" default=":=?StrataGenRocks &amp; ?StrataVanillaOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenRedstone" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataVanillaOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace redstone.</Description>
           <DisplayName>Redstone ┘</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
@@ -304,63 +304,63 @@
           <Choice value="false" displayValue="No" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenAluminum" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenAluminum" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace aluminum ore (alunite, bauxite).</Description>
           <DisplayName>Aluminum (Bauxite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenAntimony" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenAntimony" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace antimony ore (stibnite).</Description>
           <DisplayName>Antimony (Stibnite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenApatite" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenApatite" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace apatite.</Description>
           <DisplayName>Apatite ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenArsenic" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenArsenic" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace arsenic ore (realgar).</Description>
           <DisplayName>Arsenic (Realgar) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenAsbestos" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenAsbestos" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace asbestos ore (chrysotile).</Description>
           <DisplayName>Asbestos (Chrysotile) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenBarium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenBarium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace barium ore (barite).</Description>
           <DisplayName>Barium (Barite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenBastnasite" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenBastnasite" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace bastnäsite.</Description>
           <DisplayName>Bastnäsite ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenCaesium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenCaesium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace caesium ore (pollucite).</Description>
           <DisplayName>Caesium (Pollucite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenChromium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenChromium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace chromium ore (chromite).</Description>
           <DisplayName>Chromium (Chromite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
@@ -368,133 +368,133 @@
         </OptionChoice>
 
         <!-- FIXME: Malachite is missing from PFAA Geologica and therefore Strata -->
-        <OptionChoice name="StrataGenCopper" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenCopper" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace copper ore (chalcopyrite).</Description>
           <DisplayName>Copper (Chalcopyrite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenFluorite" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenFluorite" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace fluorite.</Description>
           <DisplayName>Fluorite ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenLead" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenLead" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace lead ore (galena).</Description>
           <DisplayName>Lead (Galena) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenLithium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenLithium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace lithium ore (lepidolite, spodumene).</Description>
           <DisplayName>Lithium (Lepidolite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenMagnesium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenMagnesium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace magnesium ore (magnesite).</Description>
           <DisplayName>Magnesium (Magnesite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenManganese" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenManganese" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace manganese ore (pyrolusite).</Description>
           <DisplayName>Manganese (Pyrolusite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenMercury" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenMercury" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace mercury ore (cinnabar).</Description>
           <DisplayName>Mercury (Cinnabar) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenMica" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenMica" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace mica.</Description>
           <DisplayName>Mica ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenMolybdenum" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenMolybdenum" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace molybdenum ore (molybdenite).</Description>
           <DisplayName>Molybdenum (Molybdenite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenNickel" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenNickel" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace nickel ore (garnierite, pentlandite).</Description>
           <DisplayName>Nickel (Pentlandite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenPerlite" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenPerlite" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace perlite.</Description>
           <DisplayName>Perlite ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenPyrite" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenPyrite" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace pyrite.</Description>
           <DisplayName>Pyrite ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenSalt" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenSalt" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace salt ore (halite).</Description>
           <DisplayName>Salt (Halite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenStrontium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenStrontium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace strontium ore (celestine).</Description>
           <DisplayName>Strontium (Celestine) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenTantalum" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenTantalum" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace tantalum ore (tantalite).</Description>
           <DisplayName>Tantalum (Tantalite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenTin" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenTin" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace tin ore (cassiterite).</Description>
           <DisplayName>Tin (Cassiterite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenTitanium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenTitanium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace titanium ore (ilmenite).</Description>
           <DisplayName>Titanium (Ilmenite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenTungsten" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenTungsten" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace tungsten ore (scheelite, wolframite).</Description>
           <DisplayName>Tungsten (Wolframite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenUranium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenUranium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace uranium ore (pitchblende).</Description>
           <DisplayName>Uranium (Pitchblende) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
@@ -502,21 +502,21 @@
         </OptionChoice>
 
         <!-- Implementation Detail: This does not stop quartzite from generating -->
-        <OptionChoice name="StrataGenQuartz" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenQuartz" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace quartz and associated minerals (kyanite).</Description>
           <DisplayName>Quartz ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenVanadium" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenVanadium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace vanadium ore (vanadium magnetite).</Description>
           <DisplayName>Vanadium (Vanadium Magnetite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenZinc" default=":=?StrataGenRocks &amp; ?StrataCustomOreOverride" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+        <OptionChoice name="StrataGenZinc" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
           <Description>Redistribute or replace zinc ore (sphalerite).</Description>
           <DisplayName>Zinc (Sphalerite) ┘</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
