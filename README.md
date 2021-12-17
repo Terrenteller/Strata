@@ -1,6 +1,8 @@
 ## What is Strata?
 
-Strata is a Forge-based, rock and ore generation mod for Minecraft with a focus on providing new content via plain-text configuration files of minimal complexity.
+Strata is a Forge-based, rock and ore generation mod for Minecraft with a focus on providing a platform for new content via plain-text configuration files of minimal complexity.
+
+Want to see what Strata is in pictures? Check [the gallery](https://github.com/Terrenteller/Strata/wiki/Gallery)!
 
 ## What makes Strata special?
 
@@ -9,25 +11,45 @@ _Flexibility_ and **integration**.
 - Strata is not a world generation mod. Ideally, Strata is compatible with all of them!
 - Plain-text configuration files allow anyone to create custom content without a line of code!
 - Tilesets make it easy to define entire suites of stone blocks and their derivatives. Just add textures!
-- Strata will load tile data from resource packs on both client and server. No loose files!
+- Strata will load tile data from resource packs on both client and server. One ZIP to rule them all!
 - Strata's two-in-one ore-in-host-rock system welcomes mod content cross-pollination and resource packs!
 - Ores take on the appearance and properties of their host and drop both when mined!
 - Strata will replicate existing recipes using its own content!
 - Ores support the same plants as their hosts! (technical exceptions withstanding)
 - Strata's redstone ore acts like vanilla redstone ore! (yes, this is important)
+- Strata has no hard dependency on any other mod or modding library! (sans Forge and friends)
 
 ## How do I use Strata?
 
-Strata will have little to no gameplay effect outside of creative mode without a world generation mod to bring it to life (as much as rocks can have). Currently, the only option is [CustomOreGen](https://github.com/lawremi/CustomOreGen).
+Strata will have little to no effect on gameplay outside of creative mode without a world generation mod to bring it to life (as much as rocks can have). Currently, the only option is [CustomOreGen](https://github.com/lawremi/CustomOreGen).
+
+Strata's COG XML is 100% vanilla-compatible out-of-the-box, but is disabled as a whole by default. Given that changes to world generation is ironically destructive, it is easier to turn Strata on than it is to turn off. You may do so in the "Strata" tab of "Custom Ore Generation" options when creating a new world.
+
+_NOTE: You will likely want to turn off COG's handling of vanilla ore generation in the "Vanilla" tab. COG has a long-standing bug of replacing `emerald_ore` with `monster_egg` [here](https://github.com/lawremi/CustomOreGen/blob/db939431ccab85707754c69c6d54858d1fcdf9ff/src/main/resources/config/modules/Vanilla.xml#L2059). You may, of course, fix this manually._
 
 ## How do I use Strata to create my own content?
 
-- `docs/Strata.txt` describes tiledata keyvalues for the current version.
-- `config/strata/tiledata/<modid>` directories contain block/item configuration files.
-    - **The client must know about everything the server does else the client will hang on connect**.
-- `config/strata/recipe/<modid>/blacklist.txt` restricts recipe replication.
+- `docs/Strata.txt` describes tiledata keyvalues for the current version
+- `config/strata/tiledata/<modid>` directories contain block/item configuration files
+    - **The client must know about everything the server does else the client will hang on connect**
+    - **This applies to blocks defined by resource packs as well**
+- `config/strata/recipe/<modid>/blacklist.txt` restricts recipe replication
 
 `<modid>` directories are only processed if a mod with that ID is present. Strata will extract its own configuration into corresponding directories on start but will not overwrite them.
+
+For step-by-step instructions, consult the "Your First" series of tutorials on [the wiki](https://github.com/Terrenteller/Strata/wiki).
+
+## How do I build Strata?
+
+Refer to Forge documentation instead to prepare a development environment for use with an IDE.
+
+**Arch Linux**
+
+```
+# pacman -Sy jdk8-openjdk
+$ ./gradlew setupCIWorkspace
+$ ./gradlew build
+```
 
 ## "Why" is Strata?
 
