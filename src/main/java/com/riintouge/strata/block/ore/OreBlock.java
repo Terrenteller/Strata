@@ -563,6 +563,22 @@ public class OreBlock extends BlockFalling
         return Items.AIR;
     }
 
+    @Deprecated
+    @Override
+    public int getLightValue( IBlockState state )
+    {
+        throw new NotImplementedException( "Use the positional overload instead!" );
+    }
+
+    @Override
+    public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
+    {
+        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+        return hostProperties != null
+            ? Math.max( hostProperties.lightLevel() , oreInfo.lightLevel() )
+            : oreInfo.lightLevel();
+    }
+
     @Override
     public String getLocalizedName()
     {

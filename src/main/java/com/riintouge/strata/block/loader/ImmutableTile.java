@@ -62,7 +62,9 @@ public final class ImmutableTile implements IGeoTileInfo
     private int harvestLevel;
     private float hardness;
     private float explosionResistance;
+    private int lightLevel;
     private int burnTime;
+    private long specialBlockPropertyFlags;
 
     public ImmutableTile( TileData tileData ) throws IllegalArgumentException
     {
@@ -96,7 +98,9 @@ public final class ImmutableTile implements IGeoTileInfo
         this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
         this.hardness = Util.coalesce( tileData.hardness , 1.0f );
         this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f * this.hardness );
+        this.lightLevel = Util.coalesce( tileData.lightLevel , 0 );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
+        this.specialBlockPropertyFlags = Util.coalesce( tileData.specialBlockPropertyFlags , 0L );
 
         LocalizationRegistry.INSTANCE.register(
             this,
@@ -338,8 +342,20 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
+    public int lightLevel()
+    {
+        return lightLevel;
+    }
+
+    @Override
     public int burnTime()
     {
         return burnTime;
+    }
+
+    @Override
+    public long specialBlockPropertyFlags()
+    {
+        return specialBlockPropertyFlags;
     }
 }

@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.ore;
 
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -17,9 +18,16 @@ public class OreTileSet implements IOreTileSet
     {
         this.oreInfo = oreInfo;
 
-        block = "oreRedstone".equals( oreInfo.blockOreDictionaryName() )
-            ? new RedstoneOreBlock( oreInfo )
-            : new OreBlock( oreInfo );
+        if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.ACTIVATABLE ) > 0 )
+        {
+            if( "oreRedstone".equals( oreInfo.blockOreDictionaryName() ) )
+                block = new RedstoneOreBlock( oreInfo );
+            else
+                block = new ActivatableOreBlock( oreInfo );
+        }
+        else
+            block = new OreBlock( oreInfo );
+
         itemBlock = new OreItemBlock( oreInfo , block );
         // Ores with proxies should never drop this item (rather the drops of the proxy ore), but it should
         // always be created so if an ore becomes a proxy it doesn't lead to missing registry entries on world load.

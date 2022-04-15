@@ -3,12 +3,14 @@ package com.riintouge.strata.block.loader;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.*;
 import com.riintouge.strata.sound.SoundEventRegistry;
 import com.riintouge.strata.sound.SoundEventTuple;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -54,7 +56,6 @@ public class TileData
     public String fragmentItemOreDictionaryName = null;
     public MetaResourceLocation proxyOreResourceLocation = null;
     public List< LayeredTextureLayer > oreItemTextureLayers = null;
-    public Integer burnTime = null;
     public Integer baseDropAmount = null;
     public String bonusDropExpr = null;
     public Integer baseExp = null;
@@ -74,6 +75,9 @@ public class TileData
     public Integer harvestLevel = null;
     public Float hardness = null;
     public Float explosionResistance = null;
+    public Integer lightLevel = null;
+    public Integer burnTime = null;
+    public Long specialBlockPropertyFlags = null;
 
     // Shared / Special
     public boolean isHost = false;
@@ -87,6 +91,14 @@ public class TileData
     {
         switch( key )
         {
+            case "activatable":
+            {
+                if( specialBlockPropertyFlags == null )
+                    specialBlockPropertyFlags = 0L;
+
+                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.ACTIVATABLE;
+                return true;
+            }
             case "ambientSound":
             {
                 String[] values = value.split( " " );
@@ -94,8 +106,7 @@ public class TileData
                 {
                     case 1:
                     {
-                        ambientSound = new SoundEventTuple(
-                            SoundEventRegistry.INSTANCE.register( value ) );
+                        ambientSound = new SoundEventTuple( SoundEventRegistry.INSTANCE.register( value ) );
                         return true;
                     }
                     case 3:
@@ -107,6 +118,8 @@ public class TileData
                         return true;
                     }
                 }
+
+                return false;
             }
             case "blockstate":
             {
@@ -213,6 +226,11 @@ public class TileData
                     hostAffinities.add( new MetaResourceLocation( hostValue ) );
                 return true;
             }
+            case "lightLevel":
+            {
+                lightLevel = Util.clamp( 0 , Integer.parseInt( value ) , 15 );
+                return true;
+            }
             case "ore":
             {
                 String[] values = value.split( " " );
@@ -299,6 +317,8 @@ public class TileData
                         return true;
                     }
                 }
+
+                return false;
             }
         }
 

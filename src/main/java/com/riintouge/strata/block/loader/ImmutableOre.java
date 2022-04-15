@@ -56,7 +56,9 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private int harvestLevel;
     private float hardness;
     private float explosionResistance;
+    private int lightLevel;
     private int burnTime;
+    private long specialBlockPropertyFlags;
 
     public ImmutableOre( TileData tileData ) throws IllegalArgumentException
     {
@@ -87,7 +89,9 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
         this.hardness = Util.coalesce( tileData.hardness , 1.0f );
         this.explosionResistance = Util.coalesce( tileData.explosionResistance , 1.7f * this.hardness );
+        this.lightLevel = Util.coalesce( tileData.lightLevel , 0 );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
+        this.specialBlockPropertyFlags = Util.coalesce( tileData.specialBlockPropertyFlags , 0L );
 
         LocalizationRegistry.INSTANCE.register(
             this,
@@ -201,6 +205,39 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return LocalizationRegistry.INSTANCE.get( this );
     }
 
+    @Nullable
+    @Override
+    public WeightedDropCollections weightedDropGroups()
+    {
+        return weightedDropCollections;
+    }
+
+    @Nullable
+    @Override
+    public MetaResourceLocation forcedHost()
+    {
+        return forcedHost;
+    }
+
+    @Nullable
+    @Override
+    public List< MetaResourceLocation > hostAffinities()
+    {
+        return hostAffinities;
+    }
+
+    @Override
+    public int baseExp()
+    {
+        return baseExp;
+    }
+
+    @Override
+    public String bonusExpExpr()
+    {
+        return bonusExpExpr;
+    }
+
     // ICommonBlockProperties overrides
 
     @Nonnull
@@ -243,42 +280,21 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     }
 
     @Override
+    public int lightLevel()
+    {
+        return lightLevel;
+    }
+
+    @Override
     public int burnTime()
     {
         return burnTime;
     }
 
-    @Nullable
     @Override
-    public WeightedDropCollections weightedDropGroups()
+    public long specialBlockPropertyFlags()
     {
-        return weightedDropCollections;
-    }
-
-    @Nullable
-    @Override
-    public MetaResourceLocation forcedHost()
-    {
-        return forcedHost;
-    }
-
-    @Nullable
-    @Override
-    public List< MetaResourceLocation > hostAffinities()
-    {
-        return hostAffinities;
-    }
-
-    @Override
-    public int baseExp()
-    {
-        return baseExp;
-    }
-
-    @Override
-    public String bonusExpExpr()
-    {
-        return bonusExpExpr;
+        return specialBlockPropertyFlags;
     }
 
     // IForgeRegistrable overrides

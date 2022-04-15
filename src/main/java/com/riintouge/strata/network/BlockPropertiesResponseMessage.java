@@ -2,7 +2,9 @@ package com.riintouge.strata.network;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
+import com.riintouge.strata.block.geo.ICommonBlockProperties;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.*;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.IOreTileSet;
@@ -21,6 +23,7 @@ import java.util.*;
 
 public final class BlockPropertiesResponseMessage extends ZipMessage
 {
+    private long SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK = SpecialBlockPropertyFlags.ACTIVATABLE;
     private int mismatches = 0;
     private String firstMismatch = null;
 
@@ -40,6 +43,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         stream.writeInt( properties.harvestLevel() );
         stream.writeFloat( properties.hardness() );
         stream.writeFloat( properties.explosionResistance() );
+        stream.writeLong( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
     }
 
     private boolean readThenCompareCommonBlockProperties( ICommonBlockProperties properties , DataInputStream stream ) throws IOException
@@ -50,6 +54,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         int harvestLevel = stream.readInt();
         float hardness = stream.readFloat();
         float explosionResistance = stream.readFloat();
+        long specialBlockPropertyFlags = stream.readLong();
 
         if( properties == null )
             return false;
@@ -61,6 +66,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         equivalent &= harvestLevel == properties.harvestLevel();
         equivalent &= hardness == properties.hardness();
         equivalent &= explosionResistance == properties.explosionResistance();
+        equivalent &= specialBlockPropertyFlags == ( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
 
         return equivalent;
     }

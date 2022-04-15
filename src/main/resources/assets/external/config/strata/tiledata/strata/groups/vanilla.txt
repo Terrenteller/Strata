@@ -258,3 +258,4 @@ texture strata:blocks/ore/vanilla/redstone
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:redstone
 proxy minecraft:redstone_ore
+activatable

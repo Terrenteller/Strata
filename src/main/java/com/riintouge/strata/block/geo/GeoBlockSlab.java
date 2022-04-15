@@ -1,8 +1,8 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -18,6 +18,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -140,6 +141,19 @@ public class GeoBlockSlab extends BlockSlab
     public Item getItemDropped( IBlockState state , Random rand , int fortune )
     {
         return Item.getItemFromBlock( singleSlab );
+    }
+
+    @Deprecated
+    @Override
+    public int getLightValue( IBlockState state )
+    {
+        return tileInfo.lightLevel();
+    }
+
+    @Override
+    public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
+    {
+        return tileInfo.lightLevel();
     }
 
     @Override

@@ -35,7 +35,6 @@ Description:
     Each may be registered independently. Omit, or use a hyphen, to skip that object's registration.
     itemOreDictionaryName defaults to itemBlockOreDictionaryName.
     itemOreDictionaryName does not apply when used with "generate".
-    Ores with an itemBlockOreDictionaryName of "oreRedstone" will behave like vanilla redstone ore.
     For each entry, Strata will replicate the first furnace recipe found as provided by vanilla or another mod.
     Only applies to ores and primary tile types.
 
@@ -89,6 +88,12 @@ Description:
     Number of ticks the item will burn in a furnace.
     For reference, there are 20 ticks per second and it takes 10 seconds to smelt an item. Standard coal is 1600.
     Only applies to ores and primary tile types.
+
+Key: lightLevel
+Value: <int>
+Default: 0
+Description:
+    The amount of light (0-15) to emit.
 
 Key: texture[Caps|Sides|Up|Down|North|South|East|West]
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
@@ -234,3 +239,8 @@ Description:
     A region will not fall back onto another region.
     If no translation is found for the current locale, "en" will be used, if present. ("pt_pt" > "pt" > "en")
     The registry name or the ore name will be used as the final fallback.
+
+Key: activatable
+Value: N/A
+Description:
+    This flag fine-tunes implementation details and should not be used unless you know what it does.

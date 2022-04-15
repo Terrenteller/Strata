@@ -1,100 +1,44 @@
 package com.riintouge.strata.block.ore;
 
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.NotImplementedException;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class RedstoneOreBlock extends OreBlock
+public class RedstoneOreBlock extends ActivatableOreBlock
 {
+    protected static int DORMANT_LIGHT_LEVEL = 0;
+    protected static int ACTIVE_LIGHT_LEVEL = 9;
+
     public RedstoneOreBlock( IOreInfo oreInfo )
     {
         super( oreInfo );
-        this.oreInfo = oreInfo;
-
-        setTickRandomly( true );
     }
 
-    protected boolean getRedstoneActivationState( IBlockAccess world , BlockPos pos )
-    {
-        OreBlockTileEntity tileEntity = getTileEntity( world , pos );
-        return tileEntity != null && tileEntity.isActive();
-    }
+    // ActivatableOreBlock overrides
 
-    protected void setRedstoneActivationState( World worldIn , BlockPos pos , boolean activated )
+    protected void setActive( World worldIn , BlockPos pos , boolean activated )
     {
-        if( worldIn.isRemote )
-        {
-            if( activated )
-                spawnRedstoneParticles( worldIn , pos );
-        }
-        else
-        {
-            OreBlockTileEntity tileEntity = getTileEntity( worldIn , pos );
-            if( tileEntity != null )
-                tileEntity.setActive( activated );
-        }
+        super.setActive( worldIn , pos , activated );
+
+        if( worldIn.isRemote && activated )
+            spawnRedstoneParticles( worldIn , pos );
     }
 
     // OreBlock overrides
 
-    @Nonnull
-    @Override
-    public IExtendedBlockState getCompleteExtendedState(
-        OreBlockTileEntity entity,
-        IBlockState state,
-        IBlockAccess world,
-        BlockPos pos )
-    {
-        return super.getCompleteExtendedState( entity , state , world , pos )
-            .withProperty( UnlistedPropertyActiveState.PROPERTY , entity != null && entity.isActive() );
-    }
-
-    @Nonnull
-    @Override
-    public IExtendedBlockState getDefaultExtendedState( IBlockState state )
-    {
-        return ( (IExtendedBlockState)state )
-            .withProperty( UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT )
-            .withProperty( UnlistedPropertyActiveState.PROPERTY , UnlistedPropertyActiveState.DEFAULT );
-    }
-
-    // Block overrides
-
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer.Builder( this )
-            .add( UnlistedPropertyHostRock.PROPERTY )
-            .add( UnlistedPropertyActiveState.PROPERTY )
-            .build();
-    }
-
-    @Deprecated
-    @Override
-    public int getLightValue( IBlockState state )
-    {
-        throw new NotImplementedException( "Use the positional overload instead!" );
-    }
-
     @Override
     public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
     {
-        boolean active = getRedstoneActivationState( world , pos );
-        return (int)( 15.0f * ( active ? 0.625 : 0.0f ) );
+        int lightValue = super.getLightValue( state , world , pos );
+        return lightValue >= ACTIVE_LIGHT_LEVEL
+            ? lightValue // Shortcut
+            : Math.max( lightValue , isActive( world , pos ) ? ACTIVE_LIGHT_LEVEL : DORMANT_LIGHT_LEVEL );
     }
 
     @Override
@@ -107,55 +51,13 @@ public class RedstoneOreBlock extends OreBlock
     }
 
     @Override
-    public boolean onBlockActivated(
-        World worldIn,
-        BlockPos pos,
-        IBlockState state,
-        EntityPlayer playerIn,
-        EnumHand hand,
-        EnumFacing facing,
-        float hitX,
-        float hitY,
-        float hitZ )
-    {
-        this.setRedstoneActivationState( worldIn , pos , true );
-
-        return super.onBlockActivated( worldIn , pos , state , playerIn , hand , facing , hitX , hitY , hitZ );
-    }
-
-    @Override
-    public void onBlockClicked( World worldIn , BlockPos pos , EntityPlayer playerIn )
-    {
-        super.onBlockClicked( worldIn , pos , playerIn );
-
-        this.setRedstoneActivationState( worldIn , pos , true );
-    }
-
-    @Override
-    public void onEntityWalk( World worldIn , BlockPos pos , Entity entityIn )
-    {
-        super.onEntityWalk( worldIn , pos , entityIn );
-
-        this.setRedstoneActivationState( worldIn , pos , true );
-    }
-
-    @Override
     @SideOnly( Side.CLIENT )
     public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
     {
         super.randomDisplayTick( stateIn , worldIn , pos , rand );
 
-        if( getRedstoneActivationState( worldIn , pos ) )
+        if( isActive( worldIn , pos ) )
             spawnRedstoneParticles( worldIn , pos );
-    }
-
-    @Override
-    public void updateTick( World worldIn , BlockPos pos , IBlockState state , Random rand )
-    {
-        super.updateTick( worldIn , pos , state , rand );
-
-        if( !worldIn.isRemote )
-            setRedstoneActivationState( worldIn , pos , false );
     }
 
     // spawnRedstoneParticles originated from BlockRedstoneOre.java (Forge 1.12.2-14.23.4.2705).

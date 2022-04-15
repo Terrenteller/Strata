@@ -156,6 +156,19 @@ public class GeoBlock extends BlockFalling
         return item != null ? item : super.getItemDropped( state , rand , fortune );
     }
 
+    @Deprecated
+    @Override
+    public int getLightValue( IBlockState state )
+    {
+        return tileInfo.lightLevel();
+    }
+
+    @Override
+    public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
+    {
+        return tileInfo.lightLevel();
+    }
+
     @Override
     public String getLocalizedName()
     {

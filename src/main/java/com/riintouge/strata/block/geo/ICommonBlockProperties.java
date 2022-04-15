@@ -22,5 +22,9 @@ public interface ICommonBlockProperties
 
     float explosionResistance();
 
+    int lightLevel();
+
     int burnTime();
+
+    long specialBlockPropertyFlags();
 }

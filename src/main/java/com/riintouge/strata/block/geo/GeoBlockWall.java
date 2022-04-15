@@ -2,8 +2,8 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.StateUtil;
@@ -259,6 +259,19 @@ public class GeoBlockWall extends BlockWall
             .withProperty( SOUTH , south )
             .withProperty( WEST , west )
             .withProperty( TALL , tall );
+    }
+
+    @Deprecated
+    @Override
+    public int getLightValue( IBlockState state )
+    {
+        return tileInfo.lightLevel();
+    }
+
+    @Override
+    public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
+    {
+        return tileInfo.lightLevel();
     }
 
     @Override
