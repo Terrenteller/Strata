@@ -621,6 +621,15 @@ public class OreBlock extends BlockFalling
     }
 
     @Override
+    public float getSlipperiness( IBlockState state , IBlockAccess world , BlockPos pos , @Nullable Entity entity )
+    {
+        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+        return hostProperties != null && hostProperties.slipperiness() != null
+            ? hostProperties.slipperiness()
+            : super.getSlipperiness( state , world , pos , entity );
+    }
+
+    @Override
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
         IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );

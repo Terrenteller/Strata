@@ -58,6 +58,8 @@ public class GeoBlockWall extends BlockWall
         setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
         setResistance( tileInfo.explosionResistance() );
+        if( tileInfo.slipperiness() != null )
+            setDefaultSlipperiness( tileInfo.slipperiness() );
     }
 
     private void RemoveBlockWallVariantFromBlockState()

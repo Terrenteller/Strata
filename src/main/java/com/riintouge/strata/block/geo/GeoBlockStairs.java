@@ -30,6 +30,13 @@ public class GeoBlockStairs extends BlockStairs
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         setCreativeTab( Strata.BUILDING_BLOCK_TAB );
+
+        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
+        setSoundType( tileInfo.soundType() );
+        setHardness( tileInfo.hardness() );
+        setResistance( tileInfo.explosionResistance() );
+        if( tileInfo.slipperiness() != null )
+            setDefaultSlipperiness( tileInfo.slipperiness() );
     }
 
     // Block overrides

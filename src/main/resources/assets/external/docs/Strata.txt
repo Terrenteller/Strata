@@ -95,6 +95,14 @@ Default: 0
 Description:
     The amount of light (0-15) to emit.
 
+Key: slipperiness
+Value: <float>
+Default: 0.6
+Description:
+    Influences entity drag and acceleration.
+    As slipperiness increases, acceleration increases, and more speed is preserved.
+    Does not apply to ores.
+
 Key: texture[Caps|Sides|Up|Down|North|South|East|West]
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:

@@ -53,6 +53,8 @@ public class GeoBlock extends BlockFalling
         setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
         setResistance( tileInfo.explosionResistance() );
+        if( tileInfo.slipperiness() != null )
+            setDefaultSlipperiness( tileInfo.slipperiness() );
     }
 
     public boolean canFall()

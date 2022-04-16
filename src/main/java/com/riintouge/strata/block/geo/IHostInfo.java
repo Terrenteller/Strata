@@ -6,6 +6,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface IHostInfo extends ICommonBlockProperties
 {
@@ -13,6 +14,9 @@ public interface IHostInfo extends ICommonBlockProperties
     ResourceLocation registryName();
 
     int meta();
+
+    @Nullable
+    Float slipperiness();
 
     @SideOnly( Side.CLIENT )
     ProtoBlockTextureMap modelTextureMap();

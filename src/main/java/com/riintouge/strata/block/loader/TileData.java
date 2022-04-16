@@ -48,6 +48,9 @@ public class TileData
     public Float fragmentFurnaceExp = null;
     public ArrayList< EnumPlantType > sustainedPlantTypes = null;
     public ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw = null;
+    public ResourceLocation blockstateResourceLocation = null;
+    public SoundEventTuple ambientSound = null;
+    public Float slipperiness = null;
 
     // IOreInfo
     public String oreName = null;
@@ -70,7 +73,6 @@ public class TileData
     // ICommonBlockProperties
     public Material material = null;
     public SoundType soundType = null;
-    public SoundEventTuple ambientSound = null;
     public String harvestTool = null;
     public Integer harvestLevel = null;
     public Float hardness = null;
@@ -81,7 +83,6 @@ public class TileData
 
     // Shared / Special
     public boolean isHost = false;
-    public ResourceLocation blockstateResourceLocation = null;
     public ProtoBlockTextureMap textureMap = null;
     public LayeredTextureLayer[][] layeredTextureLayers = null;
     public Map< String , String > languageMap = null;
@@ -258,6 +259,11 @@ public class TileData
             case "resistance":
             {
                 explosionResistance = Float.parseFloat( value );
+                return true;
+            }
+            case "slipperiness":
+            {
+                slipperiness = Float.parseFloat( value );
                 return true;
             }
             case "sustains":

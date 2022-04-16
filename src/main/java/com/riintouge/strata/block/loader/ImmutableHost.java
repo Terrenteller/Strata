@@ -15,11 +15,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 {
     // IHostInfo
     private MetaResourceLocation hostMetaResource;
+    private Float slipperiness;
     private ProtoBlockTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
 
@@ -40,6 +42,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
 
         // IHostInfo
         this.hostMetaResource = Util.argumentNullCheck( tileData.hostMetaResource , "hostMetaResource" );
+        this.slipperiness = tileData.slipperiness;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
 
         // ICommonBlockProperties
@@ -67,6 +70,13 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     public int meta()
     {
         return hostMetaResource.meta;
+    }
+
+    @Nullable
+    @Override
+    public Float slipperiness()
+    {
+        return slipperiness;
     }
 
     @Override

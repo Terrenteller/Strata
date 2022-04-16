@@ -49,6 +49,8 @@ public final class ImmutableTile implements IGeoTileInfo
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
     private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
+    private SoundEventTuple ambientSound;
+    private Float slipperiness;
 
     // IHostInfo
     private ResourceLocation registryName;
@@ -57,7 +59,6 @@ public final class ImmutableTile implements IGeoTileInfo
     // ICommonBlockProperties
     private Material material;
     private SoundType soundType;
-    private SoundEventTuple ambientSound;
     private String harvestTool;
     private int harvestLevel;
     private float hardness;
@@ -87,6 +88,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
         this.ambientSound = tileData.ambientSound;
+        this.slipperiness = tileData.slipperiness;
 
         // IHostInfo
         this.registryName = tileData.tileType.registryName( this.tileSetName );
@@ -267,6 +269,13 @@ public final class ImmutableTile implements IGeoTileInfo
     public SoundEventTuple ambientSound()
     {
         return ambientSound;
+    }
+
+    @Nullable
+    @Override
+    public Float slipperiness()
+    {
+        return slipperiness;
     }
 
     @Nullable

@@ -420,7 +420,7 @@ public class GeoTileSet implements IForgeRegistrable
             GeoItemFragment fragment = fragmentItems[ typeIndex ];
             if( fragment != null )
             {
-                // The null variant Doesn't do anything because items ignore it
+                // The null variant doesn't do anything because items ignore it
                 ModelLoader.setCustomModelResourceLocation(
                     fragment,
                     tileInfo.meta(),

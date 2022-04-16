@@ -71,6 +71,8 @@ public class GeoBlockSlab extends BlockSlab
         setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
         setResistance( tileInfo.explosionResistance() );
+        if( tileInfo.slipperiness() != null )
+            setDefaultSlipperiness( tileInfo.slipperiness() );
     }
 
     // BlockSlab overrides

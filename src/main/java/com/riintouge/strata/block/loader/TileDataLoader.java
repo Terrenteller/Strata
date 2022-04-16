@@ -102,6 +102,8 @@ public class TileDataLoader
                     tileData.explosionResistance = parentData.explosionResistance;
                 if( tileData.lightLevel == null )
                     tileData.lightLevel = parentData.lightLevel;
+                if( tileData.slipperiness == null )
+                    tileData.slipperiness = parentData.slipperiness;
 
                 // Surprising as it may be, the texture map is also inheritable.
                 // It will have already been initialized with the owner's registry name which prevents duplication.
