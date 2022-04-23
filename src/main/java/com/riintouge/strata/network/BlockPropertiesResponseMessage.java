@@ -9,6 +9,7 @@ import com.riintouge.strata.block.geo.*;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.IOreTileSet;
 import com.riintouge.strata.block.ore.OreRegistry;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -32,11 +33,11 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         // Nothing to do, but required
     }
 
-    private void writeCommonBlockProperties( ICommonBlockProperties properties , DataOutputStream stream ) throws IOException
+    private void writeBlockProperties( ICommonBlockProperties properties , DataOutputStream stream ) throws IOException
     {
         // TODO: It'd be really nice if we could read/write/compare these straight from the interface
 
-        // We can't serialize the material, so try our best for the important parts
+        // We can't serialize the material. Try our best for the important parts.
         stream.writeBoolean( properties.material().isReplaceable() );
         stream.writeBoolean( properties.material().isToolNotRequired() );
         stream.writeUTF( properties.harvestTool() );
@@ -44,6 +45,19 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         stream.writeFloat( properties.hardness() );
         stream.writeFloat( properties.explosionResistance() );
         stream.writeLong( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
+
+        if( properties instanceof IOreInfo )
+        {
+            IOreInfo oreProperties = (IOreInfo)properties;
+            String proxyBlockRegistryName = "";
+            IBlockState proxyBlockState = oreProperties.proxyBlockState();
+            if( proxyBlockState != null )
+            {
+                MetaResourceLocation proxyBlockMetaResource = new MetaResourceLocation( proxyBlockState );
+                proxyBlockRegistryName = proxyBlockMetaResource.toString();
+            }
+            stream.writeUTF( proxyBlockRegistryName );
+        }
     }
 
     private boolean readThenCompareCommonBlockProperties( ICommonBlockProperties properties , DataInputStream stream ) throws IOException
@@ -67,6 +81,49 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         equivalent &= hardness == properties.hardness();
         equivalent &= explosionResistance == properties.explosionResistance();
         equivalent &= specialBlockPropertyFlags == ( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
+
+        return equivalent;
+    }
+
+    private boolean readThenCompareCommonBlockPropertiesWithOre( IOreInfo properties , DataInputStream stream ) throws IOException
+    {
+        boolean isReplaceable = stream.readBoolean();
+        boolean toolNotRequired = stream.readBoolean();
+        String harvestTool = stream.readUTF();
+        int harvestLevel = stream.readInt();
+        float hardness = stream.readFloat();
+        float explosionResistance = stream.readFloat();
+        long specialBlockPropertyFlags = stream.readLong();
+        String proxyBlockRegistryName = stream.readUTF();
+
+        if( properties == null )
+            return false;
+
+        String ourProxyBlockRegistryName = "";
+        IBlockState proxyBlockState = properties.proxyBlockState();
+        if( proxyBlockState != null )
+        {
+            MetaResourceLocation proxyBlockMetaResource = new MetaResourceLocation( proxyBlockState );
+            ourProxyBlockRegistryName = proxyBlockMetaResource.toString();
+        }
+
+        boolean equivalent = true;
+        equivalent &= isReplaceable == properties.material().isReplaceable();
+        equivalent &= toolNotRequired == properties.material().isToolNotRequired();
+        equivalent &= specialBlockPropertyFlags == ( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
+
+        if( !proxyBlockRegistryName.isEmpty() && proxyBlockRegistryName.compareToIgnoreCase( ourProxyBlockRegistryName ) == 0 )
+        {
+            // Both sides agree the ore block is a proxy for the same thing.
+            // Skip checking properties we'd defer to the target.
+        }
+        else
+        {
+            equivalent &= harvestTool.equalsIgnoreCase( properties.harvestTool() );
+            equivalent &= harvestLevel == properties.harvestLevel();
+            equivalent &= hardness == properties.hardness();
+            equivalent &= explosionResistance == properties.explosionResistance();
+        }
 
         return equivalent;
     }
@@ -99,7 +156,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
             {
                 IHostInfo hostInfo = hostInfoPair.getValue();
                 stream.writeUTF( hostInfoPair.getKey().toString() );
-                writeCommonBlockProperties( hostInfo , stream );
+                writeBlockProperties( hostInfo , stream );
             }
         }
 
@@ -112,7 +169,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
             {
                 IOreInfo oreInfo = oreTileSet.getInfo();
                 stream.writeUTF( oreInfo.oreName() );
-                writeCommonBlockProperties( oreInfo , stream );
+                writeBlockProperties( oreInfo , stream );
             }
         }
 
@@ -131,7 +188,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
                 for( IGeoTileInfo tileInfo : tileInfos )
                 {
                     stream.writeUTF( tileInfo.type().toString() );
-                    writeCommonBlockProperties( tileInfo , stream );
+                    writeBlockProperties( tileInfo , stream );
                 }
             }
         }
@@ -161,7 +218,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
                 String oreName = stream.readUTF();
                 IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
                 IOreInfo oreInfo = oreTileSet != null ? oreTileSet.getInfo() : null;
-                boolean equivalent = readThenCompareCommonBlockProperties( oreInfo , stream );
+                boolean equivalent = readThenCompareCommonBlockPropertiesWithOre( oreInfo , stream );
                 if( oreInfo != null && !equivalent )
                 {
                     // Use the item because the block has a special registry name suffix

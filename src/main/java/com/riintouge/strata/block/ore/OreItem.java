@@ -1,17 +1,14 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 public class OreItem extends Item
 {
     protected IOreInfo oreInfo;
-    protected String unlocalizedProxyName = null;
 
     public OreItem( IOreInfo oreInfo )
     {
@@ -27,48 +24,84 @@ public class OreItem extends Item
     // Item overrides
 
     @Override
+    public int getEntityLifespan( ItemStack itemStack , World world )
+    {
+        ItemStack proxyDrop = oreInfo.proxyDrop();
+        if( proxyDrop != null )
+            return proxyDrop.getItem().getEntityLifespan( proxyDrop , world );
+
+        return super.getEntityLifespan( itemStack , world );
+    }
+
+    @Override
     public int getItemBurnTime( ItemStack itemStack )
     {
+        ItemStack proxyDrop = oreInfo.proxyDrop();
+        if( proxyDrop != null )
+        {
+            int burnTime = proxyDrop.getItem().getItemBurnTime( proxyDrop );
+            if( burnTime != -1 )
+                return burnTime;
+        }
+
+        // A proxy may defer to "vanilla logic" with a value of -1. We obviously don't play a part in that.
         return oreInfo.burnTime();
     }
 
     @Override
     public String getItemStackDisplayName( ItemStack stack )
     {
-        return oreInfo.proxyBlockState() != null
-            ? super.getItemStackDisplayName( stack )
-            : oreInfo.localizedName();
+        ItemStack proxyDrop = oreInfo.proxyDrop();
+        if( proxyDrop != null )
+            return proxyDrop.getItem().getItemStackDisplayName( proxyDrop );
+
+        String localizedName = oreInfo.localizedName();
+        return localizedName != null ? localizedName : getRegistryName().toString();
+    }
+
+    @Override
+    public float getSmeltingExperience( ItemStack item )
+    {
+        ItemStack proxyDrop = oreInfo.proxyDrop();
+        if( proxyDrop != null )
+        {
+            float smeltingExp = proxyDrop.getItem().getSmeltingExperience( proxyDrop );
+            if( smeltingExp != -1 )
+                return smeltingExp;
+        }
+
+        // A proxy may defer to "vanilla logic" with a value of -1. We obviously don't play a part in that.
+        return oreInfo.furnaceExp() != null ? oreInfo.furnaceExp() : -1;
     }
 
     @Override
     public String getUnlocalizedName()
     {
-        if( unlocalizedProxyName == null )
-        {
-            IBlockState proxyBlockState = oreInfo.proxyBlockState();
-            if( proxyBlockState != null )
-            {
-                Block proxyBlock = proxyBlockState.getBlock();
-                Item proxyBlockDroppedItem = proxyBlock.getItemDropped( proxyBlockState , null , 0 );
-                if( proxyBlockDroppedItem != null && !proxyBlockDroppedItem.equals( Items.AIR ) )
-                {
-                    int proxyMeta = proxyBlock.damageDropped( proxyBlockState );
-                    return unlocalizedProxyName = new ItemStack( proxyBlockDroppedItem , 1 , proxyMeta ).getUnlocalizedName();
-                }
-            }
+        ItemStack proxyDrop = oreInfo.proxyDrop();
+        if( proxyDrop != null )
+            return proxyDrop.getItem().getUnlocalizedName();
 
-            unlocalizedProxyName = "";
-        }
-        else if( !unlocalizedProxyName.isEmpty() )
-            return unlocalizedProxyName;
-
-        // Strata localization doesn't make a distinction between blocks and items.
+        // Strata localization doesn't make a distinction between blocks and items
         return super.getUnlocalizedName().replaceFirst( "item." , "" );
     }
 
     @Override
     public String getUnlocalizedName( ItemStack stack )
     {
+        ItemStack proxyDrop = oreInfo.proxyDrop();
+        if( proxyDrop != null )
+            return proxyDrop.getItem().getUnlocalizedName( proxyDrop );
+
         return getUnlocalizedName();
+    }
+
+    @Override
+    public boolean isBeaconPayment( ItemStack stack )
+    {
+        ItemStack proxyDrop = oreInfo.proxyDrop();
+        if( proxyDrop != null )
+            return proxyDrop.getItem().isBeaconPayment( proxyDrop );
+
+        return super.isBeaconPayment( stack );
     }
 }

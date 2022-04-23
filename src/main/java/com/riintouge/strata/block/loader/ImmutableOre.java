@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
@@ -42,6 +43,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
+    private ItemStack proxyItemStack = null; // Lazily evaluated
+    private ItemStack proxyDrop = null; // Lazily evaluated
     private WeightedDropCollections weightedDropCollections;
     public MetaResourceLocation forcedHost;
     public List< MetaResourceLocation > hostAffinities;
@@ -97,6 +100,24 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
             this,
             Strata.resource( oreName ).toString() + ".name",
             Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
+    }
+
+    private void resolveProxyMembers()
+    {
+        if( proxyBlockResourceLocation == null )
+            return;
+
+        Block proxyBlock = Block.REGISTRY.getObject( proxyBlockResourceLocation.resourceLocation );
+        proxyBlockState = proxyBlock.getStateFromMeta( proxyBlockResourceLocation.meta );
+
+        Item proxyItemBlock = Item.getItemFromBlock( proxyBlock );
+        proxyItemStack = new ItemStack( proxyItemBlock , 1 , proxyBlockResourceLocation.meta );
+
+        // FIXME: The implementation may use that RNG and we won't get what we really want
+        Item proxyBlockDrop = proxyBlock.getItemDropped( proxyBlockState , new Random() , 0 );
+        proxyDrop = new ItemStack( proxyBlockDrop , 1 , proxyBlockResourceLocation.meta );
+
+        proxyBlockResourceLocation = null;
     }
 
     // IOreInfo overrides
@@ -181,15 +202,27 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public IBlockState proxyBlockState()
     {
-        // Deferred resolution until reasonably sure the block has been created
-        if( proxyBlockResourceLocation != null )
-        {
-            Block proxyBlock = Block.REGISTRY.getObject( proxyBlockResourceLocation.resourceLocation );
-            proxyBlockState = proxyBlock.getStateFromMeta( proxyBlockResourceLocation.meta );
-            proxyBlockResourceLocation = null;
-        }
+        resolveProxyMembers();
 
         return proxyBlockState;
+    }
+
+    @Nullable
+    @Override
+    public ItemStack proxyItemStack()
+    {
+        resolveProxyMembers();
+
+        return proxyItemStack;
+    }
+
+    @Nullable
+    @Override
+    public ItemStack proxyDrop()
+    {
+        resolveProxyMembers();
+
+        return proxyDrop;
     }
 
     @Override

@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class EventHandlers
 {
     public static final float unharvestablePenalty = 30f / 100f; // Derived from ForgeHooks.blockStrength()
-    public static final float halfUnharvestablePenalty = unharvestablePenalty + ( ( 1.0f - unharvestablePenalty ) / 2.0f );
+    public static final float halfUnharvestablePenalty = unharvestablePenalty + ( ( 1.0f - unharvestablePenalty ) * 0.5f );
 
     /*
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -77,7 +77,7 @@ public class EventHandlers
         String hostHarvestTool = hostBlock.getHarvestTool( hostBlockState );
         int hostToolLevel = tool.getItem().getHarvestLevel( tool , hostHarvestTool , player , hostBlockState );
         boolean isToolEffectiveOnHost = hostToolLevel != -1;
-        boolean canToolHarvestHost = isToolEffectiveOnHost && hostToolLevel >= hostInfo.harvestLevel();
+        boolean canToolHarvestHost = hostToolLevel >= hostInfo.harvestLevel();
 
         // Strong stone ore in a weak stone host with a weak pickaxe?
         // Just because the tool can't harvest the host doesn't mean it's not effective (and retains its speed).
@@ -92,12 +92,22 @@ public class EventHandlers
         // No need to penalize an unharvestable host here. ForgeHooks.blockStrength() will do that.
         // Don't stop here either. We may have more penalties to apply.
 
-        // The ore often defers to the host to satisfy Forge logic. We need the real info here.
+        // The ore often defers to the host. We need the real (or proxy) info here.
         IOreInfo oreInfo = oreBlock.getOreInfo();
-        String oreHarvestTool = oreInfo.harvestTool();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            oreBlockState = proxyBlockState;
+
+        String oreHarvestTool = proxyBlockState != null
+            ? proxyBlockState.getBlock().getHarvestTool( proxyBlockState )
+            : oreInfo.harvestTool();
+        int oreHarvestLevel = proxyBlockState != null
+            ? proxyBlockState.getBlock().getHarvestLevel( proxyBlockState )
+            : oreInfo.harvestLevel();
         int oreToolLevel = tool.getItem().getHarvestLevel( tool , oreHarvestTool , player , oreBlockState );
         boolean isToolEffectiveOnOre = oreToolLevel != -1;
-        boolean canToolHarvestOre = isToolEffectiveOnOre && oreToolLevel >= oreInfo.harvestLevel();
+        boolean canToolHarvestOre = oreToolLevel >= oreHarvestLevel;
+
         if( canToolHarvestHost )
         {
             if( canToolHarvestOre )
@@ -114,7 +124,7 @@ public class EventHandlers
             }
             else if( isToolEffectiveOnOre )
             {
-                // Strong stone ore in weak stone host with an average pickaxe?
+                // Strong stone ore in a weak stone host with a weak pickaxe?
                 // A weak harvest penalty will do.
                 event.setNewSpeed( event.getNewSpeed() * halfUnharvestablePenalty );
                 return;
@@ -123,10 +133,7 @@ public class EventHandlers
             {
                 // Stone in sand with a shovel?
                 // Retain the tool efficiency speed boost but apply a harvest penalty.
-                if( hostToolLevel >= oreInfo.harvestLevel() )
-                    event.setNewSpeed( event.getNewSpeed() * halfUnharvestablePenalty );
-                else
-                    event.setNewSpeed( event.getNewSpeed() * unharvestablePenalty );
+                event.setNewSpeed( event.getNewSpeed() * halfUnharvestablePenalty );
                 return;
             }
         }
@@ -139,7 +146,7 @@ public class EventHandlers
         else if( oreInfo.material().isToolNotRequired() )
         {
             // Clay in sand with a pickaxe?
-            // The ineffective host tool speed nerf makes sense for both host and ore.
+            // The ineffective host tool speed nerf above is sufficient.
             return;
         }
 

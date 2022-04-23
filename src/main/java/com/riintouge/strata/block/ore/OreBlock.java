@@ -38,6 +38,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
@@ -53,7 +54,7 @@ import java.util.Random;
 
 public class OreBlock extends BlockFalling
 {
-    // Ore blocks and their item blocks must have a slightly different registry name
+    // Ore blocks and their item blocks have a slightly different registry name
     // so the ore items can have the name of the ore without decoration.
     public static final String RegistryNameSuffix = "_ore";
     protected static ThreadLocal< ItemStack > harvestTool = new ThreadLocal<>();
@@ -386,6 +387,14 @@ public class OreBlock extends BlockFalling
     }
 
     @Override
+    public boolean canDropFromExplosion( Explosion explosionIn )
+    {
+        // This block should never drop.
+        // However, this method may determine if an explosion ultimately calls Block.getDrops().
+        return true;
+    }
+
+    @Override
     protected boolean canSilkHarvest()
     {
         throw new NotImplementedException( "Use the state-sensitive overload instead!" );
@@ -394,10 +403,8 @@ public class OreBlock extends BlockFalling
     @Override
     public boolean canSilkHarvest( World world , BlockPos pos , IBlockState state , EntityPlayer player )
     {
-        IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
-        IBlockState proxyBlockState = oreTileSet != null ? oreTileSet.getInfo().proxyBlockState() : null;
-
-        // The consequences of silk touch only applies to proxy blocks since we should never drop ourself as an item
+        // Silk touch only applies to proxy blocks since we should never drop ourself as an item
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
         return proxyBlockState != null && proxyBlockState.getBlock().canSilkHarvest( world , pos , proxyBlockState , player );
     }
 
@@ -416,15 +423,10 @@ public class OreBlock extends BlockFalling
         if( host.canSustainPlant( hostState , world , pos , direction , plantable ) )
             return true;
 
-        IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
-        IBlockState proxyBlockState = oreTileSet != null ? oreTileSet.getInfo().proxyBlockState() : null;
-        if( proxyBlockState != null )
-        {
-            if( proxyBlockState.getBlock().canSustainPlant( proxyBlockState , world , pos , direction , plantable ) )
-                return true;
-        }
-
-        return super.canSustainPlant( state , world , pos , direction , plantable );
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        return proxyBlockState != null
+            ? proxyBlockState.getBlock().canSustainPlant( proxyBlockState , world , pos , direction , plantable )
+            : super.canSustainPlant( state , world , pos , direction , plantable );
     }
 
     @Override
@@ -439,6 +441,15 @@ public class OreBlock extends BlockFalling
     public TileEntity createTileEntity( World world , IBlockState state )
     {
         return new OreBlockTileEntity( state );
+    }
+
+    @Override
+    public void dropXpOnBlockBreak( World worldIn , BlockPos pos , int amount )
+    {
+        // Somehow different than Block.getExpDrop()
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            proxyBlockState.getBlock().dropXpOnBlockBreak( worldIn , pos , amount );
     }
 
     @Deprecated
@@ -471,10 +482,15 @@ public class OreBlock extends BlockFalling
     @Override
     public float getBlockHardness( IBlockState blockState , World worldIn , BlockPos pos )
     {
+        float oreHardness = oreInfo.hardness();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            oreHardness = proxyBlockState.getBlock().getBlockHardness( proxyBlockState , worldIn , pos );
+
         IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
         return hostProperties != null
-            ? ( hostProperties.hardness() + oreInfo.hardness() ) / 2.0f
-            : oreInfo.hardness();
+            ? ( hostProperties.hardness() + oreHardness ) / 2.0f
+            : oreHardness;
     }
 
     @Override
@@ -487,8 +503,7 @@ public class OreBlock extends BlockFalling
 
         ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
         Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
-        IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
-        IBlockState proxyBlockState = oreTileSet != null ? oreTileSet.getInfo().proxyBlockState() : null;
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
 
         if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestToolOrEmpty ) > 0 )
@@ -504,19 +519,26 @@ public class OreBlock extends BlockFalling
                 proxyBlock.getDrops( drops , world , pos , proxyBlockState , fortune );
         }
 
-        if( proxyBlock == null && oreTileSet != null )
+        if( proxyBlock == null )
         {
             WeightedDropCollections weightedDropCollections = oreInfo.weightedDropGroups();
             if( weightedDropCollections != null )
+            {
                 drops.addAll( weightedDropCollections.collectRandomDrops( RANDOM , fortune ) );
+            }
             else
-                drops.add( new ItemStack( oreTileSet.getItem() ) );
+            {
+                IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreInfo.oreName() );
+                if( oreTileSet != null )
+                    drops.add( new ItemStack( oreTileSet.getItem() ) );
+            }
         }
     }
 
     @Override
     public int getExpDrop( IBlockState state , IBlockAccess world , BlockPos pos , int fortune )
     {
+        // Somehow different than Block.dropXpOnBlockBreak()
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         if( proxyBlockState != null )
             return proxyBlockState.getBlock().getExpDrop( proxyBlockState , world , pos , fortune );
@@ -524,6 +546,29 @@ public class OreBlock extends BlockFalling
         return oreInfo.bonusExpExpr() != null
             ? oreInfo.baseExp() + (int)Math.round( Util.evaluateRPN( oreInfo.bonusExpExpr() , new ImmutablePair<>( "f" , (double)fortune ) ) )
             : oreInfo.baseExp();
+    }
+
+    @Deprecated
+    @Override
+    public float getExplosionResistance( Entity exploder )
+    {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            return proxyBlockState.getBlock().getExplosionResistance( exploder );
+
+        // Explosion resistance math is weird. We can't simply return whatever IOreInfo provides.
+        return super.getExplosionResistance( exploder );
+    }
+
+    @Override
+    public float getExplosionResistance( World world , BlockPos pos , @Nullable Entity exploder , Explosion explosion )
+    {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            return proxyBlockState.getBlock().getExplosionResistance( world , pos , exploder , explosion );
+
+        // Explosion resistance math is weird. We can't simply return whatever IOreInfo provides.
+        return super.getExplosionResistance( world , pos , exploder , explosion );
     }
 
     @Override
@@ -538,13 +583,18 @@ public class OreBlock extends BlockFalling
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
         IHostInfo hostProperties = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
-        if( hostProperties == null )
-            return oreInfo.harvestLevel();
+        if( hostProperties != null )
+        {
+            // The harvest level of the ore doesn't matter if a tool is not required for the host.
+            // For example, a tool is not required to dig rocks out of garden soil, but it helps.
+            // Alternatively, let the harvest level be that of the host given the same reasoning.
+            return hostProperties.material().isToolNotRequired() ? 0 : hostProperties.harvestLevel();
+        }
 
-        // The harvest level of the ore doesn't matter if a tool is not required to remove the host from around the ore.
-        // For example, a tool is not required for digging rocks out of a garden but it sure does make things faster.
-        // Alternatively, let the harvest level be that of the host given the same reasoning.
-        return hostProperties.material().isToolNotRequired() ? 0 : hostProperties.harvestLevel();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        return proxyBlockState != null
+            ? proxyBlockState.getBlock().getHarvestLevel( proxyBlockState )
+            : oreInfo.harvestLevel();
     }
 
     @Nullable
@@ -554,7 +604,13 @@ public class OreBlock extends BlockFalling
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
         IHostInfo hostProperties = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
-        return hostProperties != null ? hostProperties.harvestTool() : oreInfo.harvestTool();
+        if( hostProperties != null )
+            return hostProperties.harvestTool();
+
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        return proxyBlockState != null
+            ? proxyBlockState.getBlock().getHarvestTool( proxyBlockState )
+            : oreInfo.harvestTool();
     }
 
     @Override
@@ -567,22 +623,38 @@ public class OreBlock extends BlockFalling
     @Override
     public int getLightValue( IBlockState state )
     {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            return proxyBlockState.getBlock().getLightValue( proxyBlockState );
+
         throw new NotImplementedException( "Use the positional overload instead!" );
     }
 
     @Override
     public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
     {
+        int hostLightValue = 0;
         IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
-        return hostProperties != null
-            ? Math.max( hostProperties.lightLevel() , oreInfo.lightLevel() )
-            : oreInfo.lightLevel();
+        if( hostProperties != null )
+            hostLightValue = hostProperties.lightLevel();
+
+        int oreLightValue = oreInfo.lightLevel();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            oreLightValue = proxyBlockState.getBlock().getLightValue( proxyBlockState , world , pos );
+
+        return Math.max( hostLightValue , oreLightValue );
     }
 
     @Override
     public String getLocalizedName()
     {
-        return oreInfo.localizedName();
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            return proxyBlockState.getBlock().getLocalizedName();
+
+        String localizedName = oreInfo.localizedName();
+        return localizedName != null ? localizedName : getRegistryName().toString();
     }
 
     @Deprecated
@@ -615,7 +687,7 @@ public class OreBlock extends BlockFalling
     protected ItemStack getSilkTouchDrop( IBlockState state )
     {
         // 1. This block drops multiple items
-        // 2. getSilkTouchDrop() is protected on the proxy block in this scope
+        // 2. getSilkTouchDrop() is protected on the proxy block in this scope (so we can't call the proxy because Java)
         // 3. Nothing should be calling this method anyway
         throw new NotImplementedException( "Not implemented for multiple reasons. Consult the source for details." );
     }
@@ -629,21 +701,44 @@ public class OreBlock extends BlockFalling
             : super.getSlipperiness( state , world , pos , entity );
     }
 
+    @Deprecated
+    public SoundType getSoundType()
+    {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        return proxyBlockState != null
+            ? proxyBlockState.getBlock().getSoundType()
+            : oreInfo.soundType();
+    }
+
     @Override
     public SoundType getSoundType( IBlockState state , World world , BlockPos pos , @Nullable Entity entity )
     {
-        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
-        if( hostProperties != null && RANDOM.nextBoolean() )
+        if( RANDOM.nextBoolean() )
         {
-            MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-            Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
-            return hostBlock.getSoundType( state , world , pos , null );
+            IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+            if( hostProperties != null )
+            {
+                MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+                Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
+                return hostBlock.getSoundType( state , world , pos , null );
+            }
         }
 
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         return proxyBlockState != null
             ? proxyBlockState.getBlock().getSoundType( oreInfo.proxyBlockState() , world , pos , entity )
             : oreInfo.soundType();
+    }
+
+    @Override
+    public String getUnlocalizedName()
+    {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null )
+            return proxyBlockState.getBlock().getUnlocalizedName();
+
+        // Strata localization doesn't make a distinction between blocks and items
+        return super.getUnlocalizedName().replace( "tile." , "" );
     }
 
     @Override

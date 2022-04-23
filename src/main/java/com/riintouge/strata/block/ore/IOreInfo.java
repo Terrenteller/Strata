@@ -51,6 +51,12 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nullable
     IBlockState proxyBlockState();
 
+    @Nullable
+    ItemStack proxyItemStack();
+
+    @Nullable
+    ItemStack proxyDrop();
+
     SoundEventTuple ambientSound();
 
     @Nullable

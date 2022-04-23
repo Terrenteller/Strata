@@ -1,9 +1,8 @@
 package com.riintouge.strata.block.ore;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -28,20 +27,25 @@ public class OreItemBlock extends ItemBlock
     // ItemBlock overrides
 
     @Override
-    public String getUnlocalizedName( ItemStack stack )
+    public String getUnlocalizedName()
     {
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        if( proxyBlockState != null )
-        {
-            Block proxyBlock = proxyBlockState.getBlock();
-            Item proxyItem = Item.getItemFromBlock( proxyBlock );
-            int proxyMeta = proxyBlock.damageDropped( proxyBlockState );
-            ItemStack proxyItemStack = new ItemStack( proxyItem , 1 , proxyMeta );
-            return proxyItem.getUnlocalizedName( proxyItemStack );
-        }
+        ItemStack proxyItemStack = oreInfo.proxyItemStack();
+        if( proxyItemStack != null )
+            return proxyItemStack.getItem().getUnlocalizedName( proxyItemStack );
 
         // Strata localization doesn't make a distinction between blocks and items
         return this.block.getUnlocalizedName().replace( "tile." , "" );
+    }
+
+
+    @Override
+    public String getUnlocalizedName( ItemStack stack )
+    {
+        ItemStack proxyItemStack = oreInfo.proxyItemStack();
+        if( proxyItemStack != null )
+            return proxyItemStack.getItem().getUnlocalizedName( proxyItemStack );
+
+        return getUnlocalizedName();
     }
 
     @Override
@@ -55,7 +59,8 @@ public class OreItemBlock extends ItemBlock
         float hitY,
         float hitZ )
     {
-        // Ore item blocks should not be treated as blocks, especially if fortune is involved!
+        // These items are VERY creative mode only!
+        // A separate ore item exists to avoid gamebreaking behaviour like infinite drops!
         return player != null && player.isCreative()
             ? super.onItemUse( player , worldIn , pos , hand , facing , hitX , hitY , hitZ )
             : EnumActionResult.FAIL;
@@ -66,9 +71,26 @@ public class OreItemBlock extends ItemBlock
     @Override
     public String getItemStackDisplayName( ItemStack stack )
     {
-        // TextFormatting.LIGHT_PURPLE to indicate a creative mode item
-        return "§d" + ( oreInfo.proxyBlockState() != null
-            ? super.getItemStackDisplayName( stack )
-            : oreInfo.localizedName() );
+        String displayName = null;
+        ItemStack proxyItemStack = oreInfo.proxyItemStack();
+        if( proxyItemStack != null )
+        {
+            displayName = proxyItemStack.getItem().getItemStackDisplayName( proxyItemStack );
+        }
+        else
+        {
+            String localizedName = oreInfo.localizedName();
+            displayName = localizedName != null ? localizedName : getRegistryName().toString();
+        }
+
+        // Recolor while preserving other format codes
+        return EnumRarity.EPIC.rarityColor.toString()
+            + displayName.replaceAll( "§[0-9A-F]" , EnumRarity.EPIC.rarityColor.toString() );
+    }
+
+    @Override
+    public EnumRarity getRarity( ItemStack stack )
+    {
+        return EnumRarity.EPIC;
     }
 }

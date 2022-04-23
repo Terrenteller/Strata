@@ -1,6 +1,7 @@
 package com.riintouge.strata.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -50,6 +51,12 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
         }
         else
             this.meta = 0;
+    }
+
+    public MetaResourceLocation( IBlockState blockState )
+    {
+        this.resourceLocation = blockState.getBlock().getRegistryName();
+        this.meta = blockState.getBlock().getMetaFromState( blockState );
     }
 
     public boolean equals( MetaResourceLocation other )

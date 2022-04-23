@@ -193,7 +193,7 @@ Description:
 Key: proxy
 Value: <ResourceLocation>[:<meta>]
 Description:
-    Drop the drops, sustain the plants, etc. of the specified block instead.
+    Display the name, drop the drops, sustain the plants, etc. of the specified block instead.
     Only applies to ores.
 
 Key: hostAffinities
