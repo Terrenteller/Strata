@@ -36,7 +36,8 @@ public class GeoItemFragment extends Item
     @Override
     public String getItemStackDisplayName( ItemStack stack )
     {
-        return tileInfo.localizedName();
+        String name = tileInfo.localizedName();
+        return name != null ? name : tileInfo.registryName().toString();
     }
 
     @Override

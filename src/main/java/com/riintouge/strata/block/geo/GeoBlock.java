@@ -12,8 +12,10 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +29,8 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class GeoBlock extends BlockFalling
@@ -110,6 +114,17 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    @SideOnly( Side.CLIENT )
+    public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
+    {
+        super.addInformation( stack , player , tooltip , advanced );
+
+        List< String > tooltipLines = tileInfo.localizedTooltip();
+        if( tooltipLines != null )
+            tooltip.addAll( tooltipLines );
+    }
+
+    @Override
     public boolean canSustainPlant( IBlockState state , IBlockAccess world , BlockPos pos , EnumFacing direction , IPlantable plantable )
     {
         // Because worldgen may swap an otherwise valid block with us (such as hardened clay with limestone in a mesa),
@@ -174,7 +189,8 @@ public class GeoBlock extends BlockFalling
     @Override
     public String getLocalizedName()
     {
-        return tileInfo.localizedName();
+        String name = tileInfo.localizedName();
+        return name != null ? name : tileInfo.registryName().toString();
     }
 
     @Override

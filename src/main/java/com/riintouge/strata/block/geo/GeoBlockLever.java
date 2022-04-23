@@ -7,6 +7,8 @@ import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -14,6 +16,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class GeoBlockLever extends BlockLever
 {
@@ -56,6 +61,17 @@ public class GeoBlockLever extends BlockLever
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
+    {
+        super.addInformation( stack , player , tooltip , advanced );
+
+        List< String > tooltipLines = tileInfo.localizedTooltip();
+        if( tooltipLines != null )
+            tooltip.addAll( tooltipLines );
     }
 
     @Deprecated

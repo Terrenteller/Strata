@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.IdentityHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 @SideOnly( Side.CLIENT )
@@ -20,9 +20,8 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
     // Forge has TWO maps for resolving localized strings. They appear to be identical.
     private Map< String , String > localeProperties1 = null; // resources/I18n
     private Map< String , String > localeProperties2 = null; // translation/I18n
-    private Map< Object , Map< String , String > > objectLocalizationMaps = new IdentityHashMap<>();
-    private Map< Object , String > unlocalizedKeys = new IdentityHashMap<>();
-    private Map< Object , String > currentStrings = new IdentityHashMap<>();
+    private Map< String , Map< String , String > > languageMaps = new HashMap<>();
+    private Map< String , String > localizedStrings = new HashMap<>();
 
     public ClientLocalizationRegistry()
     {
@@ -30,34 +29,33 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
         ( (IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager() ).registerReloadListener( this );
     }
 
-    public void register( Object object , String unlocalizedKey , Map< String , String > languageMap )
+    public void register( String unlocalizedKey , Map< String , String > languageMap )
     {
         // This can't go in the constructor. When SidedProxy instantiates this class the current language is null.
         if( currentLanguage == null )
             currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
 
-        objectLocalizationMaps.put( object , languageMap );
-        unlocalizedKeys.put( object , unlocalizedKey );
-        String currentString = getInternal( object );
-        currentStrings.put( object , currentString );
+        languageMaps.put( unlocalizedKey , languageMap );
+        String localizedValue = getInternal( unlocalizedKey );
+        localizedStrings.put( unlocalizedKey , localizedValue );
 
         if( localeProperties1 != null )
-            localeProperties1.putIfAbsent( unlocalizedKey , currentString );
+            localeProperties1.putIfAbsent( unlocalizedKey , localizedValue );
 
         if( localeProperties2 != null )
-            localeProperties2.putIfAbsent( unlocalizedKey , currentString );
+            localeProperties2.putIfAbsent( unlocalizedKey , localizedValue );
     }
 
     @Nullable
-    public String get( Object object )
+    public String get( String unlocalizedKey )
     {
-        return currentStrings.getOrDefault( object , null );
+        return localizedStrings.getOrDefault( unlocalizedKey , null );
     }
 
     @Nullable
-    private String getInternal( Object object )
+    private String getInternal( String unlocalizedKey )
     {
-        Map< String , String > languageMap = objectLocalizationMaps.get( object );
+        Map< String , String > languageMap = languageMaps.get( unlocalizedKey );
         String localizedName = languageMap.getOrDefault( currentLanguage.getLanguageCode() , null );
         if( localizedName != null )
             return localizedName;
@@ -70,7 +68,7 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
         if( localizedName != null )
             return localizedName;
 
-        return unlocalizedKeys.getOrDefault( object , null );
+        return null;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -117,25 +115,27 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
     @Override
     public void onResourceManagerReload( IResourceManager resourceManager )
     {
+        localeProperties1 = null;
+        localeProperties2 = null;
         currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
         reacquireLocaleLocalizationMaps();
 
-        objectLocalizationMaps.keySet()
+        languageMaps.keySet()
             .parallelStream()
-            .forEach( x -> currentStrings.put( x , getInternal( x ) ) );
+            .forEach( x -> localizedStrings.put( x , getInternal( x ) ) );
 
         if( localeProperties1 != null )
         {
-            objectLocalizationMaps.keySet()
+            languageMaps.keySet()
                 .parallelStream()
-                .forEach( x -> localeProperties1.put( unlocalizedKeys.get( x ) , currentStrings.get( x ) ) );
+                .forEach( x -> localeProperties1.put( x , localizedStrings.get( x ) ) );
         }
 
         if( localeProperties2 != null )
         {
-            objectLocalizationMaps.keySet()
+            languageMaps.keySet()
                 .parallelStream()
-                .forEach( x -> localeProperties2.put( unlocalizedKeys.get( x ) , currentStrings.get( x ) ) );
+                .forEach( x -> localeProperties2.put( x , localizedStrings.get( x ) ) );
         }
     }
 }

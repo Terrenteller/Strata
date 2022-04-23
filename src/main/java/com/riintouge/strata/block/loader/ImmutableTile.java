@@ -25,8 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public final class ImmutableTile implements IGeoTileInfo
 {
@@ -105,9 +104,11 @@ public final class ImmutableTile implements IGeoTileInfo
         this.specialBlockPropertyFlags = Util.coalesce( tileData.specialBlockPropertyFlags , 0L );
 
         LocalizationRegistry.INSTANCE.register(
-            this,
-            registryName.toString() + ".name",
+            registryName.toString(),
             Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
+        LocalizationRegistry.INSTANCE.register(
+            registryName.toString() + ".tooltip",
+            Util.lazyCoalesce( tileData.tooltipMap , HashMap::new ) );
     }
 
     // IGeoTileInfo overrides
@@ -282,7 +283,15 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public String localizedName()
     {
-        return LocalizationRegistry.INSTANCE.get( this );
+        return LocalizationRegistry.INSTANCE.get( registryName.toString() );
+    }
+
+    @Nullable
+    @Override
+    public List< String > localizedTooltip()
+    {
+        String tooltip = LocalizationRegistry.INSTANCE.get( registryName.toString() + ".tooltip" );
+        return tooltip != null ? Arrays.asList( tooltip.split( "\\\\n" ) ) : null;
     }
 
     // IHostInfo overrides

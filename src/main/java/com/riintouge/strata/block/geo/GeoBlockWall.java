@@ -17,6 +17,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -30,7 +31,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class GeoBlockWall extends BlockWall
 {
@@ -163,6 +166,17 @@ public class GeoBlockWall extends BlockWall
         ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
 
         return true;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
+    {
+        super.addInformation( stack , player , tooltip , advanced );
+
+        List< String > tooltipLines = tileInfo.localizedTooltip();
+        if( tooltipLines != null )
+            tooltip.addAll( tooltipLines );
     }
 
     @Override

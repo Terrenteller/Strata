@@ -1,10 +1,14 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class OreItem extends Item
 {
@@ -31,6 +35,22 @@ public class OreItem extends Item
             return proxyDrop.getItem().getEntityLifespan( proxyDrop , world );
 
         return super.getEntityLifespan( itemStack , world );
+    }
+
+    public void addInformation( ItemStack stack , @Nullable World worldIn , List< String > tooltip , ITooltipFlag flagIn )
+    {
+        ItemStack proxyItemStack = oreInfo.proxyItemStack();
+        if( proxyItemStack != null )
+        {
+            proxyItemStack.getItem().addInformation( proxyItemStack , worldIn , tooltip , flagIn );
+            return;
+        }
+
+        super.addInformation( stack , worldIn , tooltip , flagIn );
+
+        List< String > tooltipLines = oreInfo.localizedTooltip();
+        if( tooltipLines != null )
+            tooltip.addAll( tooltipLines );
     }
 
     @Override

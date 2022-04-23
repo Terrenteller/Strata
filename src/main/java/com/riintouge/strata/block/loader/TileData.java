@@ -86,6 +86,7 @@ public class TileData
     public ProtoBlockTextureMap textureMap = null;
     public LayeredTextureLayer[][] layeredTextureLayers = null;
     public Map< String , String > languageMap = null;
+    public Map< String , String > tooltipMap = null;
 
     // It is imperative that documentation in Strata.txt stay up-to-date with this method!
     public boolean processKeyValue( String key , String value )
@@ -429,6 +430,14 @@ public class TileData
                 layeredTextureLayers[ layer.ordinal() ] = layers.toArray( new LayeredTextureLayer[ 0 ] );
                 return true;
             }
+        }
+        else if( key.startsWith( "tooltip." ) )
+        {
+            if( tooltipMap == null )
+                tooltipMap = new HashMap<>();
+
+            tooltipMap.put( key.substring( "tooltip.".length() ) , value );
+            return true;
         }
 
         return false;

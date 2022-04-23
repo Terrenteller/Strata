@@ -22,6 +22,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,6 +51,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 public class OreBlock extends BlockFalling
@@ -253,6 +255,27 @@ public class OreBlock extends BlockFalling
         }
 
         return false;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
+    {
+        ItemStack proxyItemStack = oreInfo.proxyItemStack();
+        if( proxyItemStack != null )
+        {
+            IBlockState proxyBlockState = oreInfo.proxyBlockState();
+            assert proxyBlockState != null;
+            proxyBlockState.getBlock().addInformation( proxyItemStack , player , tooltip , advanced );
+        }
+        else
+        {
+            super.addInformation( stack , player , tooltip , advanced );
+
+            List< String > tooltipLines = oreInfo.localizedTooltip();
+            if( tooltipLines != null )
+                tooltip.addAll( tooltipLines );
+        }
     }
 
     @SideOnly( Side.CLIENT )

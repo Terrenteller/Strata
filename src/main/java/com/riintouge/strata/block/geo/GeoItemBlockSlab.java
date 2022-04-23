@@ -37,6 +37,7 @@ public class GeoItemBlockSlab extends ItemSlab
     @Override
     public String getItemStackDisplayName( ItemStack stack )
     {
-        return tileInfo.localizedName();
+        String name = tileInfo.localizedName();
+        return name != null ? name : tileInfo.registryName().toString();
     }
 }

@@ -75,4 +75,7 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
 
     @Nullable
     String localizedName();
+
+    @Nullable
+    List< String > localizedTooltip();
 }

@@ -12,6 +12,7 @@ import net.minecraftforge.common.EnumPlantType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 {
@@ -63,4 +64,7 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
 
     @Nullable
     String localizedName();
+
+    @Nullable
+    List< String > localizedTooltip();
 }

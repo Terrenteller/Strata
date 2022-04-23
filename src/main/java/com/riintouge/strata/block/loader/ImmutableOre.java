@@ -24,9 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
@@ -97,9 +95,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.specialBlockPropertyFlags = Util.coalesce( tileData.specialBlockPropertyFlags , 0L );
 
         LocalizationRegistry.INSTANCE.register(
-            this,
-            Strata.resource( oreName ).toString() + ".name",
+            Strata.resource( oreName ).toString(),
             Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
+        LocalizationRegistry.INSTANCE.register(
+            Strata.resource( oreName ).toString() + ".tooltip",
+            Util.lazyCoalesce( tileData.tooltipMap , HashMap::new ) );
     }
 
     private void resolveProxyMembers()
@@ -235,7 +235,15 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public String localizedName()
     {
-        return LocalizationRegistry.INSTANCE.get( this );
+        return LocalizationRegistry.INSTANCE.get( Strata.resource( oreName ).toString() );
+    }
+
+    @Nullable
+    @Override
+    public List< String > localizedTooltip()
+    {
+        String tooltip = LocalizationRegistry.INSTANCE.get( Strata.resource( oreName ).toString() + ".tooltip" );
+        return tooltip != null ? Arrays.asList( tooltip.split( "\\\\n" ) ) : null;
     }
 
     @Nullable
