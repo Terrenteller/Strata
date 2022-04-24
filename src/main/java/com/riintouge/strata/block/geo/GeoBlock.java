@@ -221,6 +221,12 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public EnumFacing[] getValidRotations( World world , BlockPos pos )
+    {
+        return EnumFacing.VALUES;
+    }
+
+    @Override
     public void neighborChanged( IBlockState state , World worldIn , BlockPos pos , Block blockIn , BlockPos fromPos )
     {
         if( canFall() )
