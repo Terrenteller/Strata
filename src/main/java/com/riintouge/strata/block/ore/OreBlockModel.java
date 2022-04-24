@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Vector;
 
+import static com.riintouge.strata.block.ore.OreBlockTileEntity.DAMAGE_MODEL_FACE_COUNT_HACK;
+
 @SideOnly( Side.CLIENT )
 public class OreBlockModel implements IBakedModel
 {
@@ -40,11 +42,15 @@ public class OreBlockModel implements IBakedModel
         if( side == null || !( state instanceof IExtendedBlockState ) )
             return originalModel.getQuads( state , side , rand );
 
-        // renderLayer is null when pistons are involved
+        // renderLayer is null when the damage model is being constructed or when pistons are involved
         BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
         List< BakedQuad > newQuads = new Vector<>();
 
-        if( renderLayer == BlockRenderLayer.SOLID || renderLayer == null )
+        if( DAMAGE_MODEL_FACE_COUNT_HACK.get() > 0 )
+        {
+            DAMAGE_MODEL_FACE_COUNT_HACK.set( DAMAGE_MODEL_FACE_COUNT_HACK.get() - 1 );
+        }
+        else if( renderLayer == BlockRenderLayer.SOLID || renderLayer == null )
         {
             MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
             IBakedModel hostModel = BakedModelCache.INSTANCE.getBakedModel( host );

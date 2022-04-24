@@ -26,6 +26,13 @@ import java.util.Map;
 
 public class OreBlockTileEntity extends TileEntity
 {
+    // HACK: OreBlockModel.getQuads() returns the host's quads in addition to the ore's quads. This is intentional.
+    // When ForgeHooks.getDamageModel() collects quads to build a separate model on-the-fly
+    // using the damage state texture for BlockRenderDispatcher.renderBlockDamage() to render,
+    // we end up with multiple damage textures per face which overlap awkwardly.
+    // The solution here is to only return the ore's quads from the upcoming call to OreBlockModel.getQuads().
+    public static ThreadLocal< Integer > DAMAGE_MODEL_FACE_COUNT_HACK = ThreadLocal.withInitial( () -> 0 );
+
     private boolean updateOnLoad = false;
     private MetaResourceLocation hostRock = UnlistedPropertyHostRock.DEFAULT;
     private Boolean isActive = UnlistedPropertyActiveState.DEFAULT;
@@ -191,6 +198,16 @@ public class OreBlockTileEntity extends TileEntity
     }
 
     // TileEntity overrides
+
+    @Override
+    public boolean canRenderBreaking()
+    {
+        // We only know when this starts, so we must count instead of using a toggle.
+        // OreBlockModel.getQuads() is called once for each face with no culling interference.
+        DAMAGE_MODEL_FACE_COUNT_HACK.set( EnumFacing.VALUES.length );
+
+        return false;
+    }
 
     @Override
     public boolean shouldRefresh( World world , BlockPos pos , IBlockState oldState , IBlockState newSate )

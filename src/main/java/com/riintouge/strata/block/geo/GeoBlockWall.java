@@ -4,7 +4,6 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
-import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
@@ -38,7 +37,7 @@ import java.util.List;
 public class GeoBlockWall extends BlockWall
 {
     public static final PropertyBool TALL = PropertyBool.create( "tall" );
-    protected static InitializedThreadLocal< Boolean > IsRecursingUp = new InitializedThreadLocal<>( false );
+    protected static ThreadLocal< Boolean > IsRecursingUp = ThreadLocal.withInitial( () -> false );
 
     protected IGeoTileInfo tileInfo;
     // The logic for this hack MUST respect the default boolean value.

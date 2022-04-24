@@ -3,7 +3,6 @@ package com.riintouge.strata.block.geo;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
-import com.riintouge.strata.misc.InitializedThreadLocal;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -35,7 +34,7 @@ import java.util.Random;
 
 public class GeoBlock extends BlockFalling
 {
-    public static InitializedThreadLocal< Boolean > canSustainPlantEventOverride = new InitializedThreadLocal<>( false );
+    public static ThreadLocal< Boolean > canSustainPlantEventOverride = ThreadLocal.withInitial( () -> false );
     protected static final PropertyEnum< EnumGeoOrientation > ORIENTATION = PropertyEnum.create( "orientation" , EnumGeoOrientation.class );
 
     protected IGeoTileInfo tileInfo;
