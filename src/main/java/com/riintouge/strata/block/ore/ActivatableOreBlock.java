@@ -88,7 +88,8 @@ public class ActivatableOreBlock extends OreBlock
 
         this.setActive( worldIn , pos , true );
 
-        return true;
+        // Vanilla redstone ore, whose activation behaviour this class was designed to mimic, does not eat clicks
+        return false;
     }
 
     @Override
