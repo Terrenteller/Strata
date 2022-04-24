@@ -32,12 +32,12 @@ minecraft {
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     minecraftAndForgeVersions = minecraft.version.split( "-" )
-    displayVersion = "${minecraftAndForgeVersions[ 0 ]}-${buildDateVersion}"
+    displayVersion = buildDateVersion
 
     // do this in lieu of a version.properties
     replaceIn "Strata.java"
     replace "DISPLAY_VERSION", displayVersion
-    replace "INTERNAL_VERSION", buildDateVersion
+    replace "INTERNAL_VERSION", "${minecraftAndForgeVersions[ 0 ]}-${buildDateVersion}"
 }
 
 archivesBaseName = "Strata-${minecraftAndForgeVersions[ 0 ]}"
