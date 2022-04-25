@@ -262,3 +262,13 @@ Key: activatable
 Value: N/A
 Description:
     This flag fine-tunes implementation details and should not be used unless you know what it does.
+
+Key: dragonImmune
+Value: N/A
+Description:
+    Prevents the Ender Dragon from destroying the block.
+
+Key: witherImmune
+Value: N/A
+Description:
+    Prevents the Wither from destroying the block.

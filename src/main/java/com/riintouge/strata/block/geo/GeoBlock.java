@@ -3,6 +3,7 @@ package com.riintouge.strata.block.geo;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -12,7 +13,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -21,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -124,6 +130,23 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public boolean canEntityDestroy( IBlockState state , IBlockAccess world , BlockPos pos , Entity entity )
+    {
+        if( ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.DRAGON_IMMUNE ) > 0
+            && entity instanceof EntityDragon )
+        {
+            return false;
+        }
+        else if( ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.WITHER_IMMUNE ) > 0
+            && ( entity instanceof EntityWither || entity instanceof EntityWitherSkull ) )
+        {
+            return false;
+        }
+
+        return super.canEntityDestroy( state , world , pos , entity );
+    }
+
+    @Override
     public boolean canSustainPlant( IBlockState state , IBlockAccess world , BlockPos pos , EnumFacing direction , IPlantable plantable )
     {
         // Because worldgen may swap an otherwise valid block with us (such as hardened clay with limestone in a mesa),
@@ -151,6 +174,17 @@ public class GeoBlock extends BlockFalling
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer( this , ORIENTATION );
+    }
+
+    @Override
+    public float getExplosionResistance( World world , BlockPos pos , @Nullable Entity exploder , Explosion explosion )
+    {
+        // Wither explosions call canEntityDestroy() but do not respect its intentions
+        if( !canEntityDestroy( world.getBlockState( pos ) , world , pos , exploder ) )
+            return 6000000.0f; // Same as bedrock
+
+        // Explosion resistance math is weird. We can't simply return what IGeoTileInfo provides.
+        return super.getExplosionResistance( world , pos , exploder , explosion );
     }
 
     @Override

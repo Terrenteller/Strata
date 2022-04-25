@@ -5,6 +5,7 @@ import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
@@ -25,7 +26,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -418,6 +422,33 @@ public class OreBlock extends BlockFalling
     }
 
     @Override
+    public boolean canEntityDestroy( IBlockState state , IBlockAccess world , BlockPos pos , Entity entity )
+    {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null && !proxyBlockState.getBlock().canEntityDestroy( proxyBlockState , world , pos , entity ) )
+            return false;
+
+        MetaResourceLocation hostResourceLocation = getHost( world , pos );
+        Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
+        IBlockState hostBlockState = host.getStateFromMeta( hostResourceLocation.meta );
+        if( host != Blocks.AIR && !host.canEntityDestroy( hostBlockState , world , pos , entity ) )
+            return false;
+
+        if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.DRAGON_IMMUNE ) > 0
+            && entity instanceof EntityDragon )
+        {
+            return false;
+        }
+        else if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.WITHER_IMMUNE ) > 0
+            && ( entity instanceof EntityWither || entity instanceof EntityWitherSkull ) )
+        {
+            return false;
+        }
+
+        return super.canEntityDestroy( state , world , pos , entity );
+    }
+
+    @Override
     protected boolean canSilkHarvest()
     {
         throw new NotImplementedException( "Use the state-sensitive overload instead!" );
@@ -510,9 +541,9 @@ public class OreBlock extends BlockFalling
         if( proxyBlockState != null )
             oreHardness = proxyBlockState.getBlock().getBlockHardness( proxyBlockState , worldIn , pos );
 
-        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
-        return hostProperties != null
-            ? ( hostProperties.hardness() + oreHardness ) / 2.0f
+        IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
+        return hostInfo != null
+            ? ( hostInfo.hardness() + oreHardness ) / 2.0f
             : oreHardness;
     }
 
@@ -579,18 +610,22 @@ public class OreBlock extends BlockFalling
         if( proxyBlockState != null )
             return proxyBlockState.getBlock().getExplosionResistance( exploder );
 
-        // Explosion resistance math is weird. We can't simply return whatever IOreInfo provides.
+        // Explosion resistance math is weird. We can't simply return what IOreInfo provides.
         return super.getExplosionResistance( exploder );
     }
 
     @Override
     public float getExplosionResistance( World world , BlockPos pos , @Nullable Entity exploder , Explosion explosion )
     {
+        // Wither explosions call canEntityDestroy() but do not respect its intentions
+        if( !canEntityDestroy( world.getBlockState( pos ) , world , pos , exploder ) )
+            return 6000000.0f; // Same as bedrock
+
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         if( proxyBlockState != null )
             return proxyBlockState.getBlock().getExplosionResistance( world , pos , exploder , explosion );
 
-        // Explosion resistance math is weird. We can't simply return whatever IOreInfo provides.
+        // Explosion resistance math is weird. We can't simply return what IOreInfo provides.
         return super.getExplosionResistance( world , pos , exploder , explosion );
     }
 
@@ -605,13 +640,13 @@ public class OreBlock extends BlockFalling
     {
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-        IHostInfo hostProperties = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
-        if( hostProperties != null )
+        IHostInfo hostInfo = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+        if( hostInfo != null )
         {
             // The harvest level of the ore doesn't matter if a tool is not required for the host.
             // For example, a tool is not required to dig rocks out of garden soil, but it helps.
             // Alternatively, let the harvest level be that of the host given the same reasoning.
-            return hostProperties.material().isToolNotRequired() ? 0 : hostProperties.harvestLevel();
+            return hostInfo.material().isToolNotRequired() ? 0 : hostInfo.harvestLevel();
         }
 
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
@@ -626,9 +661,9 @@ public class OreBlock extends BlockFalling
     {
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-        IHostInfo hostProperties = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
-        if( hostProperties != null )
-            return hostProperties.harvestTool();
+        IHostInfo hostInfo = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+        if( hostInfo != null )
+            return hostInfo.harvestTool();
 
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         return proxyBlockState != null
@@ -657,9 +692,9 @@ public class OreBlock extends BlockFalling
     public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
     {
         int hostLightValue = 0;
-        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
-        if( hostProperties != null )
-            hostLightValue = hostProperties.lightLevel();
+        IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+        if( hostInfo != null )
+            hostLightValue = hostInfo.lightLevel();
 
         int oreLightValue = oreInfo.lightLevel();
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
@@ -690,8 +725,8 @@ public class OreBlock extends BlockFalling
             return super.getMaterial( state );
 
         // However, state from other callers might. Be aware of the consequences.
-        IHostInfo hostProperties = HostRegistry.INSTANCE.find( hostResource );
-        return hostProperties != null ? hostProperties.material() : super.getMaterial( state );
+        IHostInfo hostInfo = HostRegistry.INSTANCE.find( hostResource );
+        return hostInfo != null ? hostInfo.material() : super.getMaterial( state );
     }
 
     @Override
@@ -738,8 +773,8 @@ public class OreBlock extends BlockFalling
     {
         if( RANDOM.nextBoolean() )
         {
-            IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
-            if( hostProperties != null )
+            IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+            if( hostInfo != null )
             {
                 MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
                 Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );

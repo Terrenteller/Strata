@@ -82,6 +82,7 @@ host minecraft:end_stone
 type stone
 hardness 3.0
 texture minecraft:blocks/end_stone
+dragonImmune
 
 host minecraft:stained_hardened_clay
 type stone

@@ -140,6 +140,14 @@ public class TileData
                     : new MetaResourceLocation( value );
                 return true;
             }
+            case "dragonImmune":
+            {
+                if( specialBlockPropertyFlags == null )
+                    specialBlockPropertyFlags = 0L;
+
+                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.DRAGON_IMMUNE;
+                return true;
+            }
             case "drops":
             {
                 String[] values = value.split( " " , 2 );
@@ -326,6 +334,14 @@ public class TileData
                 }
 
                 return false;
+            }
+            case "witherImmune":
+            {
+                if( specialBlockPropertyFlags == null )
+                    specialBlockPropertyFlags = 0L;
+
+                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.WITHER_IMMUNE;
+                return true;
             }
         }
 
