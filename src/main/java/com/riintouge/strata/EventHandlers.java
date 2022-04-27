@@ -145,7 +145,7 @@ public class EventHandlers
         }
         else if( oreInfo.material().isToolNotRequired() )
         {
-            // Clay in sand with a pickaxe?
+            // Clay in sand with a pickaxe? Glass in glass with anything?
             // The ineffective host tool speed nerf above is sufficient.
             return;
         }

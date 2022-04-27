@@ -146,7 +146,7 @@ public final class ImmutableTile implements IGeoTileInfo
     public ItemStack equivalentItemStack()
     {
         if( equivalentItemResourceLocation == null )
-            return tileType.vanillaItemStack();
+            return tileType.vanillaItemStack;
 
         // Deferred resolution until reasonably sure the item has been created
         if( equivalentItemStack == null )
