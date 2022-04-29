@@ -42,7 +42,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
     private ItemStack proxyItemStack = null; // Lazily evaluated
-    private ItemStack proxyDrop = null; // Lazily evaluated
     private WeightedDropCollections weightedDropCollections;
     public MetaResourceLocation forcedHost;
     public List< MetaResourceLocation > hostAffinities;
@@ -112,10 +111,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
         Item proxyItemBlock = Item.getItemFromBlock( proxyBlock );
         proxyItemStack = new ItemStack( proxyItemBlock , 1 , proxyBlockResourceLocation.meta );
-
-        // FIXME: The implementation may use that RNG and we won't get what we really want
-        Item proxyBlockDrop = proxyBlock.getItemDropped( proxyBlockState , new Random() , 0 );
-        proxyDrop = new ItemStack( proxyBlockDrop , 1 , proxyBlockResourceLocation.meta );
 
         proxyBlockResourceLocation = null;
     }
@@ -214,15 +209,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         resolveProxyMembers();
 
         return proxyItemStack;
-    }
-
-    @Nullable
-    @Override
-    public ItemStack proxyDrop()
-    {
-        resolveProxyMembers();
-
-        return proxyDrop;
     }
 
     @Override

@@ -149,7 +149,7 @@ Value: <ResourceLocation>[:<meta>]
 Description:
     One-way, one-to-one conversion to another item for compatibility purposes. Also used in recipe replication.
     Some tile types have a pre-determined, vanilla equivalent. Use a hyphen to ignore it.
-    For ores, this applies to the ore item, not the creative mode item block.
+    For ores, this applies to the ore item, not the creative mode item block, and functions like proxy.
 
 Key: furnaceResult
 Value: <ResourceLocation>[:<meta>]
@@ -194,7 +194,7 @@ Key: proxy
 Value: <ResourceLocation>[:<meta>]
 Description:
     Display the name, show the tooltip, drop the drops, sustain the plants, etc. of the specified block instead.
-    Only applies to ores.
+    Only applies to ores, and specifically, their blocks. Use convertsTo to do the same for the ore item.
 
 Key: hostAffinities
 Value: <<ResourceLocation>[:<meta>]>+

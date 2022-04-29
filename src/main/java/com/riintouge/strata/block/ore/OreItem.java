@@ -30,9 +30,9 @@ public class OreItem extends Item
     @Override
     public int getEntityLifespan( ItemStack itemStack , World world )
     {
-        ItemStack proxyDrop = oreInfo.proxyDrop();
-        if( proxyDrop != null )
-            return proxyDrop.getItem().getEntityLifespan( proxyDrop , world );
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
+            return equivalentItemStack.getItem().getEntityLifespan( equivalentItemStack , world );
 
         return super.getEntityLifespan( itemStack , world );
     }
@@ -56,10 +56,10 @@ public class OreItem extends Item
     @Override
     public int getItemBurnTime( ItemStack itemStack )
     {
-        ItemStack proxyDrop = oreInfo.proxyDrop();
-        if( proxyDrop != null )
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
         {
-            int burnTime = proxyDrop.getItem().getItemBurnTime( proxyDrop );
+            int burnTime = equivalentItemStack.getItem().getItemBurnTime( equivalentItemStack );
             if( burnTime != -1 )
                 return burnTime;
         }
@@ -71,9 +71,9 @@ public class OreItem extends Item
     @Override
     public String getItemStackDisplayName( ItemStack stack )
     {
-        ItemStack proxyDrop = oreInfo.proxyDrop();
-        if( proxyDrop != null )
-            return proxyDrop.getItem().getItemStackDisplayName( proxyDrop );
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
+            return equivalentItemStack.getItem().getItemStackDisplayName( equivalentItemStack );
 
         String localizedName = oreInfo.localizedName();
         return localizedName != null ? localizedName : getRegistryName().toString();
@@ -82,10 +82,10 @@ public class OreItem extends Item
     @Override
     public float getSmeltingExperience( ItemStack item )
     {
-        ItemStack proxyDrop = oreInfo.proxyDrop();
-        if( proxyDrop != null )
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
         {
-            float smeltingExp = proxyDrop.getItem().getSmeltingExperience( proxyDrop );
+            float smeltingExp = equivalentItemStack.getItem().getSmeltingExperience( equivalentItemStack );
             if( smeltingExp != -1 )
                 return smeltingExp;
         }
@@ -97,9 +97,9 @@ public class OreItem extends Item
     @Override
     public String getUnlocalizedName()
     {
-        ItemStack proxyDrop = oreInfo.proxyDrop();
-        if( proxyDrop != null )
-            return proxyDrop.getItem().getUnlocalizedName();
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
+            return equivalentItemStack.getItem().getUnlocalizedName();
 
         // Strata localization doesn't make a distinction between blocks and items
         return super.getUnlocalizedName().replaceFirst( "item." , "" );
@@ -108,9 +108,9 @@ public class OreItem extends Item
     @Override
     public String getUnlocalizedName( ItemStack stack )
     {
-        ItemStack proxyDrop = oreInfo.proxyDrop();
-        if( proxyDrop != null )
-            return proxyDrop.getItem().getUnlocalizedName( proxyDrop );
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
+            return equivalentItemStack.getItem().getUnlocalizedName( equivalentItemStack );
 
         return getUnlocalizedName();
     }
@@ -118,9 +118,9 @@ public class OreItem extends Item
     @Override
     public boolean isBeaconPayment( ItemStack stack )
     {
-        ItemStack proxyDrop = oreInfo.proxyDrop();
-        if( proxyDrop != null )
-            return proxyDrop.getItem().isBeaconPayment( proxyDrop );
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
+            return equivalentItemStack.getItem().isBeaconPayment( equivalentItemStack );
 
         return super.isBeaconPayment( stack );
     }

@@ -48,9 +48,9 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
 
         if( properties instanceof IOreInfo )
         {
-            IOreInfo oreProperties = (IOreInfo)properties;
+            IOreInfo oreInfo = (IOreInfo)properties;
             String proxyBlockRegistryName = "";
-            IBlockState proxyBlockState = oreProperties.proxyBlockState();
+            IBlockState proxyBlockState = oreInfo.proxyBlockState();
             if( proxyBlockState != null )
             {
                 MetaResourceLocation proxyBlockMetaResource = new MetaResourceLocation( proxyBlockState );
