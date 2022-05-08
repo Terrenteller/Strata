@@ -1,39 +1,19 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FurnaceRecipeReplicator
 {
-    public static void replicateTargetRecipeOrCreateNew(
-        @Nonnull Item source,
-        @Nullable MetaResourceLocation targetMetaResource,
-        @Nullable Float experience )
-    {
-        if( targetMetaResource == null )
-            return;
-
-        ItemStack furnaceResult = targetMetaResource.toItemStack();
-        if( furnaceResult != null && !furnaceResult.isEmpty() )
-        {
-            Float exp = experience != null ? experience : FurnaceRecipes.instance().getSmeltingExperience( furnaceResult );
-            GameRegistry.addSmelting( source , furnaceResult , exp );
-        }
-    }
-
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
     {
@@ -51,7 +31,7 @@ public class FurnaceRecipeReplicator
 
                 if( domain.equalsIgnoreCase( Strata.modid ) )
                 {
-                    // Respect specialized furnace recipes
+                    // Ore registration may have already added a smelting recipe
                     if( furnaceRecipes.getSmeltingResult( ore ) == ItemStack.EMPTY )
                         strataOres.add( ore );
                 }

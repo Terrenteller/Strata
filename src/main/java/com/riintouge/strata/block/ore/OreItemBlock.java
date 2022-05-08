@@ -29,9 +29,9 @@ public class OreItemBlock extends ItemBlock
     @Override
     public String getUnlocalizedName()
     {
-        ItemStack proxyItemStack = oreInfo.proxyItemStack();
-        if( proxyItemStack != null )
-            return proxyItemStack.getItem().getUnlocalizedName( proxyItemStack );
+        ItemStack proxyBlockItemStack = oreInfo.proxyBlockItemStack();
+        if( proxyBlockItemStack != null )
+            return proxyBlockItemStack.getItem().getUnlocalizedName( proxyBlockItemStack );
 
         // Strata localization doesn't make a distinction between blocks and items
         return this.block.getUnlocalizedName().replace( "tile." , "" );
@@ -41,9 +41,9 @@ public class OreItemBlock extends ItemBlock
     @Override
     public String getUnlocalizedName( ItemStack stack )
     {
-        ItemStack proxyItemStack = oreInfo.proxyItemStack();
-        if( proxyItemStack != null )
-            return proxyItemStack.getItem().getUnlocalizedName( proxyItemStack );
+        ItemStack proxyBlockItemStack = oreInfo.proxyBlockItemStack();
+        if( proxyBlockItemStack != null )
+            return proxyBlockItemStack.getItem().getUnlocalizedName( proxyBlockItemStack );
 
         return getUnlocalizedName();
     }
@@ -72,10 +72,10 @@ public class OreItemBlock extends ItemBlock
     public String getItemStackDisplayName( ItemStack stack )
     {
         String displayName = null;
-        ItemStack proxyItemStack = oreInfo.proxyItemStack();
-        if( proxyItemStack != null )
+        ItemStack proxyBlockItemStack = oreInfo.proxyBlockItemStack();
+        if( proxyBlockItemStack != null )
         {
-            displayName = proxyItemStack.getItem().getItemStackDisplayName( proxyItemStack );
+            displayName = proxyBlockItemStack.getItem().getItemStackDisplayName( proxyBlockItemStack );
         }
         else
         {

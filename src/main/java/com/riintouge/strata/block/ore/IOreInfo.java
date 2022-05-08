@@ -43,16 +43,15 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     ItemStack equivalentItemStack();
 
     @Nullable
-    MetaResourceLocation furnaceResult();
+    ItemStack furnaceResult();
 
-    @Nullable
-    Float furnaceExp();
+    float furnaceExp();
 
     @Nullable
     IBlockState proxyBlockState();
 
     @Nullable
-    ItemStack proxyItemStack();
+    ItemStack proxyBlockItemStack();
 
     SoundEventTuple ambientSound();
 

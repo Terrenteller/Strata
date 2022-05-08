@@ -32,10 +32,9 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     ItemStack equivalentItemStack();
 
     @Nullable
-    MetaResourceLocation furnaceResult();
+    ItemStack furnaceResult();
 
-    @Nullable
-    Float furnaceExp();
+    float furnaceExp();
 
     boolean hasFragment();
 
@@ -46,10 +45,9 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     ItemStack equivalentFragmentItemStack();
 
     @Nullable
-    MetaResourceLocation fragmentFurnaceResult();
+    ItemStack fragmentFurnaceResult();
 
-    @Nullable
-    Float fragmentFurnaceExp();
+    float fragmentFurnaceExp();
 
     @Nonnull
     ArrayList< EnumPlantType > sustainedPlantTypes();

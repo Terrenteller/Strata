@@ -189,9 +189,9 @@ public class GeoTileSet implements IForgeRegistrable
 
             ResourceLocation registryName = tileInfo.registryName();
             ItemBlock parentItemBlock = tileType.parentType != null ? itemBlocks[ tileType.parentType.ordinal() ] : null;
-            GeoItemFragment fragment = fragmentItems[ tileType.ordinal() ];
+            GeoItemFragment fragmentItem = fragmentItems[ tileType.ordinal() ];
 
-            if( fragment != null )
+            if( fragmentItem != null )
             {
                 GameRegistry.addShapedRecipe(
                     new ResourceLocation( registryName.toString() + "_block" ),
@@ -199,13 +199,15 @@ public class GeoTileSet implements IForgeRegistrable
                     new ItemStack( itemBlock ),
                     "XX",
                     "XX",
-                    'X' , fragment );
+                    'X' , fragmentItem );
 
-                FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( fragment , tileInfo.fragmentFurnaceResult() , tileInfo.fragmentFurnaceExp() );
+                ItemStack fragmentFurnaceResult = tileInfo.fragmentFurnaceResult();
+                if( fragmentFurnaceResult != null && !fragmentFurnaceResult.isEmpty() )
+                    GameRegistry.addSmelting( fragmentItem , fragmentFurnaceResult , tileInfo.fragmentFurnaceExp() );
 
                 ItemStack equivalentFragmentItem = tileInfo.equivalentFragmentItemStack();
                 if( equivalentFragmentItem != null && !equivalentFragmentItem.isEmpty() )
-                    createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tileInfo ) , fragment , equivalentFragmentItem );
+                    createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tileInfo ) , fragmentItem , equivalentFragmentItem );
             }
 
             switch( tileType )
@@ -396,7 +398,11 @@ public class GeoTileSet implements IForgeRegistrable
             }
 
             if( tileInfo.type().isPrimary )
-                FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( itemBlock , tileInfo.furnaceResult() , tileInfo.furnaceExp() );
+            {
+                ItemStack furnaceResult = tileInfo.furnaceResult();
+                if( furnaceResult != null && !furnaceResult.isEmpty() )
+                    GameRegistry.addSmelting( itemBlock , furnaceResult , tileInfo.furnaceExp() );
+            }
 
             ItemStack equivalentItem = tileInfo.equivalentItemStack();
             if( equivalentItem != null && !equivalentItem.isEmpty() )

@@ -1,7 +1,6 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import net.minecraft.block.Block;
@@ -10,7 +9,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -111,28 +109,25 @@ public final class OreRegistry
         {
             IOreInfo oreInfo = tileSet.getInfo();
             IBlockState proxyBlockState = oreInfo.proxyBlockState();
-            ItemStack blockTargetItemStack = proxyBlockState != null
+            ItemStack oreBlockConversionTarget = proxyBlockState != null
                 ? new ItemStack( proxyBlockState.getBlock() )
                 : new ItemStack( tileSet.getItem() );
 
             GameRegistry.addShapelessRecipe(
                 new ResourceLocation( Strata.modid , oreInfo.oreName() + "_item" ),
                 null,
-                blockTargetItemStack,
+                oreBlockConversionTarget,
                 Ingredient.fromItem( tileSet.getItemBlock() ) );
 
-            // Although the item block should be creative only, we'll add a recipe for convenience
-            FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( tileSet.getItemBlock() , oreInfo.furnaceResult() , oreInfo.furnaceExp() );
-            FurnaceRecipeReplicator.replicateTargetRecipeOrCreateNew( tileSet.getItem() , oreInfo.furnaceResult() , oreInfo.furnaceExp() );
-
-            ItemStack equivalentItem = tileSet.getInfo().equivalentItemStack();
-            if( ( equivalentItem == null || equivalentItem.isEmpty() ) && proxyBlockState != null )
+            ItemStack furnaceResult = oreInfo.furnaceResult();
+            if( furnaceResult != null && !furnaceResult.isEmpty() )
             {
-                Item proxyBlockDroppedItem = proxyBlockState.getBlock().getItemDropped( proxyBlockState , null , 0 );
-                if( proxyBlockDroppedItem != null && !proxyBlockDroppedItem.equals( Items.AIR ) )
-                    equivalentItem = new ItemStack( proxyBlockDroppedItem );
+                // Although the item block should be creative only, we'll add a recipe for convenience
+                GameRegistry.addSmelting( tileSet.getItemBlock() , furnaceResult , oreInfo.furnaceExp() );
+                GameRegistry.addSmelting( tileSet.getItem() , furnaceResult , oreInfo.furnaceExp() );
             }
 
+            ItemStack equivalentItem = oreInfo.equivalentItemStack();
             if( equivalentItem != null && !equivalentItem.isEmpty() )
             {
                 RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( tileSet.getItem() ) );

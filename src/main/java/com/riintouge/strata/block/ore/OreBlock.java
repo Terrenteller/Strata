@@ -265,21 +265,20 @@ public class OreBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
     {
-        ItemStack proxyItemStack = oreInfo.proxyItemStack();
-        if( proxyItemStack != null )
+        ItemStack proxyBlockItemStack = oreInfo.proxyBlockItemStack();
+        if( proxyBlockItemStack != null )
         {
             IBlockState proxyBlockState = oreInfo.proxyBlockState();
             assert proxyBlockState != null;
-            proxyBlockState.getBlock().addInformation( proxyItemStack , player , tooltip , advanced );
+            proxyBlockState.getBlock().addInformation( proxyBlockItemStack , player , tooltip , advanced );
+            return;
         }
-        else
-        {
-            super.addInformation( stack , player , tooltip , advanced );
 
-            List< String > tooltipLines = oreInfo.localizedTooltip();
-            if( tooltipLines != null )
-                tooltip.addAll( tooltipLines );
-        }
+        super.addInformation( stack , player , tooltip , advanced );
+
+        List< String > tooltipLines = oreInfo.localizedTooltip();
+        if( tooltipLines != null )
+            tooltip.addAll( tooltipLines );
     }
 
     @SideOnly( Side.CLIENT )

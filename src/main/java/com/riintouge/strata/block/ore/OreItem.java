@@ -6,6 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,12 +39,13 @@ public class OreItem extends Item
         return super.getEntityLifespan( itemStack , world );
     }
 
+    @SideOnly( Side.CLIENT )
     public void addInformation( ItemStack stack , @Nullable World worldIn , List< String > tooltip , ITooltipFlag flagIn )
     {
-        ItemStack proxyItemStack = oreInfo.proxyItemStack();
-        if( proxyItemStack != null )
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        if( equivalentItemStack != null )
         {
-            proxyItemStack.getItem().addInformation( proxyItemStack , worldIn , tooltip , flagIn );
+            equivalentItemStack.getItem().addInformation( equivalentItemStack , worldIn , tooltip , flagIn );
             return;
         }
 
@@ -59,12 +62,12 @@ public class OreItem extends Item
         ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
         if( equivalentItemStack != null )
         {
+            // A proxy may defer to "vanilla logic" with a value of -1. We obviously don't play a part in that.
             int burnTime = equivalentItemStack.getItem().getItemBurnTime( equivalentItemStack );
             if( burnTime != -1 )
                 return burnTime;
         }
 
-        // A proxy may defer to "vanilla logic" with a value of -1. We obviously don't play a part in that.
         return oreInfo.burnTime();
     }
 
@@ -77,21 +80,6 @@ public class OreItem extends Item
 
         String localizedName = oreInfo.localizedName();
         return localizedName != null ? localizedName : getRegistryName().toString();
-    }
-
-    @Override
-    public float getSmeltingExperience( ItemStack item )
-    {
-        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
-        if( equivalentItemStack != null )
-        {
-            float smeltingExp = equivalentItemStack.getItem().getSmeltingExperience( equivalentItemStack );
-            if( smeltingExp != -1 )
-                return smeltingExp;
-        }
-
-        // A proxy may defer to "vanilla logic" with a value of -1. We obviously don't play a part in that.
-        return oreInfo.furnaceExp() != null ? oreInfo.furnaceExp() : -1;
     }
 
     @Override

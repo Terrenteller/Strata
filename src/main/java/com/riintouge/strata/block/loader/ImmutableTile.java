@@ -16,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.EnumPlantType;
@@ -168,16 +169,19 @@ public final class ImmutableTile implements IGeoTileInfo
 
     @Nullable
     @Override
-    public MetaResourceLocation furnaceResult()
+    public ItemStack furnaceResult()
     {
-        return furnaceResult;
+        return furnaceResult != null ? furnaceResult.toItemStack() : null;
     }
 
-    @Nullable
     @Override
-    public Float furnaceExp()
+    public float furnaceExp()
     {
-        return furnaceExp;
+        if( furnaceExp != null )
+            return furnaceExp;
+
+        ItemStack furnaceResult = furnaceResult();
+        return furnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( furnaceResult ) : 0.0f;
     }
 
     @Override
@@ -215,16 +219,19 @@ public final class ImmutableTile implements IGeoTileInfo
 
     @Nullable
     @Override
-    public MetaResourceLocation fragmentFurnaceResult()
+    public ItemStack fragmentFurnaceResult()
     {
-        return fragmentFurnaceResult;
+        return fragmentFurnaceResult != null ? fragmentFurnaceResult.toItemStack() : null;
     }
 
-    @Nullable
     @Override
-    public Float fragmentFurnaceExp()
+    public float fragmentFurnaceExp()
     {
-        return fragmentFurnaceExp;
+        if( fragmentFurnaceExp != null )
+            return fragmentFurnaceExp;
+
+        ItemStack fragmentFurnaceResult = fragmentFurnaceResult();
+        return fragmentFurnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( fragmentFurnaceResult ) : 0.0f;
     }
 
     @Nonnull

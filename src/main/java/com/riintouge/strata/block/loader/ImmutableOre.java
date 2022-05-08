@@ -18,13 +18,16 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
@@ -36,12 +39,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private ResourceLocation blockstateResourceLocation;
     private List< LayeredTextureLayer > oreItemTextureLayers;
     private MetaResourceLocation equivalentItemResourceLocation;
+    private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation furnaceResult;
     private Float furnaceExp;
-    private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
-    private ItemStack proxyItemStack = null; // Lazily evaluated
+    private ItemStack proxyBlockItemStack = null; // Lazily evaluated
     private WeightedDropCollections weightedDropCollections;
     public MetaResourceLocation forcedHost;
     public List< MetaResourceLocation > hostAffinities;
@@ -110,7 +113,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         proxyBlockState = proxyBlock.getStateFromMeta( proxyBlockResourceLocation.meta );
 
         Item proxyItemBlock = Item.getItemFromBlock( proxyBlock );
-        proxyItemStack = new ItemStack( proxyItemBlock , 1 , proxyBlockResourceLocation.meta );
+        proxyBlockItemStack = new ItemStack( proxyItemBlock , 1 , proxyBlockResourceLocation.meta );
 
         proxyBlockResourceLocation = null;
     }
@@ -182,15 +185,27 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     @Nullable
     @Override
-    public MetaResourceLocation furnaceResult()
+    public ItemStack furnaceResult()
     {
-        return furnaceResult;
+        ItemStack equivalentItemStack = equivalentItemStack();
+        if( equivalentItemStack != null )
+        {
+            ItemStack equivalentSmeltingResult = FurnaceRecipes.instance().getSmeltingResult( equivalentItemStack );
+            if( equivalentSmeltingResult != null && !equivalentSmeltingResult.isEmpty() )
+                return equivalentSmeltingResult;
+        }
+
+        return furnaceResult != null ? furnaceResult.toItemStack() : null;
     }
 
     @Override
-    public Float furnaceExp()
+    public float furnaceExp()
     {
-        return furnaceExp;
+        if( furnaceExp != null )
+            return furnaceExp;
+
+        ItemStack furnaceResult = furnaceResult();
+        return furnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( furnaceResult ) : 0.0f;
     }
 
     @Nullable
@@ -204,11 +219,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     @Nullable
     @Override
-    public ItemStack proxyItemStack()
+    public ItemStack proxyBlockItemStack()
     {
         resolveProxyMembers();
 
-        return proxyItemStack;
+        return proxyBlockItemStack;
     }
 
     @Override
