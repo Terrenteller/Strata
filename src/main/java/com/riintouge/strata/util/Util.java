@@ -1,10 +1,7 @@
 package com.riintouge.strata.util;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Stack;
 import java.util.function.Supplier;
 import java.util.zip.CRC32;
 
@@ -86,58 +83,5 @@ public class Util
         crc32.reset();
         crc32.update( value );
         return crc32.getValue();
-    }
-
-    public static double evaluateRPN( String expr , Pair< String , Double > ... variables ) throws NumberFormatException
-    {
-        Stack< Double > rpnStack = new Stack<>();
-
-        for( String exprToken : expr.split( " " ) )
-        {
-            switch( exprToken )
-            {
-                case "+":
-                {
-                    rpnStack.push( rpnStack.pop() + rpnStack.pop() );
-                    break;
-                }
-                case "-":
-                {
-                    double right = rpnStack.pop();
-                    double left = rpnStack.pop();
-                    rpnStack.push( left - right );
-                    break;
-                }
-                case "*":
-                {
-                    rpnStack.push( rpnStack.pop() * rpnStack.pop() );
-                    break;
-                }
-                case "/":
-                {
-                    double right = rpnStack.pop();
-                    double left = rpnStack.pop();
-                    rpnStack.push( left / right );
-                    break;
-                }
-                default:
-                {
-                    boolean wasVariable = false;
-                    for( Pair< String , Double > variable : variables )
-                    {
-                        if( exprToken.equals( variable.getKey() ) )
-                        {
-                            rpnStack.push( variable.getValue() );
-                            wasVariable = true;
-                        }
-                    }
-
-                    if( !wasVariable )
-                        rpnStack.push( Double.parseDouble( exprToken ) );
-                }
-            }
-        }
-
-        return rpnStack.peek();
     }
 }

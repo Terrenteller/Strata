@@ -1,10 +1,11 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.ICommonBlockProperties;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.state.IBlockState;
@@ -64,10 +65,8 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nullable
     List< MetaResourceLocation > hostAffinities();
 
-    int baseExp();
-
     @Nullable
-    String bonusExpExpr();
+    IDropFormula expDropFormula();
 
     @Nullable
     String localizedName();

@@ -16,6 +16,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.EnumPlantType;
 import org.apache.commons.lang3.EnumUtils;
 
@@ -26,15 +27,18 @@ import java.util.regex.Pattern;
 
 public class TileData
 {
-    private static final String DropGroupPattern = "^(?:([0-9]+) )?([a-z_:0-9]+|-|\\*)(?: ([0-9]+)(?:-([0-9]+))?)?$";
+    private static final String DropGroupPattern = "^(?:([0-9]+) )?([a-z_:0-9]+|-|\\*) *(.+?)? *$";
     private static final int DropGroupWeightGroup = 1;
     private static final int DropGroupMetaResourceLocationGroup = 2;
-    private static final int DropGroupMinimumAmountGroup = 3;
-    private static final int DropGroupMaximumAmountGroup = 4;
+    private static final int DropGroupFormulaGroup = 3;
     private static final Pattern DropGroupRegex = Pattern.compile( DropGroupPattern );
-    private static final String RPNDropGroupPattern = "^(?:([0-9]+) )?([a-z_:0-9]+|-|\\*) ([0-9]+)\\+ ([0-9f+\\-*/ ]+)$";
-    private static final int RPNDropGroupExprGroup = 4;
-    private static final Pattern RPNDropGroupRegex = Pattern.compile( RPNDropGroupPattern );
+
+    private static final String NumericDropFormulaPattern = "^(?:([0-9]+)(?:-([0-9]+))?)?$";
+    private static final String RPNDropFormulaPattern = "^(.+?)(?: ~ (.+?))?$";
+    private static final int DropFormulaBaseGroup = 1;
+    private static final int DropFormulaBonusGroup = 2;
+    private static final Pattern NumericDropFormulaRegex = Pattern.compile( NumericDropFormulaPattern );
+    private static final Pattern RPNDropFormulaRegex = Pattern.compile( RPNDropFormulaPattern );
 
     // IGeoTileInfo
     public String tileSetName = null;
@@ -59,10 +63,7 @@ public class TileData
     public String fragmentItemOreDictionaryName = null;
     public MetaResourceLocation proxyOreResourceLocation = null;
     public List< LayeredTextureLayer > oreItemTextureLayers = null;
-    public Integer baseDropAmount = null;
-    public String bonusDropExpr = null;
-    public Integer baseExp = null;
-    public String bonusExpExpr = null;
+    public IDropFormula expDropFormula = null;
     public WeightedDropCollections weightedDropCollections = null;
     public MetaResourceLocation forcedHost = null;
     public List< MetaResourceLocation > hostAffinities = null;
@@ -148,20 +149,9 @@ public class TileData
                 specialBlockPropertyFlags |= SpecialBlockPropertyFlags.DRAGON_IMMUNE;
                 return true;
             }
-            case "drops":
-            {
-                String[] values = value.split( " " , 2 );
-                baseDropAmount = Math.max( 0 , Integer.parseInt( values[ 0 ] ) );
-                if( values.length > 1 )
-                    bonusDropExpr = values[ 1 ];
-                return true;
-            }
             case "exp":
             {
-                String[] values = value.split( " " , 2 );
-                baseExp = Integer.parseInt( values[ 0 ] );
-                if( values.length > 1 )
-                    bonusExpExpr = values[ 1 ];
+                expDropFormula = parseDropFormula( value );
                 return true;
             }
             case "forceHost":
@@ -351,28 +341,17 @@ public class TileData
             if( dropGroupKey.length() <= 0 )
                 return false;
 
-            String weight , metaResource , minimum , maximum = null , rpnExpr = null;
             Matcher matcher = DropGroupRegex.matcher( value );
-            if( matcher.find() )
-            {
-                weight = matcher.group( DropGroupWeightGroup );
-                metaResource = matcher.group( DropGroupMetaResourceLocationGroup );
-                minimum = matcher.group( DropGroupMinimumAmountGroup );
-                maximum = matcher.group( DropGroupMaximumAmountGroup );
-            }
-            else
-            {
-                matcher = RPNDropGroupRegex.matcher( value );
-                if( matcher.find() )
-                {
-                    weight = matcher.group( DropGroupWeightGroup );
-                    metaResource = matcher.group( DropGroupMetaResourceLocationGroup );
-                    minimum = matcher.group( DropGroupMinimumAmountGroup );
-                    rpnExpr = matcher.group( RPNDropGroupExprGroup );
-                }
-                else
-                    return false;
-            }
+            if( !matcher.find() )
+                return false;
+
+            String weight = matcher.group( DropGroupWeightGroup );
+            String metaResource = matcher.group( DropGroupMetaResourceLocationGroup );
+            String formula = matcher.group( DropGroupFormulaGroup );
+
+            IDropFormula dropFormula = formula != null ? parseDropFormula( formula ) : new StaticDropFormula( 1 );
+            if( dropFormula == null )
+                return false;
 
             MetaResourceLocation metaResourceLocation;
             switch( metaResource )
@@ -387,23 +366,13 @@ public class TileData
                     metaResourceLocation = new MetaResourceLocation( metaResource );
                     break;
             }
-            int numericMinimum = minimum != null ? Math.max( 0 , Integer.parseInt( minimum ) ) : 1;
-            int numericMaximum = maximum != null ? Math.max( numericMinimum , Integer.parseInt( maximum ) ) : numericMinimum;
-
-            IFortuneDistribution fortuneDistribution;
-            if( rpnExpr != null )
-                fortuneDistribution = new RPNFortuneDistribution( numericMinimum , rpnExpr );
-            else if( numericMinimum == numericMaximum )
-                fortuneDistribution = new StaticFortuneDistribution( numericMinimum );
-            else
-                fortuneDistribution = new VanillaFortuneDistribution( numericMinimum , numericMaximum );
 
             if( weightedDropCollections == null )
                 weightedDropCollections = new WeightedDropCollections();
 
             weightedDropCollections.addDropToGroup(
                 metaResourceLocation,
-                fortuneDistribution,
+                dropFormula,
                 weight != null ? Math.max( 0 , Integer.parseInt( weight ) ) : 100,
                 dropGroupKey );
 
@@ -479,6 +448,38 @@ public class TileData
     }
 
     // Statics
+
+    public static IDropFormula parseDropFormula( String value )
+    {
+        Matcher matcher = NumericDropFormulaRegex.matcher( value );
+        if( matcher.find() )
+        {
+            String base = matcher.group( DropFormulaBaseGroup );
+            String bonus = matcher.group( DropFormulaBonusGroup );
+
+            int numericMinimum = base != null ? Math.max( 0 , Integer.parseInt( base ) ) : 1;
+            int numericMaximum = bonus != null ? Math.max( numericMinimum , Integer.parseInt( bonus ) ) : numericMinimum;
+
+            return numericMinimum == numericMaximum
+                ? new StaticDropFormula( numericMinimum )
+                : new VanillaDropFormula( numericMinimum , numericMaximum );
+        }
+
+        matcher = RPNDropFormulaRegex.matcher( value );
+        if( matcher.find() )
+        {
+            String base = matcher.group( DropFormulaBaseGroup );
+            String bonus = matcher.group( DropFormulaBonusGroup );
+
+            IDropFormula dropFormula = new RPNDropFormula( base , bonus );
+            // Perform a test evaluation of the RPN. This will throw if something is wrong.
+            dropFormula.getAmount( new Random() , null , new BlockPos( 0 , 0 , 0 ) );
+
+            return dropFormula;
+        }
+
+        return null;
+    }
 
     public static List< LayeredTextureLayer > parseTextureLayers( String value )
     {

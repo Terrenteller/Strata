@@ -6,7 +6,9 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.LocalizationRegistry;
+import com.riintouge.strata.item.RPNDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.Util;
@@ -46,10 +48,9 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private IBlockState proxyBlockState = null; // Lazily evaluated
     private ItemStack proxyBlockItemStack = null; // Lazily evaluated
     private WeightedDropCollections weightedDropCollections;
-    public MetaResourceLocation forcedHost;
-    public List< MetaResourceLocation > hostAffinities;
-    private int baseExp;
-    private String bonusExpExpr;
+    private MetaResourceLocation forcedHost;
+    private List< MetaResourceLocation > hostAffinities;
+    private IDropFormula expDropFormula;
 
     // ICommonBlockProperties
     private Material material;
@@ -82,8 +83,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.weightedDropCollections = tileData.weightedDropCollections;
         this.forcedHost = tileData.forcedHost;
         this.hostAffinities = tileData.hostAffinities;
-        this.baseExp = Util.coalesce( tileData.baseExp , 0 );
-        this.bonusExpExpr = tileData.bonusExpExpr;
+        this.expDropFormula = tileData.expDropFormula;
 
         // ICommonBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
@@ -268,16 +268,10 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return hostAffinities;
     }
 
-    @Override
-    public int baseExp()
+    @Nullable
+    public IDropFormula expDropFormula()
     {
-        return baseExp;
-    }
-
-    @Override
-    public String bonusExpExpr()
-    {
-        return bonusExpExpr;
+        return expDropFormula;
     }
 
     // ICommonBlockProperties overrides

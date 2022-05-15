@@ -9,10 +9,10 @@ import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.StateUtil;
-import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
@@ -51,7 +51,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -499,10 +498,11 @@ public class OreBlock extends BlockFalling
     @Override
     public void dropXpOnBlockBreak( World worldIn , BlockPos pos , int amount )
     {
-        // Somehow different than Block.getExpDrop()
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         if( proxyBlockState != null )
             proxyBlockState.getBlock().dropXpOnBlockBreak( worldIn , pos , amount );
+        else
+            super.dropXpOnBlockBreak( worldIn , pos , amount );
     }
 
     @Deprecated
@@ -577,7 +577,7 @@ public class OreBlock extends BlockFalling
             WeightedDropCollections weightedDropCollections = oreInfo.weightedDropGroups();
             if( weightedDropCollections != null )
             {
-                drops.addAll( weightedDropCollections.collectRandomDrops( RANDOM , fortune ) );
+                drops.addAll( weightedDropCollections.collectRandomDrops( RANDOM , harvestToolOrEmpty , pos ) );
             }
             else
             {
@@ -591,14 +591,18 @@ public class OreBlock extends BlockFalling
     @Override
     public int getExpDrop( IBlockState state , IBlockAccess world , BlockPos pos , int fortune )
     {
-        // Somehow different than Block.dropXpOnBlockBreak()
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         if( proxyBlockState != null )
             return proxyBlockState.getBlock().getExpDrop( proxyBlockState , world , pos , fortune );
 
-        return oreInfo.bonusExpExpr() != null
-            ? oreInfo.baseExp() + (int)Math.round( Util.evaluateRPN( oreInfo.bonusExpExpr() , new ImmutablePair<>( "f" , (double)fortune ) ) )
-            : oreInfo.baseExp();
+        IDropFormula expDropFormula = oreInfo.expDropFormula();
+        if( expDropFormula == null )
+            return 0;
+
+        // We don't have the actual tool at this point but we do have creativity
+        ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+        fakeHarvestTool.addEnchantment( Enchantments.FORTUNE , fortune );
+        return expDropFormula.getAmount( RANDOM , fakeHarvestTool , pos );
     }
 
     @Deprecated
