@@ -154,6 +154,14 @@ public class TileData
                 expDropFormula = parseDropFormula( value );
                 return true;
             }
+            case "fireSource":
+            {
+                if( specialBlockPropertyFlags == null )
+                    specialBlockPropertyFlags = 0L;
+
+                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.FIRE_SOURCE;
+                return true;
+            }
             case "forceHost":
             {
                 forcedHost = new MetaResourceLocation( value );

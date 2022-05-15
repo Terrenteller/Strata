@@ -261,6 +261,13 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public boolean isFireSource( World world , BlockPos pos , EnumFacing side )
+    {
+        return ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.FIRE_SOURCE ) > 0
+            || super.isFireSource( world , pos , side );
+    }
+
+    @Override
     public void neighborChanged( IBlockState state , World worldIn , BlockPos pos , Block blockIn , BlockPos fromPos )
     {
         if( canFall() )

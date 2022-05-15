@@ -311,8 +311,16 @@ Key: dragonImmune
 Value: N/A
 Description:
     Prevents the Ender Dragon from destroying the block.
+    Does not apply to hosts.
 
 Key: witherImmune
 Value: N/A
 Description:
     Prevents the Wither from destroying the block.
+    Does not apply to hosts.
+
+Key: fireSource
+Value: N/A
+Description:
+    Prevents fire on top of the block from being extinguished by natural means.
+    Does not apply to hosts.

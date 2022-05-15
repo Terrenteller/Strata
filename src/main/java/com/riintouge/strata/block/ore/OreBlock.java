@@ -839,6 +839,22 @@ public class OreBlock extends BlockFalling
     }
 
     @Override
+    public boolean isFireSource( World world , BlockPos pos , EnumFacing side )
+    {
+        IBlockState proxyBlockState = oreInfo.proxyBlockState();
+        if( proxyBlockState != null && proxyBlockState.getBlock().isFireSource( world , pos , side ) )
+            return true;
+
+        MetaResourceLocation hostResourceLocation = getHost( world , pos );
+        Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
+        if( host != Blocks.AIR && host.isFireSource( world , pos , side ) )
+            return true;
+
+        return ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.FIRE_SOURCE ) > 0
+            || super.isFireSource( world , pos , side );
+    }
+
+    @Override
     public boolean isToolEffective( String type , IBlockState state )
     {
         // Assume the best case scenario because state is unlikely to have unlisted property data.
