@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -101,6 +102,16 @@ public class OreItem extends Item
             return equivalentItemStack.getItem().getUnlocalizedName( equivalentItemStack );
 
         return getUnlocalizedName();
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public boolean hasEffect( ItemStack stack )
+    {
+        ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
+        return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
+            || ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.HAS_EFFECT ) > 0
+            || super.hasEffect( stack );
     }
 
     @Override

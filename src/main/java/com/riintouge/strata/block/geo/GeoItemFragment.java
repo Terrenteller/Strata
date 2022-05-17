@@ -1,10 +1,13 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nonnull;
@@ -78,5 +81,15 @@ public class GeoItemFragment extends Item
             return Ball;
 
         return null;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public boolean hasEffect( ItemStack stack )
+    {
+        ItemStack equivalentItemStack = tileInfo.equivalentItemStack();
+        return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
+            || ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.HAS_EFFECT ) > 0
+            || super.hasEffect( stack );
     }
 }

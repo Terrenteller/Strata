@@ -209,6 +209,14 @@ public class TileData
                 hardness = Float.parseFloat( value );
                 return true;
             }
+            case "hasEffect":
+            {
+                if( specialBlockPropertyFlags == null )
+                    specialBlockPropertyFlags = 0L;
+
+                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.HAS_EFFECT;
+                return true;
+            }
             case "harvestLevel":
             {
                 harvestLevel = Integer.parseInt( value );

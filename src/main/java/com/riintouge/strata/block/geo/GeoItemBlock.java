@@ -1,8 +1,11 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GeoItemBlock extends ItemBlock
 {
@@ -45,5 +48,15 @@ public class GeoItemBlock extends ItemBlock
     {
         String name = tileInfo.localizedName();
         return name != null ? name : tileInfo.registryName().toString();
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public boolean hasEffect( ItemStack stack )
+    {
+        ItemStack equivalentItemStack = tileInfo.equivalentItemStack();
+        return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
+            || ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.HAS_EFFECT ) > 0
+            || super.hasEffect( stack );
     }
 }

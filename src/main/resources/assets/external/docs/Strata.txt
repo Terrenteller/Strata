@@ -324,3 +324,9 @@ Value: N/A
 Description:
     Prevents fire on top of the block from being extinguished by natural means.
     Does not apply to hosts.
+
+Key: hasEffect
+Value: N/A
+Description:
+    Gives the item an enchanted glint.
+    Does not apply to hosts.

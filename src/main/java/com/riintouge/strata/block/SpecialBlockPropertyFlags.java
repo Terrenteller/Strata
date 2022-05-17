@@ -6,4 +6,5 @@ public class SpecialBlockPropertyFlags
     public static final int DRAGON_IMMUNE = 1 << 1;
     public static final int WITHER_IMMUNE = 1 << 2;
     public static final int FIRE_SOURCE = 1 << 3;
+    public static final int HAS_EFFECT = 1 << 4;
 }
