@@ -253,14 +253,21 @@ public class EventHandlers
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void projectileImpactEvent( ProjectileImpactEvent event )
     {
-        if( event.getRayTraceResult().typeOfHit != RayTraceResult.Type.BLOCK )
-            return;
-
         World world = event.getEntity().world;
         if( world == null )
             return;
+        else if( world.isRemote && !StrataConfig.playBlockHitSoundWhenStruckByProjectile )
+            return;
+        else if( event.getRayTraceResult().typeOfHit != RayTraceResult.Type.BLOCK )
+            return;
 
-        SoundType soundType = null;
+        float volumeDivisor = 1.0f;
+        if( event instanceof ProjectileImpactEvent.Throwable )
+            volumeDivisor = 3.0f;
+        else if( !( event instanceof ProjectileImpactEvent.Arrow ) )
+            return;
+
+        SoundType soundType;
         BlockPos pos = event.getRayTraceResult().getBlockPos();
         IBlockState blockState = world.getBlockState( pos );
         if( blockState.getBlock() instanceof GeoBlock )
@@ -271,8 +278,10 @@ public class EventHandlers
         else if( blockState.getBlock() instanceof OreBlock )
         {
             OreBlock oreBlock = (OreBlock)blockState.getBlock();
-            soundType = oreBlock.getOreInfo().soundType();
+            soundType = oreBlock.getSoundType( blockState , world , pos , event.getEntity() );
         }
+        else
+            soundType = blockState.getBlock().getSoundType( blockState , world , pos , event.getEntity() );
 
         if( soundType != null )
         {
@@ -282,7 +291,7 @@ public class EventHandlers
                 pos.getZ(),
                 soundType.getHitSound(),
                 SoundCategory.NEUTRAL,
-                soundType.volume,
+                soundType.volume / volumeDivisor,
                 soundType.pitch,
                 false );
         }
