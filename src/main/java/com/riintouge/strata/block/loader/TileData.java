@@ -79,6 +79,7 @@ public class TileData
     public Float hardness = null;
     public Float explosionResistance = null;
     public Integer lightLevel = null;
+    public Integer lightOpacity = null;
     public Integer burnTime = null;
     public Long specialBlockPropertyFlags = null;
 
@@ -253,6 +254,13 @@ public class TileData
             case "lightLevel":
             {
                 lightLevel = Util.clamp( 0 , Integer.parseInt( value ) , 15 );
+                return true;
+            }
+            case "lightOpacity":
+            {
+                // Block's constructor uses 255 for a full block. Why not 15?
+                // Is that just to ensure a full block never lets light through?
+                lightOpacity = Util.clamp( 0 , Integer.parseInt( value ) , 255 );
                 return true;
             }
             case "ore":

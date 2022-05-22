@@ -48,6 +48,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
@@ -678,6 +679,17 @@ public class OreBlock extends BlockFalling
     public Item getItemDropped( IBlockState state , Random rand , int fortune )
     {
         return Items.AIR;
+    }
+
+    @Override
+    public int getLightOpacity( IBlockState state , IBlockAccess world , BlockPos pos )
+    {
+        MetaResourceLocation hostResource = getHost( world , pos );
+        Block hostBlock = ForgeRegistries.BLOCKS.getValue( hostResource.resourceLocation );
+
+        return hostBlock != null
+            ? hostBlock.getStateFromMeta( hostResource.meta ).getLightOpacity( world , pos )
+            : super.getLightOpacity( state , world , pos );
     }
 
     @Deprecated

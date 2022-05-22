@@ -102,6 +102,8 @@ public class TileDataLoader
                     tileData.explosionResistance = parentData.explosionResistance;
                 if( tileData.lightLevel == null )
                     tileData.lightLevel = parentData.lightLevel;
+                if( tileData.lightOpacity == null )
+                    tileData.lightOpacity = parentData.lightOpacity;
                 if( tileData.slipperiness == null )
                     tileData.slipperiness = parentData.slipperiness;
 

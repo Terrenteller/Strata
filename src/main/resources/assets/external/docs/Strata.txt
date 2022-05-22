@@ -141,6 +141,12 @@ Description:
     The amount of light (0-15) to emit.
     If the tile type has a parent, the parent's value is the default.
 
+Key: lightOpacity
+Value: <int>
+Description:
+    The amount of light blocked by the block.
+    If the tile type has a parent, the parent's value is the default.
+
 Key: slipperiness
 Value: <float>
 Default: 0.6

@@ -208,6 +208,13 @@ public class GeoBlock extends BlockFalling
         return item != null ? item : super.getItemDropped( state , rand , fortune );
     }
 
+    @Override
+    public int getLightOpacity( IBlockState state , IBlockAccess world , BlockPos pos )
+    {
+        Integer lightOpacity = tileInfo.lightOpacity();
+        return lightOpacity != null ? lightOpacity : super.getLightOpacity( state , world , pos );
+    }
+
     @Deprecated
     @Override
     public int getLightValue( IBlockState state )

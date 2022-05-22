@@ -1,7 +1,6 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.IForgeRegistrable;
-import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.state.IBlockState;
@@ -59,6 +58,9 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     ResourceLocation blockstateResourceLocation();
 
     SoundEventTuple ambientSound();
+
+    @Nullable
+    Integer lightOpacity();
 
     @Nullable
     String localizedName();

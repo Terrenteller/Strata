@@ -50,6 +50,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
     private SoundEventTuple ambientSound;
+    private Integer lightOpacity;
     private Float slipperiness;
 
     // IHostInfo
@@ -88,6 +89,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
         this.ambientSound = tileData.ambientSound;
+        this.lightOpacity = tileData.lightOpacity;
         this.slipperiness = tileData.slipperiness;
 
         // IHostInfo
@@ -277,6 +279,13 @@ public final class ImmutableTile implements IGeoTileInfo
     public SoundEventTuple ambientSound()
     {
         return ambientSound;
+    }
+
+    @Nullable
+    @Override
+    public Integer lightOpacity()
+    {
+        return lightOpacity;
     }
 
     @Nullable
