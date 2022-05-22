@@ -7,6 +7,7 @@ import net.minecraft.util.Rotation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public enum EnumGeoOrientation implements IStringSerializable
 {
@@ -212,38 +213,10 @@ public enum EnumGeoOrientation implements IStringSerializable
             VALUES[ orientation.meta ] = orientation;
     }
 
-    public static EnumGeoOrientation placedAgainst( EnumFacing blockSide , EnumFacing placerFacing )
+    public static EnumGeoOrientation placedAgainst( @Nonnull EnumFacing blockSide , @Nullable EnumFacing placerHorizontalFacing )
     {
         switch( blockSide )
         {
-            case UP:
-            {
-                switch( placerFacing )
-                {
-                    case NORTH:
-                        return UP_NORTH;
-                    case SOUTH:
-                        return UP_SOUTH;
-                    case EAST:
-                        return UP_EAST;
-                    case WEST:
-                        return UP_WEST;
-                }
-            }
-            case DOWN:
-            {
-                switch( placerFacing )
-                {
-                    case NORTH:
-                        return DOWN_NORTH;
-                    case SOUTH:
-                        return DOWN_SOUTH;
-                    case EAST:
-                        return DOWN_EAST;
-                    case WEST:
-                        return DOWN_WEST;
-                }
-            }
             case NORTH:
                 return SIDE_NORTH;
             case EAST:
@@ -254,6 +227,51 @@ public enum EnumGeoOrientation implements IStringSerializable
                 return SIDE_WEST;
         }
 
-        return NATURAL;
+        EnumFacing adjustedPlacerHorizontalFacing = placerHorizontalFacing;
+        if( placerHorizontalFacing == null
+            || placerHorizontalFacing.getHorizontalIndex() < 0
+            || placerHorizontalFacing.getHorizontalIndex() >= EnumFacing.HORIZONTALS.length )
+        {
+            // The placer doesn't know about its horizontal facing or it is not applicable (straight up or down).
+            // Unfortunately, we do care. Make something up because we can't return NATURAL.
+            adjustedPlacerHorizontalFacing = EnumFacing.HORIZONTALS[ new Random().nextInt( 4 ) ];
+        }
+
+        if( blockSide == EnumFacing.UP )
+        {
+            switch( adjustedPlacerHorizontalFacing )
+            {
+                case NORTH:
+                    return UP_NORTH;
+                case SOUTH:
+                    return UP_SOUTH;
+                case EAST:
+                    return UP_EAST;
+                case WEST:
+                    return UP_WEST;
+            }
+        }
+        else
+        {
+            switch( adjustedPlacerHorizontalFacing )
+            {
+                case NORTH:
+                    return DOWN_NORTH;
+                case SOUTH:
+                    return DOWN_SOUTH;
+                case EAST:
+                    return DOWN_EAST;
+                case WEST:
+                    return DOWN_WEST;
+            }
+        }
+
+        // Anything besides worldgen adding the block is not considered natural so we can't return NATURAL.
+        // We shouldn't be able to get here anyway.
+        throw new IllegalStateException(
+            String.format(
+                "No appropriate geo orientation for block placed facing \"%s\" against side \"%s\"!",
+                blockSide.toString(),
+                placerHorizontalFacing.toString() ) );
     }
 }
