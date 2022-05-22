@@ -317,6 +317,12 @@ Value: N/A
 Description:
     This flag fine-tunes implementation details and should not be used unless you know what it does.
 
+Key: affectedByGravity
+Value: N/A
+Description:
+    Allows the block to fall like sand and gravel regardless of its actual type.
+    Only applies to primary and secondary tile types.
+
 Key: dragonImmune
 Value: N/A
 Description:

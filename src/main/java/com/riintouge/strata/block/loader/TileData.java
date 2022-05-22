@@ -102,6 +102,14 @@ public class TileData
                 specialBlockPropertyFlags |= SpecialBlockPropertyFlags.ACTIVATABLE;
                 return true;
             }
+            case "affectedByGravity":
+            {
+                if( specialBlockPropertyFlags == null )
+                    specialBlockPropertyFlags = 0L;
+
+                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY;
+                return true;
+            }
             case "ambientSound":
             {
                 String[] values = value.split( " " );

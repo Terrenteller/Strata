@@ -68,7 +68,9 @@ public class GeoBlock extends BlockFalling
 
     public boolean canFall()
     {
-        return tileInfo.type() == TileType.SAND;
+        return tileInfo.type() == TileType.SAND
+            || tileInfo.type() == TileType.GRAVEL
+            || ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY ) > 0;
     }
 
     public IGeoTileInfo getTileInfo()
