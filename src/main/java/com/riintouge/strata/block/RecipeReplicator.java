@@ -1,7 +1,6 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.util.Util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -12,8 +11,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -29,7 +26,6 @@ import java.util.regex.Pattern;
 public class RecipeReplicator
 {
     public static final RecipeReplicator INSTANCE = new RecipeReplicator();
-    private static boolean ConfigurationLoaded = false;
     private static Set< Pattern > RecipeBlacklist = new HashSet<>();
 
     private final Map< Class , IReplicator > recipeReplicatorMap = new HashMap<>();
@@ -60,6 +56,7 @@ public class RecipeReplicator
                 substitute( shapedRecipe.getIngredients() ),
                 shapedRecipe.getRecipeOutput() );
         } );
+
         recipeReplicatorMap.put( ShapelessRecipes.class , recipe ->
         {
             ShapelessRecipes shapelessRecipe = (ShapelessRecipes)recipe;
@@ -194,8 +191,6 @@ public class RecipeReplicator
     {
         Strata.LOGGER.trace( "RecipeReplicator::registerRecipes()" );
 
-        loadConfiguration();
-
         IForgeRegistry< IRecipe > recipeRegistry = event.getRegistry();
         List< IRecipe > copies = new ArrayList<>();
         for( Map.Entry< ResourceLocation , IRecipe > recipe : recipeRegistry.getEntries() )
@@ -210,46 +205,29 @@ public class RecipeReplicator
             recipeRegistry.register( recipe );
     }
 
-    private static void loadConfiguration()
+    public static void processRecipeFile( String absFilePath ) throws IOException
     {
-        if( ConfigurationLoaded )
-            return;
+        processRecipeStream( new FileInputStream( absFilePath ) );
+    }
 
-        for( ModContainer mod : Loader.instance().getIndexedModList().values() )
+    public static void processRecipeStream( InputStream stream ) throws IOException
+    {
+        BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );
+        while( buffer.ready() )
         {
-            try
-            {
-                String blacklistFilePath = String.format( "%s/recipe/%s/blacklist.txt" , Strata.modid , mod.getModId() );
-                InputStream stream = new FileInputStream( ConfigDir.INSTANCE.path().resolve( blacklistFilePath ).toString() );
-                BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );
-                while( buffer.ready() )
-                {
-                    String line = buffer.readLine().trim();
-                    if( line.isEmpty() || line.charAt( 0 ) == '#' )
-                        continue;
+            String line = buffer.readLine().trim();
+            if( line.isEmpty() || line.charAt( 0 ) == '#' )
+                continue;
 
-                    String[] kv = Util.splitKV( line );
-                    switch( kv[ 0 ] )
-                    {
-                        case "blacklist":
-                            RecipeBlacklist.add( Pattern.compile( kv[ 1 ] ) );
-                            break;
-                    }
-                }
-
-                buffer.close();
-                stream.close();
-            }
-            catch( FileNotFoundException e )
+            String[] kv = Util.splitKV( line );
+            switch( kv[ 0 ] )
             {
-                // Most mods probably won't have a blacklist
-            }
-            catch( IOException e )
-            {
-                e.printStackTrace();
+                case "blacklist":
+                    RecipeBlacklist.add( Pattern.compile( kv[ 1 ] ) );
+                    break;
             }
         }
 
-        ConfigurationLoaded = true;
+        buffer.close();
     }
 }
