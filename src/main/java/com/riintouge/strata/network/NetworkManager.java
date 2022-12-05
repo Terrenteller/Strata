@@ -39,6 +39,7 @@ public final class NetworkManager
         NetworkWrapper.registerMessage( HostResponseMessage.Handler.INSTANCE , HostResponseMessage.class , discriminator++ , Side.SERVER );
         NetworkWrapper.registerMessage( BlockPropertiesRequestMessage.Handler.class , BlockPropertiesRequestMessage.class , discriminator++ , Side.CLIENT );
         NetworkWrapper.registerMessage( BlockPropertiesResponseMessage.Handler.INSTANCE , BlockPropertiesResponseMessage.class , discriminator++ , Side.SERVER );
+        NetworkWrapper.registerMessage( OreBlockLandingEffectMessage.Handler.class , OreBlockLandingEffectMessage.class , discriminator++ , Side.CLIENT );
 
         if( side == Side.SERVER )
         {

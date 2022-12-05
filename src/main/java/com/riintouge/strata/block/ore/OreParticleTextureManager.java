@@ -36,6 +36,11 @@ public final class OreParticleTextureManager
         // Nothing to do
     }
 
+    public boolean isActive()
+    {
+        return StrataConfig.usePrecomputedOreParticles && isInitialized();
+    }
+
     public boolean isInitialized()
     {
         return isInitialized;

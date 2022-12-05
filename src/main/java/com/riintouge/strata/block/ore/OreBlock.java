@@ -1,7 +1,6 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
@@ -11,6 +10,8 @@ import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
+import com.riintouge.strata.network.NetworkManager;
+import com.riintouge.strata.network.OreBlockLandingEffectMessage;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
@@ -20,12 +21,16 @@ import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,8 +51,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -87,6 +94,143 @@ public class OreBlock extends BlockFalling
         setResistance( oreInfo.explosionResistance() );
 
         setCreativeTab( Strata.ORE_BLOCK_TAB );
+    }
+
+    public void addLandingEffects( WorldClient world , BlockPos blockPos , double xPos , double yPos , double zPos , int numberOfParticles )
+    {
+        if( !world.isRemote )
+            return;
+
+        ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
+        if( particleManager == null )
+            return;
+
+        IBlockState actualState = world.getBlockState( blockPos ).getActualState( world , blockPos );
+        MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
+        IHostInfo hostInfo = host != null ? HostRegistry.INSTANCE.find( host ) : null;
+        TextureAtlasSprite combinedTexture = null;
+        TextureAtlasSprite hostTexture = null;
+
+        if( OreParticleTextureManager.INSTANCE.isActive() && hostInfo != null && hostInfo.modelTextureMap() != null )
+        {
+            combinedTexture = OreParticleTextureManager.INSTANCE.findTextureOrNull(
+                oreInfo.oreName(),
+                host.resourceLocation.getResourceDomain(),
+                host.resourceLocation.getResourcePath(),
+                host.meta,
+                EnumFacing.UP );
+        }
+
+        if( combinedTexture == null && host != null )
+        {
+            IBlockState hostDefaultState = Block.REGISTRY.getObject( host.resourceLocation ).getDefaultState();
+            hostTexture = Minecraft.getMinecraft()
+                .getBlockRendererDispatcher()
+                .getBlockModelShapes()
+                .getTexture( hostDefaultState );
+        }
+
+        // We could register our particle factory in ClientProxy and call ParticleManager.spawnEffectParticle()
+        // instead, but that method is designed more for SPacketParticles which we can't use because it calls
+        // BlockModelShapes.getTexture() which lacks world and coordinate information. It also keeps
+        // ParticleOreBlockDust.Factory out of a code path which doesn't need to know about it.
+        ParticleOreBlockDust.Factory particleFactory = new ParticleOreBlockDust.Factory();
+
+        // Don't limit the number of ore particles unless we must show the host particles separately
+        int numberOfOreParticles = combinedTexture == null && hostTexture != null
+            ? (int)Math.floor( numberOfParticles / 3.0 )
+            : numberOfParticles;
+
+        for( int index = 0 ; index < numberOfParticles ; index++ )
+        {
+            // 0.15 comes from EntityLivingBase
+            double xSpeed = RANDOM.nextGaussian() * 0.15;
+            double ySpeed = RANDOM.nextGaussian() * 0.15;
+            double zSpeed = RANDOM.nextGaussian() * 0.15;
+
+            Particle particle = particleFactory.createParticle( actualState , world , xPos , yPos , zPos , xSpeed , ySpeed , zSpeed );
+            if( particle != null )
+            {
+                if( combinedTexture != null )
+                    particle.setParticleTexture( combinedTexture );
+                else if( index >= numberOfOreParticles )
+                    particle.setParticleTexture( hostTexture );
+
+                particleManager.addEffect( particle );
+            }
+        }
+    }
+
+    @SideOnly( Side.CLIENT )
+    protected boolean addPrecomputedDestroyEffects( World world , BlockPos pos , ParticleManager manager )
+    {
+        try
+        {
+            IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
+            int blockId = Block.getIdFromBlock( state.getBlock() );
+
+            TextureAtlasSprite baseTextures[] = new TextureAtlasSprite[ EnumFacing.values().length ];
+            String oreName = oreInfo.oreName();
+            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
+            if( host == null )
+                return false;
+
+            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
+            if( hostInfo == null || hostInfo.modelTextureMap() == null )
+                return false;
+
+            String hostResourceDomain = host.resourceLocation.getResourceDomain();
+            String hostResourceLocation = host.resourceLocation.getResourcePath();
+
+            for( EnumFacing facing : EnumFacing.values() )
+            {
+                baseTextures[ facing.ordinal() ] = OreParticleTextureManager.INSTANCE.findTextureOrMissing(
+                    oreName,
+                    hostResourceDomain,
+                    hostResourceLocation,
+                    host.meta,
+                    facing );
+            }
+
+            // This loop sampled from ParticleManager.addBlockDestroyEffects()
+            for( int x = 0 ; x < 4 ; ++x )
+            {
+                double d0 = ( (double)x + 0.5d ) / 4.0d;
+
+                for( int y = 0 ; y < 4 ; ++y )
+                {
+                    double d1 = ( (double)y + 0.5d ) / 4.0d;
+
+                    for( int z = 0 ; z < 4 ; ++z )
+                    {
+                        double d2 = ( (double)z + 0.5d ) / 4.0d;
+
+                        ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
+                            0, // unused
+                            world,
+                            (double)pos.getX() + d0,
+                            (double)pos.getY() + d1,
+                            (double)pos.getZ() + d2,
+                            d0 - 0.5d,
+                            d1 - 0.5d,
+                            d2 - 0.5d,
+                            blockId );
+
+                        TextureAtlasSprite texture = baseTextures[ EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ].ordinal() ];
+                        particleDigging.setBlockPos( pos ).setParticleTexture( texture );
+                        manager.addEffect( particleDigging );
+                    }
+                }
+            }
+
+            return true;
+        }
+        catch( Exception e )
+        {
+            // TODO: warn
+        }
+
+        return false;
     }
 
     @Nonnull
@@ -171,9 +315,8 @@ public class OreBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        if( StrataConfig.usePrecomputedOreParticles && OreParticleTextureManager.INSTANCE.isInitialized() )
-            if( addPrecomputedDestroyEffects( world , pos , manager ) )
-                return true;
+        if( OreParticleTextureManager.INSTANCE.isActive() && addPrecomputedDestroyEffects( world , pos , manager ) )
+            return true;
 
         try
         {
@@ -263,105 +406,13 @@ public class OreBlock extends BlockFalling
 
     @Override
     @SideOnly( Side.CLIENT )
-    public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
-    {
-        ItemStack proxyBlockItemStack = oreInfo.proxyBlockItemStack();
-        if( proxyBlockItemStack != null )
-        {
-            IBlockState proxyBlockState = oreInfo.proxyBlockState();
-            assert proxyBlockState != null;
-            proxyBlockState.getBlock().addInformation( proxyBlockItemStack , player , tooltip , advanced );
-            return;
-        }
-
-        super.addInformation( stack , player , tooltip , advanced );
-
-        List< String > tooltipLines = oreInfo.localizedTooltip();
-        if( tooltipLines != null )
-            tooltip.addAll( tooltipLines );
-    }
-
-    @SideOnly( Side.CLIENT )
-    protected boolean addPrecomputedDestroyEffects( World world , BlockPos pos , ParticleManager manager )
-    {
-        try
-        {
-            IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
-            int blockId = Block.getIdFromBlock( state.getBlock() );
-
-            TextureAtlasSprite baseTextures[] = new TextureAtlasSprite[ EnumFacing.values().length ];
-            String oreName = oreInfo.oreName();
-            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-            if( host == null )
-                return false;
-
-            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            if( hostInfo == null || hostInfo.modelTextureMap() == null )
-                return false;
-
-            String hostResourceDomain = host.resourceLocation.getResourceDomain();
-            String hostResourceLocation = host.resourceLocation.getResourcePath();
-
-            for( EnumFacing facing : EnumFacing.values() )
-            {
-                baseTextures[ facing.ordinal() ] = OreParticleTextureManager.INSTANCE.findTextureOrMissing(
-                    oreName,
-                    hostResourceDomain,
-                    hostResourceLocation,
-                    host.meta,
-                    facing );
-            }
-
-            // This loop sampled from ParticleManager.addBlockDestroyEffects()
-            for( int x = 0 ; x < 4 ; ++x )
-            {
-                double d0 = ( (double)x + 0.5d ) / 4.0d;
-
-                for( int y = 0 ; y < 4 ; ++y )
-                {
-                    double d1 = ( (double)y + 0.5d ) / 4.0d;
-
-                    for( int z = 0 ; z < 4 ; ++z )
-                    {
-                        double d2 = ( (double)z + 0.5d ) / 4.0d;
-
-                        ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
-                            0, // unused
-                            world,
-                            (double)pos.getX() + d0,
-                            (double)pos.getY() + d1,
-                            (double)pos.getZ() + d2,
-                            d0 - 0.5d,
-                            d1 - 0.5d,
-                            d2 - 0.5d,
-                            blockId );
-
-                        TextureAtlasSprite texture = baseTextures[ EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ].ordinal() ];
-                        particleDigging.setBlockPos( pos ).setParticleTexture( texture );
-                        manager.addEffect( particleDigging );
-                    }
-                }
-            }
-
-            return true;
-        }
-        catch( Exception e )
-        {
-            // TODO: warn
-        }
-
-        return false;
-    }
-
-    @Override
-    @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
         BlockPos blockPos = target.getBlockPos();
         IBlockState actualState = worldObj.getBlockState( blockPos ).getActualState( worldObj , blockPos );
         TextureAtlasSprite texture = null;
 
-        if( StrataConfig.usePrecomputedOreParticles && OreParticleTextureManager.INSTANCE.isInitialized() )
+        if( OreParticleTextureManager.INSTANCE.isActive() )
         {
             MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
             if( host == null )
@@ -410,6 +461,55 @@ public class OreBlock extends BlockFalling
         }
 
         return false;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
+    {
+        ItemStack proxyBlockItemStack = oreInfo.proxyBlockItemStack();
+        if( proxyBlockItemStack != null )
+        {
+            IBlockState proxyBlockState = oreInfo.proxyBlockState();
+            assert proxyBlockState != null;
+            proxyBlockState.getBlock().addInformation( proxyBlockItemStack , player , tooltip , advanced );
+            return;
+        }
+
+        super.addInformation( stack , player , tooltip , advanced );
+
+        List< String > tooltipLines = oreInfo.localizedTooltip();
+        if( tooltipLines != null )
+            tooltip.addAll( tooltipLines );
+    }
+
+    @Override
+    public boolean addLandingEffects(
+        IBlockState state,
+        WorldServer worldObj,
+        BlockPos blockPosition,
+        IBlockState iblockstate, // EntityLivingBase passes the same value to both state and iblockstate
+        EntityLivingBase entity,
+        int numberOfParticles )
+    {
+        // The base method says it's server-side but is not annotated as such
+        if( !worldObj.isRemote )
+        {
+            NetworkManager.INSTANCE.NetworkWrapper.sendToAllAround(
+                new OreBlockLandingEffectMessage(
+                    (float)entity.posX,
+                    (float)entity.posY,
+                    (float)entity.posZ,
+                    numberOfParticles ),
+                new NetworkRegistry.TargetPoint(
+                    entity.dimension,
+                    entity.posX,
+                    entity.posY,
+                    entity.posZ,
+                    1024.0 ) );
+        }
+
+        return true;
     }
 
     @Override
