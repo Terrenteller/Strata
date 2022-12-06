@@ -12,6 +12,7 @@ import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.network.NetworkManager;
 import com.riintouge.strata.network.OreBlockLandingEffectMessage;
+import com.riintouge.strata.network.OreBlockRunningEffectMessage;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
@@ -122,13 +123,7 @@ public class OreBlock extends BlockFalling
         }
 
         if( combinedTexture == null && host != null )
-        {
-            IBlockState hostDefaultState = Block.REGISTRY.getObject( host.resourceLocation ).getDefaultState();
-            hostTexture = Minecraft.getMinecraft()
-                .getBlockRendererDispatcher()
-                .getBlockModelShapes()
-                .getTexture( hostDefaultState );
-        }
+            hostTexture = hostInfo.modelTextureMap().getTexture( EnumFacing.UP );
 
         // We could register our particle factory in ClientProxy and call ParticleManager.spawnEffectParticle()
         // instead, but that method is designed more for SPacketParticles which we can't use because it calls
@@ -144,11 +139,16 @@ public class OreBlock extends BlockFalling
         for( int index = 0 ; index < numberOfParticles ; index++ )
         {
             // 0.15 comes from EntityLivingBase
-            double xSpeed = RANDOM.nextGaussian() * 0.15;
-            double ySpeed = RANDOM.nextGaussian() * 0.15;
-            double zSpeed = RANDOM.nextGaussian() * 0.15;
+            Particle particle = particleFactory.createParticle(
+                actualState,
+                world,
+                xPos,
+                yPos,
+                zPos,
+                RANDOM.nextGaussian() * 0.15,
+                RANDOM.nextGaussian() * 0.15,
+                RANDOM.nextGaussian() * 0.15 );
 
-            Particle particle = particleFactory.createParticle( actualState , world , xPos , yPos , zPos , xSpeed , ySpeed , zSpeed );
             if( particle != null )
             {
                 if( combinedTexture != null )
@@ -231,6 +231,59 @@ public class OreBlock extends BlockFalling
         }
 
         return false;
+    }
+
+    public void addRunningEffects(
+        WorldClient world,
+        BlockPos blockPos,
+        double xPos,
+        double yPos,
+        double zPos,
+        double xSpeed,
+        double ySpeed,
+        double zSpeed )
+    {
+        if( !world.isRemote )
+            return;
+
+        ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
+        if( particleManager == null )
+            return;
+
+        IBlockState actualState = world.getBlockState( blockPos ).getActualState( world , blockPos );
+        MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
+        IHostInfo hostInfo = host != null ? HostRegistry.INSTANCE.find( host ) : null;
+        TextureAtlasSprite combinedTexture = null;
+        TextureAtlasSprite hostTexture = null;
+
+        if( OreParticleTextureManager.INSTANCE.isActive() && hostInfo != null && hostInfo.modelTextureMap() != null )
+        {
+            combinedTexture = OreParticleTextureManager.INSTANCE.findTextureOrNull(
+                oreInfo.oreName(),
+                host.resourceLocation.getResourceDomain(),
+                host.resourceLocation.getResourcePath(),
+                host.meta,
+                EnumFacing.UP );
+        }
+
+        if( combinedTexture == null && host != null && RANDOM.nextFloat() < ( 1.0f / 3.0f ) )
+            hostTexture = hostInfo.modelTextureMap().getTexture( EnumFacing.UP );
+
+        // We could register our particle factory in ClientProxy and call ParticleManager.spawnEffectParticle()
+        // instead, but that method is designed more for SPacketParticles which we can't use because it calls
+        // BlockModelShapes.getTexture() which lacks world and coordinate information. It also keeps
+        // ParticleOreDigging.Factory out of a code path which doesn't need to know about it.
+        ParticleOreDigging.Factory particleFactory = new ParticleOreDigging.Factory();
+        Particle particle = particleFactory.createParticle( actualState , world , xPos , yPos , zPos , xSpeed , ySpeed , zSpeed );
+        if( particle != null )
+        {
+            if( combinedTexture != null )
+                particle.setParticleTexture( combinedTexture );
+            else if( hostTexture != null )
+                particle.setParticleTexture( hostTexture );
+
+            particleManager.addEffect( particle );
+        }
     }
 
     @Nonnull
@@ -501,6 +554,31 @@ public class OreBlock extends BlockFalling
                     (float)entity.posY,
                     (float)entity.posZ,
                     numberOfParticles ),
+                new NetworkRegistry.TargetPoint(
+                    entity.dimension,
+                    entity.posX,
+                    entity.posY,
+                    entity.posZ,
+                    1024.0 ) );
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean addRunningEffects( IBlockState state , World world , BlockPos pos , Entity entity )
+    {
+        if( world.isRemote )
+        {
+            // These values taken from Entity.createRunningParticles()
+            NetworkManager.INSTANCE.NetworkWrapper.sendToAllAround(
+                new OreBlockRunningEffectMessage(
+                    (float)( entity.posX + ( RANDOM.nextFloat() - 0.5d ) * (double)entity.width ),
+                    (float)( entity.getEntityBoundingBox().minY + 0.1d ),
+                    (float)( entity.posZ + ( RANDOM.nextFloat() - 0.5d ) * (double)entity.width ),
+                    (float)( -entity.motionX * 4.0d ),
+                    1.5f,
+                    (float)( -entity.motionZ * 4.0d ) ),
                 new NetworkRegistry.TargetPoint(
                     entity.dimension,
                     entity.posX,

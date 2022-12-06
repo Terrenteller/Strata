@@ -83,9 +83,7 @@ public class OreBlockModel implements IBakedModel
     @Override
     public TextureAtlasSprite getParticleTexture()
     {
-        // This will return the ore overlay because we have no block state per ore/host combo.
-        // OreBlock.addDestroyEffects(), OreBlock.addHitEffects(), and OreBlock.addLandingEffects()
-        // will spawn particles with the host. Running on the ore block will still involve this method.
+        // This will return the ore overlay because we have no block state per ore/host combo
         return oreTileSet.getInfo().modelTextureMap().getTexture( EnumFacing.UP );
     }
 
