@@ -1,5 +1,6 @@
 package com.riintouge.strata.block;
 
+import com.riintouge.strata.image.SquareMipmapHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -30,9 +31,8 @@ public class ParticleHelper
 
         if( texture != null )
         {
-            // Use the first pixel of the smallest mipmap as the average color
-            int[][] frameData = texture.getFrameTextureData( 0 );
-            return frameData[ frameData.length - 1 ][ 0 ];
+            SquareMipmapHelper mipmaps = new SquareMipmapHelper( texture.getFrameTextureData( 0 ) );
+            return mipmaps.mipmapForEdgeLength( 1 )[ 0 ];
         }
 
         return DefaultParticleColor;
