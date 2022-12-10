@@ -17,6 +17,7 @@ public final class StrataConfig extends ConfigBase
     public static Boolean useModernWallStyle;
     public static Boolean usePrecomputedOreParticles;
     public static Boolean playBlockHitSoundWhenStruckByProjectile;
+    public static Boolean restrictSampleXYVariation;
 
     public static final String CATEGORY_SERVER = "server";
     public static Boolean enforceClientSynchronization;
@@ -47,6 +48,7 @@ public final class StrataConfig extends ConfigBase
         useModernWallStyle = getBoolean( "useModernWallStyle" , true );
         usePrecomputedOreParticles = getBoolean( "usePrecomputedOreParticles" , true );
         playBlockHitSoundWhenStruckByProjectile = getBoolean( "playBlockHitSoundWhenStruckByProjectile" , true );
+        restrictSampleXYVariation = getBoolean( "restrictSampleXYVariation" , true );
         popCategory( true );
 
         pushCategory( config , CATEGORY_SERVER );

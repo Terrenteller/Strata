@@ -1,5 +1,6 @@
 package com.riintouge.strata.item;
 
+import com.google.common.collect.Iterables;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.misc.WeightedCollection;
 import net.minecraft.block.Block;
@@ -33,7 +34,7 @@ public class WeightedDropCollections
 
         for( WeightedCollection< Pair< MetaResourceLocation , IDropFormula > > dropGroup : dropsByGroup.values() )
         {
-            Pair< MetaResourceLocation , IDropFormula > drop = dropGroup.getRandomItem( random );
+            Pair< MetaResourceLocation , IDropFormula > drop = dropGroup.getRandomObject( random );
             if( drop == null )
                 continue;
 
@@ -57,5 +58,19 @@ public class WeightedDropCollections
         }
 
         return drops;
+    }
+
+    public ItemStack getSingleRandomDrop( Random random )
+    {
+        int groupIndex = random.nextInt( dropsByGroup.size() );
+        WeightedCollection< Pair< MetaResourceLocation , IDropFormula > > dropGroup = Iterables.get( dropsByGroup.values() , groupIndex );
+        Pair< MetaResourceLocation , IDropFormula > dropPair = dropGroup.getRandomObject( random , ( pair ) ->
+        {
+            MetaResourceLocation metaResourceLocation = pair.getKey();
+            ItemStack itemStack = new ItemStack( Item.REGISTRY.getObject( metaResourceLocation.resourceLocation ) , 1 , metaResourceLocation.meta );
+            return !itemStack.isEmpty();
+        } );
+
+        return new ItemStack( Item.REGISTRY.getObject( dropPair.getKey().resourceLocation ) , 1 , dropPair.getKey().meta );
     }
 }

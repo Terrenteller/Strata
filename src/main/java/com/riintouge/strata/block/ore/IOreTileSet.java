@@ -18,5 +18,11 @@ public interface IOreTileSet
     ItemBlock getItemBlock();
 
     @Nonnull
+    Block getSampleBlock();
+
+    @Nonnull
+    ItemBlock getSampleItemBlock();
+
+    @Nonnull
     Item getItem();
 }

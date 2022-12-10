@@ -5,11 +5,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class StrataBlockFragmentsTab extends CreativeTabs
+public class StrataOreSamplesTab extends CreativeTabs
 {
-    public StrataBlockFragmentsTab()
+    public StrataOreSamplesTab()
     {
-        super( "strataBlockFragmentsTab" );
+        super( "strataOreSamplesTab" );
     }
 
     // CreativeTabs overrides
@@ -17,6 +17,6 @@ public class StrataBlockFragmentsTab extends CreativeTabs
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( Item.REGISTRY.getObject( Strata.resource( "sodium_bentonite_ball" ) ) );
+        return new ItemStack( Item.REGISTRY.getObject( Strata.resource( "galena_sample" ) ) );
     }
 }

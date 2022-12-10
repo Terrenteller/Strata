@@ -2,7 +2,6 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class GeoBlockSlab extends BlockSlab
 {
@@ -112,8 +113,8 @@ public class GeoBlockSlab extends BlockSlab
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
-        ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
+        Supplier< TextureAtlasSprite > textureGetter = () -> tileInfo.modelTextureMap().getTexture( EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] );
+        ParticleHelper.addDestroyEffects( world , pos , manager , textureGetter );
 
         return true;
     }

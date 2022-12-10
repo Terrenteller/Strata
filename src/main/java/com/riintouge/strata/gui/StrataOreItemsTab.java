@@ -11,6 +11,8 @@ public class StrataOreItemsTab extends CreativeTabs
         super( "strataOreItemsTab" );
     }
 
+    // CreativeTabs overrides
+
     @Override
     public ItemStack getTabIconItem()
     {

@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +16,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.function.Supplier;
 
 @SideOnly( Side.CLIENT )
 public class ParticleHelper
@@ -42,10 +44,12 @@ public class ParticleHelper
         World world,
         BlockPos pos,
         ParticleManager manager,
-        Random random,
-        ProtoBlockTextureMap textureMap )
+        @Nullable Supplier< TextureAtlasSprite > textureGetter )
     {
         IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
+        if( textureGetter == null && state.getBlock() == Blocks.AIR )
+            return; // TODO: warn
+
         AxisAlignedBB AABB = state.getBoundingBox( world , pos );
         int blockId = Block.getIdFromBlock( state.getBlock() );
 
@@ -128,8 +132,10 @@ public class ParticleHelper
                         d2 - zVelocityOrigin,
                         blockId );
 
-                    TextureAtlasSprite texture = textureMap.getTexture( EnumFacing.VALUES[ random.nextInt( 6 ) ] );
-                    particleDigging.setBlockPos( pos ).setParticleTexture( texture );
+                    if( textureGetter != null )
+                        particleDigging.setParticleTexture( textureGetter.get() );
+
+                    particleDigging.setBlockPos( pos );
                     manager.addEffect( particleDigging );
                 }
             }

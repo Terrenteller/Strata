@@ -13,6 +13,8 @@ public class OreTileSet implements IOreTileSet
     protected Block block;
     protected ItemBlock itemBlock;
     protected Item item;
+    protected Block sampleBlock;
+    protected ItemBlock sampleItemBlock;
 
     public OreTileSet( IOreInfo oreInfo )
     {
@@ -29,8 +31,12 @@ public class OreTileSet implements IOreTileSet
             block = new OreBlock( oreInfo );
 
         itemBlock = new OreItemBlock( oreInfo , block );
+        sampleBlock = new OreSampleBlock( oreInfo );
+        sampleItemBlock = new OreItemBlock( oreInfo , sampleBlock );
+
         // Ores with proxies should never drop this item (rather the drops of the proxy ore), but it should
-        // always be created so if an ore becomes a proxy it doesn't lead to missing registry entries on world load.
+        // always be created so if an ore un-proxies it doesn't lead to missing registry entries on world load.
+        // Also makes for a dependable fallback.
         item = new OreItem( oreInfo );
     }
 
@@ -55,6 +61,20 @@ public class OreTileSet implements IOreTileSet
     public ItemBlock getItemBlock()
     {
         return itemBlock;
+    }
+
+    @Nonnull
+    @Override
+    public Block getSampleBlock()
+    {
+        return sampleBlock;
+    }
+
+    @Nonnull
+    @Override
+    public ItemBlock getSampleItemBlock()
+    {
+        return sampleItemBlock;
     }
 
     @Nonnull

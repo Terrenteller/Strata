@@ -3,7 +3,6 @@ package com.riintouge.strata.block.geo;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.ParticleHelper;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
@@ -33,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class GeoBlockWall extends BlockWall
 {
@@ -151,8 +151,8 @@ public class GeoBlockWall extends BlockWall
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
-        ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
+        Supplier< TextureAtlasSprite > textureGetter = () -> tileInfo.modelTextureMap().getTexture( EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] );
+        ParticleHelper.addDestroyEffects( world , pos , manager , textureGetter );
 
         return true;
     }

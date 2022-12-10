@@ -29,6 +29,7 @@ public class Strata
     public static final StrataBlockFragmentsTab BLOCK_FRAGMENT_TAB = new StrataBlockFragmentsTab();
     public static final StrataOreBlocksTab ORE_BLOCK_TAB = new StrataOreBlocksTab();
     public static final StrataOreItemsTab ORE_ITEM_TAB = new StrataOreItemsTab();
+    public static final StrataOreSamplesTab ORE_SAMPLE_TAB = new StrataOreSamplesTab();
 
     public static Logger LOGGER = LogManager.getLogger( modid );
 

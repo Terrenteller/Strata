@@ -29,7 +29,7 @@ public class OreBlockTileEntity extends TileEntity
     // HACK: OreBlockModel.getQuads() returns the host's quads in addition to the ore's quads. This is intentional.
     // When ForgeHooks.getDamageModel() collects quads to build a separate model on-the-fly
     // using the damage state texture for BlockRenderDispatcher.renderBlockDamage() to render,
-    // we end up with multiple damage textures per face which overlap awkwardly.
+    // we end up with two damage textures per facing (one for each model) which overlap additively or awkwardly.
     // The solution here is to only return the ore's quads from the upcoming call to OreBlockModel.getQuads().
     public static ThreadLocal< Integer > DAMAGE_MODEL_FACE_COUNT_HACK = ThreadLocal.withInitial( () -> 0 );
 
@@ -232,7 +232,7 @@ public class OreBlockTileEntity extends TileEntity
     @Override
     public SPacketUpdateTileEntity getUpdatePacket()
     {
-        // What does 3 mean here?
+        // According to NetHandlerPlayClient, 3 means TileEntityBeacon. Do we need this at all?
         return new SPacketUpdateTileEntity( this.pos , 3 , this.getUpdateTag() );
     }
 

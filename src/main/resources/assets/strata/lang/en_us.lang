@@ -18,6 +18,9 @@ strata.config.usePrecomputedOreParticlesDesc=Improves ore particles at the cost 
 strata.config.playBlockHitSoundWhenStruckByProjectile=Projectiles Play Block Hit Sound
 strata.config.playBlockHitSoundWhenStruckByProjectileDesc=Play the hit sound of the block when struck by an arrow or throwable object.
 
+strata.config.restrictSampleXYVariation=Restrict Ore Sample XY Variation
+strata.config.restrictSampleXYVariationDesc=Prevents ore samples from appearing far from the center of the block to not float awkwardly off ledges. Changes will take effect as chunks are re-built.
+
 #strata.config.requeryStatemapper=Re-query Statemapper
 #strata.config.requeryStatemapperDesc=Re-query a block's StateMapperBase on a BlockModelShapes cache miss. This also allows ore blocks to be pushed (but not pulled) by pistons.
 
@@ -35,6 +38,7 @@ itemGroup.strataMiscObjectsTab=Strata Misc. Objects
 itemGroup.strataBlockFragmentsTab=Strata Block Fragments
 itemGroup.strataOreBlocksTab=Strata Ore Blocks
 itemGroup.strataOreItemsTab=Strata Ore Items
+itemGroup.strataOreSamplesTab=Strata Ore Samples
 
 ### Miscellaneous
 

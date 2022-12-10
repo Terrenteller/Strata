@@ -16,7 +16,6 @@ import com.riintouge.strata.network.OreBlockRunningEffectMessage;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -28,14 +27,10 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -63,25 +58,22 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
-public class OreBlock extends BlockFalling
+public class OreBlock extends OreBaseBlock
 {
     // Ore blocks and their item blocks have a slightly different registry name
-    // so the ore items can have the name of the ore without decoration.
-    public static final String RegistryNameSuffix = "_ore";
+    // so the ore items can have the name of the ore without decoration
+    public static final String REGISTRY_NAME_SUFFIX = "_ore";
     protected static ThreadLocal< ItemStack > harvestTool = new ThreadLocal<>();
 
-    protected IOreInfo oreInfo;
     protected ThreadLocal< Integer > particleColor = new ThreadLocal<>();
 
     public OreBlock( IOreInfo oreInfo )
     {
-        super( oreInfo.material() );
-        this.oreInfo = oreInfo;
+        super( oreInfo , oreInfo.material() );
 
-        setRegistryName( Strata.modid + ":" + oreInfo.oreName() + RegistryNameSuffix );
+        setRegistryName( Strata.modid + ":" + oreInfo.oreName() + REGISTRY_NAME_SUFFIX );
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
         if( proxyBlock != null )
@@ -316,12 +308,6 @@ public class OreBlock extends BlockFalling
         return hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
     }
 
-    @Nonnull
-    public IOreInfo getOreInfo()
-    {
-        return oreInfo;
-    }
-
     @Nullable
     public OreBlockTileEntity getTileEntity( IBlockAccess world , BlockPos pos )
     {
@@ -517,26 +503,6 @@ public class OreBlock extends BlockFalling
     }
 
     @Override
-    @SideOnly( Side.CLIENT )
-    public void addInformation( ItemStack stack , @Nullable World player , List< String > tooltip , ITooltipFlag advanced )
-    {
-        ItemStack proxyBlockItemStack = oreInfo.proxyBlockItemStack();
-        if( proxyBlockItemStack != null )
-        {
-            IBlockState proxyBlockState = oreInfo.proxyBlockState();
-            assert proxyBlockState != null;
-            proxyBlockState.getBlock().addInformation( proxyBlockItemStack , player , tooltip , advanced );
-            return;
-        }
-
-        super.addInformation( stack , player , tooltip , advanced );
-
-        List< String > tooltipLines = oreInfo.localizedTooltip();
-        if( tooltipLines != null )
-            tooltip.addAll( tooltipLines );
-    }
-
-    @Override
     public boolean addLandingEffects(
         IBlockState state,
         WorldServer worldObj,
@@ -601,28 +567,14 @@ public class OreBlock extends BlockFalling
     @Override
     public boolean canEntityDestroy( IBlockState state , IBlockAccess world , BlockPos pos , Entity entity )
     {
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        if( proxyBlockState != null && !proxyBlockState.getBlock().canEntityDestroy( proxyBlockState , world , pos , entity ) )
+        // The assumption is that entities can destroy the block and the inability to destroy is the exception
+        if( !super.canEntityDestroy( state , world , pos , entity ) )
             return false;
 
         MetaResourceLocation hostResourceLocation = getHost( world , pos );
         Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
         IBlockState hostBlockState = host.getStateFromMeta( hostResourceLocation.meta );
-        if( host != Blocks.AIR && !host.canEntityDestroy( hostBlockState , world , pos , entity ) )
-            return false;
-
-        if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.DRAGON_IMMUNE ) > 0
-            && entity instanceof EntityDragon )
-        {
-            return false;
-        }
-        else if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.WITHER_IMMUNE ) > 0
-            && ( entity instanceof EntityWither || entity instanceof EntityWitherSkull ) )
-        {
-            return false;
-        }
-
-        return super.canEntityDestroy( state , world , pos , entity );
+        return host == Blocks.AIR || host.canEntityDestroy( hostBlockState , world , pos , entity );
     }
 
     @Override
@@ -870,17 +822,6 @@ public class OreBlock extends BlockFalling
             : super.getLightOpacity( state , world , pos );
     }
 
-    @Deprecated
-    @Override
-    public int getLightValue( IBlockState state )
-    {
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        if( proxyBlockState != null )
-            return proxyBlockState.getBlock().getLightValue( proxyBlockState );
-
-        throw new NotImplementedException( "Use the positional overload instead!" );
-    }
-
     @Override
     public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
     {
@@ -889,35 +830,19 @@ public class OreBlock extends BlockFalling
         if( hostInfo != null )
             hostLightValue = hostInfo.lightLevel();
 
-        int oreLightValue = oreInfo.lightLevel();
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        if( proxyBlockState != null )
-            oreLightValue = proxyBlockState.getBlock().getLightValue( proxyBlockState , world , pos );
-
-        return Math.max( hostLightValue , oreLightValue );
-    }
-
-    @Override
-    public String getLocalizedName()
-    {
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        if( proxyBlockState != null )
-            return proxyBlockState.getBlock().getLocalizedName();
-
-        String localizedName = oreInfo.localizedName();
-        return localizedName != null ? localizedName : getRegistryName().toString();
+        return Math.max( hostLightValue , super.getLightValue( state , world , pos ) );
     }
 
     @Deprecated
     @Override
     public Material getMaterial( IBlockState state )
     {
-        // state as cached by the world does not have unlisted property data
+        // state as cached by the world does not have unlisted property data.
+        // However, state from other callers might.
         MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
         if( hostResource == null )
             return super.getMaterial( state );
 
-        // However, state from other callers might. Be aware of the consequences.
         IHostInfo hostInfo = HostRegistry.INSTANCE.find( hostResource );
         return hostInfo != null ? hostInfo.material() : super.getMaterial( state );
     }
@@ -982,17 +907,6 @@ public class OreBlock extends BlockFalling
     }
 
     @Override
-    public String getUnlocalizedName()
-    {
-        IBlockState proxyBlockState = oreInfo.proxyBlockState();
-        if( proxyBlockState != null )
-            return proxyBlockState.getBlock().getUnlocalizedName();
-
-        // Strata localization doesn't make a distinction between blocks and items
-        return super.getUnlocalizedName().replace( "tile." , "" );
-    }
-
-    @Override
     public void harvestBlock( World worldIn , EntityPlayer player , BlockPos pos , IBlockState state , @Nullable TileEntity te , ItemStack stack )
     {
         // Most of this method is unfortunately copied from Block.harvestBlock().
@@ -1001,7 +915,7 @@ public class OreBlock extends BlockFalling
         StatBase blockStats = StatList.getBlockStats( this );
         if( blockStats != null )
             player.addStat( blockStats );
-        player.addExhaustion( 0.005F );
+        player.addExhaustion( 0.005f ); // Taken from Block.harvestBlock()
 
         try
         {

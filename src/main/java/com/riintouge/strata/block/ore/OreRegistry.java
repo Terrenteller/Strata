@@ -77,7 +77,10 @@ public final class OreRegistry
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        {
             blockRegistry.register( tileSet.getBlock() );
+            blockRegistry.register( tileSet.getSampleBlock() );
+        }
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -97,6 +100,8 @@ public final class OreRegistry
             String itemOreDictionaryName = tileSet.getInfo().itemOreDictionaryName();
             if( itemOreDictionaryName != null )
                 OreDictionary.registerOre( itemOreDictionaryName , tileSet.getItem() );
+
+            itemRegistry.register( tileSet.getSampleItemBlock() );
         }
     }
 
@@ -114,7 +119,7 @@ public final class OreRegistry
                 : new ItemStack( tileSet.getItem() );
 
             GameRegistry.addShapelessRecipe(
-                new ResourceLocation( Strata.modid , oreInfo.oreName() + "_item" ),
+                new ResourceLocation( Strata.modid , tileSet.getBlock().getRegistryName().getResourcePath() + "_equivalent" ),
                 null,
                 oreBlockConversionTarget,
                 Ingredient.fromItem( tileSet.getItemBlock() ) );
@@ -125,9 +130,12 @@ public final class OreRegistry
                 // Although the item block should be creative only, we'll add a recipe for convenience
                 GameRegistry.addSmelting( tileSet.getItemBlock() , furnaceResult , oreInfo.furnaceExp() );
                 GameRegistry.addSmelting( tileSet.getItem() , furnaceResult , oreInfo.furnaceExp() );
+                GameRegistry.addSmelting( tileSet.getSampleItemBlock() , furnaceResult , oreInfo.furnaceExp() );
             }
 
             ItemStack equivalentItem = oreInfo.equivalentItemStack();
+            ItemStack sampleEquivalentItem = oreBlockConversionTarget;
+
             if( equivalentItem != null && !equivalentItem.isEmpty() )
             {
                 RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( tileSet.getItem() ) );
@@ -136,7 +144,17 @@ public final class OreRegistry
                     null,
                     equivalentItem,
                     Ingredient.fromItem( tileSet.getItem() ) );
+
+                // Prioritize converting to a specific, equivalent item instead of the full ore
+                // because a sample is meant to drop a single item whereas the full ore may drop many things
+                sampleEquivalentItem = equivalentItem;
             }
+
+            GameRegistry.addShapelessRecipe(
+                new ResourceLocation( Strata.modid , tileSet.getSampleBlock().getRegistryName().getResourcePath() + "_equivalent" ),
+                null,
+                sampleEquivalentItem,
+                Ingredient.fromItem( tileSet.getSampleItemBlock() ) );
         }
     }
 
@@ -164,12 +182,17 @@ public final class OreRegistry
             ModelLoader.setCustomModelResourceLocation(
                 tileSet.getItemBlock(),
                 0,
-                new ModelResourceLocation( Strata.resource( tileSet.getInfo().oreName() + OreBlock.RegistryNameSuffix ) , "inventory" ) );
+                new ModelResourceLocation( Strata.resource( tileSet.getInfo().oreName() + OreBlock.REGISTRY_NAME_SUFFIX ) , "inventory" ) );
 
             ModelLoader.setCustomModelResourceLocation(
                 tileSet.getItem(),
                 0,
                 new ModelResourceLocation( Strata.resource( tileSet.getInfo().oreName() ) , "inventory" ) );
+
+            ModelLoader.setCustomModelResourceLocation(
+                tileSet.getSampleItemBlock(),
+                0,
+                new ModelResourceLocation( Strata.resource( tileSet.getInfo().oreName() + OreSampleBlock.REGISTRY_NAME_SUFFIX ) , "inventory" ) );
         }
     }
 
@@ -193,7 +216,7 @@ public final class OreRegistry
         IRegistry< ModelResourceLocation , IBakedModel > modelRegistry = event.getModelRegistry();
         for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
         {
-            ResourceLocation modelResource = Strata.resource( tileSet.getInfo().oreName() + OreBlock.RegistryNameSuffix );
+            ResourceLocation modelResource = Strata.resource( tileSet.getInfo().oreName() + OreBlock.REGISTRY_NAME_SUFFIX );
             ModelResourceLocation modelVariantResource = new ModelResourceLocation( modelResource , null );
             IBakedModel existingModel = modelRegistry.getObject( modelVariantResource );
 

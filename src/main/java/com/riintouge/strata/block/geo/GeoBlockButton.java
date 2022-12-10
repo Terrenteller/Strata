@@ -2,13 +2,13 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import net.minecraft.block.BlockButtonStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class GeoBlockButton extends BlockButtonStone
 {
@@ -47,8 +48,8 @@ public class GeoBlockButton extends BlockButtonStone
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
-        ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
+        Supplier< TextureAtlasSprite > textureGetter = () -> tileInfo.modelTextureMap().getTexture( EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] );
+        ParticleHelper.addDestroyEffects( world , pos , manager , textureGetter );
 
         return true;
     }

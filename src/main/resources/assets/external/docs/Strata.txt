@@ -267,7 +267,8 @@ Value: [weight:int] <ResourceLocation> [minimum:int[-<maximum:int>]]
 OR: [weight:int] <ResourceLocation> <minDropExpr:RPNExpression>[ ~ <maxBonusDropExpr:RPNExpression>]
 Description:
     Controls the probability and amount of what items an ore can drop.
-    weight controls how likely a drop is within the group and defaults to 100. The sum of weights can exceed 100.
+    weight controls how likely a drop is within the group and defaults to 100.
+    weight is treated as a ratio. The sum of weights does not have to equal 100.
     ResourceLocation refers to the item that will drop.
     ResourceLocation may also be '*' to represent the ore's own item or '-' to represent to no item at all (no drop).
     The "minimum only" form (e.g. "5") will always drop the exact amount.

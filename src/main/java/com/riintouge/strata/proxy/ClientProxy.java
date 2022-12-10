@@ -5,10 +5,7 @@ import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.GeoBlockModelLoader;
 import com.riintouge.strata.block.geo.GeoItemFragmentModelLoader;
 import com.riintouge.strata.block.geo.GeoItemFragmentTextureManager;
-import com.riintouge.strata.block.ore.OreBlockModelLoader;
-import com.riintouge.strata.block.ore.OreItemModelLoader;
-import com.riintouge.strata.block.ore.OreItemTextureManager;
-import com.riintouge.strata.block.ore.OreParticleTextureManager;
+import com.riintouge.strata.block.ore.*;
 import com.riintouge.strata.misc.BakedModelStoreProxy;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,6 +33,7 @@ public class ClientProxy extends CommonProxy
         ModelLoaderRegistry.registerLoader( new GeoItemFragmentModelLoader() );
         ModelLoaderRegistry.registerLoader( new OreBlockModelLoader() );
         ModelLoaderRegistry.registerLoader( new OreItemModelLoader() );
+        ModelLoaderRegistry.registerLoader( new OreSampleBlockModelLoader() );
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
-import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import net.minecraft.block.Block;
@@ -37,6 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class GeoBlock extends BlockFalling
 {
@@ -104,8 +104,8 @@ public class GeoBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        ProtoBlockTextureMap hostTextureMap = tileInfo.modelTextureMap();
-        ParticleHelper.addDestroyEffects( world , pos , manager , RANDOM , hostTextureMap );
+        Supplier< TextureAtlasSprite > textureGetter = () -> tileInfo.modelTextureMap().getTexture( EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] );
+        ParticleHelper.addDestroyEffects( world , pos , manager , textureGetter );
 
         return true;
     }

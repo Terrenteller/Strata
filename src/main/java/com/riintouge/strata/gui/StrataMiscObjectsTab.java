@@ -4,7 +4,6 @@ import com.riintouge.strata.Strata;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 public class StrataMiscObjectsTab extends CreativeTabs
 {
@@ -13,9 +12,11 @@ public class StrataMiscObjectsTab extends CreativeTabs
         super( "strataMiscObjectsTab" );
     }
 
+    // CreativeTabs overrides
+
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( Item.REGISTRY.getObject( new ResourceLocation( Strata.modid , "gneiss_pressureplate" ) ) );
+        return new ItemStack( Item.REGISTRY.getObject( Strata.resource( "gneiss_pressureplate" ) ) );
     }
 }
