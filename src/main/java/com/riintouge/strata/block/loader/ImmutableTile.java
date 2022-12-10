@@ -110,6 +110,9 @@ public final class ImmutableTile implements IGeoTileInfo
             registryName.toString(),
             Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
         LocalizationRegistry.INSTANCE.register(
+            registryName.toString() + ".name",
+            Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
+        LocalizationRegistry.INSTANCE.register(
             registryName.toString() + ".tooltip",
             Util.lazyCoalesce( tileData.tooltipMap , HashMap::new ) );
     }

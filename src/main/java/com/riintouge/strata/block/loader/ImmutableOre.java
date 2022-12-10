@@ -8,7 +8,6 @@ import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.LocalizationRegistry;
-import com.riintouge.strata.item.RPNDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.Util;
@@ -98,6 +97,9 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
         LocalizationRegistry.INSTANCE.register(
             Strata.resource( oreName ).toString(),
+            Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
+        LocalizationRegistry.INSTANCE.register(
+            Strata.resource( oreName ).toString() + ".name",
             Util.lazyCoalesce( tileData.languageMap , HashMap::new ) );
         LocalizationRegistry.INSTANCE.register(
             Strata.resource( oreName ).toString() + ".tooltip",
