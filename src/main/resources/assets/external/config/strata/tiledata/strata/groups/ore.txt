@@ -131,7 +131,8 @@ oreDict oreBauxite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/alunite
-lang.en Alunite (Aluminum Ore)
+lang.en Alunite (Aluminium Ore)
+lang.en_us Alunite (Aluminum Ore)
 
 ore celestine
 oreDict oreStrontium
@@ -188,6 +189,7 @@ type stone
 hardness 4.0
 texture strata:blocks/ore/strong/pollucite
 lang.en Pollucite (Caesium Ore)
+lang.en_us Pollucite (Cesium Ore)
 
 ore spodumene
 oreDict oreLithium
@@ -270,6 +272,7 @@ type clay
 hardness 1.5
 texture strata:blocks/ore/clay/bauxite
 lang.en Bauxite (Aluminium Ore)
+lang.en_us Bauxite (Aluminum Ore)
 
 ore brown_limonite
 oreDict oreIron

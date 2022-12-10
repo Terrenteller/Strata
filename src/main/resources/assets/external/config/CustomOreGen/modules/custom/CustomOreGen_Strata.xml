@@ -304,9 +304,9 @@
           <Choice value="false" displayValue="No" />
         </OptionChoice>
 
-        <OptionChoice name="StrataGenAluminum" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
-          <Description>Redistribute or replace aluminum ore (alunite, bauxite).</Description>
-          <DisplayName>Aluminum (Bauxite) ┤</DisplayName>
+        <OptionChoice name="StrataGenAluminium" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
+          <Description>Redistribute or replace aluminium ore (alunite, bauxite).</Description>
+          <DisplayName>Aluminium (Bauxite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
         </OptionChoice>
@@ -731,7 +731,7 @@
       </IfCondition>
 
       <IfCondition condition=":=?StrataCustomOreOverride">
-        <IfCondition condition=":=?StrataGenAluminum">
+        <IfCondition condition=":=?StrataGenAluminium">
           <Then>
             <Substitute name="AluminumToStone" block="minecraft:stone">
               <ReplacesOre block="oreBauxite" />
@@ -2078,7 +2078,7 @@
         <WireframeColor>0xFFFF11FF</WireframeColor>
         <Setting name="DistributionFrequency" avg="0.02" />
         <OreBlock block="strata:laterite" weight="0.5" />
-        <IfCondition condition=":=?StrataCustomOreOverride &amp; ?StrataGenAluminum">
+        <IfCondition condition=":=?StrataCustomOreOverride &amp; ?StrataGenAluminium">
           <OreBlock block="strata:bauxite_ore" weight="0.5" />
         </IfCondition>
       </CloudPreset>
@@ -3238,7 +3238,7 @@
           <BiomeSet inherits="volcanic" />
         </CloudPreset>
 
-        <IfCondition condition=":=?StrataCustomOreOverride &amp; ?StrataGenAluminum">
+        <IfCondition condition=":=?StrataCustomOreOverride &amp; ?StrataGenAluminium">
           <Veins name="Alunite" inherits="PresetAlunite" />
         </IfCondition>
         <IfCondition condition=":=?StrataCustomOreOverride &amp; ?StrataGenPerlite">
