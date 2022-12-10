@@ -2,28 +2,41 @@ package com.riintouge.strata.image;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @SideOnly( Side.CLIENT )
 public class LayeredTexture extends TextureAtlasSprite
 {
-    protected static final Cache< ResourceLocation , SquareMipmapHelper > MIPMAP_CACHE = CacheBuilder.newBuilder()
-        .expireAfterWrite( 1 , TimeUnit.MINUTES )
-        .build();
+    protected static final Cache< ResourceLocation , SquareMipmapHelper > MIPMAP_CACHE;
+    protected static final Pair< int[][] , Integer > MISSING_FRAME_INFO;
 
     protected final LayeredTextureLayer[] layers;
+
+    static
+    {
+        MIPMAP_CACHE = CacheBuilder.newBuilder().expireAfterWrite( 1 , TimeUnit.MINUTES ).build();
+
+        int[][] frame = new int[ Minecraft.getMinecraft().gameSettings.mipmapLevels + 1 ][];
+        frame[ 0 ] = TextureUtil.MISSING_TEXTURE_DATA;
+        int edgeLength = Util.squareRootOfPowerOfTwo( TextureUtil.MISSING_TEXTURE_DATA.length );
+
+        MISSING_FRAME_INFO = new ImmutablePair<>( frame , edgeLength );
+    }
 
     public LayeredTexture( ResourceLocation registryName , LayeredTextureLayer[] layers )
     {
@@ -80,13 +93,25 @@ public class LayeredTexture extends TextureAtlasSprite
     {
         if( layers.length == 1 )
         {
-            TextureAtlasSprite texture = textureGetter.apply( layers[ 0 ].resource );
-            width = texture.getIconWidth();
-            height = texture.getIconHeight();
+            ResourceLocation resource = layers[ 0 ].resource;
+            TextureAtlasSprite texture = textureGetter.apply( resource );
+            clearFramesTextureData();
 
-            this.clearFramesTextureData();
-            for( int index = 0 ; index < texture.getFrameCount() ; index++ )
-                this.framesTextureData.add( texture.getFrameTextureData( index ) );
+            if( texture.getFrameCount() > 0 )
+            {
+                width = texture.getIconWidth();
+                height = texture.getIconHeight();
+
+                for( int index = 0 ; index < texture.getFrameCount() ; index++ )
+                    framesTextureData.add( texture.getFrameTextureData( index ) );
+            }
+            else
+            {
+                Pair< int[][] , Integer > firstFrameInfo = getFirstFrameInfoOrMissing( resource , texture );
+                width = firstFrameInfo.getValue();
+                height = firstFrameInfo.getValue();
+                framesTextureData.add( firstFrameInfo.getKey() );
+            }
         }
         else if( layers.length > 1 )
         {
@@ -96,27 +121,9 @@ public class LayeredTexture extends TextureAtlasSprite
             {
                 ResourceLocation layerResource = layers[ index ].resource;
                 TextureAtlasSprite layerTexture = textureGetter.apply( layerResource );
-
-                if( layerTexture.getFrameCount() == 0 )
-                    throw new IllegalArgumentException(
-                        String.format(
-                            "Layered texture resource \"%s\" has no frames! Does the resource exist?",
-                            layerResource.toString() ) );
-
-                if( layerTexture.getIconWidth() != layerTexture.getIconHeight() )
-                    throw new IllegalArgumentException(
-                        String.format(
-                            "Layered texture resource \"%s\" must be square!",
-                            layerResource.toString() ) );
-
-                if( !Util.isPowerOfTwo( layerTexture.getIconWidth() ) )
-                    throw new IllegalArgumentException(
-                        String.format(
-                            "Layered texture resource \"%s\" size must be a power of two!",
-                            layerResource.toString() ) );
-
-                width = height = ( index == 0 ? layerTexture.getIconWidth() : Math.min( width , layerTexture.getIconWidth() ) );
-                mipmapHelpers[ index ] = getOrCreateMipmapHelper( layerResource , layerTexture.getFrameTextureData( 0 ) );
+                Pair< int[][] , Integer > firstFrameInfo = getFirstFrameInfoOrMissing( layerResource , layerTexture );
+                width = height = ( index == 0 ? firstFrameInfo.getValue() : Math.min( width , firstFrameInfo.getValue() ) );
+                mipmapHelpers[ index ] = getOrCreateMipmapHelper( layerResource , firstFrameInfo.getKey() );
             }
 
             SquareMipmapHelper baseLayerMipmapHelper = mipmapHelpers[ layers.length - 1 ];
@@ -132,11 +139,48 @@ public class LayeredTexture extends TextureAtlasSprite
                     result[ 0 ] );
             }
 
-            this.clearFramesTextureData();
-            this.framesTextureData.add( result );
+            clearFramesTextureData();
+            framesTextureData.add( result );
         }
 
         // What does it mean for this to be stitched or not?
         return false;
+    }
+
+    // Statics
+
+    public static Pair< int[][] , Integer > getFirstFrameInfoOrMissing( ResourceLocation resource , TextureAtlasSprite texture )
+    {
+        try
+        {
+            // Unloading a resource pack supplying the only instance of a necessary texture
+            // will result in a non-null, 0x0 texture with non-null, zero-length data.
+            // Attempting to index into no frames will result in an IndexOutOfBoundsException.
+            if( texture.getFrameCount() == 0 )
+                throw new IllegalArgumentException(
+                    String.format(
+                        "Layered texture resource \"%s\" has no frames! Does the resource exist? Did it get removed?",
+                        resource.toString() ) );
+
+            if( texture.getIconWidth() != texture.getIconHeight() )
+                throw new IllegalArgumentException(
+                    String.format(
+                        "Layered texture resource \"%s\" must be square!",
+                        resource.toString() ) );
+
+            if( !Util.isPowerOfTwo( texture.getIconWidth() ) )
+                throw new IllegalArgumentException(
+                    String.format(
+                        "Layered texture resource \"%s\" size must be a power of two!",
+                        resource.toString() ) );
+
+            return new ImmutablePair<>( texture.getFrameTextureData( 0 ) , texture.getIconWidth() );
+        }
+        catch( Exception e )
+        {
+            Strata.LOGGER.error( e.getMessage() );
+        }
+
+        return MISSING_FRAME_INFO;
     }
 }
