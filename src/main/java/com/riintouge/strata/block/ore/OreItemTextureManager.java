@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,6 +16,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class OreItemTextureManager
 {
+    // Redundant with Strata's configs, but necessary to make resource packs match without updating them.
+    // As a bonus, being verbose in user-visible tile data is documentation by example.
+    public static LayeredTextureLayer[] createReasonableDefault( ResourceLocation oreOverlay )
+    {
+        return new LayeredTextureLayer[]
+        {
+            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore_border" ) ),
+            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore_mask" ) , BlendMode.ERASE ),
+            new LayeredTextureLayer( oreOverlay ),
+            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore_base" ) )
+        };
+    }
+
     public static ResourceLocation getTextureLocation( String oreName )
     {
         return Strata.resource( "items/" + oreName );
@@ -32,8 +46,8 @@ public final class OreItemTextureManager
         {
             IOreInfo oreInfo = oreTileSet.getInfo();
             LayeredTextureLayer[] layers = oreInfo.oreItemTextureLayers() != null
-                ? oreInfo.oreItemTextureLayers().toArray( new LayeredTextureLayer[ 0 ] )
-                : new LayeredTextureLayer[]{ new LayeredTextureLayer( oreInfo.modelTextureMap().get( (EnumFacing)null ) ) };
+                ? oreInfo.oreItemTextureLayers()
+                : createReasonableDefault( oreInfo.modelTextureMap().get( (EnumFacing)null ) );
 
             ResourceLocation generatedResourceLocation = getTextureLocation( oreInfo.oreName() );
             Strata.LOGGER.trace( "Stitching " + generatedResourceLocation.toString() );

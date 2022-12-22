@@ -195,6 +195,7 @@ hardness 3.0
 resistance 5.0
 burnTime 1600
 texture strata:blocks/ore/vanilla/coal
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/vanilla/coal normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:coal
 proxy minecraft:coal_ore
@@ -205,6 +206,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/diamond
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/vanilla/diamond normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:diamond
 proxy minecraft:diamond_ore
@@ -215,6 +217,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/emerald
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/vanilla/emerald normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:emerald
 proxy minecraft:emerald_ore
@@ -225,6 +228,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/gold
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/vanilla/gold normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:gold_ore
 proxy minecraft:gold_ore
@@ -235,6 +239,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/iron
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/vanilla/iron normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:iron_ore
 proxy minecraft:iron_ore
@@ -245,6 +250,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/lapis
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/vanilla/lapis normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:dye:4
 proxy minecraft:lapis_ore
@@ -255,6 +261,7 @@ type stone
 hardness 3.0
 resistance 5.0
 texture strata:blocks/ore/vanilla/redstone
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/vanilla/redstone normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 convertsTo minecraft:redstone
 proxy minecraft:redstone_ore

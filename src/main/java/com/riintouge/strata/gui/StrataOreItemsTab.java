@@ -16,6 +16,6 @@ public class StrataOreItemsTab extends CreativeTabs
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( OreRegistry.INSTANCE.find( "tantalite" ).getItem() );
+        return new ItemStack( OreRegistry.INSTANCE.find( "cinnabar" ).getItem() );
     }
 }

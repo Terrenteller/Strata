@@ -45,6 +45,7 @@ type stone
 hardness 2.0
 texture strata:blocks/ore/weak/mica
 textureCaps strata:blocks/ore/weak/mica_caps
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/weak/mica normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 lang.en Mica
 
@@ -52,6 +53,7 @@ ore soapstone
 type stone
 hardness 2.0
 texture strata:blocks/ore/weak/soapstone
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/weak/soapstone normal 100 strata:items/ore_base
 lang.en Soapstone
 
 generate trona stone
@@ -69,6 +71,7 @@ oreDict oreBastnasite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/bastnasite
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/medium/bastnasite normal 100 strata:items/ore_base
 lang.en Bastnäsite
 
 ore fluorite
@@ -76,6 +79,7 @@ oreDict oreFluorite
 type stone
 hardness 3.0
 texture strata:blocks/ore/medium/fluorite
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/medium/fluorite normal 100 strata:items/ore_base
 lang.en Fluorite
 
 generate wollastonite stone
@@ -97,12 +101,14 @@ oreDict oreQuartz
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/quartz
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/strong/quartz normal 100 strata:items/ore_base
 lang.en Quartz
 
 ore kyanite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/kyanite
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/strong/kyanite normal 100 strata:items/ore_base
 lang.en Kyanite
 
 ore perlite
@@ -110,6 +116,7 @@ type stone
 hardness 4.0
 texture strata:blocks/ore/strong/perlite
 textureCaps strata:blocks/ore/strong/perlite_caps
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/strong/perlite normal 100 strata:items/ore_base
 blockstate strata:proto_cube_y_overlay
 lang.en Perlite
 
@@ -124,6 +131,7 @@ oreDict orePyrite
 type stone
 hardness 4.0
 texture strata:blocks/ore/strong/pyrite
+oreItemTexture strata:items/ore_border normal 100 strata:items/ore_mask erase 100 strata:blocks/ore/strong/pyrite normal 100 strata:items/ore_base
 lang.en Pyrite
 
 # Crude

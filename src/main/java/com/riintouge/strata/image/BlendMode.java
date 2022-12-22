@@ -4,13 +4,14 @@ package com.riintouge.strata.image;
 // If you're writing new code and it doesn't match what you see in GIMP,
 // fear not. You may be using the wrong mode. That being said, legacy is legacy,
 // and is planned for removal. Try comparing results with other image blending
-// software such as Imagemagick.
+// software such as ImageMagick.
 
 public enum BlendMode
 {
-    NORMAL,
-    LIGHTEN,
-    DARKEN;
+    NORMAL, // Legacy
+    LIGHTEN, // Legacy
+    DARKEN, // Legacy
+    ERASE; // Default
 
     public int blend( int top , float opacity , int bottom )
     {
@@ -22,6 +23,8 @@ public enum BlendMode
                 return lighten( top , opacity , bottom );
             case DARKEN:
                 return darken( top , opacity , bottom );
+            case ERASE:
+                return erase( top , opacity , bottom );
         }
 
         return 0;
@@ -106,6 +109,16 @@ public enum BlendMode
             | ( targetRed   << 16 ) & 0x00FF0000
             | ( targetGreen <<  8 ) & 0x0000FF00
             |   targetBlue          & 0x000000FF;
+    }
+
+    public static int erase( int top , float opacity , int bottom )
+    {
+        final float opacityN = opacity / 100.0f;
+        final int topAlpha = (int)( ( ( top >>> 24 ) & 0xFF ) * opacityN );
+        final int bottomAlpha = ( bottom >>> 24 ) & 0xFF;
+        final int targetAlpha = clamp( bottomAlpha - topAlpha );
+
+        return ( targetAlpha << 24 ) | ( bottom & 0x00FFFFFF );
     }
 
     private static int clamp( float value )

@@ -38,7 +38,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private String itemOreDictionaryName;
     private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
-    private List< LayeredTextureLayer > oreItemTextureLayers;
+    private LayeredTextureLayer[] oreItemTextureLayers;
     private MetaResourceLocation equivalentItemResourceLocation;
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation furnaceResult;
@@ -73,7 +73,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.itemOreDictionaryName = tileData.itemOreDictionaryName;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , Strata.resource( "proto_cube_gimbal_overlay" ) );
-        this.oreItemTextureLayers = tileData.oreItemTextureLayers;
+        if( tileData.oreItemTextureLayers != null && tileData.oreItemTextureLayers.size() > 0 )
+            this.oreItemTextureLayers = tileData.oreItemTextureLayers.toArray( new LayeredTextureLayer[ tileData.oreItemTextureLayers.size() ] );
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.furnaceResult = tileData.furnaceResult;
         this.furnaceExp = tileData.furnaceExp;
@@ -161,7 +162,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Nullable
     @Override
     @SideOnly( Side.CLIENT )
-    public List< LayeredTextureLayer > oreItemTextureLayers()
+    public LayeredTextureLayer[] oreItemTextureLayers()
     {
         return oreItemTextureLayers;
     }

@@ -38,7 +38,7 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
 
     @Nullable
     @SideOnly( Side.CLIENT )
-    List< LayeredTextureLayer > oreItemTextureLayers();
+    LayeredTextureLayer[] oreItemTextureLayers();
 
     @Nullable
     ItemStack equivalentItemStack();
