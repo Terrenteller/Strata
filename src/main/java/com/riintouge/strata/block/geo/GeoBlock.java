@@ -184,6 +184,22 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public int getExpDrop( IBlockState state , IBlockAccess world , BlockPos pos , int fortune )
+    {
+        IDropFormula expDropFormula = tileInfo.expDropFormula();
+        if( expDropFormula == null )
+            return 0;
+
+        if( !tileInfo.type().isPrimary || state.getValue( ORIENTATION ) != EnumGeoOrientation.NATURAL )
+            return 0;
+
+        // We don't have the actual tool at this point but we do have creativity
+        ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+        fakeHarvestTool.addEnchantment( Enchantments.FORTUNE , fortune );
+        return Math.max( 0 , expDropFormula.getAmount( RANDOM , fakeHarvestTool , pos ) );
+    }
+
+    @Override
     public float getExplosionResistance( World world , BlockPos pos , @Nullable Entity exploder , Explosion explosion )
     {
         // Wither explosions call canEntityDestroy() but do not respect its intentions

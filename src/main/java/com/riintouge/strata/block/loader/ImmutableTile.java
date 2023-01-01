@@ -52,6 +52,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
     private ResourceLocation blockstateResourceLocation;
+    private IDropFormula expDropFormula;
     private SoundEventTuple ambientSound;
     private Integer lightOpacity;
 
@@ -93,6 +94,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.fragmentBurnTime = Util.coalesce( tileData.fragmentBurnTime , 0 );
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
+        this.expDropFormula = tileData.expDropFormula;
         this.ambientSound = tileData.ambientSound;
         this.lightOpacity = tileData.lightOpacity;
 
@@ -288,6 +290,12 @@ public final class ImmutableTile implements IGeoTileInfo
     public ResourceLocation blockstateResourceLocation()
     {
         return blockstateResourceLocation;
+    }
+
+    @Nullable
+    public IDropFormula expDropFormula()
+    {
+        return expDropFormula;
     }
 
     @Override

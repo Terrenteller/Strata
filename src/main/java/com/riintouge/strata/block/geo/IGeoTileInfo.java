@@ -63,6 +63,9 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     @Nonnull
     ResourceLocation blockstateResourceLocation();
 
+    @Nullable
+    IDropFormula expDropFormula();
+
     SoundEventTuple ambientSound();
 
     @Nullable
