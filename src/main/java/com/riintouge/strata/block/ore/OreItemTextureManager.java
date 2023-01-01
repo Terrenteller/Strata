@@ -22,10 +22,10 @@ public final class OreItemTextureManager
     {
         return new LayeredTextureLayer[]
         {
-            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore_border" ) ),
-            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore_mask" ) , BlendMode.ERASE ),
+            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore/mask" ) , BlendMode.ERASE ),
+            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore/border" ) ),
             new LayeredTextureLayer( oreOverlay ),
-            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore_base" ) )
+            new LayeredTextureLayer( new ResourceLocation( "strata:items/ore/base" ) )
         };
     }
 
