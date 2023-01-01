@@ -2,6 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -41,12 +42,17 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     LayeredTextureLayer[] fragmentTextureLayers();
 
     @Nullable
+    IDropFormula fragmentDropFormula();
+
+    @Nullable
     ItemStack equivalentFragmentItemStack();
 
     @Nullable
     ItemStack fragmentFurnaceResult();
 
     float fragmentFurnaceExp();
+
+    int fragmentBurnTime();
 
     @Nonnull
     ArrayList< EnumPlantType > sustainedPlantTypes();

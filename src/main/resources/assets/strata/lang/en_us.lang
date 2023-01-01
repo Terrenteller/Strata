@@ -28,7 +28,10 @@ strata.config.serverCategory=Server Settings
 strata.config.serverCategory.tooltip=(which affect gameplay and connectivity)
 
 strata.config.enforceClientSynchronization=Enforce Client Synchronization
-strata.config.enforceClientSynchronizationDesc=Kick players whose block properties would lead to desynchronization on their client.\n§cIF THE CLIENT IS MISSING BLOCKS OR ITEMS, THE CLIENT WILL HANG IN FORGE CODE BEFORE STRATA HAS ANY SAY.
+strata.config.enforceClientSynchronizationDesc=Kick players whose block properties would lead to desynchronization on their client.\n§cIF THE CLIENT IS MISSING BLOCKS OR ITEMS THE CLIENT WILL HANG. STRATA HAS NO CONTROL OVER THIS.
+
+strata.config.dropNonStandardFragments=Drop Non-Standard Fragments
+strata.config.dropNonStandardFragmentsDesc=Causes blocks other than clay to drop fragments of themselves (if defined) like in TerraFirmaCraft.
 
 ### Creative Tabs
 

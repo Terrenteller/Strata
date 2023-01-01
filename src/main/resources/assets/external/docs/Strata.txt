@@ -182,7 +182,7 @@ Description:
     For example, LEVER will not inherit a custom sound type from COBBLE because they normally sound different.
     volume and pitch default to 1.0.
     Must come after `generate`.
-    Does not apply to ores or non-generated hosts.
+    Does not apply to ores and non-generated hosts.
 
 Key: ambientSound
 Value: [<volume:normal> <pitch:normal>] <ResourceLocation>
@@ -215,7 +215,7 @@ Value: <normal>
 Default: 0
 Description:
     Set the experience given for smelting the item in a furnace.
-    If unset and another recipe results in the target item, that recipe's experience will be used instead.
+    If unset and another recipe produces `furnaceResult`, that recipe's experience will be used instead.
     Only used with `furnaceResult`.
 
 Key: fragmentTexture
@@ -223,7 +223,26 @@ Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:
     Generate a texture for the fragment item using an optional array of layers blended onto a required base.
     This KV implies a fragment will be created. A dedicated key is redundant.
-    Only applies to some primary tile types.
+    STONE fragments prioritize reassembling into COBBLE and COBBLE will drop STONE fragments.
+    Only applies to primary tile types.
+
+Key: fragments
+Value: [minimum:int[-<maximum:int>]]
+OR: <minDropExpr:RPNExpression>[ ~ <maxBonusDropExpr:RPNExpression>]
+Default: 4
+Description:
+    Controls the number of fragments dropped by a block.
+    The "minimum only" form (e.g. "4") will always drop the exact amount.
+    The "minimum-maximum" form (e.g. "1-4") will use vanilla's standard fortune formula.
+    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
+    'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
+    The level of fortune replaces the variable 'f'.
+    The position of the block is not available and the variables 'x', 'y', and 'z' will evaluate to zero.
+    Other enchantments are not available and will evaluate to zero.
+    Expression results are rounded to the nearest integer. Negative results are clamped to zero.
+    For example, "0 ~ 0.2 f *" has a 50% chance of dropping one fragment with Fortune III.
+    Never drops more than four fragments to avoid infinite duplication.
+    Only applies to primary tile types.
 
 Key: fragmentConvertsTo
 Value: <ResourceLocation>[:<meta>]
@@ -240,8 +259,14 @@ Value: <normal>
 Default: 0
 Description:
     Set the experience given for smelting the fragment in a furnace.
-    If unset and another recipe results in the target item, that recipe's experience will be used instead.
+    If unset and another recipe produces `fragmentFurnaceResult`, that recipe's experience will be used instead.
     Only used with `fragmentFurnaceResult`.
+
+Key: fragmentBurnTime
+Value: <ResourceLocation>[:<meta>]
+Description:
+    Number of ticks the fragment will burn in a furnace.
+    For reference, there are 20 ticks per second and it takes 10 seconds to smelt an item. Standard coal is 1600.
 
 Key: proxy
 Value: <ResourceLocation>[:<meta>]
@@ -253,7 +278,7 @@ Key: hostAffinities
 Value: <<ResourceLocation>[:<meta>]>+
 Description:
     Prioritize one or more hosts for an ore in descending order.
-    Default host selection heuristics apply if the ore is not adjacent to any given host.
+    Default host selection heuristics apply if the ore is not adjacent to a listed host.
 
 Key: forceHost
 Value: <ResourceLocation>[:<meta>]
@@ -273,11 +298,11 @@ Description:
     ResourceLocation may also be '*' to represent the ore's own item or '-' to represent to no item at all (no drop).
     The "minimum only" form (e.g. "5") will always drop the exact amount.
     The "minimum-maximum" form (e.g. "4-9" for lapis) will use vanilla's standard fortune formula.
-    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to 'maxBonusDropExpr' more.
+    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
-    The level of fortune is provided as the variable 'f'.
-    The position of the block is provided as the variables 'x', 'y', and 'z'.
-    Tool enchantments are provided by their resource locations (e.g. fortune, minecraft:fortune, or mymod:myenchant).
+    The level of fortune replaces the variable 'f'.
+    The position of the block replaces the variables 'x', 'y', and 'z'.
+    Enchantment levels replace resource location variables (e.g. fortune, minecraft:fortune, or mymod:myenchant).
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one item with Fortune III.
     All groups are evaluated independently to provide multiple drops at once.
@@ -291,10 +316,10 @@ Description:
     Controls the amount of experience an ore can drop.
     The "minimum only" form (e.g. "5") will always drop the exact amount.
     The "minimum-maximum" form (e.g. "4-9") will use vanilla's standard fortune formula.
-    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to 'maxBonusDropExpr' more.
+    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
-    The level of fortune is provided as the variable 'f'.
-    The position of the block is provided as the variables 'x', 'y', and 'z'.
+    The level of fortune replaces the variable 'f'.
+    The position of the block replaces the variables 'x', 'y', and 'z'.
     Other enchantments are not available and will evaluate to zero.
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one experience with Fortune III.

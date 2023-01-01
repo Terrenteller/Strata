@@ -21,6 +21,7 @@ public final class StrataConfig extends ConfigBase
 
     public static final String CATEGORY_SERVER = "server";
     public static Boolean enforceClientSynchronization;
+    public static Boolean dropNonStandardFragments;
 
     private final Configuration config;
 
@@ -53,6 +54,7 @@ public final class StrataConfig extends ConfigBase
 
         pushCategory( config , CATEGORY_SERVER );
         enforceClientSynchronization = getBoolean( "enforceClientSynchronization" , true );
+        dropNonStandardFragments = getBoolean( "dropNonStandardFragments" , false );
         popCategory( true );
 
         if( config.hasChanged() )

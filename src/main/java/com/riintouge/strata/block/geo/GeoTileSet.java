@@ -139,7 +139,7 @@ public class GeoTileSet implements IForgeRegistrable
             if( tileInfo == null )
                 continue;
 
-            if( tileInfo.hasFragment() )
+            if( tileInfo.type().isPrimary && tileInfo.hasFragment() )
             {
                 GeoItemFragment fragment = new GeoItemFragment( tileInfo );
                 fragmentItems[ typeIndex ] = fragment;
@@ -157,8 +157,8 @@ public class GeoTileSet implements IForgeRegistrable
                 case STONEBRICKSLAB:
                     itemBlock = new GeoItemBlockSlab(
                         tileInfo,
-                        (GeoBlockSlab)blocks[ tileType.ordinal() ],
-                        (GeoBlockSlab)blocks[ tileType.ordinal() + 1 ] );
+                        (GeoBlockSlab)blocks[ typeIndex ],
+                        (GeoBlockSlab)blocks[ typeIndex + 1 ] );
                     break;
                 case COBBLESLABS:
                 case STONESLABS:
@@ -193,10 +193,15 @@ public class GeoTileSet implements IForgeRegistrable
 
             if( fragmentItem != null )
             {
+                ItemBlock fragmentReconstruction = itemBlock;
+                if( tileType == STONE && itemBlocks[ TileType.COBBLE.ordinal() ] != null )
+                    fragmentReconstruction = itemBlocks[ TileType.COBBLE.ordinal() ];
+
+                // It doesn't seem like this should work for glass but Quark and Charset allow it
                 GameRegistry.addShapedRecipe(
                     new ResourceLocation( registryName.toString() + "_block" ),
                     null,
-                    new ItemStack( itemBlock ),
+                    new ItemStack( fragmentReconstruction ),
                     "XX",
                     "XX",
                     'X' , fragmentItem );
@@ -207,7 +212,12 @@ public class GeoTileSet implements IForgeRegistrable
 
                 ItemStack equivalentFragmentItem = tileInfo.equivalentFragmentItemStack();
                 if( equivalentFragmentItem != null && !equivalentFragmentItem.isEmpty() )
-                    createEquivalentItemConversionRecipe( GeoItemFragment.getResourceLocation( tileInfo ) , fragmentItem , equivalentFragmentItem );
+                {
+                    createEquivalentItemConversionRecipe(
+                        GeoItemFragment.fragmentRegistryName( tileInfo ),
+                        fragmentItem,
+                        equivalentFragmentItem );
+                }
             }
 
             switch( tileType )

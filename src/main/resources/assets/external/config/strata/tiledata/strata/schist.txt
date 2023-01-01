@@ -2,6 +2,7 @@ generate schist stone
 host
 hardness 1.5
 texture strata:blocks/stone/medium/schist
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/stone/medium/schist
 blockstate strata:proto_cube
 lang.en Schist
 

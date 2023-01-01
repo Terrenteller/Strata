@@ -51,6 +51,7 @@ public class WeightedDropCollections
             }
             else
             {
+                // How can we ever have an item stack if the block doesn't have an item? Will this code ever run?
                 Block block = Block.getBlockFromName( metaResource.resourceLocation.toString() );
                 ItemStack itemStack = new ItemStack( block , Math.min( dropAmount , 64 ) , metaResource.meta );
                 drops.add( itemStack );

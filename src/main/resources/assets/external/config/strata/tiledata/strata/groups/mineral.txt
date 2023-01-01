@@ -3,6 +3,7 @@
 generate borax stone
 hardness 2.0
 texture strata:blocks/ore/weak/borax
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/borax
 convertsTo -
 lang.en Borax
 
@@ -11,6 +12,7 @@ host
 oreDict oreSalt
 hardness 2.0
 texture strata:blocks/ore/weak/salt
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/salt
 convertsTo -
 lang.en Salt
 
@@ -18,12 +20,14 @@ generate nitratine stone
 host
 hardness 2.0
 texture strata:blocks/ore/weak/nitratine
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/nitratine
 convertsTo -
 lang.en Nitratine
 
 generate graphite stone
 hardness 2.0
 texture strata:blocks/ore/weak/graphite
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/graphite
 convertsTo -
 lang.en Graphite
 
@@ -31,12 +35,14 @@ generate alabaster stone
 host
 hardness 2.0
 texture strata:blocks/ore/weak/alabaster
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/alabaster
 convertsTo -
 lang.en Alabaster
 
 generate mirabilite stone
 hardness 2.0
 texture strata:blocks/ore/weak/mirabilite
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/mirabilite
 convertsTo -
 lang.en Mirabilite
 
@@ -60,6 +66,7 @@ generate trona stone
 hardness 2.0
 texture strata:blocks/ore/weak/trona
 textureCaps strata:blocks/ore/weak/trona_caps
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/trona
 blockstate strata:proto_cube_ym
 convertsTo -
 lang.en Trona
@@ -85,12 +92,14 @@ lang.en Fluorite
 generate wollastonite stone
 hardness 3.0
 texture strata:blocks/ore/medium/wollastonite
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/medium/wollastonite
 convertsTo -
 lang.en Wollastonite
 
 generate zeolite stone
 hardness 3.0
 texture strata:blocks/ore/medium/zeolite
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/medium/zeolite
 convertsTo -
 lang.en Zeolite
 
@@ -123,6 +132,7 @@ lang.en Perlite
 generate pumice stone
 hardness 4.0
 texture strata:blocks/ore/strong/pumice
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/strong/pumice
 convertsTo -
 lang.en Pumice
 
@@ -139,5 +149,6 @@ lang.en Pyrite
 generate oil_shale stone
 hardness 3.0
 texture strata:blocks/ore/crude/oil_shale
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/crude/oil_shale
 convertsTo -
 lang.en Oil Shale

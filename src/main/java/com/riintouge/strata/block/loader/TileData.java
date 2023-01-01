@@ -43,24 +43,23 @@ public class TileData
     // IGeoTileInfo
     public String tileSetName = null;
     public TileType tileType = null;
+    public String fragmentItemOreDictionaryName = null;
     public MetaResourceLocation equivalentItemResourceLocation = null;
     public MetaResourceLocation furnaceResult = null;
     public Float furnaceExp = null;
     public List< LayeredTextureLayer > fragmentTextureLayers = null;
+    public IDropFormula fragmentDropFormula = null;
     public MetaResourceLocation equivalentFragmentItemResourceLocation = null;
     public MetaResourceLocation fragmentFurnaceResult = null;
     public Float fragmentFurnaceExp = null;
+    public Integer fragmentBurnTime = null;
     public ArrayList< EnumPlantType > sustainedPlantTypes = null;
     public ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw = null;
-    public ResourceLocation blockstateResourceLocation = null;
     public SoundEventTuple ambientSound = null;
-    public Float slipperiness = null;
 
     // IOreInfo
     public String oreName = null;
-    public String blockOreDictionaryName = null;
     public String itemOreDictionaryName = null;
-    public String fragmentItemOreDictionaryName = null;
     public MetaResourceLocation proxyOreResourceLocation = null;
     public List< LayeredTextureLayer > oreItemTextureLayers = null;
     public IDropFormula expDropFormula = null;
@@ -70,6 +69,7 @@ public class TileData
 
     // IHostInfo
     public MetaResourceLocation hostMetaResource = null;
+    public Float slipperiness = null;
 
     // ICommonBlockProperties
     public Material material = null;
@@ -85,6 +85,8 @@ public class TileData
 
     // Shared / Special
     public boolean isHost = false;
+    public String blockOreDictionaryName = null;
+    public ResourceLocation blockstateResourceLocation = null;
     public ProtoBlockTextureMap textureMap = null;
     public LayeredTextureLayer[][] layeredTextureLayers = null;
     public Map< String , String > languageMap = null;
@@ -176,14 +178,14 @@ public class TileData
                 forcedHost = new MetaResourceLocation( value );
                 return true;
             }
+            case "fragmentBurnTime":
+            {
+                fragmentBurnTime = Integer.parseInt( value );
+                return true;
+            }
             case "fragmentConvertsTo":
             {
                 equivalentFragmentItemResourceLocation = new MetaResourceLocation( value );
-                return true;
-            }
-            case "fragmentTexture":
-            {
-                fragmentTextureLayers = parseTextureLayers( value );
                 return true;
             }
             case "fragmentFurnaceExp":
@@ -194,6 +196,16 @@ public class TileData
             case "fragmentFurnaceResult":
             {
                 fragmentFurnaceResult = new MetaResourceLocation( value );
+                return true;
+            }
+            case "fragments":
+            {
+                fragmentDropFormula = parseDropFormula( value );
+                return true;
+            }
+            case "fragmentTexture":
+            {
+                fragmentTextureLayers = parseTextureLayers( value );
                 return true;
             }
             case "furnaceExp":
@@ -504,7 +516,7 @@ public class TileData
             String bonus = matcher.group( DropFormulaBonusGroup );
 
             IDropFormula dropFormula = new RPNDropFormula( base , bonus );
-            // Perform a test evaluation of the RPN. This will throw if something is wrong.
+            // Perform a test evaluation of the RPN. This will throw if the expression is invalid.
             dropFormula.getAmount( new Random() , null , new BlockPos( 0 , 0 , 0 ) );
 
             return dropFormula;

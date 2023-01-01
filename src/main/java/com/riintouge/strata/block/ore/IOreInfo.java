@@ -54,8 +54,6 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nullable
     ItemStack proxyBlockItemStack();
 
-    SoundEventTuple ambientSound();
-
     @Nullable
     WeightedDropCollections weightedDropGroups();
 
@@ -67,6 +65,8 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
 
     @Nullable
     IDropFormula expDropFormula();
+
+    SoundEventTuple ambientSound();
 
     @Nullable
     String localizedName();

@@ -1,9 +1,12 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.properties.PropertyEnum;
@@ -17,6 +20,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.projectile.EntityWitherSkull;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -192,20 +197,25 @@ public class GeoBlock extends BlockFalling
     @Override
     public Item getItemDropped( IBlockState state , Random rand , int fortune )
     {
-        Item item = null;
+        Item drop = null;
 
-        try
+        if( tileInfo.type() == TileType.CLAY || StrataConfig.dropNonStandardFragments )
         {
-            item = tileInfo.type() == TileType.STONE
-                ? Item.REGISTRY.getObject( TileType.COBBLE.registryName( tileInfo.tileSetName() ) )
-                : Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( tileInfo ) );
-        }
-        catch( NullPointerException e )
-        {
-            // No special drop
+            if( tileInfo.hasFragment() )
+            {
+                drop = Item.REGISTRY.getObject( GeoItemFragment.fragmentRegistryName( tileInfo ) );
+            }
+            else if( tileInfo.type() == TileType.COBBLE )
+            {
+                IGeoTileInfo stoneInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileInfo.tileSetName() , TileType.STONE );
+                drop = stoneInfo != null ? Item.REGISTRY.getObject( GeoItemFragment.fragmentRegistryName( stoneInfo ) ) : null;
+            }
         }
 
-        return item != null ? item : super.getItemDropped( state , rand , fortune );
+        if( drop == null && tileInfo.type() == TileType.STONE )
+            drop = Item.REGISTRY.getObject( TileType.COBBLE.registryName( tileInfo.tileSetName() ) );
+
+        return drop != null ? drop : super.getItemDropped( state , rand , fortune );
     }
 
     @Override
@@ -293,7 +303,41 @@ public class GeoBlock extends BlockFalling
     @Override
     public int quantityDropped( Random random )
     {
-        return Item.REGISTRY.getObject( GeoItemFragment.getResourceLocation( tileInfo ) ) != null ? 4 : 1;
+        // quantityDroppedWithBonus() normally calls us but we invert that to de-duplicate logic
+        return quantityDroppedWithBonus( 0 , random );
+    }
+
+    @Override
+    public int quantityDroppedWithBonus( int fortune , Random random )
+    {
+        ResourceLocation fragmentRegistryName = null;
+
+        if( tileInfo.type() == TileType.CLAY || StrataConfig.dropNonStandardFragments )
+        {
+            if( tileInfo.hasFragment() )
+            {
+                fragmentRegistryName = GeoItemFragment.fragmentRegistryName( tileInfo );
+            }
+            else if( tileInfo.type() == TileType.COBBLE )
+            {
+                IGeoTileInfo stoneInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileInfo.tileSetName() , TileType.STONE );
+                fragmentRegistryName = stoneInfo != null ? GeoItemFragment.fragmentRegistryName( stoneInfo ) : null;
+            }
+        }
+
+        if( Item.REGISTRY.getObject( fragmentRegistryName ) == null )
+            return 1;
+
+        IDropFormula fragmentDropFormula = tileInfo.fragmentDropFormula();
+        if( fragmentDropFormula == null )
+            return 4;
+
+        // We don't have the actual tool at this point but we do have creativity
+        ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+        fakeHarvestTool.addEnchantment( Enchantments.FORTUNE , fortune );
+        int dropAmount = fragmentDropFormula.getAmount( random , fakeHarvestTool , null );
+
+        return Util.clamp( 0 , dropAmount , 4 );
     }
 
     @Override

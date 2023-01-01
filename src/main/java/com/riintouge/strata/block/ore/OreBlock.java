@@ -733,7 +733,7 @@ public class OreBlock extends OreBaseBlock
         // We don't have the actual tool at this point but we do have creativity
         ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
         fakeHarvestTool.addEnchantment( Enchantments.FORTUNE , fortune );
-        return expDropFormula.getAmount( RANDOM , fakeHarvestTool , pos );
+        return Math.max( 0 , expDropFormula.getAmount( RANDOM , fakeHarvestTool , pos ) );
     }
 
     @Deprecated

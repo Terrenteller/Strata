@@ -6,7 +6,9 @@ import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
+import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.LocalizationRegistry;
+import com.riintouge.strata.item.StaticDropFormula;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
@@ -36,25 +38,27 @@ public final class ImmutableTile implements IGeoTileInfo
     private String blockOreDictionaryName;
     private String fragmentItemOreDictionaryName;
     private MetaResourceLocation equivalentItemResourceLocation;
+    private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation furnaceResult;
     private Float furnaceExp;
-    private ItemStack equivalentItemStack = null; // Lazily evaluated
     private LayeredTextureLayer[] fragmentTextureLayers;
+    private IDropFormula fragmentDropFormula;
     private MetaResourceLocation equivalentFragmentItemResourceLocation;
     private ItemStack equivalentFragmentItemStack = null; // Lazily evaluated
     private MetaResourceLocation fragmentFurnaceResult;
     private Float fragmentFurnaceExp;
+    private int fragmentBurnTime;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
-    private ProtoBlockTextureMap modelTextureMap;
     private ResourceLocation blockstateResourceLocation;
     private SoundEventTuple ambientSound;
     private Integer lightOpacity;
-    private Float slipperiness;
 
     // IHostInfo
     private ResourceLocation registryName;
+    private Float slipperiness;
+    private ProtoBlockTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
 
     // ICommonBlockProperties
@@ -80,20 +84,22 @@ public final class ImmutableTile implements IGeoTileInfo
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.furnaceResult = tileData.furnaceResult;
         this.furnaceExp = tileData.furnaceExp;
-        if( tileData.fragmentTextureLayers != null && tileData.fragmentTextureLayers.size() > 0 )
+        if( tileType.isPrimary && tileData.fragmentTextureLayers != null && tileData.fragmentTextureLayers.size() > 0 )
             this.fragmentTextureLayers = tileData.fragmentTextureLayers.toArray( new LayeredTextureLayer[ tileData.fragmentTextureLayers.size() ] );
+        this.fragmentDropFormula = Util.lazyCoalesce( tileData.fragmentDropFormula , () -> new StaticDropFormula( 4 ) );
         this.equivalentFragmentItemResourceLocation = tileData.equivalentFragmentItemResourceLocation;
         this.fragmentFurnaceResult = tileData.fragmentFurnaceResult;
         this.fragmentFurnaceExp = tileData.fragmentFurnaceExp;
+        this.fragmentBurnTime = Util.coalesce( tileData.fragmentBurnTime , 0 );
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
-        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
         this.ambientSound = tileData.ambientSound;
         this.lightOpacity = tileData.lightOpacity;
-        this.slipperiness = tileData.slipperiness;
 
         // IHostInfo
         this.registryName = tileData.tileType.registryName( this.tileSetName );
+        this.slipperiness = tileData.slipperiness;
+        this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
 
         // ICommonBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
@@ -204,6 +210,13 @@ public final class ImmutableTile implements IGeoTileInfo
 
     @Nullable
     @Override
+    public IDropFormula fragmentDropFormula()
+    {
+        return fragmentDropFormula;
+    }
+
+    @Nullable
+    @Override
     public ItemStack equivalentFragmentItemStack()
     {
         // Deferred resolution until reasonably sure the item has been created
@@ -239,6 +252,12 @@ public final class ImmutableTile implements IGeoTileInfo
         return fragmentFurnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( fragmentFurnaceResult ) : 0.0f;
     }
 
+    @Override
+    public int fragmentBurnTime()
+    {
+        return fragmentBurnTime;
+    }
+
     @Nonnull
     @Override
     public ArrayList< EnumPlantType > sustainedPlantTypes()
@@ -264,13 +283,6 @@ public final class ImmutableTile implements IGeoTileInfo
         return sustainsPlantsSustainedBy;
     }
 
-    @Override
-    @SideOnly( Side.CLIENT )
-    public ProtoBlockTextureMap modelTextureMap()
-    {
-        return modelTextureMap;
-    }
-
     @Nonnull
     @Override
     public ResourceLocation blockstateResourceLocation()
@@ -289,13 +301,6 @@ public final class ImmutableTile implements IGeoTileInfo
     public Integer lightOpacity()
     {
         return lightOpacity;
-    }
-
-    @Nullable
-    @Override
-    public Float slipperiness()
-    {
-        return slipperiness;
     }
 
     @Nullable
@@ -326,6 +331,20 @@ public final class ImmutableTile implements IGeoTileInfo
     public int meta()
     {
         return 0;
+    }
+
+    @Nullable
+    @Override
+    public Float slipperiness()
+    {
+        return slipperiness;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public ProtoBlockTextureMap modelTextureMap()
+    {
+        return modelTextureMap;
     }
 
     @Override

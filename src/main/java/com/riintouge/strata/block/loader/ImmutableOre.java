@@ -50,11 +50,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private MetaResourceLocation forcedHost;
     private List< MetaResourceLocation > hostAffinities;
     private IDropFormula expDropFormula;
+    private SoundEventTuple ambientSound;
 
     // ICommonBlockProperties
     private Material material;
     private SoundType soundType;
-    private SoundEventTuple ambientSound;
     private String harvestTool;
     private int harvestLevel;
     private float hardness;
@@ -79,11 +79,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.furnaceResult = tileData.furnaceResult;
         this.furnaceExp = tileData.furnaceExp;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
-        this.ambientSound = tileData.ambientSound;
         this.weightedDropCollections = tileData.weightedDropCollections;
         this.forcedHost = tileData.forcedHost;
         this.hostAffinities = tileData.hostAffinities;
         this.expDropFormula = tileData.expDropFormula;
+        this.ambientSound = tileData.ambientSound;
 
         // ICommonBlockProperties
         this.material = Util.argumentNullCheck( tileData.material , "material" );
@@ -229,27 +229,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return proxyBlockItemStack;
     }
 
-    @Override
-    public SoundEventTuple ambientSound()
-    {
-        return ambientSound;
-    }
-
-    @Nullable
-    @Override
-    public String localizedName()
-    {
-        return LocalizationRegistry.INSTANCE.get( Strata.resource( oreName ).toString() );
-    }
-
-    @Nullable
-    @Override
-    public List< String > localizedTooltip()
-    {
-        String tooltip = LocalizationRegistry.INSTANCE.get( Strata.resource( oreName ).toString() + ".tooltip" );
-        return tooltip != null ? Arrays.asList( tooltip.split( "\\\\n" ) ) : null;
-    }
-
     @Nullable
     @Override
     public WeightedDropCollections weightedDropGroups()
@@ -275,6 +254,27 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public IDropFormula expDropFormula()
     {
         return expDropFormula;
+    }
+
+    @Override
+    public SoundEventTuple ambientSound()
+    {
+        return ambientSound;
+    }
+
+    @Nullable
+    @Override
+    public String localizedName()
+    {
+        return LocalizationRegistry.INSTANCE.get( Strata.resource( oreName ).toString() );
+    }
+
+    @Nullable
+    @Override
+    public List< String > localizedTooltip()
+    {
+        String tooltip = LocalizationRegistry.INSTANCE.get( Strata.resource( oreName ).toString() + ".tooltip" );
+        return tooltip != null ? Arrays.asList( tooltip.split( "\\\\n" ) ) : null;
     }
 
     // ICommonBlockProperties overrides

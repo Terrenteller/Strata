@@ -3,6 +3,7 @@ host
 harvestLevel 1
 hardness 2.5
 texture strata:blocks/stone/very_strong/hornfels
+fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/stone/very_strong/hornfels
 lang.en Hornfels
 
 generate hornfels cobble

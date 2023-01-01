@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.function.Function;
@@ -30,7 +31,10 @@ public class RPNDropFormula implements IDropFormula
         this.bonusExpr = new RPNExpression( cleanBonusExpr );
     }
 
-    public int getAmount( Random random , ItemStack harvestTool , BlockPos pos )
+    // IDropFormula overrides
+
+    @Override
+    public int getAmount( @Nonnull Random random , @Nullable ItemStack harvestTool , @Nullable BlockPos pos )
     {
         Function< String , Double > variableGetter = variable ->
         {
@@ -41,11 +45,11 @@ public class RPNDropFormula implements IDropFormula
                         ? (double)EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , harvestTool )
                         : 0.0;
                 case "x":
-                    return (double)pos.getX();
+                    return pos != null ? (double)pos.getX() : 0.0;
                 case "y":
-                    return (double)pos.getY();
+                    return pos != null ? (double)pos.getY() : 0.0;
                 case "z":
-                    return (double)pos.getZ();
+                    return pos != null ? (double)pos.getZ() : 0.0;
             }
 
             Enchantment enchantment = Enchantment.REGISTRY.getObject( new ResourceLocation( variable ) );

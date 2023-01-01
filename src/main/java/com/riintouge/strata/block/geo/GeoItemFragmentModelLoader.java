@@ -2,7 +2,6 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.item.StrataItemModel;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -16,9 +15,9 @@ import java.util.regex.Pattern;
 @SideOnly( Side.CLIENT )
 public final class GeoItemFragmentModelLoader implements ICustomModelLoader
 {
-    private static final String ResourcePattern = String.format( "^%s:models/item/(.+)_([^_]+)$" , Strata.modid );
-    private static final int ResourcePatternHostNameGroup = 1;
-    private static final int ResourcePatternFragmentTypeGroup = 2;
+    private static final String ResourcePattern = String.format( "^%s:models/item/(.+)(_[^_]+)$" , Strata.modid );
+    private static final int ResourcePatternTileSetNameGroup = 1;
+    private static final int ResourcePatternFragmentTypeSuffixGroup = 2;
     private static final Pattern ResourceRegex = Pattern.compile( ResourcePattern );
 
     // ICustomModelLoader overrides
@@ -30,11 +29,12 @@ public final class GeoItemFragmentModelLoader implements ICustomModelLoader
         if( !matcher.find() )
             return false;
 
-        String hostName = matcher.group( ResourcePatternHostNameGroup );
-        String fragmentTypeName = matcher.group( ResourcePatternFragmentTypeGroup );
-        Material material = GeoItemFragment.getMaterialForType( fragmentTypeName );
-        if( material == Material.CLAY )
-            return GeoTileSetRegistry.INSTANCE.findTileInfo( hostName , TileType.CLAY ) != null;
+        String tileSetName = matcher.group( ResourcePatternTileSetNameGroup );
+        String fragmentTypeSuffix = matcher.group( ResourcePatternFragmentTypeSuffixGroup );
+
+        for( TileType type : TileType.values() )
+            if( type.isPrimary && fragmentTypeSuffix.equals( type.fragmentResourceLocationSuffix ) )
+                return GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , type ) != null;
 
         return false;
     }
@@ -46,13 +46,16 @@ public final class GeoItemFragmentModelLoader implements ICustomModelLoader
 
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
         matcher.find();
-        String hostName = matcher.group( ResourcePatternHostNameGroup );
-        String fragmentTypeName = matcher.group( ResourcePatternFragmentTypeGroup );
-        Material material = GeoItemFragment.getMaterialForType( fragmentTypeName );
-        if( material == Material.CLAY )
+        String tileSetName = matcher.group( ResourcePatternTileSetNameGroup );
+        String fragmentTypeSuffix = matcher.group( ResourcePatternFragmentTypeSuffixGroup );
+
+        for( TileType tileType : TileType.values() )
         {
-            IHostInfo hostInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( hostName , TileType.CLAY );
-            return new StrataItemModel( GeoItemFragmentTextureManager.getTextureLocation( hostInfo , TileType.CLAY ) );
+            if( tileType.isPrimary && fragmentTypeSuffix.equals( tileType.fragmentResourceLocationSuffix ) )
+            {
+                IGeoTileInfo tileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , tileType );
+                return new StrataItemModel( GeoItemFragmentTextureManager.getTextureLocation( tileInfo ) );
+            }
         }
 
         return null;
