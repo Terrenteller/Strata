@@ -48,6 +48,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private MetaResourceLocation fragmentFurnaceResult;
     private Float fragmentFurnaceExp;
     private int fragmentBurnTime;
+    private MetaResourceLocation breaksIntoResourceLocation;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
@@ -92,6 +93,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.fragmentFurnaceResult = tileData.fragmentFurnaceResult;
         this.fragmentFurnaceExp = tileData.fragmentFurnaceExp;
         this.fragmentBurnTime = Util.coalesce( tileData.fragmentBurnTime , 0 );
+        this.breaksIntoResourceLocation = tileData.breaksIntoResourceLocation;
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
         this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
         this.expDropFormula = tileData.expDropFormula;
@@ -258,6 +260,13 @@ public final class ImmutableTile implements IGeoTileInfo
     public int fragmentBurnTime()
     {
         return fragmentBurnTime;
+    }
+
+    @Nullable
+    @Override
+    public MetaResourceLocation breaksInto()
+    {
+        return breaksIntoResourceLocation;
     }
 
     @Nonnull

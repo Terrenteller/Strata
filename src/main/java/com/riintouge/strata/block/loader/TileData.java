@@ -53,6 +53,7 @@ public class TileData
     public MetaResourceLocation fragmentFurnaceResult = null;
     public Float fragmentFurnaceExp = null;
     public Integer fragmentBurnTime = null;
+    public MetaResourceLocation breaksIntoResourceLocation = null;
     public ArrayList< EnumPlantType > sustainedPlantTypes = null;
     public ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw = null;
     public SoundEventTuple ambientSound = null;
@@ -138,6 +139,11 @@ public class TileData
             case "blockstate":
             {
                 blockstateResourceLocation = new ResourceLocation( value );
+                return true;
+            }
+            case "breaksInto":
+            {
+                breaksIntoResourceLocation = new MetaResourceLocation( value );
                 return true;
             }
             case "burnTime":

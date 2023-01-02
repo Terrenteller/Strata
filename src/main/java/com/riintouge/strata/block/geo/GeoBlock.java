@@ -2,6 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
+import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.item.IDropFormula;
@@ -9,21 +10,27 @@ import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -293,6 +300,32 @@ public class GeoBlock extends BlockFalling
     public EnumFacing[] getValidRotations( World world , BlockPos pos )
     {
         return EnumFacing.VALUES;
+    }
+
+    public void harvestBlock( World worldIn , EntityPlayer player , BlockPos pos , IBlockState state , @Nullable TileEntity te , ItemStack stack )
+    {
+        MetaResourceLocation replacementBlockResourceLocation = tileInfo.breaksInto();
+
+        if( !tileInfo.type().isPrimary
+            || replacementBlockResourceLocation == null
+            || ( canSilkHarvest( worldIn , pos , state , player ) && EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , stack ) > 0 ) )
+        {
+            super.harvestBlock( worldIn , player , pos , state , te , stack );
+            return;
+        }
+
+        StatBase blockStats = StatList.getBlockStats( this );
+        if( blockStats != null )
+            player.addStat( blockStats );
+        player.addExhaustion( 0.005f ); // Taken from Block.harvestBlock()
+
+        Block replacementBlock = Block.REGISTRY.getObject( replacementBlockResourceLocation.resourceLocation );
+        IBlockState replacementBlockState = replacementBlock.getStateFromMeta( replacementBlockResourceLocation.meta );
+        Material replacementMaterial = replacementBlock.getMaterial( replacementBlockState );
+
+        // Ice requires a solid block or liquid below it to turn into water. No explanation is given.
+        if( !( replacementMaterial == Material.WATER && worldIn.provider.doesWaterVaporize() ) )
+            worldIn.setBlockState( pos , replacementBlockState );
     }
 
     @Override

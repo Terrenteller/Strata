@@ -197,6 +197,13 @@ Description:
     Override the Strata-provided, general-purpose, default blockstate. Custom blockstates cannot omit variants.
     Does not apply to non-generated hosts.
 
+Key: breaksInto
+Value: <ResourceLocation>[:<meta>]
+Description:
+    Replace the block with another when broken without silk touch.
+    Drops will be forfeit to prevent infinite duplication.
+    Only applies to primary tile types.
+
 Key: convertsTo
 Value: <ResourceLocation>[:<meta>]
 Description:
@@ -241,7 +248,7 @@ Description:
     Other enchantments are not available and will evaluate to zero.
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one fragment with Fortune III.
-    Never drops more than four fragments to avoid infinite duplication.
+    Never drops more than four fragments to prevent infinite duplication.
     Only applies to primary tile types.
 
 Key: fragmentConvertsTo

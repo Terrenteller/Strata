@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.sound.SoundEventTuple;
@@ -53,6 +54,9 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     float fragmentFurnaceExp();
 
     int fragmentBurnTime();
+
+    @Nullable
+    MetaResourceLocation breaksInto();
 
     @Nonnull
     ArrayList< EnumPlantType > sustainedPlantTypes();

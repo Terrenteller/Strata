@@ -65,8 +65,8 @@ public class OreBlock extends OreBaseBlock
     // Ore blocks and their item blocks have a slightly different registry name
     // so the ore items can have the name of the ore without decoration
     public static final String REGISTRY_NAME_SUFFIX = "_ore";
-    protected static ThreadLocal< ItemStack > harvestTool = new ThreadLocal<>();
 
+    protected ThreadLocal< ItemStack > harvestTool = new ThreadLocal<>();
     protected ThreadLocal< Integer > particleColor = new ThreadLocal<>();
 
     public OreBlock( IOreInfo oreInfo )
@@ -685,6 +685,10 @@ public class OreBlock extends OreBaseBlock
         if( hostInfo == null )
             return;
 
+        // harvestBlock() replaces this block with the host and calls harvestBlock() on it
+        // to give the host more control over what happens when it is broken.
+        // Don't drop the drops of the host when the host will drop its drops itself.
+        boolean dropHost = harvesters.get() == null;
         ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
         Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
@@ -692,13 +696,17 @@ public class OreBlock extends OreBaseBlock
 
         if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestToolOrEmpty ) > 0 )
         {
-            drops.add( new ItemStack( hostBlock ) );
+            if( dropHost )
+                drops.add( new ItemStack( hostBlock ) );
+
             if( proxyBlock != null )
                 drops.add( new ItemStack( proxyBlock , 1 , proxyBlock.damageDropped( proxyBlockState ) ) );
         }
         else
         {
-            hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
+            if( dropHost )
+                hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
+
             if( proxyBlock != null )
                 proxyBlock.getDrops( drops , world , pos , proxyBlockState , fortune );
         }
@@ -926,14 +934,29 @@ public class OreBlock extends OreBaseBlock
             harvesters.set( player );
             int fortuneLevel = EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , stack );
             dropBlockAsItem( worldIn , pos , state , fortuneLevel );
+
+            MetaResourceLocation host = StateUtil.getValue( state , worldIn , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
+            if( hostInfo == null )
+                return;
+
+            Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
+            IBlockState hostBlockState = hostBlock.getStateFromMeta( host.meta );
+            // Flags 1 and 2 would normally be used to cause a block update and send it to clients.
+            // Instead, we use flags 4 and 16 to suppress additional notifications.
+            // The host will not exist in the world long enough for anything to react to it.
+            worldIn.setBlockState( pos , hostBlockState , 16 | 4 );
+            hostBlock.harvestBlock( worldIn , player , pos , hostBlockState , te , stack );
+
+            // Set us to air if harvesting the host did not change the block again
+            if( hostBlockState.equals( worldIn.getBlockState( pos ) ) )
+                worldIn.setBlockToAir( pos );
         }
         finally
         {
             harvesters.set( null );
             harvestTool.remove();
         }
-
-        worldIn.setBlockToAir( pos );
     }
 
     @Override
@@ -997,7 +1020,7 @@ public class OreBlock extends OreBaseBlock
     {
         // See BlockFlowerPot for details about this logic.
         // tldr: If it will harvest, delay deletion of the block until after harvestBlock.
-        // BlockFlowerPot says getDrops, but that does not appear to be called.
+        // BlockFlowerPot says getDrops(), but that does not appear to be called.
         return willHarvest || super.removedByPlayer( state , world , pos , player , willHarvest );
     }
 
