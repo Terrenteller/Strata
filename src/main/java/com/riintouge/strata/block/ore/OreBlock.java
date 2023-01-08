@@ -680,32 +680,23 @@ public class OreBlock extends OreBaseBlock
     @Override
     public void getDrops( NonNullList< ItemStack > drops , IBlockAccess world , BlockPos pos , IBlockState state , int fortune )
     {
-        MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-        IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-        if( hostInfo == null )
-            return;
-
-        // harvestBlock() replaces this block with the host and calls harvestBlock() on it
-        // to give the host more control over what happens when it is broken.
-        // Don't drop the drops of the host when the host will drop its drops itself.
-        boolean dropHost = harvesters.get() == null;
-        ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
-        Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
 
-        if( EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , harvestToolOrEmpty ) > 0 )
+        // Our harvestBlock() calls harvestBlock() on the blocks we represent
+        // to give them more control over what happens when broken.
+        // We cannot determine what can be silk touched here because canSilkHarvest() is unnecessarily protected
+        // and we don't have the values to call the state-sensitive overload.
+        if( harvesters.get() == null )
         {
-            if( dropHost )
-                drops.add( new ItemStack( hostBlock ) );
+            MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
 
-            if( proxyBlock != null )
-                drops.add( new ItemStack( proxyBlock , 1 , proxyBlock.damageDropped( proxyBlockState ) ) );
-        }
-        else
-        {
-            if( dropHost )
+            if( hostInfo != null )
+            {
+                Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
                 hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
+            }
 
             if( proxyBlock != null )
                 proxyBlock.getDrops( drops , world , pos , proxyBlockState , fortune );
@@ -714,8 +705,10 @@ public class OreBlock extends OreBaseBlock
         if( proxyBlock == null )
         {
             WeightedDropCollections weightedDropCollections = oreInfo.weightedDropGroups();
+
             if( weightedDropCollections != null )
             {
+                ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
                 drops.addAll( weightedDropCollections.collectRandomDrops( RANDOM , harvestToolOrEmpty , pos ) );
             }
             else
@@ -937,20 +930,40 @@ public class OreBlock extends OreBaseBlock
 
             MetaResourceLocation host = StateUtil.getValue( state , worldIn , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            if( hostInfo == null )
-                return;
+            IBlockState hostBlockState = hostInfo != null
+                ? Block.REGISTRY.getObject( host.resourceLocation ).getStateFromMeta( host.meta )
+                : null;
+            IBlockState proxyBlockState = oreInfo.proxyBlockState();
+            IBlockState finalBlockState = null;
 
-            Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
-            IBlockState hostBlockState = hostBlock.getStateFromMeta( host.meta );
-            // Flags 1 and 2 would normally be used to cause a block update and send it to clients.
-            // Instead, we use flags 4 and 16 to suppress additional notifications.
-            // The host will not exist in the world long enough for anything to react to it.
-            worldIn.setBlockState( pos , hostBlockState , 16 | 4 );
-            hostBlock.harvestBlock( worldIn , player , pos , hostBlockState , te , stack );
+            for( int index = 0 ; index < 2 ; index++ )
+            {
+                IBlockState harvestBlockState = index == 0 ? hostBlockState : proxyBlockState;
+                if( harvestBlockState == null )
+                    continue;
 
-            // Set us to air if harvesting the host did not change the block again
-            if( hostBlockState.equals( worldIn.getBlockState( pos ) ) )
-                worldIn.setBlockToAir( pos );
+                // Flags 1 and 2 would normally be used to cause a block update and send it to clients.
+                // Instead, we use flags 4 and 16 to suppress additional notifications.
+                // The block to harvest will not exist in the world long enough for anything to react to it.
+                worldIn.setBlockState( pos , harvestBlockState , 16 | 4 );
+                harvestBlockState.getBlock().harvestBlock( worldIn , player , pos , harvestBlockState , worldIn.getTileEntity( pos ) , stack );
+                IBlockState harvestResultBlockState = worldIn.getBlockState( pos );
+                boolean unchanged = harvestResultBlockState.equals( harvestBlockState );
+                boolean isAir = harvestResultBlockState.equals( Blocks.AIR.getDefaultState() );
+
+                if( isAir )
+                    continue;
+                else if( unchanged )
+                    finalBlockState = finalBlockState == null ? Blocks.AIR.getDefaultState() : finalBlockState;
+                else
+                    finalBlockState = index == 0 && proxyBlockState != null ? harvestResultBlockState : null;
+            }
+
+            // We shouldn't need to mark any blocks as dirty if finalBlockState is null
+            // given our update suppression, because if it is, that means the block was set to air
+            // or something meaningfully different already by the last harvested block
+            if( finalBlockState != null )
+                worldIn.setBlockState( pos , finalBlockState );
         }
         finally
         {

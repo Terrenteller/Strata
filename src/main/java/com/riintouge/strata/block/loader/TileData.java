@@ -100,18 +100,12 @@ public class TileData
         {
             case "activatable":
             {
-                if( specialBlockPropertyFlags == null )
-                    specialBlockPropertyFlags = 0L;
-
-                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.ACTIVATABLE;
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.ACTIVATABLE );
                 return true;
             }
             case "affectedByGravity":
             {
-                if( specialBlockPropertyFlags == null )
-                    specialBlockPropertyFlags = 0L;
-
-                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY;
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY );
                 return true;
             }
             case "ambientSound":
@@ -160,10 +154,7 @@ public class TileData
             }
             case "dragonImmune":
             {
-                if( specialBlockPropertyFlags == null )
-                    specialBlockPropertyFlags = 0L;
-
-                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.DRAGON_IMMUNE;
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.DRAGON_IMMUNE );
                 return true;
             }
             case "exp":
@@ -173,10 +164,7 @@ public class TileData
             }
             case "fireSource":
             {
-                if( specialBlockPropertyFlags == null )
-                    specialBlockPropertyFlags = 0L;
-
-                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.FIRE_SOURCE;
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.FIRE_SOURCE );
                 return true;
             }
             case "forceHost":
@@ -238,10 +226,7 @@ public class TileData
             }
             case "hasEffect":
             {
-                if( specialBlockPropertyFlags == null )
-                    specialBlockPropertyFlags = 0L;
-
-                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.HAS_EFFECT;
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.HAS_EFFECT );
                 return true;
             }
             case "harvestLevel":
@@ -279,6 +264,11 @@ public class TileData
                 // Block's constructor uses 255 for a full block. Why not 15?
                 // Is that just to ensure a full block never lets light through?
                 lightOpacity = Util.clamp( 0 , Integer.parseInt( value ) , 255 );
+                return true;
+            }
+            case "noSilkTouch":
+            {
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.NO_SILK_TOUCH );
                 return true;
             }
             case "ore":
@@ -495,6 +485,14 @@ public class TileData
         child.textureMap = this.textureMap;
 
         return child;
+    }
+
+    protected void setSpecialBlockPropertyFlag( long flag )
+    {
+        if( specialBlockPropertyFlags == null )
+            specialBlockPropertyFlags = 0L;
+
+        specialBlockPropertyFlags |= flag;
     }
 
     // Statics

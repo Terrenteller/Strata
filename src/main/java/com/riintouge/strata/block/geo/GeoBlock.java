@@ -160,6 +160,16 @@ public class GeoBlock extends BlockFalling
         return super.canEntityDestroy( state , world , pos , entity );
     }
 
+    @Deprecated
+    @Override
+    protected boolean canSilkHarvest()
+    {
+        if( tileInfo.type().isPrimary && ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.NO_SILK_TOUCH ) != 0 )
+            return false;
+
+        return super.canSilkHarvest();
+    }
+
     @Override
     public boolean canSustainPlant( IBlockState state , IBlockAccess world , BlockPos pos , EnumFacing direction , IPlantable plantable )
     {
@@ -310,6 +320,10 @@ public class GeoBlock extends BlockFalling
             || replacementBlockResourceLocation == null
             || ( canSilkHarvest( worldIn , pos , state , player ) && EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , stack ) > 0 ) )
         {
+            // Consider overriding getDrops() to drop all the fragments in a single stack.
+            // Unless it is more visually pleasing to possibly see multiple item stacks?
+            // Would we want to ensure fragments drop in a more dispersed way?
+            // What about a toggle to ease the burden on stack-combining anti-lag mods?
             super.harvestBlock( worldIn , player , pos , state , te , stack );
             return;
         }

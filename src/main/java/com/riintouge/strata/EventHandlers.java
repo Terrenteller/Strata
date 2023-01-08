@@ -104,7 +104,10 @@ public class EventHandlers
         int oreHarvestLevel = proxyBlockState != null
             ? proxyBlockState.getBlock().getHarvestLevel( proxyBlockState )
             : oreInfo.harvestLevel();
-        int oreToolLevel = tool.getItem().getHarvestLevel( tool , oreHarvestTool , player , oreBlockState );
+        int oreToolLevel = oreHarvestTool != null
+            ? tool.getItem().getHarvestLevel( tool , oreHarvestTool , player , oreBlockState )
+            : -1;
+        // FIXME: If oreHarvestTool is null, we misinterpret that as the tool being effective
         boolean isToolEffectiveOnOre = oreToolLevel != -1;
         boolean canToolHarvestOre = oreToolLevel >= oreHarvestLevel;
 

@@ -64,6 +64,9 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     List< MetaResourceLocation > hostAffinities();
 
     @Nullable
+    MetaResourceLocation breaksInto();
+
+    @Nullable
     IDropFormula expDropFormula();
 
     SoundEventTuple ambientSound();

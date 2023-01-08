@@ -381,6 +381,12 @@ Description:
     Gives the item an enchanted glint.
     Does not apply to non-generated hosts.
 
+Key: noSilkTouch
+Value: N/A
+Description:
+    Prevents the effects of silk touch.
+    Only applies to primary tile types.
+
 Key: witherImmune
 Value: N/A
 Description:
