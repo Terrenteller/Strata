@@ -49,6 +49,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private WeightedDropCollections weightedDropCollections;
     private MetaResourceLocation forcedHost;
     private List< MetaResourceLocation > hostAffinities;
+    private MetaResourceLocation breaksIntoResourceLocation;
     private IDropFormula expDropFormula;
     private SoundEventTuple ambientSound;
 
@@ -82,6 +83,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.weightedDropCollections = tileData.weightedDropCollections;
         this.forcedHost = tileData.forcedHost;
         this.hostAffinities = tileData.hostAffinities;
+        this.breaksIntoResourceLocation = tileData.breaksIntoResourceLocation;
         this.expDropFormula = tileData.expDropFormula;
         this.ambientSound = tileData.ambientSound;
 
@@ -113,11 +115,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
             return;
 
         Block proxyBlock = Block.REGISTRY.getObject( proxyBlockResourceLocation.resourceLocation );
+        if( proxyBlock.equals( Blocks.AIR ) )
+            return;
+
         proxyBlockState = proxyBlock.getStateFromMeta( proxyBlockResourceLocation.meta );
-
-        Item proxyItemBlock = Item.getItemFromBlock( proxyBlock );
-        proxyBlockItemStack = new ItemStack( proxyItemBlock , 1 , proxyBlockResourceLocation.meta );
-
+        proxyBlockItemStack = new ItemStack( Item.getItemFromBlock( proxyBlock ) , 1 , proxyBlockResourceLocation.meta );
         proxyBlockResourceLocation = null;
     }
 
@@ -248,6 +250,13 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public List< MetaResourceLocation > hostAffinities()
     {
         return hostAffinities;
+    }
+
+    @Nullable
+    @Override
+    public MetaResourceLocation breaksInto()
+    {
+        return breaksIntoResourceLocation;
     }
 
     @Nullable

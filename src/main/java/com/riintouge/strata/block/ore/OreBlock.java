@@ -936,27 +936,56 @@ public class OreBlock extends OreBaseBlock
             IBlockState proxyBlockState = oreInfo.proxyBlockState();
             IBlockState finalBlockState = null;
 
-            for( int index = 0 ; index < 2 ; index++ )
+            if( hostBlockState != null )
             {
-                IBlockState harvestBlockState = index == 0 ? hostBlockState : proxyBlockState;
-                if( harvestBlockState == null )
-                    continue;
-
                 // Flags 1 and 2 would normally be used to cause a block update and send it to clients.
-                // Instead, we use flags 4 and 16 to suppress additional notifications.
+                // Instead, we use flags 4 and 16 to suppress notifications.
                 // The block to harvest will not exist in the world long enough for anything to react to it.
-                worldIn.setBlockState( pos , harvestBlockState , 16 | 4 );
-                harvestBlockState.getBlock().harvestBlock( worldIn , player , pos , harvestBlockState , worldIn.getTileEntity( pos ) , stack );
+                // However, adjacent blocks will react to whatever the block turns into upon harvesting
+                // because the default of World.setBlockState() is to notify neighbours.
+                // Block snapshots can be used to revert these changes, but the handling of corner cases
+                // does not meet the bar for ROI. Only the harvesting of the host causes problems when both
+                // the host and ore break into things that cause adjacent blocks to react differently.
+                // Still, consider an ore that breaks into liquid oil in an icy host that breaks into water.
+                // This ore breaks next to lava. What happens? What should happen and why?
+                // Why should what doesn't happen not happen?
+                worldIn.setBlockState( pos , hostBlockState , 16 | 4 );
+                hostBlockState.getBlock().harvestBlock( worldIn , player , pos , hostBlockState , worldIn.getTileEntity( pos ) , stack );
+
                 IBlockState harvestResultBlockState = worldIn.getBlockState( pos );
-                boolean unchanged = harvestResultBlockState.equals( harvestBlockState );
+                boolean changed = !harvestResultBlockState.equals( hostBlockState );
                 boolean isAir = harvestResultBlockState.equals( Blocks.AIR.getDefaultState() );
 
-                if( isAir )
-                    continue;
-                else if( unchanged )
-                    finalBlockState = finalBlockState == null ? Blocks.AIR.getDefaultState() : finalBlockState;
-                else
-                    finalBlockState = index == 0 && proxyBlockState != null ? harvestResultBlockState : null;
+                if( !changed )
+                    finalBlockState = Blocks.AIR.getDefaultState();
+                else if( !isAir )
+                    finalBlockState = harvestResultBlockState;
+            }
+
+            if( proxyBlockState != null )
+            {
+                worldIn.setBlockState( pos , proxyBlockState , 16 | 4 );
+                proxyBlockState.getBlock().harvestBlock( worldIn , player , pos , proxyBlockState , worldIn.getTileEntity( pos ) , stack );
+
+                IBlockState harvestResultBlockState = worldIn.getBlockState( pos );
+                boolean changed = !harvestResultBlockState.equals( hostBlockState );
+
+                if( changed )
+                    return;
+                else if( finalBlockState == null )
+                    finalBlockState = Blocks.AIR.getDefaultState();
+            }
+            else
+            {
+                MetaResourceLocation breaksIntoResourceLocation = oreInfo.breaksInto();
+                if( breaksIntoResourceLocation != null )
+                {
+                    finalBlockState = Block.REGISTRY
+                        .getObject( breaksIntoResourceLocation.resourceLocation )
+                        .getStateFromMeta( breaksIntoResourceLocation.meta );
+                }
+                else if( finalBlockState != null && !finalBlockState.equals( Blocks.AIR.getDefaultState() ) )
+                    finalBlockState = null;
             }
 
             // We shouldn't need to mark any blocks as dirty if finalBlockState is null

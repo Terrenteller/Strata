@@ -202,7 +202,7 @@ Value: <ResourceLocation>[:<meta>]
 Description:
     Replace the block with another when broken without silk touch.
     Drops will be forfeit to prevent infinite duplication.
-    Only applies to primary tile types.
+    Only applies to ores and primary tile types.
 
 Key: convertsTo
 Value: <ResourceLocation>[:<meta>]
