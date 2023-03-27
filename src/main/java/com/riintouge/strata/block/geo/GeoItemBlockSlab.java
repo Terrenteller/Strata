@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -58,7 +59,7 @@ public class GeoItemBlockSlab extends ItemSlab
     {
         ItemStack equivalentItemStack = tileInfo.equivalentItemStack();
         return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
-            || ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.HAS_EFFECT ) > 0
+            || FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.HAS_EFFECT )
             || super.hasEffect( stack );
     }
 

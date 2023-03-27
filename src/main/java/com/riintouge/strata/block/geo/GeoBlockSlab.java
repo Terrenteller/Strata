@@ -2,6 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -185,6 +186,6 @@ public class GeoBlockSlab extends BlockSlab
         IBlockState blockState = this.getDefaultState().withProperty( VARIANT , Variant.DEFAULT );
         return isDouble()
             ? blockState
-            : blockState.withProperty( HALF , ( meta & TOP_META_BIT ) != 0 ? BlockSlab.EnumBlockHalf.TOP : BlockSlab.EnumBlockHalf.BOTTOM );
+            : blockState.withProperty( HALF , FlagUtil.check( meta , TOP_META_BIT ) ? BlockSlab.EnumBlockHalf.TOP : BlockSlab.EnumBlockHalf.BOTTOM );
     }
 }

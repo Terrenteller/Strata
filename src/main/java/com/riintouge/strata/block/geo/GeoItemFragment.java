@@ -2,6 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -61,7 +62,7 @@ public class GeoItemFragment extends Item
     {
         ItemStack equivalentItemStack = tileInfo.equivalentItemStack();
         return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
-            || ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.HAS_EFFECT ) > 0
+            || FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.HAS_EFFECT )
             || super.hasEffect( stack );
     }
 

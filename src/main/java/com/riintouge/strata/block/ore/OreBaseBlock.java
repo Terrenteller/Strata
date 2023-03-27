@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -66,12 +67,12 @@ public abstract class OreBaseBlock extends BlockFalling
         if( proxyBlockState != null && !proxyBlockState.getBlock().canEntityDestroy( proxyBlockState , world , pos , entity ) )
             return false;
 
-        if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.DRAGON_IMMUNE ) > 0
+        if( FlagUtil.check( oreInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.DRAGON_IMMUNE )
             && entity instanceof EntityDragon )
         {
             return false;
         }
-        else if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.WITHER_IMMUNE ) > 0
+        else if( FlagUtil.check( oreInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.WITHER_IMMUNE )
             && ( entity instanceof EntityWither || entity instanceof EntityWitherSkull ) )
         {
             return false;

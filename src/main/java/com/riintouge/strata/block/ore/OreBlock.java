@@ -15,6 +15,7 @@ import com.riintouge.strata.network.NetworkManager;
 import com.riintouge.strata.network.OreBlockLandingEffectMessage;
 import com.riintouge.strata.network.OreBlockRunningEffectMessage;
 import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -1023,7 +1024,7 @@ public class OreBlock extends OreBaseBlock
         if( host != Blocks.AIR && host.isFireSource( world , pos , side ) )
             return true;
 
-        return ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.FIRE_SOURCE ) > 0
+        return FlagUtil.check( oreInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.FIRE_SOURCE )
             || super.isFireSource( world , pos , side );
     }
 

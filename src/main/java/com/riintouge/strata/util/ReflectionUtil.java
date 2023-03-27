@@ -77,7 +77,7 @@ public class ReflectionUtil
         {
             Field modifiersField = Field.class.getDeclaredField( "modifiers" );
             modifiersField.setAccessible( true );
-            wasFinal = ( field.getModifiers() & Modifier.FINAL ) > 0;
+            wasFinal = FlagUtil.check( field.getModifiers() , Modifier.FINAL );
             modifiersField.setInt( field , field.getModifiers() & ~Modifier.FINAL );
         }
         catch( Exception e )

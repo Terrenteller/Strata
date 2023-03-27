@@ -2,6 +2,7 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -110,7 +111,7 @@ public class OreItem extends Item
     {
         ItemStack equivalentItemStack = oreInfo.equivalentItemStack();
         return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
-            || ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.HAS_EFFECT ) > 0
+            || FlagUtil.check( oreInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.HAS_EFFECT )
             || super.hasEffect( stack );
     }
 

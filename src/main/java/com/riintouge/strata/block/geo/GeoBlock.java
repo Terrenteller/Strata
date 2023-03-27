@@ -7,6 +7,7 @@ import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -83,7 +84,7 @@ public class GeoBlock extends BlockFalling
     {
         return tileInfo.type() == TileType.SAND
             || tileInfo.type() == TileType.GRAVEL
-            || ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY ) > 0;
+            || FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY );
     }
 
     public IGeoTileInfo getTileInfo()
@@ -147,12 +148,12 @@ public class GeoBlock extends BlockFalling
     @Override
     public boolean canEntityDestroy( IBlockState state , IBlockAccess world , BlockPos pos , Entity entity )
     {
-        if( ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.DRAGON_IMMUNE ) > 0
+        if( FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.DRAGON_IMMUNE )
             && entity instanceof EntityDragon )
         {
             return false;
         }
-        else if( ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.WITHER_IMMUNE ) > 0
+        else if( FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.WITHER_IMMUNE )
             && ( entity instanceof EntityWither || entity instanceof EntityWitherSkull ) )
         {
             return false;
@@ -165,7 +166,7 @@ public class GeoBlock extends BlockFalling
     @Override
     protected boolean canSilkHarvest()
     {
-        if( tileInfo.type().isPrimary && ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.NO_SILK_TOUCH ) != 0 )
+        if( tileInfo.type().isPrimary && FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.NO_SILK_TOUCH ) )
             return false;
 
         return super.canSilkHarvest();
@@ -346,7 +347,7 @@ public class GeoBlock extends BlockFalling
     @Override
     public boolean isFireSource( World world , BlockPos pos , EnumFacing side )
     {
-        return ( tileInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.FIRE_SOURCE ) > 0
+        return FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.FIRE_SOURCE )
             || super.isFireSource( world , pos , side );
     }
 

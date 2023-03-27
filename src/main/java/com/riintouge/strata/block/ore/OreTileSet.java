@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -20,7 +21,7 @@ public class OreTileSet implements IOreTileSet
     {
         this.oreInfo = oreInfo;
 
-        if( ( oreInfo.specialBlockPropertyFlags() & SpecialBlockPropertyFlags.ACTIVATABLE ) > 0 )
+        if( FlagUtil.check( oreInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.ACTIVATABLE ) )
         {
             if( "oreRedstone".equals( oreInfo.blockOreDictionaryName() ) )
                 block = new RedstoneOreBlock( oreInfo );
