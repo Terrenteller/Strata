@@ -8,7 +8,7 @@ public class UnlistedPropertyHostRock implements IUnlistedProperty< MetaResource
 {
     public static UnlistedPropertyHostRock PROPERTY = new UnlistedPropertyHostRock();
     // TODO: Default to null and handle appropriately
-    public static MetaResourceLocation DEFAULT = new MetaResourceLocation( new ResourceLocation( "minecraft" , "stone" ) , 0 );
+    public static final MetaResourceLocation DEFAULT = new MetaResourceLocation( new ResourceLocation( "minecraft" , "stone" ) , 0 );
 
     // IUnlistedProperty overrides
 

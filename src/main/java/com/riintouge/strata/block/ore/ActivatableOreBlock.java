@@ -47,8 +47,10 @@ public class ActivatableOreBlock extends OreBlock
         IBlockAccess world,
         BlockPos pos )
     {
-        return super.getCompleteExtendedState( entity , state , world , pos )
-            .withProperty( UnlistedPropertyActiveState.PROPERTY , entity != null && entity.isActive() );
+        IExtendedBlockState extendedState = super.getCompleteExtendedState( entity , state , world , pos );
+        return entity != null
+            ? extendedState.withProperty( UnlistedPropertyOreFlags.PROPERTY , entity.getFlags() )
+            : extendedState;
     }
 
     @Nonnull
@@ -56,7 +58,7 @@ public class ActivatableOreBlock extends OreBlock
     public IExtendedBlockState getDefaultExtendedState( IBlockState state )
     {
         return super.getDefaultExtendedState( state )
-            .withProperty( UnlistedPropertyActiveState.PROPERTY , UnlistedPropertyActiveState.DEFAULT );
+            .withProperty( UnlistedPropertyOreFlags.PROPERTY , UnlistedPropertyOreFlags.DEFAULT );
     }
 
     // Block overrides
@@ -66,7 +68,7 @@ public class ActivatableOreBlock extends OreBlock
     {
         return new BlockStateContainer.Builder( this )
             .add( UnlistedPropertyHostRock.PROPERTY )
-            .add( UnlistedPropertyActiveState.PROPERTY )
+            .add( UnlistedPropertyOreFlags.PROPERTY )
             .build();
     }
 

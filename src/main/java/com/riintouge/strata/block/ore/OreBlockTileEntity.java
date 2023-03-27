@@ -4,6 +4,7 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.GeoBlock;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -35,7 +36,7 @@ public class OreBlockTileEntity extends TileEntity
 
     private boolean updateOnLoad = false;
     private MetaResourceLocation hostRock = UnlistedPropertyHostRock.DEFAULT;
-    private Boolean isActive = UnlistedPropertyActiveState.DEFAULT;
+    private byte flags = UnlistedPropertyOreFlags.DEFAULT;
 
     public OreBlockTileEntity()
     {
@@ -55,19 +56,24 @@ public class OreBlockTileEntity extends TileEntity
             return;
         }
 
-        isActive = StateUtil.getValue( state , UnlistedPropertyActiveState.PROPERTY , UnlistedPropertyActiveState.DEFAULT );
+        flags = StateUtil.getValue( state , UnlistedPropertyOreFlags.PROPERTY , UnlistedPropertyOreFlags.DEFAULT );
+    }
+
+    public byte getFlags()
+    {
+        return flags;
     }
 
     public boolean isActive()
     {
-        return isActive;
+        return FlagUtil.check( flags , UnlistedPropertyOreFlags.ACTIVE );
     }
 
     public void setActive( boolean active )
     {
-        if( !world.isRemote && isActive != active )
+        if( !world.isRemote && active != isActive() )
         {
-            isActive = active;
+            flags = FlagUtil.set( flags , UnlistedPropertyOreFlags.ACTIVE , active );
             update();
         }
     }
@@ -215,7 +221,7 @@ public class OreBlockTileEntity extends TileEntity
         // newSate? Does Forge have code reviewers?
         return !( newSate instanceof IExtendedBlockState )
             || !hostRock.equals( StateUtil.getValue( newSate , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT ) )
-            || isActive != StateUtil.getValue( newSate , UnlistedPropertyActiveState.PROPERTY , false );
+            || flags != StateUtil.getValue( newSate , UnlistedPropertyOreFlags.PROPERTY , UnlistedPropertyOreFlags.DEFAULT );
 
     }
 
@@ -243,7 +249,7 @@ public class OreBlockTileEntity extends TileEntity
 
         if( !hostRock.equals( UnlistedPropertyHostRock.DEFAULT ) )
             tag.setString( UnlistedPropertyHostRock.PROPERTY.getName() , hostRock.toString() );
-        tag.setBoolean( UnlistedPropertyActiveState.PROPERTY.getName() , isActive );
+        tag.setByte( UnlistedPropertyOreFlags.PROPERTY.getName() , flags );
 
         return this.writeToNBT( tag );
     }
@@ -284,17 +290,19 @@ public class OreBlockTileEntity extends TileEntity
             }
         }
 
-        if( tag.hasKey( UnlistedPropertyActiveState.PROPERTY.getName() ) )
+        if( tag.hasKey( UnlistedPropertyOreFlags.PROPERTY.getName() ) )
         {
-            Boolean active = tag.getBoolean( UnlistedPropertyActiveState.PROPERTY.getName() );
+            byte tagFlags = tag.getByte( UnlistedPropertyOreFlags.PROPERTY.getName() );
+            boolean active = FlagUtil.check( tagFlags , UnlistedPropertyOreFlags.ACTIVE );
+
             if( !active && hostChanged )
             {
                 // Don't interpret a scheduled host update tick as a random tick to deactivate,
                 // but do allow activation if it happened at the same time.
             }
-            else if( active != isActive )
+            else if( active != isActive() )
             {
-                isActive = active;
+                flags = FlagUtil.set( flags , UnlistedPropertyOreFlags.ACTIVE , active );
                 hasUpdates = true;
             }
         }
@@ -324,8 +332,7 @@ public class OreBlockTileEntity extends TileEntity
                 return;
             }
 
-            isActive = compound.getBoolean( UnlistedPropertyActiveState.PROPERTY.getName() );
-
+            flags = compound.getByte( UnlistedPropertyOreFlags.PROPERTY.getName() );
         }
         catch( Exception e )
         {
@@ -339,7 +346,7 @@ public class OreBlockTileEntity extends TileEntity
         super.writeToNBT( compound );
 
         compound.setString( UnlistedPropertyHostRock.PROPERTY.getName() , hostRock.toString() );
-        compound.setBoolean( UnlistedPropertyActiveState.PROPERTY.getName() , isActive );
+        compound.setByte( UnlistedPropertyOreFlags.PROPERTY.getName() , flags );
 
         return compound;
     }
