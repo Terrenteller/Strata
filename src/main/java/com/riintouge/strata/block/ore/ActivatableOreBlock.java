@@ -19,8 +19,6 @@ public class ActivatableOreBlock extends OreBlock
     public ActivatableOreBlock( IOreInfo oreInfo )
     {
         super( oreInfo );
-
-        setTickRandomly( true );
     }
 
     protected boolean isActive( IBlockAccess world , BlockPos pos )

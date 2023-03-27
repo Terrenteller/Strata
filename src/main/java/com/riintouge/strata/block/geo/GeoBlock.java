@@ -37,11 +37,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -74,6 +74,7 @@ public class GeoBlock extends BlockFalling
         setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
         setResistance( tileInfo.explosionResistance() );
+        setTickRandomly( tileInfo.meltsAt() != null );
         if( tileInfo.slipperiness() != null )
             setDefaultSlipperiness( tileInfo.slipperiness() );
     }
@@ -425,7 +426,14 @@ public class GeoBlock extends BlockFalling
     @Override
     public void updateTick( World worldIn , BlockPos pos , IBlockState state , Random rand )
     {
-        if( canFall() )
+        Integer meltsAt = tileInfo.meltsAt();
+        if( meltsAt != null && !worldIn.isRemote && willMelt( this , worldIn , pos , state , meltsAt ) )
+        {
+            FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
+            ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+            harvestBlock( worldIn , fakePlayer , pos , state , null , fakeHarvestTool );
+        }
+        else if( canFall() )
             super.updateTick( worldIn , pos , state , rand );
     }
 
@@ -439,5 +447,27 @@ public class GeoBlock extends BlockFalling
     public IBlockState withRotation( IBlockState state , Rotation rot )
     {
         return state.withProperty( ORIENTATION , state.getValue( ORIENTATION ).rotate( rot ) );
+    }
+
+    // Statics
+
+    public static boolean willMelt( Block block , World worldIn , BlockPos pos , IBlockState state , int meltingPoint )
+    {
+        int lightOpacity = block.getLightOpacity( state , worldIn , pos );
+
+        // Greater than 15 so blocks can melt at a light level of zero because the default opacity is 255
+        if( lightOpacity > 15 )
+        {
+            return worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.up() ) >= meltingPoint
+                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.north() ) >= meltingPoint
+                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.south() ) >= meltingPoint
+                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.east() ) >= meltingPoint
+                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.west() ) >= meltingPoint
+                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.down() ) >= meltingPoint;
+        }
+
+        // The subtraction in BlockIce is because of the light "absorbed" by the block at its position
+        int totalInputLight = worldIn.getLightFor( EnumSkyBlock.BLOCK , pos ) + lightOpacity;
+        return totalInputLight <= 15 && totalInputLight >= meltingPoint;
     }
 }

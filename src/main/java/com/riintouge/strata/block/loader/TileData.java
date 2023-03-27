@@ -71,6 +71,7 @@ public class TileData
     // IHostInfo
     public MetaResourceLocation hostMetaResource = null;
     public Float slipperiness = null;
+    public Integer meltsAt;
 
     // ICommonBlockProperties
     public Material material = null;
@@ -264,6 +265,11 @@ public class TileData
                 // Block's constructor uses 255 for a full block. Why not 15?
                 // Is that just to ensure a full block never lets light through?
                 lightOpacity = Util.clamp( 0 , Integer.parseInt( value ) , 255 );
+                return true;
+            }
+            case "meltsAt":
+            {
+                meltsAt = Util.clamp( 0 , Integer.parseInt( value ) , 15 );
                 return true;
             }
             case "noSilkTouch":

@@ -22,6 +22,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     // IHostInfo
     private MetaResourceLocation hostMetaResource;
     private Float slipperiness;
+    private Integer meltsAt;
     private ProtoBlockTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
 
@@ -43,6 +44,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
         // IHostInfo
         this.hostMetaResource = Util.argumentNullCheck( tileData.hostMetaResource , "hostMetaResource" );
         this.slipperiness = tileData.slipperiness;
+        this.meltsAt = tileData.meltsAt;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
 
         // ICommonBlockProperties
@@ -77,6 +79,13 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     public Float slipperiness()
     {
         return slipperiness;
+    }
+
+    @Nullable
+    @Override
+    public Integer meltsAt()
+    {
+        return meltsAt;
     }
 
     @Override

@@ -18,6 +18,9 @@ public interface IHostInfo extends ICommonBlockProperties
     @Nullable
     Float slipperiness();
 
+    @Nullable
+    Integer meltsAt();
+
     @SideOnly( Side.CLIENT )
     ProtoBlockTextureMap modelTextureMap();
 

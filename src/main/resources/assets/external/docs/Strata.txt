@@ -65,8 +65,10 @@ Description:
 Key: host
 Value: <ResourceLocation>[:<meta>]
 Description:
-    Register the block as one from which ores may acquire various properties. Does not generate actual blocks or items.
-    When used with `generate`, the Value (not Key!) is ignored, and only applies to primary tile types.
+    Register the block as one from which ores may acquire various properties.
+    Random effects and other behaviours will not occur on blocks Strata does not itself create.
+    When used with `generate`, Value is unnecessary and ignored, and only applies to primary tile types.
+    Does not apply to ores.
 
 Key: ore
 Value: <name>
@@ -146,6 +148,13 @@ Value: <int>
 Description:
     The amount of light blocked by the block.
     If the tile type has a parent, the parent's value is the default.
+
+Key: meltsAt
+Value: <int>
+Description:
+    Randomly break the block when the block light level meets or exceeds Value, just like ice.
+    If the block also emits a sufficient amount of light, it can melt itself.
+    Only applies to ores and primary tile types.
 
 Key: slipperiness
 Value: <float>
