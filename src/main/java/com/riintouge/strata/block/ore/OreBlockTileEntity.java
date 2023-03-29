@@ -19,7 +19,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,7 @@ public class OreBlockTileEntity extends TileEntity
     public static ThreadLocal< Integer > DAMAGE_MODEL_FACE_COUNT_HACK = ThreadLocal.withInitial( () -> 0 );
 
     private boolean updateOnLoad = false;
-    private MetaResourceLocation hostRock = UnlistedPropertyHostRock.DEFAULT;
+    private MetaResourceLocation hostRock = null;
     private byte flags = UnlistedPropertyOreFlags.DEFAULT;
 
     public OreBlockTileEntity()
@@ -51,7 +50,6 @@ public class OreBlockTileEntity extends TileEntity
         hostRock = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY );
         if( hostRock == null )
         {
-            hostRock = UnlistedPropertyHostRock.DEFAULT;
             updateOnLoad = true;
             return;
         }
@@ -78,7 +76,7 @@ public class OreBlockTileEntity extends TileEntity
         }
     }
 
-    @Nonnull
+    @Nullable
     public MetaResourceLocation getHostRock()
     {
         return hostRock;
@@ -86,7 +84,7 @@ public class OreBlockTileEntity extends TileEntity
 
     public void setHostRock( MetaResourceLocation hostMetaLocation )
     {
-        if( hostMetaLocation != null && !world.isRemote && !hostRock.equals( hostMetaLocation ) )
+        if( !world.isRemote && hostMetaLocation != null && !hostMetaLocation.equals( hostRock ) )
         {
             hostRock = hostMetaLocation;
             update();
@@ -98,17 +96,17 @@ public class OreBlockTileEntity extends TileEntity
         if( world.isRemote )
             return; // Clients should only get this property from the server
 
-        if( !hostRock.equals( UnlistedPropertyHostRock.DEFAULT ) )
+        if( hostRock != null )
             return; // Host has been determined
 
         hostRock = findHost( world , pos );
-        if( hostRock.equals( UnlistedPropertyHostRock.DEFAULT ) )
+        if( hostRock == null )
             return; // No host found. Wait for something to update us or try again later.
 
         update();
     }
 
-    @Nonnull
+    @Nullable
     public MetaResourceLocation findHost( IBlockAccess worldIn , BlockPos pos )
     {
         IBlockState state = world.getBlockState( pos );
@@ -124,7 +122,7 @@ public class OreBlockTileEntity extends TileEntity
         for( EnumFacing facing : EnumFacing.VALUES )
         {
             MetaResourceLocation host = getAdjacentHost( worldIn , pos , facing );
-            IHostInfo hostInfo = host != null ? HostRegistry.INSTANCE.find( host ) : null;
+            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
             if( hostInfo == null )
                 continue;
 
@@ -135,21 +133,10 @@ public class OreBlockTileEntity extends TileEntity
                     mostAffinitizedHostIndex = affinityIndex; 
             }
 
-            float weight = 1;
-
-            if( host.equals( UnlistedPropertyHostRock.DEFAULT ) )
-            {
-                // Never prioritize the default (which should really be null)
-                weight = 0;
-            }
-            else
-            {
-                // Give a bonus to horizontal facings since most rock is found in layers
-                weight *= facing.getAxis().isHorizontal() ? 2 : 1;
-
-                // Give a bonus for hosts which match the ore's material
-                weight *= hostInfo.material() == oreBlock.oreInfo.material() ? 2.0f : 0.5f;
-            }
+            // Give a bonus to horizontal facings since most rock is found in layers
+            float weight = facing.getAxis().isHorizontal() ? 2.0f : 1.0f;
+            // Give a bonus for hosts which match the ore's material
+            weight *= hostInfo.material() == oreBlock.oreInfo.material() ? 2.0f : 0.5f;
 
             hostWeight.put( host , hostWeight.getOrDefault( host , 0.0f ) + weight );
         }
@@ -167,7 +154,7 @@ public class OreBlockTileEntity extends TileEntity
                 if( HostRegistry.INSTANCE.find( entry.getKey() ) != null )
                     bestEntry = entry;
 
-        return bestEntry != null ? bestEntry.getKey() : UnlistedPropertyHostRock.DEFAULT;
+        return bestEntry != null ? bestEntry.getKey() : null;
     }
 
     @Nullable
@@ -218,11 +205,15 @@ public class OreBlockTileEntity extends TileEntity
     @Override
     public boolean shouldRefresh( World world , BlockPos pos , IBlockState oldState , IBlockState newSate )
     {
-        // newSate? Does Forge have code reviewers?
-        return !( newSate instanceof IExtendedBlockState )
-            || !hostRock.equals( StateUtil.getValue( newSate , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT ) )
-            || flags != StateUtil.getValue( newSate , UnlistedPropertyOreFlags.PROPERTY , UnlistedPropertyOreFlags.DEFAULT );
+        // newSate? Really?
+        if( !( newSate instanceof IExtendedBlockState ) )
+            return true;
 
+        MetaResourceLocation newHostRock = StateUtil.getValue( newSate , UnlistedPropertyHostRock.PROPERTY );
+        if( newHostRock != null && !newHostRock.equals( hostRock ) )
+            return true;
+
+        return flags != StateUtil.getValue( newSate , UnlistedPropertyOreFlags.PROPERTY , UnlistedPropertyOreFlags.DEFAULT );
     }
 
     @Override
@@ -247,8 +238,7 @@ public class OreBlockTileEntity extends TileEntity
     {
         NBTTagCompound tag = super.getUpdateTag();
 
-        if( !hostRock.equals( UnlistedPropertyHostRock.DEFAULT ) )
-            tag.setString( UnlistedPropertyHostRock.PROPERTY.getName() , hostRock.toString() );
+        tag.setString( UnlistedPropertyHostRock.PROPERTY.getName() , hostRock != null ? hostRock.toString() : "" );
         tag.setByte( UnlistedPropertyOreFlags.PROPERTY.getName() , flags );
 
         return this.writeToNBT( tag );
@@ -276,15 +266,15 @@ public class OreBlockTileEntity extends TileEntity
 
         if( tag.hasKey( UnlistedPropertyHostRock.PROPERTY.getName() ) )
         {
-            String propertyString = tag.getString( UnlistedPropertyHostRock.PROPERTY.getName() );
-            MetaResourceLocation host = new MetaResourceLocation( propertyString );
-            if( !host.equals( hostRock ) )
+            String rawHostRock = tag.getString( UnlistedPropertyHostRock.PROPERTY.getName() );
+            MetaResourceLocation tagHostRock = !rawHostRock.isEmpty() ? new MetaResourceLocation( rawHostRock ) : null;
+            if( tagHostRock != null && !tagHostRock.equals( hostRock ) )
             {
                 // The client may not know about the host as a host, but to get this far the client must know
                 // about the block. The game would have hung in a nasty way otherwise (at least with 1.12.2).
                 // Strata is visually functional in this state, but breaking blocks will likely cause de-syncs.
 
-                hostRock = host;
+                hostRock = tagHostRock;
                 hasUpdates = true;
                 hostChanged = true;
             }
@@ -318,16 +308,17 @@ public class OreBlockTileEntity extends TileEntity
 
         try
         {
-            if( !compound.hasKey( UnlistedPropertyHostRock.PROPERTY.getName() ) )
+            String rawHostRock = compound.getString( UnlistedPropertyHostRock.PROPERTY.getName() );
+            if( rawHostRock.isEmpty() )
             {
                 updateOnLoad = true;
                 return;
             }
 
-            hostRock = new MetaResourceLocation( compound.getString( UnlistedPropertyHostRock.PROPERTY.getName() ) );
+            hostRock = new MetaResourceLocation( rawHostRock );
             if( HostRegistry.INSTANCE.find( hostRock ) == null )
             {
-                hostRock = UnlistedPropertyHostRock.DEFAULT;
+                hostRock = null;
                 updateOnLoad = true;
                 return;
             }
@@ -345,7 +336,7 @@ public class OreBlockTileEntity extends TileEntity
     {
         super.writeToNBT( compound );
 
-        compound.setString( UnlistedPropertyHostRock.PROPERTY.getName() , hostRock.toString() );
+        compound.setString( UnlistedPropertyHostRock.PROPERTY.getName() , hostRock != null ? hostRock.toString() : "" );
         compound.setByte( UnlistedPropertyOreFlags.PROPERTY.getName() , flags );
 
         return compound;

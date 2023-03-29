@@ -5,7 +5,6 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
-import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.GeoBlock;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
@@ -17,6 +16,7 @@ import com.riintouge.strata.network.OreBlockRunningEffectMessage;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.StateUtil;
+import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.EnumPushReaction;
@@ -94,6 +94,7 @@ public class OreBlock extends OreBaseBlock
         setCreativeTab( Strata.ORE_BLOCK_TAB );
     }
 
+    @SideOnly( Side.CLIENT )
     public void addLandingEffects( WorldClient world , BlockPos blockPos , double xPos , double yPos , double zPos , int numberOfParticles )
     {
         if( !world.isRemote )
@@ -104,23 +105,8 @@ public class OreBlock extends OreBaseBlock
             return;
 
         IBlockState actualState = world.getBlockState( blockPos ).getActualState( world , blockPos );
-        MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
-        IHostInfo hostInfo = host != null ? HostRegistry.INSTANCE.find( host ) : null;
-        TextureAtlasSprite combinedTexture = null;
-        TextureAtlasSprite hostTexture = null;
-
-        if( OreParticleTextureManager.INSTANCE.isActive() && hostInfo != null && hostInfo.modelTextureMap() != null )
-        {
-            combinedTexture = OreParticleTextureManager.INSTANCE.findTextureOrNull(
-                oreInfo.oreName(),
-                host.resourceLocation.getResourceDomain(),
-                host.resourceLocation.getResourcePath(),
-                host.meta,
-                EnumFacing.UP );
-        }
-
-        if( combinedTexture == null && host != null )
-            hostTexture = hostInfo.modelTextureMap().getTexture( EnumFacing.UP );
+        MetaResourceLocation host = Util.coalesce( getHost( actualState ) , UnlistedPropertyHostRock.FALLBACK );
+        OreParticleTextureTuple textures = new OreParticleTextureTuple( host , oreInfo , EnumFacing.UP , true );
 
         // We could register our particle factory in ClientProxy and call ParticleManager.spawnEffectParticle()
         // instead, but that method is designed more for SPacketParticles which we can't use because it calls
@@ -129,9 +115,9 @@ public class OreBlock extends OreBaseBlock
         ParticleOreBlockDust.Factory particleFactory = new ParticleOreBlockDust.Factory();
 
         // Don't limit the number of ore particles unless we must show the host particles separately
-        int numberOfOreParticles = combinedTexture == null && hostTexture != null
-            ? (int)Math.floor( numberOfParticles / 3.0 )
-            : numberOfParticles;
+        int numberOfOreParticles = textures.combinedTexture != null
+            ? numberOfParticles
+            : (int)Math.floor( numberOfParticles / 3.0 );
 
         for( int index = 0 ; index < numberOfParticles ; index++ )
         {
@@ -148,12 +134,20 @@ public class OreBlock extends OreBaseBlock
 
             if( particle != null )
             {
-                if( combinedTexture != null )
-                    particle.setParticleTexture( combinedTexture );
-                else if( index >= numberOfOreParticles )
-                    particle.setParticleTexture( hostTexture );
+                TextureAtlasSprite texture = textures.combinedTexture;
 
-                particleManager.addEffect( particle );
+                if( texture == null )
+                {
+                    texture = index < numberOfOreParticles
+                        ? textures.hostTexture
+                        : textures.oreTexture;
+                }
+
+                if( texture != null )
+                {
+                    particle.setParticleTexture( texture );
+                    particleManager.addEffect( particle );
+                }
             }
         }
     }
@@ -163,19 +157,15 @@ public class OreBlock extends OreBaseBlock
     {
         try
         {
-            IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
-            int blockId = Block.getIdFromBlock( state.getBlock() );
-
-            TextureAtlasSprite baseTextures[] = new TextureAtlasSprite[ EnumFacing.values().length ];
-            String oreName = oreInfo.oreName();
-            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-            if( host == null )
-                return false;
-
+            IBlockState actualState = world.getBlockState( pos ).getActualState( world , pos );
+            MetaResourceLocation host = getHost( actualState );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
             if( hostInfo == null || hostInfo.modelTextureMap() == null )
                 return false;
 
+            int blockId = Block.getIdFromBlock( actualState.getBlock() );
+            TextureAtlasSprite baseTextures[] = new TextureAtlasSprite[ EnumFacing.values().length ];
+            String oreName = oreInfo.oreName();
             String hostResourceDomain = host.resourceLocation.getResourceDomain();
             String hostResourceLocation = host.resourceLocation.getResourcePath();
 
@@ -230,6 +220,7 @@ public class OreBlock extends OreBaseBlock
         return false;
     }
 
+    @SideOnly( Side.CLIENT )
     public void addRunningEffects(
         WorldClient world,
         BlockPos blockPos,
@@ -240,77 +231,78 @@ public class OreBlock extends OreBaseBlock
         double ySpeed,
         double zSpeed )
     {
-        if( !world.isRemote )
-            return;
-
         ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
         if( particleManager == null )
             return;
-
-        IBlockState actualState = world.getBlockState( blockPos ).getActualState( world , blockPos );
-        MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
-        IHostInfo hostInfo = host != null ? HostRegistry.INSTANCE.find( host ) : null;
-        TextureAtlasSprite combinedTexture = null;
-        TextureAtlasSprite hostTexture = null;
-
-        if( OreParticleTextureManager.INSTANCE.isActive() && hostInfo != null && hostInfo.modelTextureMap() != null )
-        {
-            combinedTexture = OreParticleTextureManager.INSTANCE.findTextureOrNull(
-                oreInfo.oreName(),
-                host.resourceLocation.getResourceDomain(),
-                host.resourceLocation.getResourcePath(),
-                host.meta,
-                EnumFacing.UP );
-        }
-
-        if( combinedTexture == null && host != null && RANDOM.nextFloat() < ( 1.0f / 3.0f ) )
-            hostTexture = hostInfo.modelTextureMap().getTexture( EnumFacing.UP );
 
         // We could register our particle factory in ClientProxy and call ParticleManager.spawnEffectParticle()
         // instead, but that method is designed more for SPacketParticles which we can't use because it calls
         // BlockModelShapes.getTexture() which lacks world and coordinate information. It also keeps
         // ParticleOreDigging.Factory out of a code path which doesn't need to know about it.
         ParticleOreDigging.Factory particleFactory = new ParticleOreDigging.Factory();
+        IBlockState actualState = world.getBlockState( blockPos ).getActualState( world , blockPos );
         Particle particle = particleFactory.createParticle( actualState , world , xPos , yPos , zPos , xSpeed , ySpeed , zSpeed );
+
         if( particle != null )
         {
-            if( combinedTexture != null )
-                particle.setParticleTexture( combinedTexture );
-            else if( hostTexture != null )
-                particle.setParticleTexture( hostTexture );
+            MetaResourceLocation host = Util.coalesce( getHost( actualState ) , UnlistedPropertyHostRock.FALLBACK );
+            OreParticleTextureTuple textures = new OreParticleTextureTuple( host , oreInfo , EnumFacing.UP , true );
+            TextureAtlasSprite texture = textures.combinedTexture;
 
-            particleManager.addEffect( particle );
+            if( texture == null )
+            {
+                texture = RANDOM.nextFloat() < ( 2.0f / 3.0f )
+                    ? textures.hostTexture
+                    : textures.oreTexture;
+            }
+
+            if( texture != null )
+            {
+                particle.setParticleTexture( texture );
+                particleManager.addEffect( particle );
+            }
         }
     }
 
     @Nonnull
     public IExtendedBlockState getCompleteExtendedState( OreBlockTileEntity entity , IBlockState state , IBlockAccess world , BlockPos pos )
     {
-        IExtendedBlockState extendedState = getDefaultExtendedState( state );
-        return entity != null
-            ? extendedState.withProperty( UnlistedPropertyHostRock.PROPERTY , entity.getHostRock() )
-            : extendedState;
+        return getDefaultExtendedState( state )
+            .withProperty( UnlistedPropertyHostRock.PROPERTY , entity != null ? entity.getHostRock() : null );
     }
 
     @Nonnull
     public IExtendedBlockState getDefaultExtendedState( IBlockState state )
     {
         return ( (IExtendedBlockState)state )
-            .withProperty( UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            .withProperty( UnlistedPropertyHostRock.PROPERTY , null );
     }
 
-    @Nonnull
+    @Nullable
+    public MetaResourceLocation getHost( IBlockState actualState )
+    {
+        return StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
+    }
+
+    @Nullable
     public MetaResourceLocation getHost( IBlockAccess world , BlockPos pos )
     {
         OreBlockTileEntity tileEntity = getTileEntity( world , pos );
-        return tileEntity != null ? tileEntity.getHostRock() : UnlistedPropertyHostRock.DEFAULT;
+        return tileEntity != null ? tileEntity.getHostRock() : null;
     }
 
     @Nullable
     public IHostInfo getHostInfo( IBlockState actualState )
     {
-        MetaResourceLocation hostResource = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
-        return hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+        MetaResourceLocation hostResource = getHost( actualState );
+        return HostRegistry.INSTANCE.find( hostResource );
+    }
+
+    @Nullable
+    public IHostInfo getHostInfo( IBlockAccess world , BlockPos pos )
+    {
+        MetaResourceLocation hostResource = getHost( world , pos );
+        return HostRegistry.INSTANCE.find( hostResource );
     }
 
     @Nullable
@@ -344,7 +336,7 @@ public class OreBlock extends OreBaseBlock
         if( !canFallThrough( worldIn.getBlockState( pos.down() ) ) )
             return;
 
-        IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
+        IHostInfo hostInfo = getHostInfo( worldIn , pos );
         // It would be fancy to check if the host block is BlockFalling, but all Strata rocks are BlockFalling
         if( hostInfo == null || hostInfo.material() != Material.SAND )
             return;
@@ -367,17 +359,13 @@ public class OreBlock extends OreBaseBlock
             IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
             int blockId = Block.getIdFromBlock( state.getBlock() );
 
-            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
+            IHostInfo hostInfo = getHostInfo( state );
             ProtoBlockTextureMap hostTextureMap = hostInfo != null ? hostInfo.modelTextureMap() : null;
+            ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
 
-            String oreName = oreInfo.oreName();
-            IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
-            ProtoBlockTextureMap oreTextureMap = oreTileSet != null ? oreTileSet.getInfo().modelTextureMap() : null;
-
-            if( hostTextureMap == null && host != null )
+            if( hostTextureMap == null && hostInfo != null )
             {
-                Block hostBlock = Block.getBlockFromName( host.resourceLocation.toString() );
+                Block hostBlock = Block.getBlockFromName( hostInfo.registryName().toString() );
                 if( hostBlock != null )
                     hostBlock.addDestroyEffects( world , pos , manager );
             }
@@ -452,55 +440,20 @@ public class OreBlock extends OreBaseBlock
     @SideOnly( Side.CLIENT )
     public boolean addHitEffects( IBlockState state , World worldObj , RayTraceResult target , ParticleManager manager )
     {
-        BlockPos blockPos = target.getBlockPos();
-        IBlockState actualState = worldObj.getBlockState( blockPos ).getActualState( worldObj , blockPos );
-        TextureAtlasSprite texture = null;
-
-        if( OreParticleTextureManager.INSTANCE.isActive() )
-        {
-            MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
-            if( host == null )
-                return false;
-
-            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-            if( hostInfo != null && hostInfo.modelTextureMap() != null )
-            {
-                texture = OreParticleTextureManager.INSTANCE.findTextureOrNull(
-                    oreInfo.oreName(),
-                    host.resourceLocation.getResourceDomain(),
-                    host.resourceLocation.getResourcePath(),
-                    host.meta,
-                    target.sideHit );
-            }
-        }
+        MetaResourceLocation host = Util.coalesce( getHost( worldObj , target.getBlockPos() ) , UnlistedPropertyHostRock.FALLBACK );
+        OreParticleTextureTuple textures = new OreParticleTextureTuple( host , oreInfo , target.sideHit , true );
+        TextureAtlasSprite texture = textures.combinedTexture;
 
         if( texture == null )
         {
-            if( RANDOM.nextBoolean() )
-            {
-                MetaResourceLocation host = StateUtil.getValue( actualState , UnlistedPropertyHostRock.PROPERTY , null );
-                IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-                ProtoBlockTextureMap hostTextureMap = hostInfo != null ? hostInfo.modelTextureMap() : null;
-
-                texture = hostTextureMap != null
-                    ? hostTextureMap.getTexture( target.sideHit )
-                    : BakedModelCache.INSTANCE.getBakedModel( host ).getParticleTexture();
-            }
-            else
-            {
-                String oreName = oreInfo.oreName();
-                IOreTileSet oreTileSet = OreRegistry.INSTANCE.find( oreName );
-                ProtoBlockTextureMap oreTextureMap = oreTileSet != null ? oreTileSet.getInfo().modelTextureMap() : null;
-
-                texture = oreTextureMap != null
-                    ? oreTextureMap.getTexture( target.sideHit )
-                    : BakedModelCache.INSTANCE.getBakedOreModel( oreName ).getParticleTexture();
-            }
+            texture = RANDOM.nextBoolean()
+                ? textures.hostTexture
+                : textures.oreTexture;
         }
 
         if( texture != null )
         {
-            ParticleHelper.createHitParticle( actualState , worldObj , target , manager , RANDOM , texture );
+            ParticleHelper.createHitParticle( state , worldObj , target , manager , RANDOM , texture );
             return true;
         }
 
@@ -577,6 +530,9 @@ public class OreBlock extends OreBaseBlock
             return false;
 
         MetaResourceLocation hostResourceLocation = getHost( world , pos );
+        if( hostResourceLocation == null )
+            return true;
+
         Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
         IBlockState hostBlockState = host.getStateFromMeta( hostResourceLocation.meta );
         return host == Blocks.AIR || host.canEntityDestroy( hostBlockState , world , pos , entity );
@@ -606,6 +562,9 @@ public class OreBlock extends OreBaseBlock
     public boolean canSustainPlant( IBlockState state , IBlockAccess world , BlockPos pos , EnumFacing direction , IPlantable plantable )
     {
         MetaResourceLocation hostResourceLocation = getHost( world , pos );
+        if( hostResourceLocation == null )
+            return false;
+
         Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
         IBlockState hostState = host.getStateFromMeta( hostResourceLocation.meta );
         if( host.canSustainPlant( hostState , world , pos , direction , plantable ) )
@@ -676,7 +635,7 @@ public class OreBlock extends OreBaseBlock
         if( proxyBlockState != null )
             oreHardness = proxyBlockState.getBlock().getBlockHardness( proxyBlockState , worldIn , pos );
 
-        IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
+        IHostInfo hostInfo = getHostInfo( worldIn , pos );
         return hostInfo != null
             ? ( hostInfo.hardness() + oreHardness ) / 2.0f
             : oreHardness;
@@ -694,7 +653,7 @@ public class OreBlock extends OreBaseBlock
         // and we don't have the values to call the state-sensitive overload.
         if( harvesters.get() == null )
         {
-            MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            MetaResourceLocation host = getHost( world , pos );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
 
             if( hostInfo != null )
@@ -779,8 +738,7 @@ public class OreBlock extends OreBaseBlock
     public int getHarvestLevel( IBlockState state )
     {
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
-        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-        IHostInfo hostInfo = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+        IHostInfo hostInfo = getHostInfo( state );
         if( hostInfo != null )
         {
             // The harvest level of the ore doesn't matter if a tool is not required for the host.
@@ -800,8 +758,7 @@ public class OreBlock extends OreBaseBlock
     public String getHarvestTool( IBlockState state )
     {
         // state is expected to have unlisted properties from ForgeHooks.canHarvestBlock()
-        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-        IHostInfo hostInfo = hostResource != null ? HostRegistry.INSTANCE.find( hostResource ) : null;
+        IHostInfo hostInfo = getHostInfo( state );
         if( hostInfo != null )
             return hostInfo.harvestTool();
 
@@ -821,7 +778,7 @@ public class OreBlock extends OreBaseBlock
     public int getLightOpacity( IBlockState state , IBlockAccess world , BlockPos pos )
     {
         MetaResourceLocation hostResource = getHost( world , pos );
-        Block hostBlock = ForgeRegistries.BLOCKS.getValue( hostResource.resourceLocation );
+        Block hostBlock = hostResource != null ? ForgeRegistries.BLOCKS.getValue( hostResource.resourceLocation ) : null;
 
         return hostBlock != null
             ? hostBlock.getStateFromMeta( hostResource.meta ).getLightOpacity( world , pos )
@@ -832,7 +789,7 @@ public class OreBlock extends OreBaseBlock
     public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
     {
         int hostLightValue = 0;
-        IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+        IHostInfo hostInfo = getHostInfo( world , pos );
         if( hostInfo != null )
             hostLightValue = hostInfo.lightLevel();
 
@@ -845,11 +802,7 @@ public class OreBlock extends OreBaseBlock
     {
         // state as cached by the world does not have unlisted property data.
         // However, state from other callers might.
-        MetaResourceLocation hostResource = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , null );
-        if( hostResource == null )
-            return super.getMaterial( state );
-
-        IHostInfo hostInfo = HostRegistry.INSTANCE.find( hostResource );
+        IHostInfo hostInfo = getHostInfo( state );
         return hostInfo != null ? hostInfo.material() : super.getMaterial( state );
     }
 
@@ -877,10 +830,9 @@ public class OreBlock extends OreBaseBlock
     @Override
     public float getSlipperiness( IBlockState state , IBlockAccess world , BlockPos pos , @Nullable Entity entity )
     {
-        IHostInfo hostProperties = HostRegistry.INSTANCE.find( getHost( world , pos ) );
-        return hostProperties != null && hostProperties.slipperiness() != null
-            ? hostProperties.slipperiness()
-            : super.getSlipperiness( state , world , pos , entity );
+        IHostInfo hostInfo = getHostInfo( world , pos );
+        Float slipperiness = hostInfo != null ? hostInfo.slipperiness() : null;
+        return slipperiness != null ? slipperiness : super.getSlipperiness( state , world , pos , entity );
     }
 
     @Deprecated
@@ -897,12 +849,12 @@ public class OreBlock extends OreBaseBlock
     {
         if( RANDOM.nextBoolean() )
         {
-            IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( world , pos ) );
+            IHostInfo hostInfo = getHostInfo( world , pos );
             if( hostInfo != null )
             {
-                MetaResourceLocation host = StateUtil.getValue( state , world , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
-                Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
-                return hostBlock.getSoundType( state , world , pos , null );
+                Block hostBlock = Block.REGISTRY.getObject( hostInfo.registryName() );
+                IBlockState hostBlockState = hostBlock.getStateFromMeta( hostInfo.meta() );
+                return hostBlock.getSoundType( hostBlockState , world , pos , null );
             }
         }
 
@@ -933,7 +885,7 @@ public class OreBlock extends OreBaseBlock
             int fortuneLevel = EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , stack );
             dropBlockAsItem( worldIn , pos , state , fortuneLevel );
 
-            MetaResourceLocation host = StateUtil.getValue( state , worldIn , pos , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            MetaResourceLocation host = getHost( worldIn , pos );
             IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
             IBlockState hostBlockState = hostInfo != null
                 ? Block.REGISTRY.getObject( host.resourceLocation ).getStateFromMeta( host.meta )
@@ -1020,6 +972,9 @@ public class OreBlock extends OreBaseBlock
             return true;
 
         MetaResourceLocation hostResourceLocation = getHost( world , pos );
+        if( hostResourceLocation == null )
+            return false;
+
         Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
         if( host != Blocks.AIR && host.isFireSource( world , pos , side ) )
             return true;
@@ -1045,12 +1000,18 @@ public class OreBlock extends OreBaseBlock
             return;
 
         OreBlockTileEntity tileEntity = getTileEntity( worldIn , pos );
-        if( tileEntity == null || tileEntity.getHostRock() != UnlistedPropertyHostRock.DEFAULT )
+        if( tileEntity == null || tileEntity.getHostRock() != null )
             return;
 
         IBlockState changedState = worldIn.getBlockState( fromPos );
         if( changedState.getBlock() instanceof OreBlock )
-            worldIn.scheduleBlockUpdate( pos , state.getBlock() , 20 , 10 );
+        {
+            OreBlockTileEntity otherTileEntity = getTileEntity( worldIn , fromPos );
+            if( otherTileEntity == null || otherTileEntity.getHostRock() == null )
+                return;
+        }
+
+        worldIn.scheduleBlockUpdate( pos , state.getBlock() , 20 , 10 );
     }
 
     @Override
@@ -1083,7 +1044,7 @@ public class OreBlock extends OreBaseBlock
         // we need to avoid expensive host searches by differentiating undefined from default hosts
         tileEntity.searchForAdjacentHostRock();
 
-        IHostInfo hostInfo = HostRegistry.INSTANCE.find( getHost( worldIn , pos ) );
+        IHostInfo hostInfo = getHostInfo( worldIn , pos );
         Integer meltsAt = hostInfo != null ? hostInfo.meltsAt() : null;
         if( meltsAt != null && GeoBlock.willMelt( this , worldIn , pos , state , meltsAt ) )
         {

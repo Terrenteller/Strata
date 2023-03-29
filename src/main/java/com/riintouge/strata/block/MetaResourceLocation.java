@@ -1,5 +1,6 @@
 package com.riintouge.strata.block;
 
+import com.sun.istack.internal.NotNull;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -59,9 +60,9 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
         this.meta = blockState.getBlock().getMetaFromState( blockState );
     }
 
-    public boolean equals( MetaResourceLocation other )
+    public boolean equals( @Nullable MetaResourceLocation other )
     {
-        return compareTo( other ) == 0;
+        return other != null && compareTo( other ) == 0;
     }
 
     @Nullable
@@ -81,7 +82,7 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     // Comparable overrides
 
     @Override
-    public int compareTo( MetaResourceLocation other )
+    public int compareTo( @NotNull MetaResourceLocation other )
     {
         int comparison = resourceLocation.compareTo( other.resourceLocation );
         if( comparison != 0 )

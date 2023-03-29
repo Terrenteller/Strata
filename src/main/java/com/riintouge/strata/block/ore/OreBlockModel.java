@@ -46,13 +46,14 @@ public class OreBlockModel implements IBakedModel
         BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
         List< BakedQuad > newQuads = new Vector<>();
 
-        if( DAMAGE_MODEL_FACE_COUNT_HACK.get() > 0 )
+        int damageModelFaceCountHackValue = DAMAGE_MODEL_FACE_COUNT_HACK.get();
+        if( damageModelFaceCountHackValue > 0 )
         {
-            DAMAGE_MODEL_FACE_COUNT_HACK.set( DAMAGE_MODEL_FACE_COUNT_HACK.get() - 1 );
+            DAMAGE_MODEL_FACE_COUNT_HACK.set( damageModelFaceCountHackValue - 1 );
         }
         else if( renderLayer == BlockRenderLayer.SOLID || renderLayer == null )
         {
-            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.DEFAULT );
+            MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.FALLBACK );
             IBakedModel hostModel = BakedModelCache.INSTANCE.getBakedModel( host );
             Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
             IBlockState hostState = hostBlock.getStateFromMeta( host.meta );
