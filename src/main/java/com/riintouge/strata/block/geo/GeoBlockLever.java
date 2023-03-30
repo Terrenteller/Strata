@@ -38,8 +38,9 @@ public class GeoBlockLever extends BlockLever
         setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
         setResistance( tileInfo.explosionResistance() );
-        if( tileInfo.slipperiness() != null )
-            setDefaultSlipperiness( tileInfo.slipperiness() );
+        Float slipperiness = tileInfo.slipperiness();
+        if( slipperiness != null )
+            setDefaultSlipperiness( slipperiness );
     }
 
     // Block overrides
