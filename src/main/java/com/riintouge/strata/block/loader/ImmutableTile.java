@@ -367,6 +367,12 @@ public final class ImmutableTile implements IGeoTileInfo
     }
 
     @Override
+    public boolean ticksRandomly()
+    {
+        return meltsAt != null;
+    }
+
+    @Override
     @SideOnly( Side.CLIENT )
     public ProtoBlockTextureMap modelTextureMap()
     {

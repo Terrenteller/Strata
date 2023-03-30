@@ -82,28 +82,14 @@ public class OreBlockTileEntity extends TileEntity
         return hostRock;
     }
 
-    public void setHostRock( MetaResourceLocation hostMetaLocation )
+    public void updateHostRock()
     {
-        if( !world.isRemote && hostMetaLocation != null && !hostMetaLocation.equals( hostRock ) )
-        {
-            hostRock = hostMetaLocation;
-            update();
-        }
-    }
-
-    public void searchForAdjacentHostRock()
-    {
-        if( world.isRemote )
-            return; // Clients should only get this property from the server
-
-        if( hostRock != null )
-            return; // Host has been determined
+        if( world.isRemote || hostRock != null )
+            return;
 
         hostRock = findHost( world , pos );
-        if( hostRock == null )
-            return; // No host found. Wait for something to update us or try again later.
-
-        update();
+        if( hostRock != null )
+            update();
     }
 
     @Nullable

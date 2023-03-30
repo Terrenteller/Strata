@@ -19,6 +19,8 @@ public class ActivatableOreBlock extends OreBlock
     public ActivatableOreBlock( IOreInfo oreInfo )
     {
         super( oreInfo );
+
+        setTickRandomly( true );
     }
 
     protected boolean isActive( IBlockAccess world , BlockPos pos )
@@ -86,7 +88,7 @@ public class ActivatableOreBlock extends OreBlock
     {
         super.onBlockActivated( worldIn , pos , state , playerIn , hand , facing , hitX , hitY , hitZ );
 
-        this.setActive( worldIn , pos , true );
+        setActive( worldIn , pos , true );
 
         // Vanilla redstone ore, whose activation behaviour this class was designed to mimic, does not eat clicks
         return false;
@@ -97,7 +99,7 @@ public class ActivatableOreBlock extends OreBlock
     {
         super.onBlockClicked( worldIn , pos , playerIn );
 
-        this.setActive( worldIn , pos , true );
+        setActive( worldIn , pos , true );
     }
 
     @Override
@@ -105,15 +107,15 @@ public class ActivatableOreBlock extends OreBlock
     {
         super.onEntityWalk( worldIn , pos , entityIn );
 
-        this.setActive( worldIn , pos , true );
+        setActive( worldIn , pos , true );
     }
 
     @Override
-    public void updateTick( World worldIn , BlockPos pos , IBlockState state , Random rand )
+    public void randomTick( World worldIn , BlockPos pos , IBlockState state , Random random )
     {
-        super.updateTick( worldIn , pos , state , rand );
+        // Deactivate before we may melt by calling super (thus invalidating the tile entity)
+        setActive( worldIn , pos , false );
 
-        if( !worldIn.isRemote )
-            setActive( worldIn , pos , false );
+        super.randomTick( worldIn , pos , state , random );
     }
 }

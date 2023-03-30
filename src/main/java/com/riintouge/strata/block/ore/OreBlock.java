@@ -5,9 +5,7 @@ import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
-import com.riintouge.strata.block.geo.GeoBlock;
-import com.riintouge.strata.block.geo.HostRegistry;
-import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.block.geo.*;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.network.NetworkManager;
@@ -89,7 +87,7 @@ public class OreBlock extends OreBaseBlock
         setSoundType( oreInfo.soundType() );
         setHardness( oreInfo.hardness() );
         setResistance( oreInfo.explosionResistance() );
-        setTickRandomly( true );
+        setTickRandomly( HostRegistry.ANY_HOST_TICKS );
 
         setCreativeTab( Strata.ORE_BLOCK_TAB );
     }
@@ -1021,6 +1019,25 @@ public class OreBlock extends OreBaseBlock
     }
 
     @Override
+    public void randomTick( World worldIn , BlockPos pos , IBlockState state , Random random )
+    {
+        // Do not call super.randomTick() because it calls updateTick()
+
+        OreBlockTileEntity tileEntity = !worldIn.isRemote ? getTileEntity( worldIn , pos ) : null;
+        if( tileEntity == null )
+            return;
+
+        IHostInfo hostInfo = HostRegistry.INSTANCE.find( tileEntity.getHostRock() );
+        Integer meltsAt = hostInfo != null ? hostInfo.meltsAt() : null;
+        if( meltsAt == null || !GeoBlock.willMelt( this , worldIn , pos , state , meltsAt ) )
+            return;
+
+        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
+        ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+        harvestBlock( worldIn , fakePlayer , pos , state , tileEntity , fakeHarvestTool );
+    }
+
+    @Override
     public boolean removedByPlayer( IBlockState state , World world , BlockPos pos , EntityPlayer player , boolean willHarvest )
     {
         // See BlockFlowerPot for details about this logic.
@@ -1037,20 +1054,9 @@ public class OreBlock extends OreBaseBlock
         // TODO: Revisit this should sandy ores be added.
 
         OreBlockTileEntity tileEntity = !worldIn.isRemote ? getTileEntity( worldIn , pos ) : null;
-        if( tileEntity == null )
+        if( tileEntity == null || tileEntity.getHostRock() != null )
             return;
 
-        // FIXME: Now that all ores must tick randomly to accommodate any host which might melt
-        // we need to avoid expensive host searches by differentiating undefined from default hosts
-        tileEntity.searchForAdjacentHostRock();
-
-        IHostInfo hostInfo = getHostInfo( worldIn , pos );
-        Integer meltsAt = hostInfo != null ? hostInfo.meltsAt() : null;
-        if( meltsAt != null && GeoBlock.willMelt( this , worldIn , pos , state , meltsAt ) )
-        {
-            FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
-            ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
-            harvestBlock( worldIn , fakePlayer , pos , state , tileEntity , fakeHarvestTool );
-        }
+        tileEntity.updateHostRock();
     }
 }

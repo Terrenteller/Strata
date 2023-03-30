@@ -75,7 +75,7 @@ public class GeoBlock extends BlockFalling
         setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
         setResistance( tileInfo.explosionResistance() );
-        setTickRandomly( tileInfo.meltsAt() != null );
+        setTickRandomly( getTickRandomly() || tileInfo.ticksRandomly() );
         if( tileInfo.slipperiness() != null )
             setDefaultSlipperiness( tileInfo.slipperiness() );
     }
@@ -406,6 +406,20 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public void randomTick( World worldIn , BlockPos pos , IBlockState state , Random random )
+    {
+        // Do not call super.randomTick() because it calls updateTick()
+
+        Integer meltsAt = !worldIn.isRemote ? tileInfo.meltsAt() : null;
+        if( meltsAt != null && willMelt( this , worldIn , pos , state , meltsAt ) )
+        {
+            FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
+            ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+            harvestBlock( worldIn , fakePlayer , pos , state , null , fakeHarvestTool );
+        }
+    }
+
+    @Override
     public boolean rotateBlock( World world , BlockPos pos , EnumFacing axis )
     {
         IBlockState state = world.getBlockState( pos );
@@ -427,14 +441,7 @@ public class GeoBlock extends BlockFalling
     @Override
     public void updateTick( World worldIn , BlockPos pos , IBlockState state , Random rand )
     {
-        Integer meltsAt = tileInfo.meltsAt();
-        if( meltsAt != null && !worldIn.isRemote && willMelt( this , worldIn , pos , state , meltsAt ) )
-        {
-            FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
-            ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
-            harvestBlock( worldIn , fakePlayer , pos , state , null , fakeHarvestTool );
-        }
-        else if( canFall() )
+        if( canFall() )
             super.updateTick( worldIn , pos , state , rand );
     }
 

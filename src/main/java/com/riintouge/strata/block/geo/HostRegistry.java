@@ -20,6 +20,11 @@ public final class HostRegistry
 {
     public static final HostRegistry INSTANCE = new HostRegistry();
 
+    // This is a minor optimization for ores since randomly ticking them is an all or nothing affair.
+    // That is to say, we cannot set an individual ore to tick randomly if and only if it acquires a host which does.
+    // Since no host ticks randomly out-of-the-box, no ore needs to either.
+    public static boolean ANY_HOST_TICKS = false;
+
     private Map< ResourceLocation , IHostInfo[] > hostInfos = new HashMap<>();
 
     private HostRegistry()
@@ -35,6 +40,9 @@ public final class HostRegistry
             hostInfos.put( registryName , metaInfos = new IHostInfo[ 16 ] );
 
         metaInfos[ meta ] = hostInfo;
+
+        if( !ANY_HOST_TICKS && hostInfo.ticksRandomly() )
+            ANY_HOST_TICKS = true;
     }
 
     @Nullable
