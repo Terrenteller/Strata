@@ -3,7 +3,9 @@ package com.riintouge.strata.block.loader;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
+import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.IDropFormula;
@@ -20,6 +22,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -34,9 +37,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 {
     // IOreInfo
     private String oreName;
+    private TileType tileType;
     private String blockOreDictionaryName;
     private String itemOreDictionaryName;
     private ProtoBlockTextureMap modelTextureMap;
+    private Integer particleFallingColor = null; // Lazily evaluated
     private ResourceLocation blockstateResourceLocation;
     private LayeredTextureLayer[] oreItemTextureLayers;
     private MetaResourceLocation equivalentItemResourceLocation;
@@ -70,6 +75,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
         // IOreInfo
         this.oreName = Util.argumentNullCheck( tileData.oreName , "oreName" );
+        this.tileType = Util.argumentNullCheck( tileData.tileType , "type" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.itemOreDictionaryName = tileData.itemOreDictionaryName;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
@@ -132,6 +138,13 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return oreName;
     }
 
+    @Nonnull
+    @Override
+    public TileType type()
+    {
+        return tileType;
+    }
+
     @Nullable
     @Override
     public String blockOreDictionaryName()
@@ -152,6 +165,15 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public ProtoBlockTextureMap modelTextureMap()
     {
         return modelTextureMap;
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public int particleFallingColor()
+    {
+        return particleFallingColor != null
+            ? particleFallingColor
+            : ( particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) ) );
     }
 
     @Nonnull

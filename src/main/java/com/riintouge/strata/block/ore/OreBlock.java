@@ -12,6 +12,7 @@ import com.riintouge.strata.network.NetworkManager;
 import com.riintouge.strata.network.OreBlockLandingEffectMessage;
 import com.riintouge.strata.network.OreBlockRunningEffectMessage;
 import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.StateUtil;
 import com.riintouge.strata.util.Util;
@@ -69,7 +70,6 @@ public class OreBlock extends OreBaseBlock
     public static final String REGISTRY_NAME_SUFFIX = "_ore";
 
     protected ThreadLocal< ItemStack > harvestTool = new ThreadLocal<>();
-    protected ThreadLocal< Integer > particleColor = new ThreadLocal<>();
 
     public OreBlock( IOreInfo oreInfo )
     {
@@ -262,6 +262,13 @@ public class OreBlock extends OreBaseBlock
         }
     }
 
+    public boolean canFall()
+    {
+        return oreInfo.type() == TileType.SAND
+            || oreInfo.type() == TileType.GRAVEL
+            || FlagUtil.check( oreInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY );
+    }
+
     @Nonnull
     public IExtendedBlockState getCompleteExtendedState( OreBlockTileEntity entity , IBlockState state , IBlockAccess world , BlockPos pos )
     {
@@ -317,30 +324,32 @@ public class OreBlock extends OreBaseBlock
     @SideOnly( Side.CLIENT )
     public int getDustColor( IBlockState state )
     {
-        // We have to rely on randomDisplayTick() to set the particle color because state is clean
-        return particleColor.get() != null ? particleColor.get() : super.getDustColor( state );
+        return oreInfo.particleFallingColor();
     }
 
     @Override
     @SideOnly( Side.CLIENT )
     public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
     {
-        // Hosts are not expected to have an ambient sound.
-        // We can do without the overhead of a lookup here given how often this method is called.
-        if( oreInfo.ambientSound() != null )
-            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , oreInfo.ambientSound() );
+        if( rand.nextBoolean() )
+        {
+            if( canFall() )
+                super.randomDisplayTick( stateIn , worldIn , pos , rand );
 
-        // Cheap sanity check
-        if( !canFallThrough( worldIn.getBlockState( pos.down() ) ) )
-            return;
+            SoundEventTuple oreAmbientSound = oreInfo.ambientSound();
+            if( oreAmbientSound != null )
+                AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , oreAmbientSound );
+        }
+        else
+        {
+            IHostInfo hostInfo = getHostInfo( worldIn , pos );
+            if( hostInfo == null )
+                return;
 
-        IHostInfo hostInfo = getHostInfo( worldIn , pos );
-        // It would be fancy to check if the host block is BlockFalling, but all Strata rocks are BlockFalling
-        if( hostInfo == null || hostInfo.material() != Material.SAND )
-            return;
-
-        particleColor.set( hostInfo.particleFallingColor() );
-        super.randomDisplayTick( stateIn , worldIn , pos , rand );
+            Block hostBlock = Block.getBlockFromName( hostInfo.registryName().toString() );
+            IBlockState hostBlockState = hostBlock.getStateFromMeta( hostInfo.meta() );
+            hostBlock.randomDisplayTick( hostBlockState , worldIn , pos , rand );
+        }
     }
 
     // Block overrides

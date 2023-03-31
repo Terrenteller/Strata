@@ -4,6 +4,7 @@ import com.riintouge.strata.block.IForgeRegistrable;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.ICommonBlockProperties;
+import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
@@ -23,6 +24,9 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nonnull
     String oreName();
 
+    @Nonnull
+    TileType type();
+
     @Nullable
     String blockOreDictionaryName();
 
@@ -32,6 +36,9 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nonnull
     @SideOnly( Side.CLIENT )
     ProtoBlockTextureMap modelTextureMap();
+
+    @SideOnly( Side.CLIENT )
+    int particleFallingColor();
 
     @Nonnull
     ResourceLocation blockstateResourceLocation();
