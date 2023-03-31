@@ -2,6 +2,7 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.*;
+import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -193,18 +194,22 @@ public class GeoTileSet implements IForgeRegistrable
 
             if( fragmentItem != null )
             {
-                ItemBlock fragmentReconstruction = itemBlock;
-                if( tileType == STONE && itemBlocks[ TileType.COBBLE.ordinal() ] != null )
-                    fragmentReconstruction = itemBlocks[ TileType.COBBLE.ordinal() ];
+                if( !FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.NOT_RECONSTITUTABLE ) )
+                {
+                    ItemBlock fragmentReconstruction = itemBlock;
+                    ItemBlock cobbleItemBlock = itemBlocks[ TileType.COBBLE.ordinal() ];
+                    if( tileType == STONE && cobbleItemBlock != null )
+                        fragmentReconstruction = cobbleItemBlock;
 
-                // It doesn't seem like this should work for glass but Quark and Charset allow it
-                GameRegistry.addShapedRecipe(
-                    new ResourceLocation( registryName.toString() + "_block" ),
-                    null,
-                    new ItemStack( fragmentReconstruction ),
-                    "XX",
-                    "XX",
-                    'X' , fragmentItem );
+                    // It doesn't seem like this should work for glass but Quark and Charset allow it
+                    GameRegistry.addShapedRecipe(
+                        new ResourceLocation( registryName.toString() + "_block" ),
+                        null,
+                        new ItemStack( fragmentReconstruction ),
+                        "XX",
+                        "XX",
+                        'X' , fragmentItem );
+                }
 
                 ItemStack fragmentFurnaceResult = tileInfo.fragmentFurnaceResult();
                 if( fragmentFurnaceResult != null && !fragmentFurnaceResult.isEmpty() )

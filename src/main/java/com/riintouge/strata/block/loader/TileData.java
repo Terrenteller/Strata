@@ -277,6 +277,11 @@ public class TileData
                 setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.NO_SILK_TOUCH );
                 return true;
             }
+            case "notReconstitutable":
+            {
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.NOT_RECONSTITUTABLE );
+                return true;
+            }
             case "ore":
             {
                 String[] values = value.split( " " );

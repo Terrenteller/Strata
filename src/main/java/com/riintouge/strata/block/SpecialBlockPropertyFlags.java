@@ -9,4 +9,5 @@ public class SpecialBlockPropertyFlags
     public static final int HAS_EFFECT          = 1 << 4;
     public static final int AFFECTED_BY_GRAVITY = 1 << 5;
     public static final int NO_SILK_TOUCH       = 1 << 6;
+    public static final int NOT_RECONSTITUTABLE = 1 << 7;
 }

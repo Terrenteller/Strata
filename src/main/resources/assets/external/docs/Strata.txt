@@ -384,6 +384,12 @@ Description:
     Prevents fire on top of the block from being extinguished by natural means.
     Does not apply to non-generated hosts.
 
+Key: notReconstitutable
+Value: N/A
+Description:
+    Prevents crafting a block from its fragments.
+    Only applies to primary tile types.
+
 Key: hasEffect
 Value: N/A
 Description:
