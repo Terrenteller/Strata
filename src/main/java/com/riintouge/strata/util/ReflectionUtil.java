@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.IdentityHashMap;
 
 public class ReflectionUtil
 {
@@ -19,7 +18,7 @@ public class ReflectionUtil
                 if( field.getType().equals( type ) )
                     return field;
 
-                if( allowAssignable && field.getType().isAssignableFrom( IdentityHashMap.class ) )
+                if( allowAssignable && field.getType().isAssignableFrom( type ) )
                     return field;
             }
         }

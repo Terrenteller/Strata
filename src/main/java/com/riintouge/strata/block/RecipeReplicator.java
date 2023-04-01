@@ -1,6 +1,7 @@
 package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -10,9 +11,10 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CompoundIngredient;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,6 +22,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -51,10 +54,36 @@ public class RecipeReplicator
             ShapedRecipes shapedRecipe = (ShapedRecipes)recipe;
             return new ShapedRecipes(
                 shapedRecipe.getGroup(),
-                shapedRecipe.getWidth(),
-                shapedRecipe.getHeight(),
+                shapedRecipe.getRecipeWidth(),
+                shapedRecipe.getRecipeHeight(),
                 substitute( shapedRecipe.getIngredients() ),
                 shapedRecipe.getRecipeOutput() );
+        } );
+
+        recipeReplicatorMap.put( ShapedOreRecipe.class , recipe ->
+        {
+            ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe)recipe;
+            CraftingHelper.ShapedPrimer primer = new CraftingHelper.ShapedPrimer();
+            primer.width = shapedOreRecipe.getRecipeWidth();
+            primer.height = shapedOreRecipe.getRecipeHeight();
+            primer.input = substitute( shapedOreRecipe.getIngredients() );
+
+            try
+            {
+                Field mirroredField = ReflectionUtil.findFieldByType( ShapedOreRecipe.class , boolean.class , true );
+                mirroredField.setAccessible( true );
+                primer.mirrored = (boolean)mirroredField.get( shapedOreRecipe );
+            }
+            catch( Exception ex )
+            {
+                Strata.LOGGER.warn( "Unable to locate field \"ShapedOreRecipe.mirrored\" by type!" );
+                primer.mirrored = false;
+            }
+
+            return new ShapedOreRecipe(
+                new ResourceLocation( shapedOreRecipe.getGroup() ),
+                shapedOreRecipe.getRecipeOutput(),
+                primer );
         } );
 
         recipeReplicatorMap.put( ShapelessRecipes.class , recipe ->
@@ -64,6 +93,15 @@ public class RecipeReplicator
                 shapelessRecipe.getGroup(),
                 shapelessRecipe.getRecipeOutput(),
                 substitute( shapelessRecipe.getIngredients() ) );
+        } );
+
+        recipeReplicatorMap.put( ShapelessOreRecipe.class , recipe ->
+        {
+            ShapelessOreRecipe shapelessRecipe = (ShapelessOreRecipe)recipe;
+            return new ShapelessOreRecipe(
+                new ResourceLocation( shapelessRecipe.getGroup() ),
+                substitute( shapelessRecipe.getIngredients() ),
+                shapelessRecipe.getRecipeOutput() );
         } );
     }
 
@@ -87,6 +125,12 @@ public class RecipeReplicator
         targetPair.setValue( null );
     }
 
+    public boolean canReplicateIngredientClass( Ingredient ing )
+    {
+        // Some ingredient classes don't make sense to replicate, like NBT and ores
+        return ing instanceof CompoundIngredient || ing.getClass() == Ingredient.class;
+    }
+
     public boolean canReplicate( IRecipe recipe )
     {
         ResourceLocation recipeResourceLocation = recipe.getRegistryName();
@@ -104,9 +148,10 @@ public class RecipeReplicator
             return false;
 
         for( Ingredient ing : recipe.getIngredients() )
-            for( ItemStack replaceableItemStack : megaMap.keySet() )
-                if( ing.apply( replaceableItemStack ) )
-                    return true;
+            if( canReplicateIngredientClass( ing ) )
+                for( ItemStack replaceableItemStack : megaMap.keySet() )
+                    if( ing.apply( replaceableItemStack ) )
+                        return true;
 
         return false;
     }
@@ -119,7 +164,15 @@ public class RecipeReplicator
 
         IReplicator replicator = recipeReplicatorMap.get( recipe.getClass() );
         if( replicator == null )
-            return null; // TODO: warn
+        {
+            Strata.LOGGER.warn(
+                String.format(
+                    "No recipe replicator for \"%s\" of type \"%s\"!",
+                    recipe.getRegistryName().toString(),
+                    recipe.getClass().toString() ) );
+
+            return null;
+        }
 
         return replicator.replicate( recipe ).setRegistryName( replicatedResourceLocation( recipe.getRegistryName() ) );
     }
@@ -157,6 +210,12 @@ public class RecipeReplicator
 
         for( Ingredient ing : ings )
         {
+            if( !canReplicateIngredientClass( ing ) )
+            {
+                replacedIngredients.add( ing );
+                continue;
+            }
+
             for( ItemStack replaceableItemStack : replaceableItemStacks )
                 if( ing.apply( replaceableItemStack ) )
                     matchingItemStacks.add( replaceableItemStack );
@@ -186,12 +245,11 @@ public class RecipeReplicator
 
     // Statics
 
-    @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
+    public static void replicateAndRegister()
     {
-        Strata.LOGGER.trace( "RecipeReplicator::registerRecipes()" );
+        Strata.LOGGER.trace( "RecipeReplicator::replicateAndRegister()" );
 
-        IForgeRegistry< IRecipe > recipeRegistry = event.getRegistry();
+        IForgeRegistry< IRecipe > recipeRegistry = ForgeRegistries.RECIPES;
         List< IRecipe > copies = new ArrayList<>();
         for( Map.Entry< ResourceLocation , IRecipe > recipe : recipeRegistry.getEntries() )
         {

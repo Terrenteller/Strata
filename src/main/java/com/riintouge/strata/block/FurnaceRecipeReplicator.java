@@ -3,10 +3,6 @@ package com.riintouge.strata.block;
 import com.riintouge.strata.Strata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -14,10 +10,9 @@ import java.util.List;
 
 public class FurnaceRecipeReplicator
 {
-    @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void registerRecipes( RegistryEvent.Register< IRecipe > event )
+    public static void replicateAndRegister()
     {
-        Strata.LOGGER.trace( "FurnaceRecipeReplicator::registerRecipes()" );
+        Strata.LOGGER.trace( "FurnaceRecipeReplicator::replicateAndRegister()" );
 
         FurnaceRecipes furnaceRecipes = FurnaceRecipes.instance();
         for( String oreName : OreDictionary.getOreNames() )

@@ -37,14 +37,12 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register( GeoTileSetRegistry.class );
         MinecraftForge.EVENT_BUS.register( OreRegistry.class );
         MinecraftForge.EVENT_BUS.register( SoundEventRegistry.class );
-        // Recipe replication should happen after specific recipes are in place
-        MinecraftForge.EVENT_BUS.register( FurnaceRecipeReplicator.class );
-        MinecraftForge.EVENT_BUS.register( RecipeReplicator.class );
     }
 
     public void init( FMLInitializationEvent event )
     {
-        // Nothing to do
+        FurnaceRecipeReplicator.replicateAndRegister();
+        RecipeReplicator.replicateAndRegister();
     }
 
     public void postInit( FMLPostInitializationEvent event )
