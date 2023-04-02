@@ -12,6 +12,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -32,7 +33,7 @@ public class RecipeReplicator
     private static Set< Pattern > RecipeBlacklist = new HashSet<>();
 
     private final Map< Class , IReplicator > recipeReplicatorMap = new HashMap<>();
-    private final Map< ItemStack , Pair< List< ItemStack > , Ingredient > > megaMap = new HashMap<>();
+    private final List< Pair< List< ItemStack > , Ingredient > > ingredientInfos = new ArrayList<>();
 
     private interface IReplicator
     {
@@ -105,33 +106,51 @@ public class RecipeReplicator
         } );
     }
 
-    public void register( ItemStack original , ItemStack alternative )
+    public void associate( ItemStack original , ItemStack alternative )
     {
-        List< ItemStack > matchingItemStacks;
-        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.getOrDefault( original , null );
-        if( targetPair == null )
+        for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
         {
-            matchingItemStacks = new ArrayList<>();
-            // Start off with the original item to allow mix'n'match.
-            // Otherwise, our recipe will exclusively use our items.
-            matchingItemStacks.add( original );
-            targetPair = new MutablePair<>( matchingItemStacks , null );
-            megaMap.put( original , targetPair );
+            List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
+            for( ItemStack itemStack : matchingItemStacks )
+            {
+                // Transitivity is very important so we don't end up with incomplete recipes!
+                boolean originalIsKnown = ItemStack.areItemStacksEqual( original , itemStack );
+                boolean alternativeIsKnown = ItemStack.areItemStacksEqual( alternative , itemStack );
+
+                if( originalIsKnown || alternativeIsKnown )
+                {
+                    if( !originalIsKnown )
+                    {
+                        matchingItemStacks.add( original );
+                        ingredientInfo.setValue( null );
+                    }
+
+                    if( !alternativeIsKnown )
+                    {
+                        matchingItemStacks.add( alternative );
+                        ingredientInfo.setValue( null );
+                    }
+
+                    return;
+                }
+            }
         }
-        else
-            matchingItemStacks = targetPair.getKey();
 
+        List< ItemStack > matchingItemStacks = new ArrayList<>();
+        // Keeping the original item is important so our recipe can mix and match.
+        // The original recipe will become a subset of ours but we get the same result so it doesn't matter.
+        // We don't remove the original recipe because there's no telling how it may be referenced.
+        matchingItemStacks.add( original );
         matchingItemStacks.add( alternative );
-        targetPair.setValue( null );
+        ingredientInfos.add( new MutablePair<>( matchingItemStacks , null ) );
     }
 
-    public boolean canReplicateIngredientClass( Ingredient ing )
+    public boolean canReplicateIngredient( Ingredient ing )
     {
-        // Some ingredient classes don't make sense to replicate, like NBT and ores
-        return ing instanceof CompoundIngredient || ing.getClass() == Ingredient.class;
+        return ing != Ingredient.EMPTY && !( ing instanceof IngredientNBT );
     }
 
-    public boolean canReplicate( IRecipe recipe )
+    public boolean shouldReplicate( IRecipe recipe )
     {
         ResourceLocation recipeResourceLocation = recipe.getRegistryName();
         if( recipeResourceLocation.getResourceDomain().equals( Strata.modid ) )
@@ -148,10 +167,36 @@ public class RecipeReplicator
             return false;
 
         for( Ingredient ing : recipe.getIngredients() )
-            if( canReplicateIngredientClass( ing ) )
-                for( ItemStack replaceableItemStack : megaMap.keySet() )
-                    if( ing.apply( replaceableItemStack ) )
-                        return true;
+        {
+            if( !canReplicateIngredient( ing ) )
+                continue;
+
+            for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
+            {
+                boolean anyMatchInCurrentList = false , allMatchInCurrentList = true;
+                List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
+
+                for( ItemStack itemStack : matchingItemStacks )
+                {
+                    if( ing.apply( itemStack ) )
+                    {
+                        anyMatchInCurrentList = true;
+                        continue;
+                    }
+
+                    allMatchInCurrentList = false;
+                    if( anyMatchInCurrentList )
+                        break;
+                }
+
+                // We only have a meaningful replication if any of the original ingredients
+                // accept some, but not all, of the items we consider associated.
+                // Otherwise, that means we have no replacement for the original ingredient
+                // or we are redundant with the original ingredient, respectively.
+                if( anyMatchInCurrentList && !allMatchInCurrentList )
+                    return true;
+            }
+        }
 
         return false;
     }
@@ -159,7 +204,7 @@ public class RecipeReplicator
     @Nullable
     public IRecipe replicate( IRecipe recipe )
     {
-        if( !canReplicate( recipe ) )
+        if( !shouldReplicate( recipe ) )
             return null;
 
         IReplicator replicator = recipeReplicatorMap.get( recipe.getClass() );
@@ -186,59 +231,50 @@ public class RecipeReplicator
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
     }
 
-    @Nonnull
-    protected Ingredient getTargetIngredient( ItemStack original )
+    protected Ingredient getCompleteIngredientOrOriginal( Ingredient original )
     {
-        Pair< List< ItemStack > , Ingredient > targetPair = megaMap.get( original );
-        Ingredient ing = targetPair.getValue();
-        if( ing == null )
+        if( !canReplicateIngredient( original ) )
+            return original;
+
+        List< Ingredient > matchingIngredients = new ArrayList<>();
+        for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
         {
-            List< ItemStack > itemStacks = targetPair.getKey();
-            ing = Ingredient.fromStacks( itemStacks.toArray( new ItemStack[ 0 ] ) );
-            targetPair.setValue( ing );
+            List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
+            for( ItemStack itemStack : matchingItemStacks )
+            {
+                if( original.apply( itemStack ) )
+                {
+                    Ingredient ing = ingredientInfo.getRight();
+                    if( ing == null )
+                    {
+                        ing = Ingredient.fromStacks( matchingItemStacks.toArray( new ItemStack[ 0 ] ) );
+                        ingredientInfo.setValue( ing );
+                    }
+
+                    matchingIngredients.add( ing );
+                    break;
+                }
+            }
         }
 
-        return ing;
+        switch( matchingIngredients.size() )
+        {
+            case 0:
+                return original;
+            case 1:
+                return matchingIngredients.get( 0 );
+            default:
+                return new ReplicatedCompoundIngredient( matchingIngredients );
+        }
     }
 
     @Nonnull
     protected NonNullList< Ingredient > substitute( NonNullList< Ingredient > ings )
     {
         NonNullList< Ingredient > replacedIngredients = NonNullList.create();
-        Set< ItemStack > replaceableItemStacks = megaMap.keySet();
-        List< ItemStack > matchingItemStacks = new ArrayList<>();
 
         for( Ingredient ing : ings )
-        {
-            if( !canReplicateIngredientClass( ing ) )
-            {
-                replacedIngredients.add( ing );
-                continue;
-            }
-
-            for( ItemStack replaceableItemStack : replaceableItemStacks )
-                if( ing.apply( replaceableItemStack ) )
-                    matchingItemStacks.add( replaceableItemStack );
-
-            switch( matchingItemStacks.size() )
-            {
-                case 0:
-                    replacedIngredients.add( ing );
-                    break;
-                case 1:
-                    replacedIngredients.add( getTargetIngredient( matchingItemStacks.get( 0 ) ) );
-                    break;
-                default:
-                {
-                    List< Ingredient > matchingIngredients = new ArrayList<>();
-                    for( ItemStack itemStack : matchingItemStacks )
-                        matchingIngredients.add( getTargetIngredient( itemStack ) );
-                    replacedIngredients.add( new ReplicatedCompoundIngredient( matchingIngredients ) );
-                }
-            }
-
-            matchingItemStacks.clear();
-        }
+            replacedIngredients.add( getCompleteIngredientOrOriginal( ing ) );
 
         return replacedIngredients;
     }

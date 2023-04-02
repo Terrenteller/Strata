@@ -138,7 +138,7 @@ public final class OreRegistry
 
             if( equivalentItem != null && !equivalentItem.isEmpty() )
             {
-                RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( tileSet.getItem() ) );
+                RecipeReplicator.INSTANCE.associate( equivalentItem , new ItemStack( tileSet.getItem() ) );
                 GameRegistry.addShapelessRecipe(
                     new ResourceLocation( Strata.modid , oreInfo.oreName() + "_equivalent" ),
                     null,

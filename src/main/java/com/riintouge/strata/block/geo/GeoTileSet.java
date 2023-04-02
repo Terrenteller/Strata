@@ -422,7 +422,7 @@ public class GeoTileSet implements IForgeRegistrable
             ItemStack equivalentItem = tileInfo.equivalentItemStack();
             if( equivalentItem != null && !equivalentItem.isEmpty() )
             {
-                RecipeReplicator.INSTANCE.register( equivalentItem , new ItemStack( itemBlock ) );
+                RecipeReplicator.INSTANCE.associate( equivalentItem , new ItemStack( itemBlock ) );
                 createEquivalentItemConversionRecipe( registryName , itemBlock , equivalentItem );
             }
         }
