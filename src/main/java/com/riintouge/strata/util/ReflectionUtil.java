@@ -1,10 +1,14 @@
 package com.riintouge.strata.util;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ReflectionUtil
 {
@@ -12,18 +16,24 @@ public class ReflectionUtil
     public static Field findFieldByType( Class clazz , Class type , boolean allowAssignable )
     {
         for( Class curClazz = clazz ; curClazz != Object.class ; curClazz = curClazz.getSuperclass() )
-        {
             for( Field field : curClazz.getDeclaredFields() )
-            {
-                if( field.getType().equals( type ) )
+                if( field.getType().equals( type ) || ( allowAssignable && field.getType().isAssignableFrom( type ) ) )
                     return field;
-
-                if( allowAssignable && field.getType().isAssignableFrom( type ) )
-                    return field;
-            }
-        }
 
         return null;
+    }
+
+    @NotNull
+    public static List< Field > findFieldsByType( Class clazz , Class type , boolean allowAssignable )
+    {
+        List< Field > fields = new ArrayList<>();
+
+        for( Class curClazz = clazz ; curClazz != Object.class ; curClazz = curClazz.getSuperclass() )
+            for( Field field : curClazz.getDeclaredFields() )
+                if( field.getType().equals( type ) || ( allowAssignable && field.getType().isAssignableFrom( type ) ) )
+                    fields.add( field );
+
+        return fields;
     }
 
     @Nullable

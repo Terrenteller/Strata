@@ -1,5 +1,6 @@
 package com.riintouge.strata.block;
 
+import com.google.common.collect.ImmutableList;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.Util;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class RecipeReplicator
@@ -143,6 +145,26 @@ public class RecipeReplicator
         matchingItemStacks.add( original );
         matchingItemStacks.add( alternative );
         ingredientInfos.add( new MutablePair<>( matchingItemStacks , null ) );
+    }
+
+    public ImmutableList< ItemStack > getAssociatedItems( Predicate< ItemStack > predicate )
+    {
+        ImmutableList.Builder< ItemStack > associatedItems = new ImmutableList.Builder<>();
+
+        for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
+        {
+            List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
+            for( ItemStack itemStack : matchingItemStacks )
+            {
+                if( predicate.test( itemStack ) )
+                {
+                    associatedItems.addAll( matchingItemStacks );
+                    break; // We can't stop at the first result because predicate may be testing multiple items
+                }
+            }
+        }
+
+        return associatedItems.build();
     }
 
     public boolean canReplicateIngredient( Ingredient ing )

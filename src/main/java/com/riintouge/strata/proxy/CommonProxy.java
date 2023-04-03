@@ -4,6 +4,7 @@ import com.riintouge.strata.EventHandlers;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.Blocks;
+import com.riintouge.strata.recipe.BrewingRecipeReplicator;
 import com.riintouge.strata.block.FurnaceRecipeReplicator;
 import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
@@ -37,6 +38,7 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register( GeoTileSetRegistry.class );
         MinecraftForge.EVENT_BUS.register( OreRegistry.class );
         MinecraftForge.EVENT_BUS.register( SoundEventRegistry.class );
+        MinecraftForge.EVENT_BUS.register( BrewingRecipeReplicator.class );
     }
 
     public void init( FMLInitializationEvent event )
