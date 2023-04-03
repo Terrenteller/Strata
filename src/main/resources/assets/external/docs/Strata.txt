@@ -149,12 +149,14 @@ Description:
     The amount of light blocked by the block.
     If the tile type has a parent, the parent's value is the default.
 
-Key: meltsAt
-Value: <int>
+Key: meltsAtInto
+Value: <int> [MetaResourceLocation]
 Description:
-    Randomly break the block when the block light level meets or exceeds Value, just like ice.
-    If the block also emits a sufficient amount of light, it can melt itself.
-    Only applies to ores and primary tile types.
+    Randomly break the block when the block light level meets or exceeds the threshold, just like ice.
+    If the block emits a sufficient amount of light it can melt itself.
+    If a resource location is provided, the block will melt into that instead of breaking normally.
+    Drops will be forfeit to prevent infinite duplication.
+    Only applies to primary tile types.
 
 Key: slipperiness
 Value: <float>
@@ -169,7 +171,7 @@ Key: texture[Caps|Sides|Up|Down|North|South|East|West]
 Value: [<ResourceLocation> <BlendMode> <opacity:float>]* <ResourceLocation>
 Description:
     Generate a texture for the block model using an optional array of layers blended onto a required base.
-    Only "texture" is required. The other keys override a side or group of sides.
+    Only `texture` is required. The other keys override a side or group of sides.
     If the tile type has a parent, the parent's complete texture map is the default.
     Specifying any of these keys will generate a new and distinct texture map.
     Although Strata does not generate host blocks, these textures are used for their particles.

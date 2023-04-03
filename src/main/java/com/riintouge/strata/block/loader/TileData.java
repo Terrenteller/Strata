@@ -72,6 +72,7 @@ public class TileData
     public MetaResourceLocation hostMetaResource = null;
     public Float slipperiness = null;
     public Integer meltsAt;
+    public MetaResourceLocation meltsInto;
 
     // ICommonBlockProperties
     public Material material = null;
@@ -267,9 +268,12 @@ public class TileData
                 lightOpacity = Util.clamp( 0 , Integer.parseInt( value ) , 255 );
                 return true;
             }
-            case "meltsAt":
+            case "meltsAtInto":
             {
-                meltsAt = Util.clamp( 0 , Integer.parseInt( value ) , 15 );
+                String[] values = value.split( " " );
+                meltsAt = Util.clamp( 0 , Integer.parseInt( values[ 0 ] ) , 15 );
+                if( values.length > 1 )
+                    meltsInto = new MetaResourceLocation( values[ 1 ] );
                 return true;
             }
             case "noSilkTouch":

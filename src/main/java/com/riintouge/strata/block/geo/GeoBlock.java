@@ -54,9 +54,16 @@ import java.util.function.Supplier;
 public class GeoBlock extends BlockFalling
 {
     public static ThreadLocal< Boolean > canSustainPlantEventOverride = ThreadLocal.withInitial( () -> false );
+    public static ThreadLocal< HarvestReason > HARVEST_REASON = ThreadLocal.withInitial( () -> HarvestReason.UNDEFINED );
     protected static final PropertyEnum< EnumGeoOrientation > ORIENTATION = PropertyEnum.create( "orientation" , EnumGeoOrientation.class );
 
     protected IGeoTileInfo tileInfo;
+
+    public enum HarvestReason
+    {
+        UNDEFINED,
+        MELT
+    }
 
     public GeoBlock( IGeoTileInfo tileInfo )
     {
@@ -317,7 +324,12 @@ public class GeoBlock extends BlockFalling
 
     public void harvestBlock( World worldIn , EntityPlayer player , BlockPos pos , IBlockState state , @Nullable TileEntity te , ItemStack stack )
     {
-        MetaResourceLocation replacementBlockResourceLocation = tileInfo.breaksInto();
+        MetaResourceLocation replacementBlockResourceLocation = null;
+        if( HARVEST_REASON.get() == HarvestReason.MELT )
+            replacementBlockResourceLocation = tileInfo.meltsInto();
+
+        if( replacementBlockResourceLocation == null )
+            replacementBlockResourceLocation = tileInfo.breaksInto();
 
         if( !tileInfo.type().isPrimary
             || replacementBlockResourceLocation == null
@@ -416,7 +428,16 @@ public class GeoBlock extends BlockFalling
         {
             FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
             ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
-            harvestBlock( worldIn , fakePlayer , pos , state , null , fakeHarvestTool );
+
+            try
+            {
+                HARVEST_REASON.set( HarvestReason.MELT );
+                harvestBlock( worldIn , fakePlayer , pos , state , null , fakeHarvestTool );
+            }
+            finally
+            {
+                HARVEST_REASON.remove();
+            }
         }
     }
 

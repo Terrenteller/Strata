@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,6 +21,9 @@ public interface IHostInfo extends ICommonBlockProperties
 
     @Nullable
     Integer meltsAt();
+
+    @Nullable
+    MetaResourceLocation meltsInto();
 
     boolean ticksRandomly();
 

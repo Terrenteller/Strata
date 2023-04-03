@@ -1043,7 +1043,16 @@ public class OreBlock extends OreBaseBlock
 
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
         ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
-        harvestBlock( worldIn , fakePlayer , pos , state , tileEntity , fakeHarvestTool );
+
+        try
+        {
+            GeoBlock.HARVEST_REASON.set( GeoBlock.HarvestReason.MELT );
+            harvestBlock( worldIn , fakePlayer , pos , state , tileEntity , fakeHarvestTool );
+        }
+        finally
+        {
+            GeoBlock.HARVEST_REASON.remove();
+        }
     }
 
     @Override
