@@ -150,11 +150,18 @@ Description:
     If the tile type has a parent, the parent's value is the default.
 
 Key: meltsAtInto
-Value: <int> [MetaResourceLocation]
+Value: <int> <ResourceLocation>[:<meta>]
 Description:
-    Randomly break the block when the block light level meets or exceeds the threshold, just like ice.
-    If the block emits a sufficient amount of light it can melt itself.
-    If a resource location is provided, the block will melt into that instead of breaking normally.
+    Randomly replace the block with another when any adjacent block light level meets or exceeds the threshold.
+    If the block emits a sufficient amount of light it can melt itself regardless of neighbouring light levels.
+    Drops will be forfeit to prevent infinite duplication.
+    Only applies to primary tile types.
+
+Key: sublimatesAtInto
+Value: <int> <ResourceLocation>[:<meta>]
+Description:
+    Randomly replace the block with another when any adjacent block light level meets or exceeds the threshold.
+    If the block emits a sufficient amount of light it can sublimate itself regardless of neighbouring light levels.
     Drops will be forfeit to prevent infinite duplication.
     Only applies to primary tile types.
 

@@ -62,6 +62,8 @@ public final class ImmutableTile implements IGeoTileInfo
     private Float slipperiness;
     private Integer meltsAt;
     private MetaResourceLocation meltsInto;
+    private Integer sublimatesAt;
+    private MetaResourceLocation sublimatesInto;
     private ProtoBlockTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
 
@@ -105,8 +107,13 @@ public final class ImmutableTile implements IGeoTileInfo
         // IHostInfo
         this.registryName = tileData.tileType.registryName( this.tileSetName );
         this.slipperiness = tileData.slipperiness;
-        this.meltsAt = tileData.meltsAt;
-        this.meltsInto = tileData.meltsInto;
+        if( tileType.isPrimary )
+        {
+            this.meltsAt = tileData.meltsAt;
+            this.meltsInto = tileData.meltsInto;
+            this.sublimatesAt = tileData.sublimatesAt;
+            this.sublimatesInto = tileData.sublimatesInto;
+        }
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
 
         // ICommonBlockProperties
@@ -375,10 +382,24 @@ public final class ImmutableTile implements IGeoTileInfo
         return meltsInto;
     }
 
+    @Nullable
+    @Override
+    public Integer sublimatesAt()
+    {
+        return sublimatesAt;
+    }
+
+    @Nullable
+    @Override
+    public MetaResourceLocation sublimatesInto()
+    {
+        return sublimatesInto;
+    }
+
     @Override
     public boolean ticksRandomly()
     {
-        return meltsAt != null;
+        return meltsAt != null || sublimatesAt != null;
     }
 
     @Override

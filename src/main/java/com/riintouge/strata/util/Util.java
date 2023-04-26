@@ -2,6 +2,7 @@ package com.riintouge.strata.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Random;
 import java.util.function.Supplier;
 import java.util.zip.CRC32;
 
@@ -83,5 +84,10 @@ public class Util
         crc32.reset();
         crc32.update( value );
         return crc32.getValue();
+    }
+
+    public static float randomNegativeOneToPositiveOne( Random random )
+    {
+        return ( random.nextFloat() * 2.0f ) - 1.0f;
     }
 }

@@ -73,6 +73,8 @@ public class TileData
     public Float slipperiness = null;
     public Integer meltsAt;
     public MetaResourceLocation meltsInto;
+    public Integer sublimatesAt;
+    public MetaResourceLocation sublimatesInto;
 
     // ICommonBlockProperties
     public Material material = null;
@@ -271,9 +273,11 @@ public class TileData
             case "meltsAtInto":
             {
                 String[] values = value.split( " " );
+                if( values.length < 2 )
+                    return false;
+
                 meltsAt = Util.clamp( 0 , Integer.parseInt( values[ 0 ] ) , 15 );
-                if( values.length > 1 )
-                    meltsInto = new MetaResourceLocation( values[ 1 ] );
+                meltsInto = new MetaResourceLocation( values[ 1 ] );
                 return true;
             }
             case "noSilkTouch":
@@ -318,6 +322,20 @@ public class TileData
             case "slipperiness":
             {
                 slipperiness = Float.parseFloat( value );
+                return true;
+            }
+            case "sublimatesAtInto":
+            {
+                // If we sublimate below the melting point everything will still work because
+                // GeoBlock.checkRandomHarvest() checks for sublimation first.
+                // We ought to have a Strata-wide sanity check in a finalization stage
+                // to check if the values make sense and the target block exists.
+                String[] values = value.split( " " );
+                if( values.length < 2 )
+                    return false;
+
+                sublimatesAt = Util.clamp( 0 , Integer.parseInt( values[ 0 ] ) , 15 );
+                sublimatesInto = new MetaResourceLocation( values[ 1 ] );
                 return true;
             }
             case "sustains":

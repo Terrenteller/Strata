@@ -25,6 +25,12 @@ public interface IHostInfo extends ICommonBlockProperties
     @Nullable
     MetaResourceLocation meltsInto();
 
+    @Nullable
+    Integer sublimatesAt();
+
+    @Nullable
+    MetaResourceLocation sublimatesInto();
+
     boolean ticksRandomly();
 
     @SideOnly( Side.CLIENT )

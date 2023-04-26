@@ -1037,8 +1037,11 @@ public class OreBlock extends OreBaseBlock
             return;
 
         IHostInfo hostInfo = HostRegistry.INSTANCE.find( tileEntity.getHostRock() );
-        Integer meltsAt = hostInfo != null ? hostInfo.meltsAt() : null;
-        if( meltsAt == null || !GeoBlock.willMelt( this , worldIn , pos , state , meltsAt ) )
+        if( hostInfo == null )
+            return;
+
+        GeoBlock.HarvestReason harvestReason = GeoBlock.checkRandomHarvest( hostInfo , this , worldIn , pos , state );
+        if( harvestReason == GeoBlock.HarvestReason.UNDEFINED )
             return;
 
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
@@ -1046,7 +1049,7 @@ public class OreBlock extends OreBaseBlock
 
         try
         {
-            GeoBlock.HARVEST_REASON.set( GeoBlock.HarvestReason.MELT );
+            GeoBlock.HARVEST_REASON.set( harvestReason );
             harvestBlock( worldIn , fakePlayer , pos , state , tileEntity , fakeHarvestTool );
         }
         finally

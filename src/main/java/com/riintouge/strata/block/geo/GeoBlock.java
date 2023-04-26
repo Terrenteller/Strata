@@ -32,10 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.*;
@@ -62,7 +59,8 @@ public class GeoBlock extends BlockFalling
     public enum HarvestReason
     {
         UNDEFINED,
-        MELT
+        MELT,
+        SUBLIMATE
     }
 
     public GeoBlock( IGeoTileInfo tileInfo )
@@ -325,11 +323,41 @@ public class GeoBlock extends BlockFalling
     public void harvestBlock( World worldIn , EntityPlayer player , BlockPos pos , IBlockState state , @Nullable TileEntity te , ItemStack stack )
     {
         MetaResourceLocation replacementBlockResourceLocation = null;
-        if( HARVEST_REASON.get() == HarvestReason.MELT )
-            replacementBlockResourceLocation = tileInfo.meltsInto();
 
-        if( replacementBlockResourceLocation == null )
-            replacementBlockResourceLocation = tileInfo.breaksInto();
+        // meltsAt() and sublimatesAt() determine whether meltsInto() and sublimatesInto() are meaningful,
+        // respectively. However, it doesn't make sense to require *Into() to not be null
+        // assuming it will only be used when *At() is valid. If the block does not melt or sublimate,
+        // *Into() returning null is the right thing to do. Therefore, we end up with a slight disconnect
+        // between what we require in text, require in code, and what the code actually does with missing values.
+        // tl;dr TileData requires both parameters but the interface does not enforce it.
+        switch( HARVEST_REASON.get() )
+        {
+            case SUBLIMATE:
+                replacementBlockResourceLocation = tileInfo.sublimatesInto();
+                if( replacementBlockResourceLocation == null )
+                    replacementBlockResourceLocation = new MetaResourceLocation( "minecraft:air" );
+                if( worldIn instanceof WorldServer )
+                {
+                    ( (WorldServer)worldIn ).spawnParticle(
+                        EnumParticleTypes.SMOKE_LARGE,
+                        pos.getX() + 0.5,
+                        pos.getY() + 0.25,
+                        pos.getZ() + 0.5,
+                        8,
+                        0.5,
+                        0.25,
+                        0.5,
+                        0.0 );
+                }
+                break;
+            case MELT:
+                replacementBlockResourceLocation = tileInfo.meltsInto();
+                if( replacementBlockResourceLocation == null )
+                    replacementBlockResourceLocation = new MetaResourceLocation( "minecraft:air" );
+                break;
+            default:
+                replacementBlockResourceLocation = tileInfo.breaksInto();
+        }
 
         if( !tileInfo.type().isPrimary
             || replacementBlockResourceLocation == null
@@ -423,21 +451,24 @@ public class GeoBlock extends BlockFalling
     {
         // Do not call super.randomTick() because it calls updateTick()
 
-        Integer meltsAt = !worldIn.isRemote ? tileInfo.meltsAt() : null;
-        if( meltsAt != null && willMelt( this , worldIn , pos , state , meltsAt ) )
-        {
-            FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
-            ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+        if( worldIn.isRemote )
+            return;
 
-            try
-            {
-                HARVEST_REASON.set( HarvestReason.MELT );
-                harvestBlock( worldIn , fakePlayer , pos , state , null , fakeHarvestTool );
-            }
-            finally
-            {
-                HARVEST_REASON.remove();
-            }
+        HarvestReason harvestReason = checkRandomHarvest( tileInfo , this , worldIn , pos , state );
+        if( harvestReason == HarvestReason.UNDEFINED )
+            return;
+
+        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft( (WorldServer)worldIn );
+        ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
+
+        try
+        {
+            HARVEST_REASON.set( harvestReason );
+            harvestBlock( worldIn , fakePlayer , pos , state , null , fakeHarvestTool );
+        }
+        finally
+        {
+            HARVEST_REASON.remove();
         }
     }
 
@@ -481,23 +512,23 @@ public class GeoBlock extends BlockFalling
 
     // Statics
 
-    public static boolean willMelt( Block block , World worldIn , BlockPos pos , IBlockState state , int meltingPoint )
+    public static HarvestReason checkRandomHarvest( IHostInfo hostInfo , Block block , World worldIn , BlockPos pos , IBlockState state )
     {
-        int lightOpacity = block.getLightOpacity( state , worldIn , pos );
+        Integer sublimatesAt = hostInfo.sublimatesAt();
+        Integer meltsAt = hostInfo.meltsAt();
+        if( sublimatesAt == null && meltsAt == null )
+            return HarvestReason.UNDEFINED;
 
-        // Greater than 15 so blocks can melt at a light level of zero because the default opacity is 255
-        if( lightOpacity > 15 )
-        {
-            return worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.up() ) >= meltingPoint
-                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.north() ) >= meltingPoint
-                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.south() ) >= meltingPoint
-                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.east() ) >= meltingPoint
-                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.west() ) >= meltingPoint
-                || worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.down() ) >= meltingPoint;
-        }
+        // Ensure blocks that emit enough light to melt themselves can still do so
+        // even when surrounded by opaque or partially translucent blocks
+        int brightestNeighbour = block.getLightValue( state , worldIn , pos ) - 1;
+        for( EnumFacing facing : EnumFacing.VALUES )
+            brightestNeighbour = Math.max( brightestNeighbour , worldIn.getLightFor( EnumSkyBlock.BLOCK , pos.offset( facing ) ) );
 
-        // The subtraction in BlockIce is because of the light "absorbed" by the block at its position
-        int totalInputLight = worldIn.getLightFor( EnumSkyBlock.BLOCK , pos ) + lightOpacity;
-        return totalInputLight <= 15 && totalInputLight >= meltingPoint;
+        return sublimatesAt != null && brightestNeighbour >= sublimatesAt
+            ? HarvestReason.SUBLIMATE
+            : meltsAt != null && brightestNeighbour >= meltsAt
+                ? HarvestReason.MELT
+                : HarvestReason.UNDEFINED;
     }
 }
