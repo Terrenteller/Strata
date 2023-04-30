@@ -50,10 +50,16 @@ public class GeoTileSetRegistry
     }
 
     @Nullable
+    public IGeoTileSet find( String tileSetName )
+    {
+        return tileSets.getOrDefault( tileSetName , null );
+    }
+
+    @Nullable
     public IGeoTileInfo findTileInfo( String tileSetName , TileType tileType )
     {
         GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
-        return tileSet != null ? tileSet.find( tileType ) : null;
+        return tileSet != null ? tileSet.getInfo( tileType ) : null;
     }
 
     @Nullable
@@ -79,11 +85,12 @@ public class GeoTileSetRegistry
         }
 
         // We can't tell primary types apart here
+        GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
         for( TileType tileType : TileType.values() )
         {
             if( tileType.isPrimary )
             {
-                IGeoTileInfo tileInfo = INSTANCE.findTileInfo( tileSetName , tileType );
+                IGeoTileInfo tileInfo = tileSet.getInfo( tileType );
                 if( tileInfo != null )
                     return tileInfo;
             }

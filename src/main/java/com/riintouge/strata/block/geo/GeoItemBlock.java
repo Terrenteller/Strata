@@ -2,12 +2,11 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.util.FlagUtil;
+import com.riintouge.strata.item.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -55,20 +54,10 @@ public class GeoItemBlock extends ItemBlock
         float hitY,
         float hitZ )
     {
-        Item originalItem = player.getHeldItem( hand ).getItem();
-        EnumActionResult result = super.onItemUse( player , worldIn , pos , hand , facing , hitX , hitY , hitZ );
-
-        if( result == EnumActionResult.SUCCESS )
-        {
-            // ItemBlock.onItemUse() always decrements the stack size, even for creative players.
-            // If the stack size becomes zero, it acts like air, and ItemStack.onItemUse() will increment a bogus stat.
-            Item bogusItem = player.getHeldItem( hand ).getItem();
-
-            player.addStat( StatList.getObjectUseStats( bogusItem ) , -1 );
-            player.addStat( StatList.getObjectUseStats( originalItem ) );
-        }
-
-        return result;
+        return ItemHelper.onItemUseWithStatisticsFix(
+            player,
+            hand,
+            () -> super.onItemUse( player , worldIn , pos , hand , facing , hitX , hitY , hitZ ) );
     }
 
     // Item overrides

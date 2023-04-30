@@ -1,6 +1,7 @@
 package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.SampleBlockModelLoader;
 import com.riintouge.strata.block.geo.BakedModelCache;
 import com.riintouge.strata.block.geo.GeoBlockModelLoader;
 import com.riintouge.strata.block.geo.GeoItemFragmentModelLoader;
@@ -33,7 +34,7 @@ public class ClientProxy extends CommonProxy
         ModelLoaderRegistry.registerLoader( new GeoItemFragmentModelLoader() );
         ModelLoaderRegistry.registerLoader( new OreBlockModelLoader() );
         ModelLoaderRegistry.registerLoader( new OreItemModelLoader() );
-        ModelLoaderRegistry.registerLoader( new OreSampleBlockModelLoader() );
+        ModelLoaderRegistry.registerLoader( new SampleBlockModelLoader() );
     }
 
     @Override

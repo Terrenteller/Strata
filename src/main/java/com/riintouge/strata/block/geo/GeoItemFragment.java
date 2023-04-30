@@ -3,9 +3,17 @@ package com.riintouge.strata.block.geo;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.util.FlagUtil;
+import com.riintouge.strata.item.ItemHelper;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,6 +72,22 @@ public class GeoItemFragment extends Item
         return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
             || FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.HAS_EFFECT )
             || super.hasEffect( stack );
+    }
+
+    @Override
+    public EnumActionResult onItemUse( EntityPlayer player , World worldIn , BlockPos pos , EnumHand hand , EnumFacing facing , float hitX , float hitY , float hitZ )
+    {
+        IGeoTileSet geoTileSet = GeoTileSetRegistry.INSTANCE.find( tileInfo.tileSetName() );
+        Block sampleBlock = geoTileSet != null ? geoTileSet.getSampleBlock() : null;
+        if( sampleBlock == null )
+            return EnumActionResult.PASS;
+
+        // The sample and fragment are equivalent in "units" of material but that does not make the fragment
+        // the item block of the sample. Fragments may not exist and the sample already has its own item block.
+        return ItemHelper.onItemUseWithStatisticsFix(
+            player,
+            hand,
+            () -> ItemHelper.placeItemAsBlock( this , sampleBlock , player , worldIn , pos , hand , facing , hitX , hitY , hitZ ) );
     }
 
     // Statics

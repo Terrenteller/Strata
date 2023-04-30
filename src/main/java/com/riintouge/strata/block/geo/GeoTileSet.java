@@ -1,7 +1,10 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.*;
+import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.block.ProtoBlockTextureMap;
+import com.riintouge.strata.block.RecipeReplicator;
+import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -22,16 +25,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.riintouge.strata.block.geo.TileType.*;
 
-public class GeoTileSet implements IForgeRegistrable
+public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
 {
+    protected TileType primaryTileType;
     protected IGeoTileInfo[] tileInfos;
     protected Block[] blocks;
     protected ItemBlock[] itemBlocks;
-    protected GeoItemFragment[] fragmentItems;
+    protected GeoItemFragment fragmentItem;
+    protected Block sampleBlock;
+    protected ItemBlock sampleItemBlock;
 
     public GeoTileSet()
     {
@@ -39,11 +49,18 @@ public class GeoTileSet implements IForgeRegistrable
         tileInfos = new IGeoTileInfo[ numberOfTileTypes ];
         blocks = new Block[ numberOfTileTypes ];
         itemBlocks = new ItemBlock[ numberOfTileTypes ];
-        fragmentItems = new GeoItemFragment[ numberOfTileTypes ];
     }
 
     public void addTile( IGeoTileInfo tileInfo )
     {
+        if( tileInfo.type().isPrimary )
+        {
+            if( primaryTileType == null )
+                primaryTileType = tileInfo.type();
+            else
+                throw new IllegalArgumentException( "GeoTileSet cannot support multiple primary tile types!" );
+        }
+
         tileInfos[ tileInfo.type().ordinal() ] = tileInfo;
     }
 
@@ -58,21 +75,75 @@ public class GeoTileSet implements IForgeRegistrable
         return types;
     }
 
-    public IGeoTileInfo find( TileType tileType )
+    protected void createEquivalentItemConversionRecipe( ResourceLocation registryName , Item input , ItemStack output )
     {
-        return tileInfos[ tileType.ordinal() ];
-    }
-
-    protected void createEquivalentItemConversionRecipe( ResourceLocation registryName , Item item , ItemStack equivalentItem )
-    {
-        if( equivalentItem != null )
+        if( output != null )
         {
             GameRegistry.addShapelessRecipe(
                 new ResourceLocation( registryName.toString() + "_equivalent" ),
                 null,
-                equivalentItem,
-                Ingredient.fromItem( item ) );
+                output,
+                Ingredient.fromItem( input ) );
         }
+    }
+
+    // IGeoTileSet overrides
+
+    @Nullable
+    public TileType getPrimaryType()
+    {
+        return primaryTileType;
+    }
+
+    @Nullable
+    public IGeoTileInfo getInfo( @Nullable TileType tileType )
+    {
+        if( tileType != null )
+            return tileInfos[ tileType.ordinal() ];
+        else if( primaryTileType != null )
+            return tileInfos[ primaryTileType.ordinal() ];
+
+        return null;
+    }
+
+    @Nullable
+    public Block getBlock( @Nullable TileType tileType )
+    {
+        if( tileType != null )
+            return blocks[ tileType.ordinal() ];
+        else if( primaryTileType != null )
+            return blocks[ primaryTileType.ordinal() ];
+
+        return null;
+    }
+
+    @Nullable
+    public ItemBlock getItemBlock( @Nullable TileType tileType )
+    {
+        if( tileType != null )
+            return itemBlocks[ tileType.ordinal() ];
+        else if( primaryTileType != null )
+            return itemBlocks[ primaryTileType.ordinal() ];
+
+        return null;
+    }
+
+    @Nullable
+    public Item getFragmentItem()
+    {
+        return fragmentItem;
+    }
+
+    @Nullable
+    public Block getSampleBlock()
+    {
+        return sampleBlock;
+    }
+
+    @Nullable
+    public ItemBlock getSampleItemBlock()
+    {
+        return sampleItemBlock;
     }
 
     // IForgeRegistrable overrides
@@ -127,6 +198,12 @@ public class GeoTileSet implements IForgeRegistrable
 
             blocks[ typeIndex ] = block;
             blockRegistry.register( block );
+
+            if( tileType.isPrimary )
+            {
+                sampleBlock = new GeoSampleBlock( tileInfo , block.getStateFromMeta( tileInfo.meta() ) );
+                blockRegistry.register( sampleBlock );
+            }
         }
     }
 
@@ -140,14 +217,19 @@ public class GeoTileSet implements IForgeRegistrable
             if( tileInfo == null )
                 continue;
 
-            if( tileInfo.type().isPrimary && tileInfo.hasFragment() )
+            if( tileType.isPrimary && sampleBlock != null )
             {
-                GeoItemFragment fragment = new GeoItemFragment( tileInfo );
-                fragmentItems[ typeIndex ] = fragment;
-                itemRegistry.register( fragment );
+                sampleItemBlock = new GeoItemBlock( tileInfo , sampleBlock );
+                itemRegistry.register( sampleItemBlock );
+            }
+
+            if( tileType.isPrimary && tileInfo.hasFragment() )
+            {
+                fragmentItem = new GeoItemFragment( tileInfo );
+                itemRegistry.register( fragmentItem );
 
                 if( tileInfo.fragmentItemOreDictionaryName() != null )
-                    OreDictionary.registerOre( tileInfo.fragmentItemOreDictionaryName() , fragment );
+                    OreDictionary.registerOre( tileInfo.fragmentItemOreDictionaryName() , fragmentItem );
             }
 
             ItemBlock itemBlock;
@@ -190,9 +272,8 @@ public class GeoTileSet implements IForgeRegistrable
 
             ResourceLocation registryName = tileInfo.registryName();
             ItemBlock parentItemBlock = tileType.parentType != null ? itemBlocks[ tileType.parentType.ordinal() ] : null;
-            GeoItemFragment fragmentItem = fragmentItems[ tileType.ordinal() ];
 
-            if( fragmentItem != null )
+            if( tileType.isPrimary && fragmentItem != null )
             {
                 if( !FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.NOT_RECONSTITUTABLE ) )
                 {
@@ -412,6 +493,25 @@ public class GeoTileSet implements IForgeRegistrable
                 }
             }
 
+            if( tileType.isPrimary && sampleItemBlock != null )
+            {
+                if( fragmentItem != null )
+                {
+                    createEquivalentItemConversionRecipe(
+                        sampleItemBlock.getRegistryName(),
+                        sampleItemBlock,
+                        new ItemStack( fragmentItem ) );
+                }
+
+                GameRegistry.addShapedRecipe(
+                    Strata.resource( sampleItemBlock.getRegistryName().getResourcePath() + "_block" ),
+                    null,
+                    new ItemStack( itemBlock ),
+                    "XX",
+                    "XX",
+                    'X' , sampleItemBlock );
+            }
+
             if( tileInfo.type().isPrimary )
             {
                 ItemStack furnaceResult = tileInfo.furnaceResult();
@@ -438,14 +538,21 @@ public class GeoTileSet implements IForgeRegistrable
             if( tileInfo == null )
                 continue;
 
-            GeoItemFragment fragment = fragmentItems[ typeIndex ];
-            if( fragment != null )
+            if( tileType.isPrimary && sampleItemBlock != null )
+            {
+                ModelLoader.setCustomModelResourceLocation(
+                    sampleItemBlock,
+                    tileInfo.meta(),
+                    new ModelResourceLocation( sampleItemBlock.getRegistryName() , "inventory" ) );
+            }
+
+            if( tileType.isPrimary && fragmentItem != null )
             {
                 // The null variant doesn't do anything because items ignore it
                 ModelLoader.setCustomModelResourceLocation(
-                    fragment,
+                    fragmentItem,
                     tileInfo.meta(),
-                    new ModelResourceLocation( fragment.getRegistryName() , null ) );
+                    new ModelResourceLocation( fragmentItem.getRegistryName() , null ) );
             }
 
             ItemBlock itemBlock = itemBlocks[ typeIndex ];

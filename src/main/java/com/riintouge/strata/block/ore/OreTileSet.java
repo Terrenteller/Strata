@@ -32,7 +32,7 @@ public class OreTileSet implements IOreTileSet
             block = new OreBlock( oreInfo );
 
         itemBlock = new OreItemBlock( oreInfo , block );
-        sampleBlock = new OreSampleBlock( oreInfo );
+        sampleBlock = new OreSampleBlock( oreInfo , block.getStateFromMeta( 0 ) );
         sampleItemBlock = new OreItemBlock( oreInfo , sampleBlock );
 
         // Ores with proxies should never drop this item (rather the drops of the proxy ore), but it should
