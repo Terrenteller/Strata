@@ -10,7 +10,6 @@ import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -61,33 +60,6 @@ public final class GeoBlockModelLoader implements ICustomModelLoader
     // Statics
 
     @Nullable
-    private static TileType findTileType( String tileSetName , String type )
-    {
-        if( !GeoTileSetRegistry.INSTANCE.contains( tileSetName ) )
-            return null;
-
-        if( type != null && !type.isEmpty() )
-        {
-            try
-            {
-                TileType tileType = Enum.valueOf( TileType.class , type.toUpperCase() );
-                // Tertiary types cannot be validated to exist in the registry
-                return tileType.parentType != null
-                    ? tileType
-                    : GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , tileType ) != null ? tileType : null;
-            }
-            catch( IllegalArgumentException ex )
-            {
-                return null;
-            }
-        }
-
-        // No type, so must be a primary. Let GeoTileSetRegistry figure out which one.
-        IGeoTileInfo tileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , type );
-        return tileInfo != null ? tileInfo.type() : null;
-    }
-
-    @Nullable
     private static Pair< String , TileType > getNameAndTileTypeFromLocation( ResourceLocation modelLocation )
     {
         Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
@@ -95,17 +67,19 @@ public final class GeoBlockModelLoader implements ICustomModelLoader
             return null;
 
         String tileTypeName = matcher.group( ResourcePatternTileTypeGroup );
-        if( tileTypeName != null && EnumUtils.isValidEnum( TileType.class , tileTypeName.toUpperCase() ) )
+        TileType tileType = TileType.tryValueOf( tileTypeName );
+        if( tileType != null )
         {
             String tileSetName = matcher.group( ResourcePatternTileSetNameGroup );
-            TileType tileType = findTileType( tileSetName , tileTypeName );
-            if( tileType != null )
-                return new ImmutablePair<>( tileSetName , tileType );
+            IGeoTileInfo geoTileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , tileType );
+            if( geoTileInfo != null )
+                return new ImmutablePair<>( tileSetName , geoTileInfo.type() );
         }
 
-        // The resource name for a primary type may end with a primary type enum value and fail the above search
+        // The resource name for a primary type may end with a primary type enum value and fail the above search.
+        // For example, quartz_sand#... is not quartz and SAND, it's quartz_sand and SAND.
         String resourcePath = matcher.group( ResourcePatternResourceLocationPathGroup );
-        TileType tileType = findTileType( resourcePath , null );
-        return new ImmutablePair<>( resourcePath , tileType );
+        IGeoTileInfo geoTileInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( resourcePath , null );
+        return new ImmutablePair<>( resourcePath , geoTileInfo != null ? geoTileInfo.type() : null );
     }
 }

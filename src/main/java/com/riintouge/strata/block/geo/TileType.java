@@ -112,13 +112,13 @@ public enum TileType
     // Statics
 
     @Nullable
-    public static TileType tryValueOf( String value )
+    public static TileType tryValueOf( @Nullable String value )
     {
         try
         {
-            return TileType.valueOf( value );
+            return value != null && !value.isEmpty() ? TileType.valueOf( value.toUpperCase() ) : null;
         }
-        catch( IllegalArgumentException e )
+        catch( Exception e )
         {
             return null;
         }

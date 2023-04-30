@@ -182,7 +182,19 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
             {
                 stream.writeUTF( tileSetName );
 
-                List< IGeoTileInfo > tileInfos = GeoTileSetRegistry.INSTANCE.findTileInfos( tileSetName );
+                List< IGeoTileInfo > tileInfos = new ArrayList<>();
+                IGeoTileSet geoTileSet = GeoTileSetRegistry.INSTANCE.find( tileSetName );
+
+                if( geoTileSet != null )
+                {
+                    for( TileType tileType : TileType.values() )
+                    {
+                        IGeoTileInfo geoTileInfo = geoTileSet.getInfo( tileType );
+                        if( geoTileInfo != null )
+                            tileInfos.add( geoTileInfo );
+                    }
+                }
+
                 stream.writeInt( tileInfos.size() );
 
                 for( IGeoTileInfo tileInfo : tileInfos )

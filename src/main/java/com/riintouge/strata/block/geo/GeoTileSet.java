@@ -26,9 +26,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static com.riintouge.strata.block.geo.TileType.*;
@@ -62,17 +60,6 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
         }
 
         tileInfos[ tileInfo.type().ordinal() ] = tileInfo;
-    }
-
-    public List< IGeoTileInfo > tileInfos()
-    {
-        List< IGeoTileInfo > types = new ArrayList<>();
-
-        for( IGeoTileInfo tileInfo : tileInfos )
-            if( tileInfo != null )
-                types.add( tileInfo );
-
-        return types;
     }
 
     protected void createEquivalentItemConversionRecipe( ResourceLocation registryName , Item input , ItemStack output )

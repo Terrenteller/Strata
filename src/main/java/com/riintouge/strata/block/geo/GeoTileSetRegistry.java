@@ -17,10 +17,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GeoTileSetRegistry
 {
@@ -60,43 +57,6 @@ public class GeoTileSetRegistry
     {
         GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
         return tileSet != null ? tileSet.getInfo( tileType ) : null;
-    }
-
-    @Nullable
-    public List< IGeoTileInfo > findTileInfos( String tileSetName )
-    {
-        GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
-        return tileSet != null ? tileSet.tileInfos() : null;
-    }
-
-    @Nullable
-    public IGeoTileInfo findTileInfo( String tileSetName , @Nullable String type )
-    {
-        if( type != null && !type.isEmpty() )
-        {
-            try
-            {
-                return INSTANCE.findTileInfo( tileSetName , Enum.valueOf( TileType.class , type.toUpperCase() ) );
-            }
-            catch( IllegalArgumentException ex )
-            {
-                return null;
-            }
-        }
-
-        // We can't tell primary types apart here
-        GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
-        for( TileType tileType : TileType.values() )
-        {
-            if( tileType.isPrimary )
-            {
-                IGeoTileInfo tileInfo = tileSet.getInfo( tileType );
-                if( tileInfo != null )
-                    return tileInfo;
-            }
-        }
-
-        return null;
     }
 
     // Statics
