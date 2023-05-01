@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import net.minecraft.block.BlockPressurePlate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -34,7 +34,7 @@ public class GeoBlockPressurePlate extends BlockPressurePlate
         ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        setCreativeTab( Strata.MISC_BLOCK_TAB );
+        setCreativeTab( StrataCreativeTabs.MISC_BLOCK_TAB );
 
         // Vanilla sets a precedent with gold pressure plates.
         // Gold blocks require an iron pick or higher to mine but any level pick will break the plate.

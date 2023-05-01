@@ -2,6 +2,7 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SampleBlock;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.sound.SoundEventTuple;
@@ -41,7 +42,7 @@ public class OreSampleBlock extends SampleBlock
             setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
 
         setSoundType( SoundType.GROUND );
-        setCreativeTab( Strata.ORE_SAMPLE_TAB );
+        setCreativeTab( StrataCreativeTabs.ORE_SAMPLE_TAB );
     }
 
     // Block overrides

@@ -6,6 +6,7 @@ import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.*;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.network.NetworkManager;
@@ -89,7 +90,7 @@ public class OreBlock extends OreBaseBlock
         setResistance( oreInfo.explosionResistance() );
         setTickRandomly( HostRegistry.ANY_HOST_TICKS );
 
-        setCreativeTab( Strata.ORE_BLOCK_TAB );
+        setCreativeTab( StrataCreativeTabs.ORE_BLOCK_TAB );
     }
 
     @SideOnly( Side.CLIENT )

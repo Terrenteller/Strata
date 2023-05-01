@@ -1,10 +1,10 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.util.FlagUtil;
@@ -72,9 +72,9 @@ public class GeoBlock extends BlockFalling
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
         if( tileInfo.type().isPrimary || tileInfo.type() == TileType.COBBLE )
-            setCreativeTab( Strata.BLOCK_TAB );
+            setCreativeTab( StrataCreativeTabs.BLOCK_TAB );
         else
-            setCreativeTab( Strata.BUILDING_BLOCK_TAB );
+            setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
 
         setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
         setSoundType( tileInfo.soundType() );

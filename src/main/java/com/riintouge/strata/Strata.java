@@ -1,6 +1,5 @@
 package com.riintouge.strata;
 
-import com.riintouge.strata.gui.*;
 import com.riintouge.strata.proxy.CommonProxy;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
@@ -22,15 +21,6 @@ public class Strata
     // These two are distinct in GuiModList
     public static final String displayVersion = "DISPLAY_VERSION";
     public static final String internalVersion = "INTERNAL_VERSION"; // Internal according to FMLModContainer
-
-    public static final StrataBlocksTab BLOCK_TAB = new StrataBlocksTab();
-    public static final StrataBuildingBlocksTab BUILDING_BLOCK_TAB = new StrataBuildingBlocksTab();
-    public static final StrataMiscObjectsTab MISC_BLOCK_TAB = new StrataMiscObjectsTab();
-    public static final StrataBlockFragmentsTab BLOCK_FRAGMENT_TAB = new StrataBlockFragmentsTab();
-    public static final StrataBlockSamplesTab BLOCK_SAMPLE_TAB = new StrataBlockSamplesTab();
-    public static final StrataOreBlocksTab ORE_BLOCK_TAB = new StrataOreBlocksTab();
-    public static final StrataOreItemsTab ORE_ITEM_TAB = new StrataOreItemsTab();
-    public static final StrataOreSamplesTab ORE_SAMPLE_TAB = new StrataOreSamplesTab();
 
     public static Logger LOGGER = LogManager.getLogger( modid );
 
@@ -58,6 +48,8 @@ public class Strata
     {
         proxy.postInit( event );
     }
+
+    // Statics
 
     public static ResourceLocation resource( String resourcePath )
     {

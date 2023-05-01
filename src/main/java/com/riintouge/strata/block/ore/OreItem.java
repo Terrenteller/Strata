@@ -2,6 +2,7 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.item.ItemHelper;
 import net.minecraft.client.util.ITooltipFlag;
@@ -32,7 +33,7 @@ public class OreItem extends Item
         setRegistryName( resource );
         setUnlocalizedName( resource.toString() );
 
-        setCreativeTab( Strata.ORE_ITEM_TAB );
+        setCreativeTab( StrataCreativeTabs.ORE_ITEM_TAB );
     }
 
     // Item overrides

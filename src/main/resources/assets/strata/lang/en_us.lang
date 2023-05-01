@@ -24,6 +24,9 @@ strata.config.restrictSampleXYVariationDesc=Prevents samples from appearing far 
 #strata.config.requeryStatemapper=Re-query Statemapper
 #strata.config.requeryStatemapperDesc=Re-query a block's StateMapperBase on a BlockModelShapes cache miss. This also allows ore blocks to be pushed (but not pulled) by pistons.
 
+strata.config.prioritizeCreativeTabs=Prioritize Creative Tabs
+strata.config.prioritizeCreativeTabsDesc=Put Strata's creative mode item tabs before all other mod tabs on game start.
+
 strata.config.serverCategory=Server Settings
 strata.config.serverCategory.tooltip=(which affect gameplay and connectivity)
 
@@ -37,7 +40,7 @@ strata.config.dropNonStandardFragmentsDesc=Causes blocks other than clay to drop
 
 itemGroup.strataBlocksTab=Strata Blocks
 itemGroup.strataBuildingBlocksTab=Strata Building Blocks
-itemGroup.strataMiscObjectsTab=Strata Misc. Objects
+itemGroup.strataMiscBlocksTab=Strata Misc. Blocks
 itemGroup.strataBlockFragmentsTab=Strata Block Fragments
 itemGroup.strataBlockSamplesTab=Strata Block Samples
 itemGroup.strataOreBlocksTab=Strata Ore Blocks

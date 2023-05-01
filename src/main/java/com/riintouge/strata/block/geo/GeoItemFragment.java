@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.item.ItemHelper;
 import net.minecraft.block.Block;
@@ -32,7 +32,7 @@ public class GeoItemFragment extends Item
         setRegistryName( resource );
         setUnlocalizedName( resource.toString() );
 
-        setCreativeTab( Strata.BLOCK_FRAGMENT_TAB );
+        setCreativeTab( StrataCreativeTabs.BLOCK_FRAGMENT_TAB );
     }
 
     // Item overrides

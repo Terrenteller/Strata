@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import net.minecraft.block.BlockLever;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -32,7 +32,7 @@ public class GeoBlockLever extends BlockLever
         ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        setCreativeTab( Strata.MISC_BLOCK_TAB );
+        setCreativeTab( StrataCreativeTabs.MISC_BLOCK_TAB );
 
         setHarvestLevel( tileInfo.harvestTool() , 0 );
         setSoundType( tileInfo.soundType() );

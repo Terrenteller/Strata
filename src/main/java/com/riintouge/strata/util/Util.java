@@ -90,4 +90,9 @@ public class Util
     {
         return ( random.nextFloat() * 2.0f ) - 1.0f;
     }
+
+    public static boolean isNullOrEmpty( String value )
+    {
+        return value == null || value.isEmpty();
+    }
 }

@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.MapColor;
@@ -65,7 +65,7 @@ public class GeoBlockSlab extends BlockSlab
         ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        setCreativeTab( Strata.BUILDING_BLOCK_TAB );
+        setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
 
         IBlockState blockState = this.blockState.getBaseState();
         if( !isDouble() )

@@ -1,8 +1,8 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.ParticleHelper;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
@@ -54,7 +54,7 @@ public class GeoBlockWall extends BlockWall
         ResourceLocation registryName = tileInfo.registryName();
         setRegistryName( registryName );
         setUnlocalizedName( registryName.toString() );
-        setCreativeTab( Strata.BUILDING_BLOCK_TAB );
+        setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
 
         setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
         setSoundType( tileInfo.soundType() );

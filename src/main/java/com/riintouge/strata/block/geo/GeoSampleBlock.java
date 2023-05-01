@@ -3,6 +3,7 @@ package com.riintouge.strata.block.geo;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SampleBlock;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -36,7 +37,7 @@ public class GeoSampleBlock extends SampleBlock
         setUnlocalizedName( Strata.modid + ":" + tileInfo.tileSetName() );
 
         setSoundType( tileInfo.soundType() );
-        setCreativeTab( Strata.BLOCK_SAMPLE_TAB );
+        setCreativeTab( StrataCreativeTabs.BLOCK_SAMPLE_TAB );
     }
 
     // Block overrides
