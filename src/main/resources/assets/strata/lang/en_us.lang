@@ -15,11 +15,11 @@ strata.config.useModernWallStyleDesc=Comes with minor visual discrepancies. Vani
 strata.config.usePrecomputedOreParticles=Pre-compute Ore Particles
 strata.config.usePrecomputedOreParticlesDesc=Improves ore particles at the cost of load time and memory consumption. Requires a restart only if Minecraft was not started with this enabled.
 
-strata.config.playBlockHitSoundWhenStruckByProjectile=Projectiles Play Block Hit Sound
-strata.config.playBlockHitSoundWhenStruckByProjectileDesc=Play the hit sound of the block when struck by an arrow or throwable object.
+strata.config.additionalBlockSounds=Additional Block Sounds
+strata.config.additionalBlockSoundsDesc=Play block sounds not normally heard upon a hard landing or when struck by an arrow or throwable object.
 
-strata.config.restrictSampleXYVariation=Restrict Sample XY Variation
-strata.config.restrictSampleXYVariationDesc=Prevents samples from appearing far from the center of the block to not float awkwardly off ledges. Changes will take effect as chunks are re-built.
+strata.config.restrictSampleOffset=Restrict Sample Offset
+strata.config.restrictSampleOffsetDesc=Prevents samples from appearing far from the center of the block to not float awkwardly off ledges. Changes will take effect as chunks are re-built.
 
 #strata.config.requeryStatemapper=Re-query Statemapper
 #strata.config.requeryStatemapperDesc=Re-query a block's StateMapperBase on a BlockModelShapes cache miss. This also allows ore blocks to be pushed (but not pulled) by pistons.

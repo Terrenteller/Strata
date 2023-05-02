@@ -13,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -188,5 +189,13 @@ public class GeoBlockSlab extends BlockSlab
         return isDouble()
             ? blockState
             : blockState.withProperty( HALF , FlagUtil.check( meta , TOP_META_BIT ) ? BlockSlab.EnumBlockHalf.TOP : BlockSlab.EnumBlockHalf.BOTTOM );
+    }
+
+    @Override
+    public void onFallenUpon( World worldIn , BlockPos pos , Entity entityIn , float fallDistance )
+    {
+        GeoBlock.onFallenUponCommon( this , worldIn , pos , entityIn , fallDistance );
+
+        super.onFallenUpon( worldIn , pos , entityIn , fallDistance );
     }
 }

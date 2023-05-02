@@ -11,6 +11,7 @@ import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -407,6 +408,14 @@ public class GeoBlock extends BlockFalling
     }
 
     @Override
+    public void onFallenUpon( World worldIn , BlockPos pos , Entity entityIn , float fallDistance )
+    {
+        onFallenUponCommon( this , worldIn , pos , entityIn , fallDistance );
+
+        super.onFallenUpon( worldIn , pos , entityIn , fallDistance );
+    }
+
+    @Override
     public int quantityDropped( Random random )
     {
         // quantityDroppedWithBonus() normally calls us but we invert that to de-duplicate logic
@@ -530,5 +539,22 @@ public class GeoBlock extends BlockFalling
             : meltsAt != null && brightestNeighbour >= meltsAt
                 ? HarvestReason.MELT
                 : HarvestReason.UNDEFINED;
+    }
+
+    public static void onFallenUponCommon( Block block , World worldIn , BlockPos pos , Entity entityIn , float fallDistance )
+    {
+        if( StrataConfig.additionalBlockSounds && entityIn instanceof EntityLivingBase && fallDistance > 3.0 )
+        {
+            SoundType soundType = block.getSoundType( worldIn.getBlockState( pos ) , worldIn , pos , entityIn );
+            worldIn.playSound(
+                entityIn.posX,
+                entityIn.posY,
+                entityIn.posZ,
+                soundType.getFallSound(),
+                SoundCategory.BLOCKS,
+                ( soundType.getVolume() + 1.0f ) / 2.0f,
+                soundType.getPitch() * 0.8f,
+                false );
+        }
     }
 }

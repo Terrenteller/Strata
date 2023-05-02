@@ -176,7 +176,7 @@ public abstract class SampleBlock extends BlockFalling
     @Override
     public Vec3d getOffset( IBlockState state , IBlockAccess worldIn , BlockPos pos )
     {
-        if( !StrataConfig.restrictSampleXYVariation )
+        if( !StrataConfig.restrictSampleOffset )
             return super.getOffset( state , worldIn , pos );
 
         long i = MathHelper.getCoordinateRandom( pos.getX() , 0 , pos.getZ() );
@@ -300,7 +300,7 @@ public abstract class SampleBlock extends BlockFalling
         if( entityIn instanceof EntityLivingBase && fallDistance > 3.0 )
         {
             boolean isPlayer = entityIn instanceof EntityPlayer;
-            if( isPlayer && ( (EntityPlayer)entityIn ).isCreative() )
+            if( StrataConfig.additionalBlockSounds && isPlayer && ( (EntityPlayer)entityIn ).isCreative() )
             {
                 SoundType soundType = getSoundType( worldIn.getBlockState( pos ) , worldIn , pos , entityIn );
                 worldIn.playSound(
@@ -312,11 +312,8 @@ public abstract class SampleBlock extends BlockFalling
                     ( soundType.getVolume() + 1.0f ) / 2.0f,
                     soundType.getPitch() * 0.8f,
                     false );
-
-                return;
             }
-
-            if( !worldIn.isRemote && ( isPlayer || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent( worldIn , entityIn ) ) )
+            else if( !worldIn.isRemote && ( isPlayer || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent( worldIn , entityIn ) ) )
                 worldIn.destroyBlock( pos , true );
         }
 

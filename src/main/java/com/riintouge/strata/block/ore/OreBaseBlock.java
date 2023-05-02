@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.block.geo.GeoBlock;
 import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
@@ -123,5 +124,13 @@ public abstract class OreBaseBlock extends BlockFalling
 
         // Strata localization doesn't make a distinction between blocks and items
         return super.getUnlocalizedName().replace( "tile." , "" );
+    }
+
+    @Override
+    public void onFallenUpon( World worldIn , BlockPos pos , Entity entityIn , float fallDistance )
+    {
+        GeoBlock.onFallenUponCommon( this , worldIn , pos , entityIn , fallDistance );
+
+        super.onFallenUpon( worldIn , pos , entityIn , fallDistance );
     }
 }

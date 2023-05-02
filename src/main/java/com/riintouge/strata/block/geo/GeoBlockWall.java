@@ -17,6 +17,7 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -312,5 +313,13 @@ public class GeoBlockWall extends BlockWall
     public void getSubBlocks( CreativeTabs itemIn , NonNullList< ItemStack > items )
     {
         items.add( new ItemStack( this ) );
+    }
+
+    @Override
+    public void onFallenUpon( World worldIn , BlockPos pos , Entity entityIn , float fallDistance )
+    {
+        GeoBlock.onFallenUponCommon( this , worldIn , pos , entityIn , fallDistance );
+
+        super.onFallenUpon( worldIn , pos , entityIn , fallDistance );
     }
 }

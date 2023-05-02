@@ -257,12 +257,12 @@ public class EventHandlers
     public static void projectileImpactEvent( ProjectileImpactEvent event )
     {
         World world = event.getEntity().world;
-        if( world == null )
+        if( world == null
+            || ( world.isRemote && !StrataConfig.additionalBlockSounds )
+            || event.getRayTraceResult().typeOfHit != RayTraceResult.Type.BLOCK )
+        {
             return;
-        else if( world.isRemote && !StrataConfig.playBlockHitSoundWhenStruckByProjectile )
-            return;
-        else if( event.getRayTraceResult().typeOfHit != RayTraceResult.Type.BLOCK )
-            return;
+        }
 
         float volumeDivisor = 1.0f;
         if( event instanceof ProjectileImpactEvent.Throwable )
