@@ -14,19 +14,16 @@ public enum EnumGeoOrientation implements IStringSerializable
     // Placed by natural means. Does not have an inherent orientation.
     NATURAL ( 0 , 0 , "natural" , 0 ),
 
-    // Placed against the ground. Faces up and in the direction the placer is facing.
     UP_NORTH ( 4 , 7 , "up_north" , 5 ),
     UP_EAST  ( 5 , 4 , "up_east"  , 6 ),
     UP_SOUTH ( 6 , 5 , "up_south" , 7 ),
     UP_WEST  ( 7 , 6 , "up_west"  , 4 ),
 
-    // Placed against the side of a block. Faces away from the side.
     SIDE_NORTH (  8 , 11 , "side_north" ,  9 ),
     SIDE_EAST  (  9 ,  8 , "side_east"  , 10 ),
     SIDE_SOUTH ( 10 ,  9 , "side_south" , 11 ),
     SIDE_WEST  ( 11 , 10 , "side_west"  ,  8 ),
 
-    // Placed against the ceiling. Faces down and in the direction the placer is facing.
     DOWN_NORTH ( 12 , 15 , "down_north" , 13 ),
     DOWN_EAST  ( 13 , 12 , "down_east"  , 14 ),
     DOWN_SOUTH ( 14 , 13 , "down_south" , 15 ),
@@ -215,18 +212,6 @@ public enum EnumGeoOrientation implements IStringSerializable
 
     public static EnumGeoOrientation placedAgainst( @Nonnull EnumFacing blockSide , @Nullable EnumFacing placerHorizontalFacing )
     {
-        switch( blockSide )
-        {
-            case NORTH:
-                return SIDE_NORTH;
-            case EAST:
-                return SIDE_EAST;
-            case SOUTH:
-                return SIDE_SOUTH;
-            case WEST:
-                return SIDE_WEST;
-        }
-
         EnumFacing adjustedPlacerHorizontalFacing = placerHorizontalFacing;
         if( placerHorizontalFacing == null
             || placerHorizontalFacing.getHorizontalIndex() < 0
@@ -242,13 +227,27 @@ public enum EnumGeoOrientation implements IStringSerializable
             switch( adjustedPlacerHorizontalFacing )
             {
                 case NORTH:
-                    return UP_NORTH;
-                case SOUTH:
                     return UP_SOUTH;
+                case SOUTH:
+                    return UP_NORTH;
                 case EAST:
-                    return UP_EAST;
-                case WEST:
                     return UP_WEST;
+                case WEST:
+                    return UP_EAST;
+            }
+        }
+        else if( blockSide == EnumFacing.DOWN )
+        {
+            switch( adjustedPlacerHorizontalFacing )
+            {
+                case NORTH:
+                    return DOWN_SOUTH;
+                case SOUTH:
+                    return DOWN_NORTH;
+                case EAST:
+                    return DOWN_WEST;
+                case WEST:
+                    return DOWN_EAST;
             }
         }
         else
@@ -256,13 +255,13 @@ public enum EnumGeoOrientation implements IStringSerializable
             switch( adjustedPlacerHorizontalFacing )
             {
                 case NORTH:
-                    return DOWN_NORTH;
-                case SOUTH:
-                    return DOWN_SOUTH;
+                    return SIDE_SOUTH;
                 case EAST:
-                    return DOWN_EAST;
+                    return SIDE_WEST;
+                case SOUTH:
+                    return SIDE_NORTH;
                 case WEST:
-                    return DOWN_WEST;
+                    return SIDE_EAST;
             }
         }
 
