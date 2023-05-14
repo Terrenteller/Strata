@@ -30,18 +30,17 @@ public class GeoBlockStairs extends BlockStairs
     {
         super( blockState );
         this.tileInfo = tileInfo;
-        // This is what Forge does for BlockStairs in Block.registerBlocks()
         this.useNeighborBrightness = true;
 
         ResourceLocation registryName = tileInfo.registryName();
-        setRegistryName( registryName );
-        setUnlocalizedName( registryName.toString() );
         setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
-
-        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
-        setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
+        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
+        setRegistryName( registryName );
         setResistance( tileInfo.explosionResistance() );
+        setSoundType( tileInfo.soundType() );
+        setUnlocalizedName( registryName.toString() );
+
         Float slipperiness = tileInfo.slipperiness();
         if( slipperiness != null )
             setDefaultSlipperiness( slipperiness );

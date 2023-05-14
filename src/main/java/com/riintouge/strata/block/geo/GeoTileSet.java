@@ -44,22 +44,22 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
     public GeoTileSet()
     {
         int numberOfTileTypes = TileType.values().length;
-        tileInfos = new IGeoTileInfo[ numberOfTileTypes ];
-        blocks = new Block[ numberOfTileTypes ];
-        itemBlocks = new ItemBlock[ numberOfTileTypes ];
+        this.tileInfos = new IGeoTileInfo[ numberOfTileTypes ];
+        this.blocks = new Block[ numberOfTileTypes ];
+        this.itemBlocks = new ItemBlock[ numberOfTileTypes ];
     }
 
     public void addTile( IGeoTileInfo tileInfo )
     {
-        if( tileInfo.type().isPrimary )
+        if( tileInfo.tileType().isPrimary )
         {
             if( primaryTileType == null )
-                primaryTileType = tileInfo.type();
+                primaryTileType = tileInfo.tileType();
             else
-                throw new IllegalArgumentException( "GeoTileSet cannot support multiple primary tile types!" );
+                throw new IllegalStateException( "GeoTileSet already has a primary tile type!" );
         }
 
-        tileInfos[ tileInfo.type().ordinal() ] = tileInfo;
+        tileInfos[ tileInfo.tileType().ordinal() ] = tileInfo;
     }
 
     protected void createEquivalentItemConversionRecipe( ResourceLocation registryName , Item input , ItemStack output )
@@ -90,7 +90,7 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
         else if( primaryTileType != null )
             return tileInfos[ primaryTileType.ordinal() ];
 
-        return null;
+        throw new IllegalStateException( "GeoTileSet does not have a primary IGeoTileInfo!" );
     }
 
     @Nullable
@@ -101,7 +101,7 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
         else if( primaryTileType != null )
             return blocks[ primaryTileType.ordinal() ];
 
-        return null;
+        throw new IllegalStateException( "GeoTileSet does not have a primary Block!" );
     }
 
     @Nullable
@@ -112,7 +112,7 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
         else if( primaryTileType != null )
             return itemBlocks[ primaryTileType.ordinal() ];
 
-        return null;
+        throw new IllegalStateException( "GeoTileSet does not have a primary ItemBlock!" );
     }
 
     @Nullable
@@ -281,7 +281,7 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
 
                 ItemStack fragmentFurnaceResult = tileInfo.fragmentFurnaceResult();
                 if( fragmentFurnaceResult != null && !fragmentFurnaceResult.isEmpty() )
-                    GameRegistry.addSmelting( fragmentItem , fragmentFurnaceResult , tileInfo.fragmentFurnaceExp() );
+                    GameRegistry.addSmelting( fragmentItem , fragmentFurnaceResult , tileInfo.fragmentFurnaceExperience() );
 
                 ItemStack equivalentFragmentItem = tileInfo.equivalentFragmentItemStack();
                 if( equivalentFragmentItem != null && !equivalentFragmentItem.isEmpty() )
@@ -499,11 +499,11 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
                     'X' , sampleItemBlock );
             }
 
-            if( tileInfo.type().isPrimary )
+            if( tileInfo.tileType().isPrimary )
             {
                 ItemStack furnaceResult = tileInfo.furnaceResult();
                 if( furnaceResult != null && !furnaceResult.isEmpty() )
-                    GameRegistry.addSmelting( itemBlock , furnaceResult , tileInfo.furnaceExp() );
+                    GameRegistry.addSmelting( itemBlock , furnaceResult , tileInfo.furnaceExperience() );
             }
 
             ItemStack equivalentItem = tileInfo.equivalentItemStack();

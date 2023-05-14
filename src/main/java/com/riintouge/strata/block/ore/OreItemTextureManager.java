@@ -18,13 +18,13 @@ public final class OreItemTextureManager
 {
     // Redundant with Strata's configs, but necessary to make resource packs match without updating them.
     // As a bonus, being verbose in user-visible tile data is documentation by example.
-    public static LayeredTextureLayer[] createReasonableDefault( ResourceLocation oreOverlay )
+    public static LayeredTextureLayer[] createReasonableDefault( ResourceLocation oreOverlayResource )
     {
         return new LayeredTextureLayer[]
         {
             new LayeredTextureLayer( new ResourceLocation( "strata:items/ore/mask" ) , BlendMode.ERASE ),
             new LayeredTextureLayer( new ResourceLocation( "strata:items/ore/border" ) ),
-            new LayeredTextureLayer( oreOverlay ),
+            new LayeredTextureLayer( oreOverlayResource ),
             new LayeredTextureLayer( new ResourceLocation( "strata:items/ore/base" ) )
         };
     }

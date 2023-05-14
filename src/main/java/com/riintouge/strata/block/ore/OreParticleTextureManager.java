@@ -58,11 +58,7 @@ public final class OreParticleTextureManager
     {
         String resourcePath = getGeneratedResourceLocation( orePath , hostDomain , hostPath , hostMeta , facing.getName2() ).getResourcePath();
         TextureAtlasSprite texture = generatedTextureMap.getOrDefault( resourcePath , null );
-        if( texture != null )
-            return texture;
-
-        Strata.LOGGER.warn( String.format( "No texture was generated for \"%s\"!" , resourcePath ) );
-        return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+        return texture != null ? texture : Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -75,7 +71,6 @@ public final class OreParticleTextureManager
 
         TextureMap textureMap = event.getMap();
         Map< ResourceLocation , IHostInfo[] > hostInfoMap = HostRegistry.INSTANCE.allHosts();
-
         if( hostInfoMap.size() == 0 )
             return;
 
@@ -87,7 +82,6 @@ public final class OreParticleTextureManager
             for( ResourceLocation host : hostInfoMap.keySet() )
             {
                 IHostInfo[] hostMetaInfos = hostInfoMap.get( host );
-
                 for( int hostMeta = 0 ; hostMeta < hostMetaInfos.length ; hostMeta++ )
                 {
                     IHostInfo hostInfo = hostMetaInfos[ hostMeta ];
@@ -96,7 +90,6 @@ public final class OreParticleTextureManager
 
                     ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
                     ProtoBlockTextureMap hostTextureMap = hostInfo.modelTextureMap();
-
                     if( oreTextureMap == null || hostTextureMap == null )
                         continue;
 
@@ -104,7 +97,6 @@ public final class OreParticleTextureManager
                     {
                         ResourceLocation oreTextureResource = oreTextureMap.getOrDefault( layer , null );
                         ResourceLocation hostTextureResource = hostTextureMap.getOrDefault( layer , null );
-
                         if( oreTextureResource == null && hostTextureResource == null )
                             continue;
 
@@ -114,14 +106,16 @@ public final class OreParticleTextureManager
                             host.getResourcePath(),
                             hostMeta,
                             layer.toString().toLowerCase() );
-                        Strata.LOGGER.trace( "Stitching " + facingResource.toString() );
-
-                        LayeredTextureLayer oreLayer = new LayeredTextureLayer( oreTextureResource != null ? oreTextureResource : oreTextureMap.get( layer ) );
-                        LayeredTextureLayer hostLayer = new LayeredTextureLayer( hostTextureResource != null ? hostTextureResource : hostTextureMap.get( layer ) );
-
+                        LayeredTextureLayer oreLayer = new LayeredTextureLayer( oreTextureResource != null
+                            ? oreTextureResource
+                            : oreTextureMap.get( layer ) );
+                        LayeredTextureLayer hostLayer = new LayeredTextureLayer( hostTextureResource != null
+                            ? hostTextureResource
+                            : hostTextureMap.get( layer ) );
                         TextureAtlasSprite generatedTexture = new LayeredTexture(
                             facingResource,
                             new LayeredTextureLayer[] { oreLayer , hostLayer } );
+
                         textureMap.setTextureEntry( generatedTexture );
 
                         for( EnumFacing facing : layer.applicableFacings )

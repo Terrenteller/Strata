@@ -1,11 +1,13 @@
 package com.riintouge.strata.block.ore;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.geo.GeoBlock;
 import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.StateUtil;
+import com.riintouge.strata.util.StringUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,12 +28,13 @@ import java.util.Map;
 
 public class OreBlockTileEntity extends TileEntity
 {
+    public static ResourceLocation REGISTRY_NAME = Strata.resource( "ore_tile_entity" );
     // HACK: OreBlockModel.getQuads() returns the host's quads in addition to the ore's quads. This is intentional.
     // When ForgeHooks.getDamageModel() collects quads to build a separate model on-the-fly
     // using the damage state texture for BlockRenderDispatcher.renderBlockDamage() to render,
     // we end up with two damage textures per facing (one for each model) which overlap additively or awkwardly.
     // The solution here is to only return the ore's quads from the upcoming call to OreBlockModel.getQuads().
-    public static ThreadLocal< Integer > DAMAGE_MODEL_FACE_COUNT_HACK = ThreadLocal.withInitial( () -> 0 );
+    private static final ThreadLocal< Integer > DAMAGE_MODEL_FACE_COUNT_HACK = ThreadLocal.withInitial( () -> 0 );
 
     private boolean updateOnLoad = false;
     private MetaResourceLocation hostRock = null;
@@ -215,8 +218,7 @@ public class OreBlockTileEntity extends TileEntity
     @Override
     public SPacketUpdateTileEntity getUpdatePacket()
     {
-        // According to NetHandlerPlayClient, 3 means TileEntityBeacon. Do we need this at all?
-        return new SPacketUpdateTileEntity( this.pos , 3 , this.getUpdateTag() );
+        return new SPacketUpdateTileEntity( this.pos , 0 , this.getUpdateTag() );
     }
 
     @Override
@@ -295,7 +297,7 @@ public class OreBlockTileEntity extends TileEntity
         try
         {
             String rawHostRock = compound.getString( UnlistedPropertyHostRock.PROPERTY.getName() );
-            if( rawHostRock.isEmpty() )
+            if( StringUtil.isNullOrEmpty( rawHostRock ) )
             {
                 updateOnLoad = true;
                 return;
@@ -326,5 +328,19 @@ public class OreBlockTileEntity extends TileEntity
         compound.setByte( UnlistedPropertyOreFlags.PROPERTY.getName() , flags );
 
         return compound;
+    }
+
+    // Statics
+
+    public static boolean getQuadsOnlyForDamageModel()
+    {
+        int damageModelFaceCountHackValue = DAMAGE_MODEL_FACE_COUNT_HACK.get();
+        if( damageModelFaceCountHackValue > 0 )
+        {
+            DAMAGE_MODEL_FACE_COUNT_HACK.set( damageModelFaceCountHackValue - 1 );
+            return true;
+        }
+
+        return false;
     }
 }

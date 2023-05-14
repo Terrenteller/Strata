@@ -1,12 +1,7 @@
 package com.riintouge.strata.block;
 
 import com.sun.istack.internal.NotNull;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -15,10 +10,10 @@ import java.util.regex.Pattern;
 
 public class MetaResourceLocation implements Comparable< MetaResourceLocation >
 {
-    private static final Pattern ResourceRegex = Pattern.compile( "^([^:]+):([^0-9][^:]*)(?::([0-9]+))?$" );
-    private static final int DomainGroup = 1;
-    private static final int PathGroup = 2;
-    private static final int MetaGroup = 3;
+    public static final Pattern RESOURCE_PATTERN = Pattern.compile( "^([^:]+):([^0-9][^:]*)(?::([0-9]+))?$" );
+    public static final int DOMAIN_GROUP = 1;
+    public static final int PATH_GROUP = 2;
+    public static final int META_GROUP = 3;
 
     public final ResourceLocation resourceLocation;
     public final int meta;
@@ -37,13 +32,13 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
 
     public MetaResourceLocation( String resourceString )
     {
-        Matcher matcher = ResourceRegex.matcher( resourceString.toLowerCase() );
+        Matcher matcher = RESOURCE_PATTERN.matcher( resourceString.toLowerCase() );
         if( !matcher.find() )
             throw new IllegalArgumentException( resourceString );
 
-        this.resourceLocation = new ResourceLocation( matcher.group( DomainGroup ) , matcher.group( PathGroup ) );
+        this.resourceLocation = new ResourceLocation( matcher.group( DOMAIN_GROUP ) , matcher.group( PATH_GROUP ) );
 
-        String metaString = matcher.group( MetaGroup );
+        String metaString = matcher.group( META_GROUP );
         if( metaString != null )
         {
             this.meta = Integer.parseInt( metaString );
@@ -63,20 +58,6 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     public boolean equals( @Nullable MetaResourceLocation other )
     {
         return other != null && compareTo( other ) == 0;
-    }
-
-    @Nullable
-    public ItemStack toItemStack()
-    {
-        Block resultBlock = Block.REGISTRY.getObject( resourceLocation );
-        if( resultBlock != Blocks.AIR )
-            return new ItemStack( resultBlock , 1 , meta );
-
-        Item resultItem = Item.REGISTRY.getObject( resourceLocation );
-        if( resultItem != null && resultItem != Items.AIR )
-            return new ItemStack( resultItem , 1 , meta );
-
-        return null;
     }
 
     // Comparable overrides

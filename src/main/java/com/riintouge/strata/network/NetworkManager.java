@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
+import com.riintouge.strata.util.DebugUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -23,8 +24,8 @@ import java.util.concurrent.CancellationException;
 public final class NetworkManager
 {
     public static final NetworkManager INSTANCE = new NetworkManager();
-    public final SimpleNetworkWrapper NetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( Strata.modid );
 
+    public final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel( Strata.MOD_ID );
     private int discriminator = 0;
     private HandshakeExecutor handshakeExecutor;
 
@@ -35,12 +36,15 @@ public final class NetworkManager
 
     public void init( Side side )
     {
-        NetworkWrapper.registerMessage( HostRequestMessage.Handler.class , HostRequestMessage.class , discriminator++ , Side.CLIENT );
-        NetworkWrapper.registerMessage( HostResponseMessage.Handler.INSTANCE , HostResponseMessage.class , discriminator++ , Side.SERVER );
-        NetworkWrapper.registerMessage( BlockPropertiesRequestMessage.Handler.class , BlockPropertiesRequestMessage.class , discriminator++ , Side.CLIENT );
-        NetworkWrapper.registerMessage( BlockPropertiesResponseMessage.Handler.INSTANCE , BlockPropertiesResponseMessage.class , discriminator++ , Side.SERVER );
-        NetworkWrapper.registerMessage( OreBlockLandingEffectMessage.Handler.class , OreBlockLandingEffectMessage.class , discriminator++ , Side.CLIENT );
-        NetworkWrapper.registerMessage( OreBlockRunningEffectMessage.Handler.class , OreBlockRunningEffectMessage.class , discriminator++ , Side.CLIENT );
+        if( discriminator > 0 )
+            throw new UnsupportedOperationException( "Cannot initialize NetworkManager twice!" );
+
+        networkWrapper.registerMessage( HostRequestMessage.Handler.class , HostRequestMessage.class , discriminator++ , Side.CLIENT );
+        networkWrapper.registerMessage( HostResponseMessage.Handler.INSTANCE , HostResponseMessage.class , discriminator++ , Side.SERVER );
+        networkWrapper.registerMessage( BlockPropertiesRequestMessage.Handler.class , BlockPropertiesRequestMessage.class , discriminator++ , Side.CLIENT );
+        networkWrapper.registerMessage( BlockPropertiesResponseMessage.Handler.INSTANCE , BlockPropertiesResponseMessage.class , discriminator++ , Side.SERVER );
+        networkWrapper.registerMessage( OreBlockLandingEffectMessage.Handler.class , OreBlockLandingEffectMessage.class , discriminator++ , Side.CLIENT );
+        networkWrapper.registerMessage( OreBlockRunningEffectMessage.Handler.class , OreBlockRunningEffectMessage.class , discriminator++ , Side.CLIENT );
 
         if( side == Side.SERVER )
         {
@@ -51,7 +55,7 @@ public final class NetworkManager
             // io.netty.channel.unix.Errors$NativeIoException: syscall:write(..) failed: Broken pipe
             //     at io.netty.channel.unix.FileDescriptor.writeAddress(..)(Unknown Source) ~[FileDescriptor.class:4.1.9.Final]
             // Netty 4.1.68.Final behaves similarly.
-            handshakeExecutor = new HandshakeExecutor( NetworkWrapper , 5000 , 3 , 3000 , 0 );
+            handshakeExecutor = new HandshakeExecutor( networkWrapper , 5000 , 3 , 3000 , 0 );
             handshakeExecutor.register( HostRequestMessage.class , HostResponseMessage.Handler.INSTANCE );
             handshakeExecutor.register( BlockPropertiesRequestMessage.class , BlockPropertiesResponseMessage.Handler.INSTANCE );
         }
@@ -100,21 +104,31 @@ public final class NetworkManager
                     case Disconnected: // The client kicked themselves
                         return;
                     case NoResponse:
-                        disconnectMessage = "strata.multiplayer.disconnect.noResponse";
+                        disconnectMessage = StrataConfig.enforceClientSynchronization
+                            ? "strata.multiplayer.disconnect.noResponse"
+                            : "strata.multiplayer.warning.noResponse";
                         break;
                     case Interrupted:
                     case Exception:
                     case Terminated:
                     case InternalError:
-                        disconnectMessage = "strata.multiplayer.disconnect.unexpectedHandshakeError";
+                        disconnectMessage = StrataConfig.enforceClientSynchronization
+                            ? "strata.multiplayer.disconnect.unexpectedHandshakeError"
+                            : "strata.multiplayer.warning.unexpectedHandshakeError";
                         break;
                 }
 
-                // Why does TextComponentTranslation not localize here?
                 if( !serverPlayer.hasDisconnected() )
-                    serverPlayer.connection.disconnect(
-                        new TextComponentString(
-                            net.minecraft.util.text.translation.I18n.translateToLocal( disconnectMessage ) ) );
+                {
+                    // Why does TextComponentTranslation not localize here? Is it because we're server-side?
+                    TextComponentString text = new TextComponentString(
+                        net.minecraft.util.text.translation.I18n.translateToLocal( disconnectMessage ) );
+
+                    if( StrataConfig.enforceClientSynchronization )
+                        serverPlayer.connection.disconnect( text );
+                    else
+                        serverPlayer.sendMessage( text );
+                }
             }
 
             @Override
@@ -126,7 +140,7 @@ public final class NetworkManager
                 }
                 else
                 {
-                    t.printStackTrace();
+                    Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( t , "Caught %s during client synchronization handshake!" ) );
                     onSuccess( HandshakeExecutor.HandshakeResult.InternalError );
                 }
             }

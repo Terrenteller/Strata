@@ -11,9 +11,10 @@ import java.util.Random;
 @SideOnly( Side.CLIENT )
 public final class AmbientSoundHelper
 {
-    private static final long MinimumMillisToNextThreshold = 3 * 1000;
-    private static final int MaximumAdditionalMillisToNextThreshold = 15 * 1000;
-    private static long NextSoundThresholdMillis = System.currentTimeMillis() + MinimumMillisToNextThreshold;
+    // These numbers were derived from experimentation and not from a definitive resource
+    private static final long MINIMUM_MILLIS_TO_NEXT_THRESHOLD = 3 * 1000;
+    private static final int MAXIMUM_ADDITIONAL_MILLIS_TO_NEXT_THRESHOLD = 15 * 1000;
+    private static long nextSoundThresholdMillis = System.currentTimeMillis() + MINIMUM_MILLIS_TO_NEXT_THRESHOLD;
 
     public static void playForRandomDisplayTick(
         World world,
@@ -22,7 +23,7 @@ public final class AmbientSoundHelper
         SoundEventTuple soundEventTuple )
     {
         long currentTimeMillis = System.currentTimeMillis();
-        if( currentTimeMillis >= NextSoundThresholdMillis )
+        if( currentTimeMillis >= nextSoundThresholdMillis )
         {
             world.playSound(
                 pos.getX(),
@@ -34,9 +35,9 @@ public final class AmbientSoundHelper
                 soundEventTuple.pitch,
                 false );
 
-            NextSoundThresholdMillis = currentTimeMillis
-                + MinimumMillisToNextThreshold
-                + random.nextInt( MaximumAdditionalMillisToNextThreshold );
+            nextSoundThresholdMillis = currentTimeMillis
+                + MINIMUM_MILLIS_TO_NEXT_THRESHOLD
+                + random.nextInt( MAXIMUM_ADDITIONAL_MILLIS_TO_NEXT_THRESHOLD );
         }
     }
 }

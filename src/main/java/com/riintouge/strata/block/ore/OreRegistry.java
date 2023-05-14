@@ -1,9 +1,8 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.RecipeReplicator;
 import com.riintouge.strata.block.SampleBlock;
-import com.riintouge.strata.block.geo.BakedModelCache;
+import com.riintouge.strata.block.RecipeReplicator;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -39,34 +38,38 @@ public final class OreRegistry
 {
     public static final OreRegistry INSTANCE = new OreRegistry();
 
-    private Map< String , IOreTileSet > oreTileSetMap = new HashMap<>();
+    private final Map< String , IOreTileSet > oreMap = new HashMap<>();
 
     private OreRegistry()
     {
         // Nothing to do
     }
 
-    public void register( IOreTileSet tileSet )
+    public void register( IOreTileSet tileSet ) throws IllegalStateException
     {
-        oreTileSetMap.put( tileSet.getInfo().oreName() , tileSet );
+        String oreName = tileSet.getInfo().oreName();
+        if( find( oreName ) != null )
+            throw new IllegalStateException( String.format( "Ore '%s' already registered!" , oreName ) );
+
+        oreMap.put( tileSet.getInfo().oreName() , tileSet );
     }
 
     @Nullable
     public IOreTileSet find( @Nullable String oreName )
     {
         // TODO: toLower here and elsewhere? ResourceLocation overload?
-        return oreTileSetMap.getOrDefault( oreName , null );
+        return oreMap.getOrDefault( oreName , null );
     }
 
     public boolean contains( @Nullable String oreName )
     {
-        return oreTileSetMap.getOrDefault( oreName , null ) != null;
+        return oreMap.getOrDefault( oreName , null ) != null;
     }
 
     @Nonnull
     public Collection< IOreTileSet > all()
     {
-        return oreTileSetMap.values();
+        return oreMap.values();
     }
 
     // Statics
@@ -77,11 +80,13 @@ public final class OreRegistry
         Strata.LOGGER.trace( "OreRegistry::registerBlocks()" );
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
-        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
         {
             blockRegistry.register( tileSet.getBlock() );
             blockRegistry.register( tileSet.getSampleBlock() );
         }
+
+        GameRegistry.registerTileEntity( OreBlockTileEntity.class , OreBlockTileEntity.REGISTRY_NAME );
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
@@ -90,7 +95,7 @@ public final class OreRegistry
         Strata.LOGGER.trace( "OreRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
-        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
         {
             itemRegistry.register( tileSet.getItemBlock() );
             String blockOreDictionaryName = tileSet.getInfo().blockOreDictionaryName();
@@ -111,7 +116,7 @@ public final class OreRegistry
     {
         Strata.LOGGER.trace( "OreRegistry::registerRecipes()" );
 
-        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
         {
             IOreInfo oreInfo = tileSet.getInfo();
             IBlockState proxyBlockState = oreInfo.proxyBlockState();
@@ -120,7 +125,7 @@ public final class OreRegistry
                 : new ItemStack( tileSet.getItem() );
 
             GameRegistry.addShapelessRecipe(
-                new ResourceLocation( Strata.modid , tileSet.getBlock().getRegistryName().getResourcePath() + "_equivalent" ),
+                Strata.resource( tileSet.getBlock().getRegistryName().getResourcePath() + "_equivalent" ),
                 null,
                 oreBlockConversionTarget,
                 Ingredient.fromItem( tileSet.getItemBlock() ) );
@@ -128,10 +133,11 @@ public final class OreRegistry
             ItemStack furnaceResult = oreInfo.furnaceResult();
             if( furnaceResult != null && !furnaceResult.isEmpty() )
             {
-                // Although the item block should be creative only, we'll add a recipe for convenience
-                GameRegistry.addSmelting( tileSet.getItemBlock() , furnaceResult , oreInfo.furnaceExp() );
-                GameRegistry.addSmelting( tileSet.getItem() , furnaceResult , oreInfo.furnaceExp() );
-                GameRegistry.addSmelting( tileSet.getSampleItemBlock() , furnaceResult , oreInfo.furnaceExp() );
+                // The item block is creative only but we'll add a recipe for convenience
+                float furnaceExperience = oreInfo.furnaceExperience();
+                GameRegistry.addSmelting( tileSet.getItemBlock() , furnaceResult , furnaceExperience );
+                GameRegistry.addSmelting( tileSet.getItem() , furnaceResult , furnaceExperience );
+                GameRegistry.addSmelting( tileSet.getSampleItemBlock() , furnaceResult , furnaceExperience );
             }
 
             ItemStack equivalentItem = oreInfo.equivalentItemStack();
@@ -141,7 +147,7 @@ public final class OreRegistry
             {
                 RecipeReplicator.INSTANCE.associate( equivalentItem , new ItemStack( tileSet.getItem() ) );
                 GameRegistry.addShapelessRecipe(
-                    new ResourceLocation( Strata.modid , oreInfo.oreName() + "_equivalent" ),
+                    Strata.resource( oreInfo.oreName() + "_equivalent" ),
                     null,
                     equivalentItem,
                     Ingredient.fromItem( tileSet.getItem() ) );
@@ -152,7 +158,7 @@ public final class OreRegistry
             }
 
             GameRegistry.addShapelessRecipe(
-                new ResourceLocation( Strata.modid , tileSet.getSampleBlock().getRegistryName().getResourcePath() + "_equivalent" ),
+                Strata.resource( tileSet.getSampleBlock().getRegistryName().getResourcePath() + "_equivalent" ),
                 null,
                 sampleEquivalentItem,
                 Ingredient.fromItem( tileSet.getSampleItemBlock() ) );
@@ -165,7 +171,7 @@ public final class OreRegistry
     {
         Strata.LOGGER.trace( "OreRegistry::registerModels()" );
 
-        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
         {
             ModelLoader.setCustomStateMapper( tileSet.getBlock() , new StateMapperBase()
             {
@@ -204,7 +210,7 @@ public final class OreRegistry
         Strata.LOGGER.trace( "OreRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
-        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
             tileSet.getInfo().stitchTextures( textureMap );
     }
 
@@ -215,7 +221,7 @@ public final class OreRegistry
         Strata.LOGGER.trace( "OreRegistry::bakeModels()" );
 
         IRegistry< ModelResourceLocation , IBakedModel > modelRegistry = event.getModelRegistry();
-        for( IOreTileSet tileSet : INSTANCE.oreTileSetMap.values() )
+        for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
         {
             ResourceLocation modelResource = Strata.resource( tileSet.getInfo().oreName() + OreBlock.REGISTRY_NAME_SUFFIX );
             ModelResourceLocation modelVariantResource = new ModelResourceLocation( modelResource , null );
@@ -224,7 +230,6 @@ public final class OreRegistry
             if( existingModel != null )
             {
                 IBakedModel bakedOreModel = new OreBlockModel( tileSet , existingModel );
-                BakedModelCache.INSTANCE.registerBakedOreModel( tileSet.getInfo().oreName() , bakedOreModel );
                 modelRegistry.putObject( modelVariantResource , bakedOreModel );
             }
         }

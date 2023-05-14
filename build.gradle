@@ -36,8 +36,8 @@ minecraft {
 
     // do this in lieu of a version.properties
     replaceIn "Strata.java"
-    replace "DISPLAY_VERSION", displayVersion
-    replace "INTERNAL_VERSION", "${minecraftAndForgeVersions[ 0 ]}-${buildDateVersion}"
+    replace "BUILD_DISPLAY_VERSION", displayVersion
+    replace "BUILD_INTERNAL_VERSION", "${minecraftAndForgeVersions[ 0 ]}-${buildDateVersion}"
 }
 
 archivesBaseName = "Strata-${minecraftAndForgeVersions[ 0 ]}"

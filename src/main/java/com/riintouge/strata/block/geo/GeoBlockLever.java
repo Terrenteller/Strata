@@ -30,14 +30,14 @@ public class GeoBlockLever extends BlockLever
         this.tileInfo = tileInfo;
 
         ResourceLocation registryName = tileInfo.registryName();
-        setRegistryName( registryName );
-        setUnlocalizedName( registryName.toString() );
         setCreativeTab( StrataCreativeTabs.MISC_BLOCK_TAB );
-
-        setHarvestLevel( tileInfo.harvestTool() , 0 );
-        setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
+        setHarvestLevel( tileInfo.harvestTool() , 0 );
+        setRegistryName( registryName );
         setResistance( tileInfo.explosionResistance() );
+        setSoundType( tileInfo.soundType() );
+        setUnlocalizedName( registryName.toString() );
+
         Float slipperiness = tileInfo.slipperiness();
         if( slipperiness != null )
             setDefaultSlipperiness( slipperiness );

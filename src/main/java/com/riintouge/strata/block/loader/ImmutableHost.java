@@ -40,7 +40,7 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     private int burnTime;
     private long specialBlockPropertyFlags;
 
-    public ImmutableHost( TileData tileData ) throws IllegalArgumentException
+    public ImmutableHost( TileData tileData ) throws NullPointerException
     {
         Util.argumentNullCheck( tileData , "tileData" );
 
@@ -58,8 +58,8 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
         this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
         this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
         this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
-        this.hardness = Util.coalesce( tileData.hardness , 1.0f );
-        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f * this.hardness );
+        this.hardness = Util.coalesce( tileData.hardness , 1.5f );
+        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 10.0f );
         this.lightLevel = Util.coalesce( tileData.lightLevel , 0 );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
         this.specialBlockPropertyFlags = Util.coalesce( tileData.specialBlockPropertyFlags , 0L );
@@ -132,9 +132,10 @@ public final class ImmutableHost implements IHostInfo , IForgeRegistrable
     @SideOnly( Side.CLIENT )
     public int particleFallingColor()
     {
-        return particleFallingColor != null
-            ? particleFallingColor
-            : ( particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) ) );
+        if( particleFallingColor == null )
+            particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) );
+
+        return particleFallingColor;
     }
 
     // ICommonBlockProperties overrides

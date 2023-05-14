@@ -1,186 +1,177 @@
 # Hosts
 
 host minecraft:stone
-type stone
-hardness 1.5
-resistance 10
+tileType stone
 texture minecraft:blocks/stone
 
 host minecraft:stone:1
-type stone
-hardness 1.5
-resistance 10
+tileType stone
 texture minecraft:blocks/stone_granite
 
 host minecraft:stone:3
-type stone
-hardness 1.5
-resistance 10
+tileType stone
 texture minecraft:blocks/stone_diorite
 
 host minecraft:stone:5
-type stone
-hardness 1.5
-resistance 10
+tileType stone
 texture minecraft:blocks/stone_andesite
 
 host minecraft:dirt
-type ground
+tileType ground
 hardness 0.5
 texture minecraft:blocks/dirt
 
 host minecraft:dirt:1
-type ground
+tileType ground
 hardness 0.5
 texture minecraft:blocks/coarse_dirt
 
+# Strata ores cannot fall which makes sand and gravel weird as hosts
 host minecraft:sand
-type sand
+tileType sand
 hardness 0.5
 texture minecraft:blocks/sand
 
 host minecraft:sand:1
-type sand
+tileType sand
 hardness 0.5
 texture minecraft:blocks/red_sand
 
-# gravel has no possibility of surface tension like sand.
-# This makes it weird as a host when it can't fall.
 host minecraft:gravel
-type gravel
+tileType gravel
 hardness 0.6
 texture minecraft:blocks/gravel
 
 host minecraft:sandstone
-type stone
+tileType stone
 hardness 0.8
 texture minecraft:blocks/sandstone_normal
 textureUp minecraft:blocks/sandstone_top
 textureDown minecraft:blocks/sandstone_bottom
 
 host minecraft:clay
-type ground
+tileType ground
 hardness 0.6
 texture minecraft:blocks/clay
 
 host minecraft:hardened_clay
-type stone
+tileType stone
 hardness 1.25
 texture minecraft:blocks/hardened_clay
 
 host minecraft:netherrack
-type stone
+tileType stone
 hardness 0.4
 texture minecraft:blocks/netherrack
 
 host minecraft:soul_sand
-type sand
+tileType sand
 hardness 0.5
 texture minecraft:blocks/soul_sand
 
 host minecraft:end_stone
-type stone
+tileType stone
 hardness 3.0
 texture minecraft:blocks/end_stone
 
 host minecraft:stained_hardened_clay
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_white
 
 host minecraft:stained_hardened_clay:1
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_orange
 
 host minecraft:stained_hardened_clay:2
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_magenta
 
 host minecraft:stained_hardened_clay:3
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_light_blue
 
 host minecraft:stained_hardened_clay:4
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_yellow
 
 host minecraft:stained_hardened_clay:5
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_lime
 
 host minecraft:stained_hardened_clay:6
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_pink
 
 host minecraft:stained_hardened_clay:7
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_gray
 
 host minecraft:stained_hardened_clay:8
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_silver
 
 host minecraft:stained_hardened_clay:9
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_cyan
 
 host minecraft:stained_hardened_clay:10
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_purple
 
 host minecraft:stained_hardened_clay:11
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_blue
 
 host minecraft:stained_hardened_clay:12
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_brown
 
 host minecraft:stained_hardened_clay:13
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_green
 
 host minecraft:stained_hardened_clay:14
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_red
 
 host minecraft:stained_hardened_clay:15
-type stone
+tileType stone
 hardness 1.25
 resistance 7.0
 texture minecraft:blocks/hardened_clay_stained_black
 
 host minecraft:red_sandstone
-type stone
+tileType stone
 hardness 0.8
 texture minecraft:blocks/red_sandstone_normal
 textureUp minecraft:blocks/red_sandstone_top
@@ -190,79 +181,65 @@ textureDown minecraft:blocks/red_sandstone_bottom
 
 ore coal
 oreDict oreCoal -
-type stone
-hardness 3.0
-resistance 5.0
+tileType stone
 burnTime 1600
 texture strata:blocks/ore/vanilla/coal
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/vanilla/coal normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 convertsTo minecraft:coal
-proxy minecraft:coal_ore
+proxyOre minecraft:coal_ore
 
 ore diamond
 oreDict oreDiamond gemDiamond
-type stone
-hardness 3.0
-resistance 5.0
+tileType stone
 texture strata:blocks/ore/vanilla/diamond
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/vanilla/diamond normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 convertsTo minecraft:diamond
-proxy minecraft:diamond_ore
+proxyOre minecraft:diamond_ore
 
 ore emerald
 oreDict oreEmerald gemEmerald
-type stone
-hardness 3.0
-resistance 5.0
+tileType stone
 texture strata:blocks/ore/vanilla/emerald
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/vanilla/emerald normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 convertsTo minecraft:emerald
-proxy minecraft:emerald_ore
+proxyOre minecraft:emerald_ore
 
 ore gold
 oreDict oreGold
-type stone
-hardness 3.0
-resistance 5.0
+tileType stone
 texture strata:blocks/ore/vanilla/gold
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/vanilla/gold normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 convertsTo minecraft:gold_ore
-proxy minecraft:gold_ore
+proxyOre minecraft:gold_ore
 
 ore iron
 oreDict oreIron
-type stone
-hardness 3.0
-resistance 5.0
+tileType stone
 texture strata:blocks/ore/vanilla/iron
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/vanilla/iron normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 convertsTo minecraft:iron_ore
-proxy minecraft:iron_ore
+proxyOre minecraft:iron_ore
 
 ore lapis
 oreDict oreLapis gemLapis
-type stone
-hardness 3.0
-resistance 5.0
+tileType stone
 texture strata:blocks/ore/vanilla/lapis
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/vanilla/lapis normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 convertsTo minecraft:dye:4
-proxy minecraft:lapis_ore
+proxyOre minecraft:lapis_ore
 
 ore redstone
 oreDict oreRedstone dustRedstone
-type stone
-hardness 3.0
-resistance 5.0
+tileType stone
 texture strata:blocks/ore/vanilla/redstone
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/vanilla/redstone normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 convertsTo minecraft:redstone
-proxy minecraft:redstone_ore
+proxyOre minecraft:redstone_ore
 activatable

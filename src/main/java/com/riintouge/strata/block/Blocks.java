@@ -2,22 +2,19 @@ package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.loader.TileDataLoader;
-import com.riintouge.strata.block.ore.OreBlockTileEntity;
 import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.resource.ResourcePacksDir;
+import com.riintouge.strata.util.DebugUtil;
 import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.List;
@@ -28,20 +25,20 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-public class Blocks
+public final class Blocks
 {
-    private static final String StrataAssetConfigPath = String.format( "assets/%s/config/%s" , Strata.modid , Strata.modid );
-    private static final String ModIDPattern = "[a-z0-9]+";
+    private static final String STRATA_ASSET_CONFIG_PATH = String.format( "assets/%s/config/%s" , Strata.MOD_ID , Strata.MOD_ID );
+    private static final String MOD_ID_REGEX = "[a-z0-9]+";
 
-    private static final String ResourcePackTileDataPath = String.format( "%s/tiledata" , StrataAssetConfigPath );
-    private static final String ResourcePathTileDataPathPattern = String.format( "^%s/(%s)" , ResourcePackTileDataPath , "tiledata" , ModIDPattern );
-    private static final int ResourcePathTileDataPathModIDGroup = 1;
-    private static final Pattern ResourcePackTileDataPathRegex = Pattern.compile( ResourcePathTileDataPathPattern );
+    private static final String RESOURCE_PACK_TILE_DATA_PATH = String.format( "%s/tiledata" , STRATA_ASSET_CONFIG_PATH );
+    private static final String RESOURCE_PACK_TILE_DATA_PATH_REGEX = String.format( "^%s/(%s)" , RESOURCE_PACK_TILE_DATA_PATH , MOD_ID_REGEX );
+    private static final Pattern RESOURCE_PACK_TILE_DATA_PATH_PATTERN = Pattern.compile( RESOURCE_PACK_TILE_DATA_PATH_REGEX );
+    private static final int RESOURCE_PACK_TILE_DATA_PATH_MOD_ID_GROUP = 1;
 
-    private static final String ResourcePackRecipePath = String.format( "%s/recipe" , StrataAssetConfigPath );
-    private static final String ResourcePathRecipePathPattern = String.format( "^%s/(%s)" , ResourcePackRecipePath , ModIDPattern );
-    private static final int ResourcePathRecipePathModIDGroup = 1;
-    private static final Pattern ResourcePackRecipePathRegex = Pattern.compile( ResourcePathRecipePathPattern );
+    private static final String RESOURCE_PACK_RECIPE_PATH = String.format( "%s/recipe" , STRATA_ASSET_CONFIG_PATH );
+    private static final String RESOURCE_PACK_RECIPE_PATH_REGEX = String.format( "^%s/(%s)" , RESOURCE_PACK_RECIPE_PATH , MOD_ID_REGEX );
+    private static final Pattern RESOURCE_PACK_RECIPE_PATH_PATTERN = Pattern.compile( RESOURCE_PACK_RECIPE_PATH_REGEX );
+    private static final int RESOURCE_PACK_RECIPE_PATH_MOD_ID_GROUP = 1;
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void registerBlocks( RegistryEvent.Register< Block > event ) throws IOException
@@ -49,20 +46,18 @@ public class Blocks
         Strata.LOGGER.trace( "Blocks::registerBlocks()" );
 
         TileDataLoader tileDataLoader = new TileDataLoader();
-
-        List< String > activeResourcePackPaths = ResourcePacksDir.INSTANCE.activeResourcePackPaths();
-        if( activeResourcePackPaths == null )
-            activeResourcePackPaths = ResourcePacksDir.INSTANCE.find( s -> true , false );
+        ConfigDir configDir = new ConfigDir();
+        List< String > activeResourcePackPaths = ( new ResourcePacksDir() ).activeResourcePackPaths();
 
         // Priority #1: Config files in our domain
-        processConfigFilesForMod( tileDataLoader , Strata.modid );
+        processConfigFilesForMod( tileDataLoader , configDir , Strata.MOD_ID );
 
         // Priority #2: Config files outside our domain
         for( ModContainer mod : Loader.instance().getIndexedModList().values() )
         {
             String modID = mod.getModId();
-            if( !modID.equalsIgnoreCase( Strata.modid ) )
-                processConfigFilesForMod( tileDataLoader , modID );
+            if( !modID.equalsIgnoreCase( Strata.MOD_ID ) )
+                processConfigFilesForMod( tileDataLoader , configDir , modID );
         }
 
         // Priority #3: Loose resource pack files in our domain
@@ -84,21 +79,37 @@ public class Blocks
         for( String path : activeResourcePackPaths )
             if( ! new File( path ).isDirectory() )
                 processCompressedResourcePack( tileDataLoader , path , false );
-
-        GameRegistry.registerTileEntity(
-            OreBlockTileEntity.class,
-            new ResourceLocation( String.format( "%s:ore_tile_entity" , Strata.modid ) ) );
     }
 
-    private static void processConfigFilesForMod( TileDataLoader tileDataLoader , String modID ) throws IOException
+    private static void processConfigFilesForMod( TileDataLoader tileDataLoader , ConfigDir configDir , String modID ) throws IOException
     {
-        String tileDataDir = String.format( "%s/tiledata/%s" , Strata.modid , modID );
-        for( String path : ConfigDir.INSTANCE.allIn( tileDataDir , true ) )
-            tileDataLoader.loadFile( path );
+        String tileDataDir = String.format( "%s/tiledata/%s" , Strata.MOD_ID , modID );
+        for( String path : configDir.allIn( tileDataDir , true ) )
+        {
+            try
+            {
+                tileDataLoader.loadFile( path );
+            }
+            catch( Exception e )
+            {
+                Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , String.format( "Saw %%s while loading '%s'!" , path ) ) );
+                throw e;
+            }
+        }
 
-        String recipeDataDir = String.format( "%s/recipe/%s" , Strata.modid , modID );
-        for( String path : ConfigDir.INSTANCE.allIn( recipeDataDir , true ) )
-            RecipeReplicator.processRecipeFile( path );
+        String recipeDataDir = String.format( "%s/recipe/%s" , Strata.MOD_ID , modID );
+        for( String path : configDir.allIn( recipeDataDir , true ) )
+        {
+            try
+            {
+                RecipeReplicator.processRecipeFile( path );
+            }
+            catch( Exception e )
+            {
+                Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , String.format( "Saw %%s while loading '%s'!" , path ) ) );
+                throw e;
+            }
+        }
     }
 
     private static void processLooseResourcePack(
@@ -108,7 +119,7 @@ public class Blocks
         throws IOException
     {
         File[] unpackedTileDataDomainDirs = Paths.get( resourcePackPath )
-            .resolve( ResourcePackTileDataPath )
+            .resolve( RESOURCE_PACK_TILE_DATA_PATH )
             .toFile()
             .listFiles( ( file , s ) -> file.isDirectory() );
 
@@ -116,20 +127,31 @@ public class Blocks
         {
             for( File unpackedTileDataDomainDir : unpackedTileDataDomainDirs )
             {
-                if( unpackedTileDataDomainDir.getName().equalsIgnoreCase( Strata.modid ) == inOurDomain )
+                if( unpackedTileDataDomainDir.getName().equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
                 {
-                    List< Path > tileDataFilePaths = Files.walk( unpackedTileDataDomainDir.toPath() )
+                    List< String > tileDataFilePaths = Files.walk( unpackedTileDataDomainDir.toPath() )
                         .filter( Files::isRegularFile )
+                        .map( x -> x.toAbsolutePath().toString() )
                         .collect( Collectors.toList() );
 
-                    for( Path tileDataFilePath : tileDataFilePaths )
-                        tileDataLoader.loadFile( tileDataFilePath.toString() );
+                    for( String tileDataFilePath : tileDataFilePaths )
+                    {
+                        try
+                        {
+                            tileDataLoader.loadFile( tileDataFilePath );
+                        }
+                        catch( Exception e )
+                        {
+                            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , String.format( "Saw %%s while loading '%s'!" , tileDataFilePath ) ) );
+                            throw e;
+                        }
+                    }
                 }
             }
         }
 
         File[] unpackedRecipeDomainDirs = Paths.get( resourcePackPath )
-            .resolve( ResourcePackRecipePath )
+            .resolve( RESOURCE_PACK_RECIPE_PATH )
             .toFile()
             .listFiles( ( file , s ) -> file.isDirectory() );
 
@@ -137,14 +159,25 @@ public class Blocks
         {
             for( File unpackedRecipeDomainDir : unpackedRecipeDomainDirs )
             {
-                if( unpackedRecipeDomainDir.getName().equalsIgnoreCase( Strata.modid ) == inOurDomain )
+                if( unpackedRecipeDomainDir.getName().equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
                 {
-                    List< Path > recipeFilePaths = Files.walk( unpackedRecipeDomainDir.toPath() )
+                    List< String > recipeFilePaths = Files.walk( unpackedRecipeDomainDir.toPath() )
                         .filter( Files::isRegularFile )
+                        .map( x -> x.toAbsolutePath().toString() )
                         .collect( Collectors.toList() );
 
-                    for( Path recipeFilePath : recipeFilePaths )
-                        RecipeReplicator.processRecipeFile( recipeFilePath.toAbsolutePath().toString() );
+                    for( String recipeFilePath : recipeFilePaths )
+                    {
+                        try
+                        {
+                            RecipeReplicator.processRecipeFile( recipeFilePath );
+                        }
+                        catch( Exception e )
+                        {
+                            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , String.format( "Saw %%s while loading '%s'!" , recipeFilePath ) ) );
+                            throw e;
+                        }
+                    }
                 }
             }
         }
@@ -164,7 +197,7 @@ public class Blocks
         }
         catch( ZipException e )
         {
-            // Not a ZIP?
+            // Not a ZIP? Don't warn because we may end up with a lot of false positives.
             return;
         }
 
@@ -176,21 +209,30 @@ public class Blocks
                 continue;
 
             String zipEntryName = zipEntry.getName();
-
-            Matcher matcher = ResourcePackTileDataPathRegex.matcher( zipEntryName );
-            if( matcher.find() )
+            try
             {
-                String modID = matcher.group( ResourcePathTileDataPathModIDGroup );
-                if( modID.equalsIgnoreCase( Strata.modid ) == inOurDomain )
-                    tileDataLoader.loadStream( zipFile.getInputStream( zipEntry ) );
+                Matcher matcher = RESOURCE_PACK_TILE_DATA_PATH_PATTERN.matcher( zipEntryName );
+                if( matcher.find() )
+                {
+                    String modID = matcher.group( RESOURCE_PACK_TILE_DATA_PATH_MOD_ID_GROUP );
+                    if( modID.equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
+                        tileDataLoader.loadStream( zipFile.getInputStream( zipEntry ) );
+                }
+                else
+                {
+                    matcher = RESOURCE_PACK_RECIPE_PATH_PATTERN.matcher( zipEntryName );
+                    if( matcher.find() )
+                    {
+                        String modID = matcher.group( RESOURCE_PACK_RECIPE_PATH_MOD_ID_GROUP );
+                        if( modID.equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
+                            RecipeReplicator.processRecipeStream( zipFile.getInputStream( zipEntry ) );
+                    }
+                }
             }
-
-            matcher = ResourcePackRecipePathRegex.matcher( zipEntryName );
-            if( matcher.find() )
+            catch( Exception e )
             {
-                String modID = matcher.group( ResourcePathRecipePathModIDGroup );
-                if( modID.equalsIgnoreCase( Strata.modid ) == inOurDomain )
-                    RecipeReplicator.processRecipeStream( zipFile.getInputStream( zipEntry ) );
+                Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , String.format( "Saw %%s while loading '%s' from '%s'!" , zipEntryName , resourcePackFilePath ) ) );
+                throw e;
             }
         }
     }

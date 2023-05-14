@@ -15,8 +15,10 @@ public class StrataConfigGui extends GuiConfig
 {
     public StrataConfigGui( GuiScreen parentScreen )
     {
-        super( parentScreen , getConfigElements() , Strata.modid , false , false , I18n.format( "strata.config.main" ) );
+        super( parentScreen , getConfigElements() , Strata.MOD_ID , false , false , I18n.format( "strata.config.main" ) );
     }
+
+    // Statics
 
     @Nonnull
     private static List< IConfigElement > getConfigElements()

@@ -2,6 +2,7 @@ package com.riintouge.strata.block;
 
 import com.google.common.collect.ImmutableList;
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.util.DebugUtil;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.item.ItemStack;
@@ -29,30 +30,31 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class RecipeReplicator
+public final class RecipeReplicator
 {
     public static final RecipeReplicator INSTANCE = new RecipeReplicator();
-    private static Set< Pattern > RecipeBlacklist = new HashSet<>();
 
-    private final Map< Class , IReplicator > recipeReplicatorMap = new HashMap<>();
+    private final Map< Class , IReplicator > recipeClassReplicatorMap = new HashMap<>();
     private final List< Pair< List< ItemStack > , Ingredient > > ingredientInfos = new ArrayList<>();
-
-    private interface IReplicator
-    {
-        IRecipe replicate( IRecipe recipe );
-    }
-
-    private class ReplicatedCompoundIngredient extends CompoundIngredient
-    {
-        public ReplicatedCompoundIngredient( Collection< Ingredient > children )
-        {
-            super( children );
-        }
-    }
+    private final Set< Pattern > blacklistedRecipes = new HashSet<>();
+    private final Field shapedOreRecipeMirroredField;
 
     private RecipeReplicator()
     {
-        recipeReplicatorMap.put( ShapedRecipes.class , recipe ->
+        Field tempShapedOreRecipeMirroredField;
+        try
+        {
+            tempShapedOreRecipeMirroredField = ReflectionUtil.findFieldByType( ShapedOreRecipe.class , boolean.class , true );
+            tempShapedOreRecipeMirroredField.setAccessible( true );
+        }
+        catch( Exception e )
+        {
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s while locating field 'ShapedOreRecipe.mirrored'!" ) );
+            tempShapedOreRecipeMirroredField = null;
+        }
+        this.shapedOreRecipeMirroredField = tempShapedOreRecipeMirroredField;
+
+        recipeClassReplicatorMap.put( ShapedRecipes.class , recipe ->
         {
             ShapedRecipes shapedRecipe = (ShapedRecipes)recipe;
             return new ShapedRecipes(
@@ -63,7 +65,7 @@ public class RecipeReplicator
                 shapedRecipe.getRecipeOutput() );
         } );
 
-        recipeReplicatorMap.put( ShapedOreRecipe.class , recipe ->
+        recipeClassReplicatorMap.put( ShapedOreRecipe.class , recipe ->
         {
             ShapedOreRecipe shapedOreRecipe = (ShapedOreRecipe)recipe;
             CraftingHelper.ShapedPrimer primer = new CraftingHelper.ShapedPrimer();
@@ -71,16 +73,17 @@ public class RecipeReplicator
             primer.height = shapedOreRecipe.getRecipeHeight();
             primer.input = substitute( shapedOreRecipe.getIngredients() );
 
-            try
+            if( shapedOreRecipeMirroredField != null )
             {
-                Field mirroredField = ReflectionUtil.findFieldByType( ShapedOreRecipe.class , boolean.class , true );
-                mirroredField.setAccessible( true );
-                primer.mirrored = (boolean)mirroredField.get( shapedOreRecipe );
-            }
-            catch( Exception ex )
-            {
-                Strata.LOGGER.warn( "Unable to locate field \"ShapedOreRecipe.mirrored\" by type!" );
-                primer.mirrored = false;
+                try
+                {
+                    primer.mirrored = (boolean)shapedOreRecipeMirroredField.get( shapedOreRecipe );
+                }
+                catch( Exception e )
+                {
+                    Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , null ) );
+                    primer.mirrored = false;
+                }
             }
 
             return new ShapedOreRecipe(
@@ -89,7 +92,7 @@ public class RecipeReplicator
                 primer );
         } );
 
-        recipeReplicatorMap.put( ShapelessRecipes.class , recipe ->
+        recipeClassReplicatorMap.put( ShapelessRecipes.class , recipe ->
         {
             ShapelessRecipes shapelessRecipe = (ShapelessRecipes)recipe;
             return new ShapelessRecipes(
@@ -98,7 +101,7 @@ public class RecipeReplicator
                 substitute( shapelessRecipe.getIngredients() ) );
         } );
 
-        recipeReplicatorMap.put( ShapelessOreRecipe.class , recipe ->
+        recipeClassReplicatorMap.put( ShapelessOreRecipe.class , recipe ->
         {
             ShapelessOreRecipe shapelessRecipe = (ShapelessOreRecipe)recipe;
             return new ShapelessOreRecipe(
@@ -167,6 +170,11 @@ public class RecipeReplicator
         return associatedItems.build();
     }
 
+    public boolean isRecipeBlacklisted( String recipeResourceLocationString )
+    {
+        return blacklistedRecipes.stream().anyMatch( x -> x.matcher( recipeResourceLocationString ).matches() );
+    }
+
     public boolean canReplicateIngredient( Ingredient ing )
     {
         return ing != Ingredient.EMPTY && !( ing instanceof IngredientNBT );
@@ -175,18 +183,12 @@ public class RecipeReplicator
     public boolean shouldReplicate( IRecipe recipe )
     {
         ResourceLocation recipeResourceLocation = recipe.getRegistryName();
-        if( recipeResourceLocation.getResourceDomain().equals( Strata.modid ) )
+        if( recipeResourceLocation.getResourceDomain().equals( Strata.MOD_ID )
+            || isRecipeBlacklisted( recipeResourceLocation.toString() )
+            || isRecipeBlacklisted( replicatedResourceLocation( recipeResourceLocation ).toString() ) )
+        {
             return false;
-
-        // Input recipe blacklisting
-        String recipeResourceLocationString = recipeResourceLocation.toString();
-        if( RecipeBlacklist.stream().anyMatch( x -> x.matcher( recipeResourceLocationString ).matches() ) )
-            return false;
-
-        // Output recipe blacklisting
-        String replicatedResourceLocationString = replicatedResourceLocation( recipeResourceLocation ).toString();
-        if( RecipeBlacklist.stream().anyMatch( x -> x.matcher( replicatedResourceLocationString ).matches() ) )
-            return false;
+        }
 
         for( Ingredient ing : recipe.getIngredients() )
         {
@@ -229,12 +231,12 @@ public class RecipeReplicator
         if( !shouldReplicate( recipe ) )
             return null;
 
-        IReplicator replicator = recipeReplicatorMap.get( recipe.getClass() );
+        IReplicator replicator = recipeClassReplicatorMap.get( recipe.getClass() );
         if( replicator == null )
         {
-            Strata.LOGGER.warn(
+            Strata.LOGGER.error(
                 String.format(
-                    "No recipe replicator for \"%s\" of type \"%s\"!",
+                    "No recipe replicator for '%s' of type '%s'!",
                     recipe.getRegistryName().toString(),
                     recipe.getClass().toString() ) );
 
@@ -247,7 +249,7 @@ public class RecipeReplicator
     @Nonnull
     public ResourceLocation replicatedResourceLocation( ResourceLocation resourceLocation )
     {
-        if( resourceLocation.getResourceDomain().equals( Strata.modid ) )
+        if( resourceLocation.getResourceDomain().equals( Strata.MOD_ID ) )
             throw new IllegalArgumentException( "resourceLocation" );
 
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
@@ -305,10 +307,9 @@ public class RecipeReplicator
 
     public static void replicateAndRegister()
     {
-        Strata.LOGGER.trace( "RecipeReplicator::replicateAndRegister()" );
-
         IForgeRegistry< IRecipe > recipeRegistry = ForgeRegistries.RECIPES;
         List< IRecipe > copies = new ArrayList<>();
+
         for( Map.Entry< ResourceLocation , IRecipe > recipe : recipeRegistry.getEntries() )
         {
             IRecipe copy = RecipeReplicator.INSTANCE.replicate( recipe.getValue() );
@@ -339,11 +340,28 @@ public class RecipeReplicator
             switch( kv[ 0 ] )
             {
                 case "blacklist":
-                    RecipeBlacklist.add( Pattern.compile( kv[ 1 ] ) );
+                    INSTANCE.blacklistedRecipes.add( Pattern.compile( kv[ 1 ] ) );
                     break;
             }
         }
 
         buffer.close();
+    }
+
+    // Interfaces
+
+    private interface IReplicator
+    {
+        IRecipe replicate( IRecipe recipe );
+    }
+
+    // Nested classes
+
+    private class ReplicatedCompoundIngredient extends CompoundIngredient
+    {
+        public ReplicatedCompoundIngredient( Collection< Ingredient > children )
+        {
+            super( children );
+        }
     }
 }

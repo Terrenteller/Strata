@@ -23,32 +23,37 @@ public final class HostRegistry
     // This is a minor optimization for ores since randomly ticking them is an all or nothing affair.
     // That is to say, we cannot set an individual ore to tick randomly if and only if it acquires a host which does.
     // Since no host ticks randomly out-of-the-box, no ore needs to either.
-    public static boolean ANY_HOST_TICKS = false;
-
-    private Map< ResourceLocation , IHostInfo[] > hostInfos = new HashMap<>();
+    private boolean someHostTicksRandomly = false;
+    private final Map< ResourceLocation , IHostInfo[] > hostMap = new HashMap<>();
 
     private HostRegistry()
     {
         // Nothing to do
     }
 
-    public void register( ResourceLocation registryName , int meta , IHostInfo hostInfo )
+    public void register( IHostInfo hostInfo ) throws IllegalStateException
     {
-        IHostInfo[] metaInfos = hostInfos.getOrDefault( registryName , null );
+        ResourceLocation registryName = hostInfo.registryName();
+        int meta = hostInfo.meta();
+        if( find( registryName , meta ) != null )
+            throw new IllegalStateException( String.format( "Host '%s:%d' already registered!" , registryName , meta ) );
 
-        if( metaInfos == null )
-            hostInfos.put( registryName , metaInfos = new IHostInfo[ 16 ] );
-
+        IHostInfo[] metaInfos = hostMap.computeIfAbsent( registryName , x -> new IHostInfo[ 16 ] );
         metaInfos[ meta ] = hostInfo;
 
-        if( !ANY_HOST_TICKS && hostInfo.ticksRandomly() )
-            ANY_HOST_TICKS = true;
+        if( !someHostTicksRandomly && hostInfo.ticksRandomly() )
+            someHostTicksRandomly = true;
+    }
+
+    public boolean doesAnyHostTickRandomly()
+    {
+        return someHostTicksRandomly;
     }
 
     @Nullable
     public IHostInfo find( ResourceLocation registryName , int meta )
     {
-        IHostInfo[] metaInfos = hostInfos.getOrDefault( registryName , null );
+        IHostInfo[] metaInfos = hostMap.getOrDefault( registryName , null );
         return metaInfos != null ? metaInfos[ meta ] : null;
     }
 
@@ -61,7 +66,7 @@ public final class HostRegistry
     @Nonnull
     public Map< ResourceLocation , IHostInfo[] > allHosts()
     {
-        return Collections.unmodifiableMap( hostInfos );
+        return Collections.unmodifiableMap( hostMap );
     }
 
     @Nonnull
@@ -69,7 +74,7 @@ public final class HostRegistry
     {
         Set< MetaResourceLocation > hostResources = new HashSet<>();
 
-        for( Map.Entry< ResourceLocation , IHostInfo[] > entry : hostInfos.entrySet() )
+        for( Map.Entry< ResourceLocation , IHostInfo[] > entry : hostMap.entrySet() )
             for( int index = 0 ; index < entry.getValue().length ; index++ )
                 if( entry.getValue()[ index ] != null )
                     hostResources.add( new MetaResourceLocation( entry.getKey() , index ) );
@@ -86,7 +91,7 @@ public final class HostRegistry
         Strata.LOGGER.trace( "HostRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
-        for( IHostInfo[] hostInfos : INSTANCE.hostInfos.values() )
+        for( IHostInfo[] hostInfos : INSTANCE.hostMap.values() )
             for( IHostInfo hostInfo : hostInfos )
                 if( hostInfo instanceof ImmutableTile ) // FIXME: We're not supposed to know about tiles here
                     break;

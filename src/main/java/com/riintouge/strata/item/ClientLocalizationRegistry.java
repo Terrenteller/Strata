@@ -1,6 +1,7 @@
 package com.riintouge.strata.item;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.util.DebugUtil;
 import com.riintouge.strata.util.ReflectionUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.*;
@@ -17,39 +18,55 @@ import java.util.Map;
 public final class ClientLocalizationRegistry extends LocalizationRegistry implements IResourceManagerReloadListener
 {
     private Language currentLanguage;
-    // Forge has TWO maps for resolving localized strings. They appear to be identical.
-    private Map< String , String > localeProperties1 = null; // resources/I18n
-    private Map< String , String > localeProperties2 = null; // translation/I18n
+    // There are TWO maps for resolving localized strings. They appear to be identical.
+    private Map< String , String > localeProperties1 = null; // LanguageManager's Locale
+    private Map< String , String > localeProperties2 = null; // LanguageMap's Map
     private Map< String , Map< String , String > > languageMaps = new HashMap<>();
     private Map< String , String > localizedStrings = new HashMap<>();
 
     public ClientLocalizationRegistry()
     {
-        reacquireLocaleLocalizationMaps();
+        acquireLocalizationMaps();
         ( (IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager() ).registerReloadListener( this );
     }
 
-    public void register( String unlocalizedKey , Map< String , String > languageMap )
+    @SuppressWarnings( "unchecked" )
+    private void acquireLocalizationMaps()
     {
-        // This can't go in the constructor. When SidedProxy instantiates this class the current language is null.
-        if( currentLanguage == null )
-            currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
+        // Not all code paths traverse Block.getLocalizedName() or Item.getLocalizedName(), such as tooltips
+        // on the Statistics page. Don't rely on this, however. Use get() where possible because it's more correct.
 
-        languageMaps.put( unlocalizedKey , languageMap );
-        String localizedValue = getInternal( unlocalizedKey );
-        localizedStrings.put( unlocalizedKey , localizedValue );
+        // The Statistics page uses this
+        try
+        {
+            Field localeField = ReflectionUtil.findFieldByType( LanguageManager.class , Locale.class , false );
+            localeField.setAccessible( true );
+            Locale locale = (Locale)localeField.get( Minecraft.getMinecraft().getLanguageManager() );
 
-        if( localeProperties1 != null )
-            localeProperties1.putIfAbsent( unlocalizedKey , localizedValue );
+            Field propertiesField = ReflectionUtil.findFieldByType( Locale.class , Map.class , true );
+            propertiesField.setAccessible( true );
+            localeProperties1 = (Map< String , String >)propertiesField.get( locale );
+        }
+        catch( Exception e )
+        {
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s while acquiring the LanguageManager localization dictionary! Some strings may appear unlocalized." ) );
+        }
 
-        if( localeProperties2 != null )
-            localeProperties2.putIfAbsent( unlocalizedKey , localizedValue );
-    }
+        // Item tooltips use this
+        try
+        {
+            Field instanceField = ReflectionUtil.findFieldByType( LanguageMap.class , LanguageMap.class , false );
+            instanceField.setAccessible( true );
+            LanguageMap languageMap = (LanguageMap)instanceField.get( null );
 
-    @Nullable
-    public String get( String unlocalizedKey )
-    {
-        return localizedStrings.getOrDefault( unlocalizedKey , null );
+            Field languageListField = ReflectionUtil.findFieldByType( LanguageMap.class , Map.class , true );
+            languageListField.setAccessible( true );
+            localeProperties2 = (Map< String , String >)languageListField.get( languageMap );
+        }
+        catch( Exception e )
+        {
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s while acquiring the LanguageMap localization dictionary! Some strings may appear unlocalized." ) );
+        }
     }
 
     @Nullable
@@ -71,43 +88,38 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
         return null;
     }
 
-    @SuppressWarnings( "unchecked" )
-    private void reacquireLocaleLocalizationMaps()
+    // LocalizationRegistry overrides
+
+    @Override
+    public void register( String unlocalizedKey , Map< String , String > languageMap )
     {
-        // Not all code paths traverse Block.getLocalizedName() or Item.getLocalizedName(), such as tooltips
-        // on the Statistics page. Don't rely on this, however. Use get() where possible because it's more correct.
+        // This can't go in the constructor. When SidedProxy instantiates this class the current language is null.
+        if( currentLanguage == null )
+            currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
 
-        // The Statistics page uses the following localization map
-        try
-        {
-            Field localeField = ReflectionUtil.findFieldByType( LanguageManager.class , Locale.class , false );
-            localeField.setAccessible( true );
-            Locale locale = (Locale)localeField.get( Minecraft.getMinecraft().getLanguageManager() );
+        languageMaps.put( unlocalizedKey , languageMap );
+        String localizedValue = getInternal( unlocalizedKey );
+        localizedStrings.put( unlocalizedKey , localizedValue );
 
-            Field propertyField = ReflectionUtil.findFieldByType( Locale.class , Map.class , true );
-            propertyField.setAccessible( true );
-            localeProperties1 = (Map< String , String >)propertyField.get( locale );
-        }
-        catch( Exception e )
-        {
-            Strata.LOGGER.warn( "Failed to acquire the resources/I18n localization dictionary for direct injection! Some strings may appear unlocalized." );
-        }
+        if( localeProperties1 != null )
+            localeProperties1.putIfAbsent( unlocalizedKey , localizedValue );
 
-        // Item tooltips use the following localization map
-        try
-        {
-            Field instanceField = ReflectionUtil.findFieldByType( LanguageMap.class , LanguageMap.class , false );
-            instanceField.setAccessible( true );
-            LanguageMap languageMap = (LanguageMap)instanceField.get( null );
+        if( localeProperties2 != null )
+            localeProperties2.putIfAbsent( unlocalizedKey , localizedValue );
+    }
 
-            Field languageListField = ReflectionUtil.findFieldByType( LanguageMap.class , Map.class , true );
-            languageListField.setAccessible( true );
-            localeProperties2 = (Map< String , String >)languageListField.get( languageMap );
-        }
-        catch( Exception e )
-        {
-            Strata.LOGGER.warn( "Failed to acquire the translation/I18n localization dictionary for direct injection! Some strings may appear unlocalized." );
-        }
+    @Nullable
+    @Override
+    public String get( String unlocalizedKey )
+    {
+        // TODO: We need to make a distinction between blocks and items and get rid of this method.
+        // These classes should only be used to facilitate the addition of strings to the internal
+        // localization dictionaries at runtime, not as our version of the registries.
+        // Other things to consider:
+        // 1. If we keep this getter, it should call an appropriate internal method
+        // 2. See about cleaning up the try/catch in ConfigHelper.getLocalizedString()
+        // 3. Do these classes belong in the item package?
+        return localizedStrings.getOrDefault( unlocalizedKey , null );
     }
 
     // IResourceManagerReloadListener overrides
@@ -118,7 +130,7 @@ public final class ClientLocalizationRegistry extends LocalizationRegistry imple
         localeProperties1 = null;
         localeProperties2 = null;
         currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
-        reacquireLocaleLocalizationMaps();
+        acquireLocalizationMaps();
 
         languageMaps.keySet()
             .parallelStream()

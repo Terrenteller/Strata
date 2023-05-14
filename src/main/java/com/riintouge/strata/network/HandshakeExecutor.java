@@ -3,6 +3,8 @@ package com.riintouge.strata.network;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.riintouge.strata.Strata;
+import com.riintouge.strata.util.DebugUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -143,12 +145,12 @@ public final class HandshakeExecutor implements Observer
         }
         catch( IllegalAccessException | InstantiationException e )
         {
-            e.printStackTrace();
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s during client synchronization handshake!" ) );
             return HandshakeResult.InternalError;
         }
         catch( Exception e )
         {
-            e.printStackTrace();
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s during client synchronization handshake!" ) );
             return HandshakeResult.Exception;
         }
     }

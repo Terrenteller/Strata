@@ -3,6 +3,7 @@ package com.riintouge.strata.image;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.util.DebugUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,7 +16,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collection;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -44,13 +46,13 @@ public class LayeredTexture extends TextureAtlasSprite
         this.layers = layers;
     }
 
-    public SquareMipmapHelper getOrCreateMipmapHelper( ResourceLocation resourceLocation , int[][] originalMipmaps )
+    public SquareMipmapHelper getOrCreateMipmapHelper( ResourceLocation textureResource , int[][] originalMipmaps )
     {
-        SquareMipmapHelper mipmapHelper = MIPMAP_CACHE.getIfPresent( resourceLocation );
+        SquareMipmapHelper mipmapHelper = MIPMAP_CACHE.getIfPresent( textureResource );
         if( mipmapHelper == null )
         {
             mipmapHelper = new SquareMipmapHelper( originalMipmaps );
-            MIPMAP_CACHE.put( resourceLocation , mipmapHelper );
+            MIPMAP_CACHE.put( textureResource , mipmapHelper );
         }
 
         return mipmapHelper;
@@ -74,7 +76,7 @@ public class LayeredTexture extends TextureAtlasSprite
     {
         Vector< ResourceLocation > resources = new Vector<>();
         for( LayeredTextureLayer layer : layers )
-            resources.add( layer.resource );
+            resources.add( layer.textureResource );
 
         return resources;
     }
@@ -93,8 +95,8 @@ public class LayeredTexture extends TextureAtlasSprite
     {
         if( layers.length == 1 )
         {
-            ResourceLocation resource = layers[ 0 ].resource;
-            TextureAtlasSprite texture = textureGetter.apply( resource );
+            ResourceLocation textureResource = layers[ 0 ].textureResource;
+            TextureAtlasSprite texture = textureGetter.apply( textureResource );
             clearFramesTextureData();
 
             if( texture.getFrameCount() > 0 )
@@ -107,7 +109,7 @@ public class LayeredTexture extends TextureAtlasSprite
             }
             else
             {
-                Pair< int[][] , Integer > firstFrameInfo = getFirstFrameInfoOrMissing( resource , texture );
+                Pair< int[][] , Integer > firstFrameInfo = getFirstFrameInfoOrMissing( textureResource , texture );
                 width = firstFrameInfo.getValue();
                 height = firstFrameInfo.getValue();
                 framesTextureData.add( firstFrameInfo.getKey() );
@@ -119,11 +121,11 @@ public class LayeredTexture extends TextureAtlasSprite
 
             for( int index = 0 ; index < layers.length ; index++ )
             {
-                ResourceLocation layerResource = layers[ index ].resource;
-                TextureAtlasSprite layerTexture = textureGetter.apply( layerResource );
-                Pair< int[][] , Integer > firstFrameInfo = getFirstFrameInfoOrMissing( layerResource , layerTexture );
+                ResourceLocation textureResource = layers[ index ].textureResource;
+                TextureAtlasSprite texture = textureGetter.apply( textureResource );
+                Pair< int[][] , Integer > firstFrameInfo = getFirstFrameInfoOrMissing( textureResource , texture );
                 width = height = ( index == 0 ? firstFrameInfo.getValue() : Math.min( width , firstFrameInfo.getValue() ) );
-                mipmapHelpers[ index ] = getOrCreateMipmapHelper( layerResource , firstFrameInfo.getKey() );
+                mipmapHelpers[ index ] = getOrCreateMipmapHelper( textureResource , firstFrameInfo.getKey() );
             }
 
             SquareMipmapHelper baseLayerMipmapHelper = mipmapHelpers[ layers.length - 1 ];
@@ -149,36 +151,36 @@ public class LayeredTexture extends TextureAtlasSprite
 
     // Statics
 
-    public static Pair< int[][] , Integer > getFirstFrameInfoOrMissing( ResourceLocation resource , TextureAtlasSprite texture )
+    public static Pair< int[][] , Integer > getFirstFrameInfoOrMissing( ResourceLocation textureResource , TextureAtlasSprite texture )
     {
         try
         {
             // Unloading a resource pack supplying the only instance of a necessary texture
             // will result in a non-null, 0x0 texture with non-null, zero-length data.
-            // Attempting to index into no frames will result in an IndexOutOfBoundsException.
+            // Attempting to index into this will cause an IndexOutOfBoundsException.
             if( texture.getFrameCount() == 0 )
                 throw new IllegalArgumentException(
                     String.format(
-                        "Layered texture resource \"%s\" has no frames! Does the resource exist? Did it get removed?",
-                        resource.toString() ) );
+                        "Layered texture resource '%s' has no frames! Does the resource exist? Did it get removed?",
+                        textureResource.toString() ) );
 
             if( texture.getIconWidth() != texture.getIconHeight() )
                 throw new IllegalArgumentException(
                     String.format(
-                        "Layered texture resource \"%s\" must be square!",
-                        resource.toString() ) );
+                        "Layered texture resource '%s' must be square!",
+                        textureResource.toString() ) );
 
             if( !Util.isPowerOfTwo( texture.getIconWidth() ) )
                 throw new IllegalArgumentException(
                     String.format(
-                        "Layered texture resource \"%s\" size must be a power of two!",
-                        resource.toString() ) );
+                        "Layered texture resource '%s' size must be a power of two!",
+                        textureResource.toString() ) );
 
             return new ImmutablePair<>( texture.getFrameTextureData( 0 ) , texture.getIconWidth() );
         }
         catch( Exception e )
         {
-            Strata.LOGGER.error( e.getMessage() );
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , null ) );
         }
 
         return MISSING_FRAME_INFO;

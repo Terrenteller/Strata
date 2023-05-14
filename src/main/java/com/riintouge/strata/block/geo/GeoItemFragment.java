@@ -29,10 +29,9 @@ public class GeoItemFragment extends Item
 
         ResourceLocation resource = GeoItemFragment.fragmentRegistryName( tileInfo );
         assert resource != null;
+        setCreativeTab( StrataCreativeTabs.BLOCK_FRAGMENT_TAB );
         setRegistryName( resource );
         setUnlocalizedName( resource.toString() );
-
-        setCreativeTab( StrataCreativeTabs.BLOCK_FRAGMENT_TAB );
     }
 
     // Item overrides
@@ -95,6 +94,6 @@ public class GeoItemFragment extends Item
     @Nullable
     public static ResourceLocation fragmentRegistryName( IGeoTileInfo tileInfo )
     {
-        return tileInfo.type().fragmentRegistryName( tileInfo.tileSetName() );
+        return tileInfo.tileType().fragmentRegistryName( tileInfo.tileSetName() );
     }
 }

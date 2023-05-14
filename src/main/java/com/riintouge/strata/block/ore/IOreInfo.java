@@ -41,7 +41,7 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     int particleFallingColor();
 
     @Nonnull
-    ResourceLocation blockstateResourceLocation();
+    ResourceLocation blockStateResourceLocation();
 
     @Nullable
     @SideOnly( Side.CLIENT )
@@ -53,7 +53,7 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     @Nullable
     ItemStack furnaceResult();
 
-    float furnaceExp();
+    float furnaceExperience();
 
     @Nullable
     IBlockState proxyBlockState();
@@ -74,8 +74,9 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     MetaResourceLocation breaksInto();
 
     @Nullable
-    IDropFormula expDropFormula();
+    IDropFormula experienceDropFormula();
 
+    @Nullable
     SoundEventTuple ambientSound();
 
     @Nullable

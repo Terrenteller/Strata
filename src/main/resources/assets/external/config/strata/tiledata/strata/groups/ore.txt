@@ -2,7 +2,7 @@
 
 ore cinnabar
 oreDict oreCinnabar
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/cinnabar
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/cinnabar normal 100 strata:items/ore/base
@@ -10,7 +10,7 @@ lang.en Cinnabar (Mercury Ore)
 
 ore galena
 oreDict oreLead
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/galena
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/galena normal 100 strata:items/ore/base
@@ -19,7 +19,7 @@ lang.en Galena (Lead Ore)
 # This was referred to oreMolydenum in the original PFAA COG XML
 ore molybdenite
 oreDict oreMolybdenum
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/molybdenite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/molybdenite normal 100 strata:items/ore/base
@@ -27,7 +27,7 @@ lang.en Molybdenite (Molybdenum Ore)
 
 ore pyrolusite
 oreDict oreManganese
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/pyrolusite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/pyrolusite normal 100 strata:items/ore/base
@@ -35,7 +35,7 @@ lang.en Pyrolusite (Manganese Ore)
 
 ore stibnite
 oreDict oreAntimony
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/stibnite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/stibnite normal 100 strata:items/ore/base
@@ -43,7 +43,7 @@ lang.en Stibnite (Antimony Ore)
 
 ore chrysotile
 oreDict oreAsbestos
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/chrysotile
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/chrysotile normal 100 strata:items/ore/base
@@ -51,7 +51,7 @@ lang.en Chrysotile (Asbestos Ore)
 
 ore realgar
 oreDict oreArsenic
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/realgar
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/realgar normal 100 strata:items/ore/base
@@ -59,7 +59,7 @@ lang.en Realgar (Arsenic Ore)
 
 ore bog_iron
 oreDict oreIron
-type stone
+tileType stone
 hardness 2.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/weak/bog_iron
@@ -70,7 +70,7 @@ lang.en Bog Iron (Iron Ore)
 
 ore barite
 oreDict oreBarium
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/barite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/barite normal 100 strata:items/ore/base
@@ -79,7 +79,7 @@ lang.en Barite (Barium Ore)
 # PFAA COG XML mentions malachite but cannot be found
 ore chalcopyrite
 oreDict oreCopper
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/chalcopyrite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/chalcopyrite normal 100 strata:items/ore/base
@@ -87,7 +87,7 @@ lang.en Chalcopyrite (Copper Ore)
 
 ore garnierite
 oreDict oreNickel
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/garnierite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/garnierite normal 100 strata:items/ore/base
@@ -95,7 +95,7 @@ lang.en Garnierite (Nickel Ore)
 
 ore lepidolite
 oreDict oreLithium
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/lepidolite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/lepidolite normal 100 strata:items/ore/base
@@ -103,7 +103,7 @@ lang.en Lepidolite (Lithium Ore)
 
 ore magnesite
 oreDict oreMagnesium
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/magnesite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/magnesite normal 100 strata:items/ore/base
@@ -112,7 +112,7 @@ lang.en Magnesite (Magnesium Ore)
 # This one is tricky. Mindat says "Most samples are Ni-dominant, but some are Fe-dominant".
 ore pentlandite
 oreDict oreNickel
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/pentlandite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/pentlandite normal 100 strata:items/ore/base
@@ -120,7 +120,7 @@ lang.en Pentlandite (Nickle Ore)
 
 ore scheelite
 oreDict oreTungsten
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/scheelite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/scheelite normal 100 strata:items/ore/base
@@ -128,7 +128,7 @@ lang.en Scheelite (Tungsten Ore)
 
 ore sphalerite
 oreDict oreZinc
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/sphalerite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/sphalerite normal 100 strata:items/ore/base
@@ -136,7 +136,7 @@ lang.en Sphalerite (Zinc Ore)
 
 ore wolframite
 oreDict oreTungsten
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/wolframite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/wolframite normal 100 strata:items/ore/base
@@ -145,7 +145,7 @@ lang.en Wolframite (Tungsten Ore)
 # Regardless of IUPAC naming, oreBauxite came first
 ore alunite
 oreDict oreBauxite
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/alunite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/alunite normal 100 strata:items/ore/base
@@ -154,7 +154,7 @@ lang.en_us Alunite (Aluminum Ore)
 
 ore celestine
 oreDict oreStrontium
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/celestine
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/celestine normal 100 strata:items/ore/base
@@ -164,18 +164,18 @@ lang.en Celestine (Strontium Ore)
 
 ore banded_iron
 oreDict oreIron
-type stone
+tileType stone
 hardness 4.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/strong/banded_iron
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/banded_iron normal 100 strata:items/ore/base
 textureCaps strata:blocks/ore/strong/banded_iron_caps
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 lang.en Banded Iron (Iron Ore)
 
 ore cassiterite
 oreDict oreTin
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/cassiterite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/cassiterite normal 100 strata:items/ore/base
@@ -183,7 +183,7 @@ lang.en Cassiterite (Tin Ore)
 
 ore chromite
 oreDict oreChromium
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/chromite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/chromite normal 100 strata:items/ore/base
@@ -191,7 +191,7 @@ lang.en Chromite (Chromium Ore)
 
 ore ilmenite
 oreDict oreTitanium
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/ilmenite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/ilmenite normal 100 strata:items/ore/base
@@ -199,7 +199,7 @@ lang.en Ilmenite (Titanium Ore)
 
 ore magnetite
 oreDict oreIron
-type stone
+tileType stone
 hardness 4.0
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/strong/magnetite
@@ -209,7 +209,7 @@ lang.en Magnetite (Iron Ore)
 # Caesium is the IUPAC name. Beware of oreCesium.
 ore pollucite
 oreDict oreCaesium
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/pollucite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/pollucite normal 100 strata:items/ore/base
@@ -218,7 +218,7 @@ lang.en_us Pollucite (Cesium Ore)
 
 ore spodumene
 oreDict oreLithium
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/spodumene
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/spodumene normal 100 strata:items/ore/base
@@ -226,7 +226,7 @@ lang.en Spodumene (Lithium Ore)
 
 ore tantalite
 oreDict oreTantalum
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/tantalite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/tantalite normal 100 strata:items/ore/base
@@ -234,7 +234,7 @@ lang.en Tantalite (Tantalum Ore)
 
 ore pitchblende
 oreDict oreUranium
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/pitchblende
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/pitchblende normal 100 strata:items/ore/base
@@ -242,7 +242,7 @@ lang.en Pitchblende (Uranium Ore)
 
 ore vanadium_magnetite
 oreDict oreVanadium
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/vanadium_magnetite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/vanadium_magnetite normal 100 strata:items/ore/base
@@ -250,7 +250,7 @@ lang.en Vanadium Magnetite (Vanadium Ore)
 
 ore apatite
 oreDict oreApatite
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/apatite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/apatite normal 100 strata:items/ore/base
@@ -260,7 +260,7 @@ lang.en Apatite
 
 ore bituminous_coal
 oreDict oreCoal bituminousCoal
-type stone
+tileType stone
 hardness 3.0
 convertsTo minecraft:coal
 burnTime 1600
@@ -270,7 +270,7 @@ lang.en Bituminous Coal
 
 ore lignite
 oreDict oreCoal lignite
-type stone
+tileType stone
 hardness 3.0
 convertsTo minecraft:coal
 burnTime 1600
@@ -280,7 +280,7 @@ lang.en Lignite
 
 ore anthracite
 oreDict oreCoal anthracite
-type stone
+tileType stone
 hardness 3.0
 convertsTo minecraft:coal
 burnTime 1600
@@ -290,7 +290,7 @@ lang.en Anthracite
 
 ore coke
 oreDict oreCoal coke
-type stone
+tileType stone
 hardness 3.0
 convertsTo minecraft:coal
 burnTime 1600
@@ -302,7 +302,7 @@ lang.en Coke
 
 ore bauxite
 oreDict oreBauxite
-type clay
+tileType clay
 hardness 1.5
 texture strata:blocks/ore/clay/bauxite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/clay/bauxite normal 100 strata:items/ore/base
@@ -311,7 +311,7 @@ lang.en_us Bauxite (Aluminum Ore)
 
 ore brown_limonite
 oreDict oreIron
-type clay
+tileType clay
 hardness 1.5
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/clay/brown_limonite
@@ -320,7 +320,7 @@ lang.en Brown Limonite (Iron Ore)
 
 ore yellow_limonite
 oreDict oreIron
-type clay
+tileType clay
 hardness 1.5
 convertsTo minecraft:iron_ore
 texture strata:blocks/ore/clay/yellow_limonite

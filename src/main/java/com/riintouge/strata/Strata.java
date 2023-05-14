@@ -11,48 +11,51 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod( modid = Strata.modid , name = Strata.name , version = Strata.internalVersion , guiFactory = "com.riintouge.strata.gui.StrataGuiFactory" )
+@Mod(
+    modid = Strata.MOD_ID,
+    name = Strata.NAME,
+    version = Strata.INTERNAL_VERSION,
+    guiFactory = "com.riintouge.strata.gui.StrataGuiFactory" )
 public class Strata
 {
-    // We're not using useMetadata so that display and internal versions remain separate.
     // Values here MUST stay in sync with mcmod.info where not replaced by build.gradle!
-    public static final String modid = "strata";
-    public static final String name = "Strata";
-    // These two are distinct in GuiModList
-    public static final String displayVersion = "DISPLAY_VERSION";
-    public static final String internalVersion = "INTERNAL_VERSION"; // Internal according to FMLModContainer
+    public static final String MOD_ID = "strata";
+    public static final String NAME = "Strata";
+    // These versions are distinct in GuiModList when useMetadata on the Mod annotation is false (the default)
+    public static final String DISPLAY_VERSION = "BUILD_DISPLAY_VERSION"; // Actually sourced from mcmod.info
+    public static final String INTERNAL_VERSION = "BUILD_INTERNAL_VERSION"; // Internal according to FMLModContainer
+    public static final Logger LOGGER = LogManager.getLogger( MOD_ID );
 
-    public static Logger LOGGER = LogManager.getLogger( modid );
+    @Mod.Instance( MOD_ID )
+    public static Strata INSTANCE = new Strata(); // Cannot be final because of the annotation
 
-    @Mod.Instance( modid )
-    public static Strata instance = new Strata();
-
-    @SidedProxy( serverSide = "com.riintouge.strata.proxy.ServerProxy" , clientSide = "com.riintouge.strata.proxy.ClientProxy" )
-    public static CommonProxy proxy;
+    @SidedProxy(
+        serverSide = "com.riintouge.strata.proxy.ServerProxy",
+        clientSide = "com.riintouge.strata.proxy.ClientProxy" )
+    public static CommonProxy PROXY;
 
     @EventHandler
     public void preInit( FMLPreInitializationEvent event )
     {
-        LOGGER = event.getModLog();
-        proxy.preInit( event );
+        PROXY.preInit( event );
     }
 
     @EventHandler
     public void init( FMLInitializationEvent event )
     {
-        proxy.init( event );
+        PROXY.init( event );
     }
 
     @EventHandler
     public void postInit( FMLPostInitializationEvent event )
     {
-        proxy.postInit( event );
+        PROXY.postInit( event );
     }
 
     // Statics
 
     public static ResourceLocation resource( String resourcePath )
     {
-        return new ResourceLocation( modid , resourcePath );
+        return new ResourceLocation( MOD_ID , resourcePath );
     }
 }

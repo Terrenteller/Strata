@@ -2,6 +2,7 @@ package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.item.ItemHelper;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
@@ -42,12 +43,12 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private String itemOreDictionaryName;
     private ProtoBlockTextureMap modelTextureMap;
     private Integer particleFallingColor = null; // Lazily evaluated
-    private ResourceLocation blockstateResourceLocation;
+    private ResourceLocation blockStateResourceLocation;
     private LayeredTextureLayer[] oreItemTextureLayers;
     private MetaResourceLocation equivalentItemResourceLocation;
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation furnaceResult;
-    private Float furnaceExp;
+    private Float furnaceExperience;
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
     private ItemStack proxyBlockItemStack = null; // Lazily evaluated
@@ -55,7 +56,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private MetaResourceLocation forcedHost;
     private List< MetaResourceLocation > hostAffinities;
     private MetaResourceLocation breaksIntoResourceLocation;
-    private IDropFormula expDropFormula;
+    private IDropFormula experienceDropFormula;
     private SoundEventTuple ambientSound;
 
     // ICommonBlockProperties
@@ -75,22 +76,22 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
         // IOreInfo
         this.oreName = Util.argumentNullCheck( tileData.oreName , "oreName" );
-        this.tileType = Util.argumentNullCheck( tileData.tileType , "type" );
+        this.tileType = Util.argumentNullCheck( tileData.tileType , "tileType" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.itemOreDictionaryName = tileData.itemOreDictionaryName;
         this.modelTextureMap = Util.argumentNullCheck( tileData.textureMap , "texture" );
-        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , Strata.resource( "proto_cube_gimbal_overlay" ) );
+        this.blockStateResourceLocation = Util.coalesce( tileData.blockStateResource , Strata.resource( "proto_cube_gimbal_overlay" ) );
         if( tileData.oreItemTextureLayers != null && tileData.oreItemTextureLayers.size() > 0 )
             this.oreItemTextureLayers = tileData.oreItemTextureLayers.toArray( new LayeredTextureLayer[ tileData.oreItemTextureLayers.size() ] );
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.furnaceResult = tileData.furnaceResult;
-        this.furnaceExp = tileData.furnaceExp;
+        this.furnaceExperience = tileData.furnaceExperience;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
         this.weightedDropCollections = tileData.weightedDropCollections;
         this.forcedHost = tileData.forcedHost;
         this.hostAffinities = tileData.hostAffinities;
         this.breaksIntoResourceLocation = tileData.breaksIntoResourceLocation;
-        this.expDropFormula = tileData.expDropFormula;
+        this.experienceDropFormula = tileData.experienceDropFormula;
         this.ambientSound = tileData.ambientSound;
 
         // ICommonBlockProperties
@@ -98,8 +99,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
         this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
         this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
-        this.hardness = Util.coalesce( tileData.hardness , 1.0f );
-        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 1.7f * this.hardness );
+        this.hardness = Util.coalesce( tileData.hardness , 3.0f );
+        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f );
         this.lightLevel = Util.coalesce( tileData.lightLevel , 0 );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
         this.specialBlockPropertyFlags = Util.coalesce( tileData.specialBlockPropertyFlags , 0L );
@@ -171,16 +172,17 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @SideOnly( Side.CLIENT )
     public int particleFallingColor()
     {
-        return particleFallingColor != null
-            ? particleFallingColor
-            : ( particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) ) );
+        if( particleFallingColor == null )
+            particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) );
+
+        return particleFallingColor;
     }
 
     @Nonnull
     @Override
-    public ResourceLocation blockstateResourceLocation()
+    public ResourceLocation blockStateResourceLocation()
     {
-        return blockstateResourceLocation;
+        return blockStateResourceLocation;
     }
 
     @Nullable
@@ -222,17 +224,19 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
                 return equivalentSmeltingResult;
         }
 
-        return furnaceResult != null ? furnaceResult.toItemStack() : null;
+        return furnaceResult != null ? ItemHelper.metaResourceLocationToItemStack( furnaceResult ) : null;
     }
 
     @Override
-    public float furnaceExp()
+    public float furnaceExperience()
     {
-        if( furnaceExp != null )
-            return furnaceExp;
+        if( furnaceExperience == null )
+        {
+            ItemStack furnaceResult = furnaceResult();
+            furnaceExperience = furnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( furnaceResult ) : 0.0f;
+        }
 
-        ItemStack furnaceResult = furnaceResult();
-        return furnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( furnaceResult ) : 0.0f;
+        return furnaceExperience;
     }
 
     @Nullable
@@ -282,9 +286,9 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     }
 
     @Nullable
-    public IDropFormula expDropFormula()
+    public IDropFormula experienceDropFormula()
     {
-        return expDropFormula;
+        return experienceDropFormula;
     }
 
     @Override

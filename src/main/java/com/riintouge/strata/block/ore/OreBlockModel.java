@@ -20,8 +20,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Vector;
 
-import static com.riintouge.strata.block.ore.OreBlockTileEntity.DAMAGE_MODEL_FACE_COUNT_HACK;
-
 @SideOnly( Side.CLIENT )
 public class OreBlockModel implements IBakedModel
 {
@@ -46,12 +44,7 @@ public class OreBlockModel implements IBakedModel
         BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
         List< BakedQuad > newQuads = new Vector<>();
 
-        int damageModelFaceCountHackValue = DAMAGE_MODEL_FACE_COUNT_HACK.get();
-        if( damageModelFaceCountHackValue > 0 )
-        {
-            DAMAGE_MODEL_FACE_COUNT_HACK.set( damageModelFaceCountHackValue - 1 );
-        }
-        else if( renderLayer == BlockRenderLayer.SOLID || renderLayer == null )
+        if( ( renderLayer == BlockRenderLayer.SOLID || renderLayer == null ) && !OreBlockTileEntity.getQuadsOnlyForDamageModel() )
         {
             MetaResourceLocation host = StateUtil.getValue( state , UnlistedPropertyHostRock.PROPERTY , UnlistedPropertyHostRock.FALLBACK );
             IBakedModel hostModel = BakedModelCache.INSTANCE.getBakedModel( host );
@@ -59,7 +52,7 @@ public class OreBlockModel implements IBakedModel
             IBlockState hostState = hostBlock.getStateFromMeta( host.meta );
 
             // When hostModel is WeightedBakedModel, the value of rand has a major role in overlay Z-fighting.
-            // Stone, netherrack, and dirt blockstates (at least) specify random rotations to break up monotony.
+            // Stone, netherrack, and dirt block states (at least) specify random rotations to break up monotony.
             // This is good, but some rotations (non-default?) cause additional quads to Z-fight.
             // Using a zero value for rand (because it's actually a long) solves the problem for unknown reasons.
             // However, I cannot prove it solves the problem in all cases. Therefore, continue passing rand to reap

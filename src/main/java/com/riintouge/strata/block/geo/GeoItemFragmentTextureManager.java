@@ -19,7 +19,7 @@ public final class GeoItemFragmentTextureManager
     @Nullable
     public static ResourceLocation getTextureLocation( IGeoTileInfo tileInfo )
     {
-        String fragmentResourceLocationSuffix = tileInfo.type().fragmentResourceLocationSuffix;
+        String fragmentResourceLocationSuffix = tileInfo.tileType().fragmentResourceLocationSuffix;
         if( fragmentResourceLocationSuffix != null )
         {
             return Strata.resource(

@@ -39,6 +39,8 @@ public enum BlendMode
         return 0;
     }
 
+    // Statics
+
     // FIXME: Some sources say the correct formula is something like:
     // C = B < 128 ? ( 2 * A * B / 255 ) : 255 - 2 * ( 255 - A ) * ( 255 - B ) / 255
     public static int normal( int top , float opacity , int bottom )

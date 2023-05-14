@@ -20,25 +20,24 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.EnumPlantType;
 import org.apache.commons.lang3.EnumUtils;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TileData
 {
-    private static final String DropGroupPattern = "^(?:([0-9]+) )?([a-z_:0-9]+|-|\\*) *(.+?)? *$";
-    private static final int DropGroupWeightGroup = 1;
-    private static final int DropGroupMetaResourceLocationGroup = 2;
-    private static final int DropGroupFormulaGroup = 3;
-    private static final Pattern DropGroupRegex = Pattern.compile( DropGroupPattern );
+    protected static final String DROP_GROUP_REGEX = "^(?:([0-9]+) )?([a-z_:0-9]+|-|\\*) *(.+?)? *$";
+    protected static final Pattern DROP_GROUP_PATTERN = Pattern.compile( DROP_GROUP_REGEX );
+    protected static final int DROP_GROUP_WEIGHT_GROUP = 1;
+    protected static final int DROP_GROUP_META_RESOURCE_LOCATION_GROUP = 2;
+    protected static final int DROP_GROUP_FORMULA_GROUP = 3;
 
-    private static final String NumericDropFormulaPattern = "^(?:([0-9]+)(?:-([0-9]+))?)?$";
-    private static final String RPNDropFormulaPattern = "^(.+?)(?: ~ (.+?))?$";
-    private static final int DropFormulaBaseGroup = 1;
-    private static final int DropFormulaBonusGroup = 2;
-    private static final Pattern NumericDropFormulaRegex = Pattern.compile( NumericDropFormulaPattern );
-    private static final Pattern RPNDropFormulaRegex = Pattern.compile( RPNDropFormulaPattern );
+    protected static final String NUMERIC_DROP_FORMULA_REGEX = "^(?:([0-9]+)(?:-([0-9]+))?)?$";
+    protected static final Pattern NUMERIC_DROP_FORMULA_PATTERN = Pattern.compile( NUMERIC_DROP_FORMULA_REGEX );
+    protected static final String RPN_DROP_FORMULA_REGEX = "^(.+?)(?: ~ (.+?))?$";
+    protected static final Pattern RPN_DROP_FORMULA_PATTERN = Pattern.compile( RPN_DROP_FORMULA_REGEX );
+    protected static final int DROP_FORMULA_BASE_GROUP = 1;
+    protected static final int DROP_FORMULA_BONUS_GROUP = 2;
 
     // IGeoTileInfo
     public String tileSetName = null;
@@ -46,12 +45,12 @@ public class TileData
     public String fragmentItemOreDictionaryName = null;
     public MetaResourceLocation equivalentItemResourceLocation = null;
     public MetaResourceLocation furnaceResult = null;
-    public Float furnaceExp = null;
+    public Float furnaceExperience = null;
     public List< LayeredTextureLayer > fragmentTextureLayers = null;
     public IDropFormula fragmentDropFormula = null;
     public MetaResourceLocation equivalentFragmentItemResourceLocation = null;
     public MetaResourceLocation fragmentFurnaceResult = null;
-    public Float fragmentFurnaceExp = null;
+    public Float fragmentFurnaceExperience = null;
     public Integer fragmentBurnTime = null;
     public MetaResourceLocation breaksIntoResourceLocation = null;
     public ArrayList< EnumPlantType > sustainedPlantTypes = null;
@@ -63,7 +62,7 @@ public class TileData
     public String itemOreDictionaryName = null;
     public MetaResourceLocation proxyOreResourceLocation = null;
     public List< LayeredTextureLayer > oreItemTextureLayers = null;
-    public IDropFormula expDropFormula = null;
+    public IDropFormula experienceDropFormula = null;
     public WeightedDropCollections weightedDropCollections = null;
     public MetaResourceLocation forcedHost = null;
     public List< MetaResourceLocation > hostAffinities = null;
@@ -91,7 +90,7 @@ public class TileData
     // Shared / Special
     public boolean isHost = false;
     public String blockOreDictionaryName = null;
-    public ResourceLocation blockstateResourceLocation = null;
+    public ResourceLocation blockStateResource = null;
     public ProtoBlockTextureMap textureMap = null;
     public LayeredTextureLayer[][] layeredTextureLayers = null;
     public Map< String , String > languageMap = null;
@@ -124,9 +123,10 @@ public class TileData
                     }
                     case 3:
                     {
+                        // Volume and pitch are multipliers. Clamp for safety.
                         ambientSound = new SoundEventTuple(
-                            Float.parseFloat( values[ 0 ] ),
-                            Float.parseFloat( values[ 1 ] ),
+                            Util.clamp( 0.0f , Float.parseFloat( values[ 0 ] ) , 2.0f ),
+                            Util.clamp( 0.0f , Float.parseFloat( values[ 1 ] ) , 2.0f ),
                             SoundEventRegistry.INSTANCE.register( values[ 2 ] ) );
                         return true;
                     }
@@ -134,9 +134,9 @@ public class TileData
 
                 return false;
             }
-            case "blockstate":
+            case "blockState":
             {
-                blockstateResourceLocation = new ResourceLocation( value );
+                blockStateResource = new ResourceLocation( value );
                 return true;
             }
             case "breaksInto":
@@ -161,9 +161,14 @@ public class TileData
                 setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.DRAGON_IMMUNE );
                 return true;
             }
-            case "exp":
+            case "experience":
             {
-                expDropFormula = parseDropFormula( value );
+                experienceDropFormula = parseDropFormula( value );
+                return true;
+            }
+            case "explosionResistance":
+            {
+                explosionResistance = Float.parseFloat( value );
                 return true;
             }
             case "fireSource":
@@ -186,9 +191,9 @@ public class TileData
                 equivalentFragmentItemResourceLocation = new MetaResourceLocation( value );
                 return true;
             }
-            case "fragmentFurnaceExp":
+            case "fragmentFurnaceExperience":
             {
-                fragmentFurnaceExp = Float.parseFloat( value );
+                fragmentFurnaceExperience = Float.parseFloat( value );
                 return true;
             }
             case "fragmentFurnaceResult":
@@ -206,9 +211,9 @@ public class TileData
                 fragmentTextureLayers = parseTextureLayers( value );
                 return true;
             }
-            case "furnaceExp":
+            case "furnaceExperience":
             {
-                furnaceExp = Float.parseFloat( value );
+                furnaceExperience = Float.parseFloat( value );
                 return true;
             }
             case "furnaceResult":
@@ -220,7 +225,7 @@ public class TileData
             {
                 String[] values = value.split( " " );
                 tileSetName = values[ 0 ].toLowerCase();
-                processKeyValue( "type" , values[ 1 ] );
+                processKeyValue( "tileType" , values[ 1 ] );
                 return true;
             }
             case "hardness":
@@ -299,6 +304,9 @@ public class TileData
             case "oreDict":
             {
                 String[] values = value.split( " " );
+                if( values.length == 0 )
+                    return false;
+
                 blockOreDictionaryName = values[ 0 ].equals( "-" ) ? null : values[ 0 ];
                 itemOreDictionaryName = values.length > 1 ? ( values[ 1 ].equals( "-" ) ? null : values[ 1 ] ) : blockOreDictionaryName;
                 fragmentItemOreDictionaryName = values.length > 2 && !values[ 2 ].equals( "-" ) ? values[ 2 ] : null;
@@ -309,14 +317,9 @@ public class TileData
                 oreItemTextureLayers = parseTextureLayers( value );
                 return true;
             }
-            case "proxy":
+            case "proxyOre":
             {
                 proxyOreResourceLocation = new MetaResourceLocation( value );
-                return true;
-            }
-            case "resistance":
-            {
-                explosionResistance = Float.parseFloat( value );
                 return true;
             }
             case "slipperiness":
@@ -345,24 +348,16 @@ public class TileData
 
                 for( String token : value.split( " " ) )
                 {
+                    // We have to prioritize resource locations because EnumPlantType.getPlantType()
+                    // will add to the enumeration if the value doesn't exist. Checking for the value
+                    // in the enumeration by other means is not sufficient because we may initialize
+                    // before whatever is responsible for the plant type adds it to the enumeration.
                     if( token.contains( ":" ) )
                         sustainsPlantsSustainedByRaw.add( new MetaResourceLocation( token ) );
                     else
                         sustainedPlantTypes.add( EnumPlantType.getPlantType( token ) );
                 }
 
-                return true;
-            }
-            case "type":
-            {
-                tileType = TileType.valueOf( value.toUpperCase() );
-                if( harvestTool == null )
-                    harvestTool = tileType.harvestTool;
-                // Obsfucation prevents us from using reflection
-                // to get non-enum Material and SoundType values from distinct KVs
-                material = tileType.material;
-                if( soundType == null )
-                    soundType = tileType.soundType;
                 return true;
             }
             case "soundEvents":
@@ -372,7 +367,7 @@ public class TileData
                 {
                     case 5:
                     {
-                        soundType = SoundEventRegistry.INSTANCE.registerAndCreate(
+                        soundType = SoundEventRegistry.INSTANCE.register(
                             1.0f,
                             1.0f,
                             values[ 0 ],
@@ -384,7 +379,7 @@ public class TileData
                     }
                     case 7:
                     {
-                        soundType = SoundEventRegistry.INSTANCE.registerAndCreate(
+                        soundType = SoundEventRegistry.INSTANCE.register(
                             Float.parseFloat( values[ 0 ] ),
                             Float.parseFloat( values[ 1 ] ),
                             values[ 2 ],
@@ -398,12 +393,21 @@ public class TileData
 
                 return false;
             }
+            case "tileType":
+            {
+                tileType = TileType.valueOf( value.toUpperCase() );
+                if( harvestTool == null )
+                    harvestTool = tileType.harvestTool;
+                // Obsfucation prevents us from using reflection
+                // to get non-enum Material and SoundType values from distinct KVs
+                material = tileType.material;
+                if( soundType == null )
+                    soundType = tileType.soundType;
+                return true;
+            }
             case "witherImmune":
             {
-                if( specialBlockPropertyFlags == null )
-                    specialBlockPropertyFlags = 0L;
-
-                specialBlockPropertyFlags |= SpecialBlockPropertyFlags.WITHER_IMMUNE;
+                setSpecialBlockPropertyFlag( SpecialBlockPropertyFlags.WITHER_IMMUNE );
                 return true;
             }
         }
@@ -414,18 +418,16 @@ public class TileData
             if( dropGroupKey.length() <= 0 )
                 return false;
 
-            Matcher matcher = DropGroupRegex.matcher( value );
+            Matcher matcher = DROP_GROUP_PATTERN.matcher( value );
             if( !matcher.find() )
                 return false;
 
-            String weight = matcher.group( DropGroupWeightGroup );
-            String metaResource = matcher.group( DropGroupMetaResourceLocationGroup );
-            String formula = matcher.group( DropGroupFormulaGroup );
-
+            String formula = matcher.group( DROP_GROUP_FORMULA_GROUP );
             IDropFormula dropFormula = formula != null ? parseDropFormula( formula ) : new StaticDropFormula( 1 );
             if( dropFormula == null )
                 return false;
 
+            String metaResource = matcher.group( DROP_GROUP_META_RESOURCE_LOCATION_GROUP );
             MetaResourceLocation metaResourceLocation;
             switch( metaResource )
             {
@@ -443,6 +445,7 @@ public class TileData
             if( weightedDropCollections == null )
                 weightedDropCollections = new WeightedDropCollections();
 
+            String weight = matcher.group( DROP_GROUP_WEIGHT_GROUP );
             weightedDropCollections.addDropToGroup(
                 metaResourceLocation,
                 dropFormula,
@@ -474,7 +477,7 @@ public class TileData
                 {
                     layeredTextureLayers = new LayeredTextureLayer[ ProtoBlockTextureMap.Layer.values().length ][];
 
-                    // FIXME: Using tileSetName, oreName, and type here violates the assumption that lines can be in any order
+                    // FIXME: Using tileSetName, oreName, and tileType here violates the assumption that lines can be in any order
                     String registryName = tileSetName != null
                         ? tileType.registryName( tileSetName ).getResourcePath()
                         : oreName != null
@@ -501,10 +504,10 @@ public class TileData
         return false;
     }
 
-    public TileData createMissingChildType( TileType tileType ) throws OperationNotSupportedException
+    public TileData createChildType( TileType tileType ) throws UnsupportedOperationException
     {
         if( this.tileSetName == null || this.tileType == null || tileType.parentType != this.tileType )
-            throw new OperationNotSupportedException();
+            throw new UnsupportedOperationException();
 
         TileData child = new TileData();
         child.tileSetName = this.tileSetName;
@@ -532,11 +535,11 @@ public class TileData
 
     public static IDropFormula parseDropFormula( String value )
     {
-        Matcher matcher = NumericDropFormulaRegex.matcher( value );
+        Matcher matcher = NUMERIC_DROP_FORMULA_PATTERN.matcher( value );
         if( matcher.find() )
         {
-            String base = matcher.group( DropFormulaBaseGroup );
-            String bonus = matcher.group( DropFormulaBonusGroup );
+            String base = matcher.group( DROP_FORMULA_BASE_GROUP );
+            String bonus = matcher.group( DROP_FORMULA_BONUS_GROUP );
 
             int numericMinimum = base != null ? Math.max( 0 , Integer.parseInt( base ) ) : 1;
             int numericMaximum = bonus != null ? Math.max( numericMinimum , Integer.parseInt( bonus ) ) : numericMinimum;
@@ -546,11 +549,11 @@ public class TileData
                 : new VanillaDropFormula( numericMinimum , numericMaximum );
         }
 
-        matcher = RPNDropFormulaRegex.matcher( value );
+        matcher = RPN_DROP_FORMULA_PATTERN.matcher( value );
         if( matcher.find() )
         {
-            String base = matcher.group( DropFormulaBaseGroup );
-            String bonus = matcher.group( DropFormulaBonusGroup );
+            String base = matcher.group( DROP_FORMULA_BASE_GROUP );
+            String bonus = matcher.group( DROP_FORMULA_BONUS_GROUP );
 
             IDropFormula dropFormula = new RPNDropFormula( base , bonus );
             // Perform a test evaluation of the RPN. This will throw if the expression is invalid.

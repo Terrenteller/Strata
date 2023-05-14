@@ -46,7 +46,7 @@ public class ProtoBlockTextureMap implements
         Layer( Layer parentLayer , EnumFacing facing , EnumFacing ... applicableFacings )
         {
             this.parentLayer = parentLayer;
-            this.resourceLocation = new ResourceLocation( Strata.modid , String.format( "meta/%s" , this.toString().toLowerCase() ) );
+            this.resourceLocation = Strata.resource( String.format( "meta/%s" , this.toString().toLowerCase() ) );
             this.facing = facing;
             this.applicableFacings = applicableFacings;
         }
@@ -86,7 +86,7 @@ public class ProtoBlockTextureMap implements
             {
                 Strata.LOGGER.trace( "Stitching " + baseRegistryName + layer.resourceLocationSuffix() );
                 LayeredTexture layerTexture = new LayeredTexture(
-                    new ResourceLocation( Strata.modid , baseRegistryName + layer.resourceLocationSuffix() ),
+                    Strata.resource( baseRegistryName + layer.resourceLocationSuffix() ),
                     textureLayers );
                 layerTextures[ layer.ordinal() ] = layerTexture;
                 textureMap.setTextureEntry( layerTexture );
@@ -126,7 +126,7 @@ public class ProtoBlockTextureMap implements
         ResourceLocation resourceLocation = getOrDefault( multiFacing , null );
         return resourceLocation != null
             ? resourceLocation
-            : new ResourceLocation( Strata.modid , baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
+            : Strata.resource( baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
     }
 
     @Nullable
@@ -134,7 +134,7 @@ public class ProtoBlockTextureMap implements
     public ResourceLocation getOrDefault( Layer multiFacing , ResourceLocation defaultValue )
     {
         return layerLayers[ multiFacing.ordinal() ] != null
-            ? new ResourceLocation( Strata.modid , baseRegistryName + getActualMultiFacing( multiFacing ).resourceLocationSuffix() )
+            ? Strata.resource( baseRegistryName + getActualMultiFacing( multiFacing ).resourceLocationSuffix() )
             : defaultValue;
     }
 
@@ -142,19 +142,19 @@ public class ProtoBlockTextureMap implements
 
     @Nonnull
     @Override
-    public ResourceLocation get( ResourceLocation resourceLocation )
+    public ResourceLocation get( ResourceLocation originalResource )
     {
         // Unlike other getters, we don't want to re-map resources we're not meant to
-        return getOrDefault( resourceLocation , resourceLocation );
+        return getOrDefault( originalResource , originalResource );
     }
 
     @Nullable
     @Override
-    public ResourceLocation getOrDefault( ResourceLocation resourceLocation , ResourceLocation defaultValue )
+    public ResourceLocation getOrDefault( ResourceLocation originalResource , ResourceLocation defaultValue )
     {
         for( Layer layer : Layer.values() )
-            if( resourceLocation.equals( layer.resourceLocation ) )
-                return new ResourceLocation( Strata.modid , baseRegistryName + getActualMultiFacing( layer ).resourceLocationSuffix() );
+            if( originalResource.equals( layer.resourceLocation ) )
+                return Strata.resource( baseRegistryName + getActualMultiFacing( layer ).resourceLocationSuffix() );
 
         return defaultValue;
     }
@@ -166,7 +166,7 @@ public class ProtoBlockTextureMap implements
         List< ResourceLocation > resourceLocations = new ArrayList<>();
         for( Layer layer : Layer.values() )
             if( layerLayers[ layer.ordinal() ] != null )
-                resourceLocations.add( new ResourceLocation( Strata.modid , baseRegistryName + layer.resourceLocationSuffix() ) );
+                resourceLocations.add( Strata.resource( baseRegistryName + layer.resourceLocationSuffix() ) );
 
         return resourceLocations;
     }
@@ -180,7 +180,7 @@ public class ProtoBlockTextureMap implements
         ResourceLocation resourceLocation = getOrDefault( facing , null );
         return resourceLocation != null
             ? resourceLocation
-            : new ResourceLocation( Strata.modid , baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
+            : Strata.resource( baseRegistryName + ProtoBlockTextureMap.Layer.ALL.resourceLocationSuffix() );
     }
 
     @Nullable
@@ -190,7 +190,7 @@ public class ProtoBlockTextureMap implements
         if( facing != null )
             for( Layer layer : Layer.values() )
                 if( layer.facing == facing )
-                    return new ResourceLocation( Strata.modid , baseRegistryName + getActualMultiFacing( layer ).resourceLocationSuffix() );
+                    return Strata.resource( baseRegistryName + getActualMultiFacing( layer ).resourceLocationSuffix() );
 
         return defaultValue;
     }

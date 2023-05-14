@@ -4,7 +4,7 @@ hardness 1.5
 texture strata:blocks/stone/medium/chalk
 textureCaps strata:blocks/stone/medium/chalk_caps
 fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/stone/medium/chalk
-blockstate strata:proto_cube_ym
+blockState strata:proto_cube_ym
 lang.en Chalk
 
 generate chalk cobble

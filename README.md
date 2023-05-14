@@ -10,11 +10,11 @@ _Flexibility_ and **integration**.
 
 - Strata is not a world generation mod. Ideally, Strata is compatible with all of them!
 - Plain-text configuration files allow anyone to create custom content without a line of code!
-- Tilesets make it easy to define entire suites of stone blocks and their derivatives. Just add textures!
+- Tile sets make it easy to define entire suites of stone blocks and their derivatives. Just add textures!
 - Strata will load tile data from resource packs on both client and server. One ZIP to rule them all!
 - Strata's two-in-one ore-in-host-rock system welcomes mod content cross-pollination and resource packs!
 - Ores take on the appearance and properties of their host and drop both when mined!
-- Strata will replicate existing recipes using its own content!
+- Strata will replicate existing recipes using custom content!
 - Ores support the same plants as their hosts! (technical exceptions withstanding)
 - Strata's redstone ore acts like vanilla redstone ore! (yes, this is important)
 - Strata has no hard dependency on any other mod or modding library! (sans Forge, of course)
@@ -23,18 +23,18 @@ _Flexibility_ and **integration**.
 
 Strata will have little to no effect on gameplay outside of creative mode without a world generation mod to bring it to life (as much as rocks can have). Currently, the only option is [CustomOreGen](https://github.com/lawremi/CustomOreGen).
 
-Strata's COG XML is 100% vanilla-compatible out-of-the-box, but is disabled as a whole by default. Given that changes to world generation is ironically destructive, it is easier to turn Strata on than it is to turn off. You may do so in the "Strata" tab of "Custom Ore Generation" options when creating a new world.
+Strata's COG XML is 100% vanilla-compatible out-of-the-box, but is disabled as a whole by default. Given that changes to world generation are ironically destructive, it is easier to turn Strata on than it is to turn off. You may do so in the "Strata" tab of "Custom Ore Generation" options when creating a new world.
 
 _NOTE: COG has a long-standing bug of replacing `emerald_ore` with `monster_egg` [here](https://github.com/lawremi/CustomOreGen/blob/db939431ccab85707754c69c6d54858d1fcdf9ff/src/main/resources/config/modules/Vanilla.xml#L2059). You will likely want to turn off COG's handling of vanilla ore generation in the "Vanilla" tab if you do not fix this yourself._
 
 ## How do I use Strata to create my own content?
 
-- `docs/Strata.txt` describes tiledata keyvalues for the current version
-- `config/strata/tiledata/<modid>` directories contain block/item configuration files
-    - **The client must know about all blocks the server does else the client will hang on connect**
-        - This applies to blocks defined by active resource packs as well
+- `docs/Strata.txt` describes tiledata key-values for the current version
+- `config/strata/tiledata/<modid>` directories contain tile/host/ore configuration files
+    - **Clients must know about everything the server does else the client will hang upon connecting**
         - Unfortunately, the hang occurs outside of Strata's influence
 - `config/strata/recipe/<modid>/blacklist.txt` restricts recipe replication
+    - One recipe resource location regular expression per line
 
 `<modid>` directories are only processed if a mod with that ID is present. Strata will extract its own configuration into corresponding directories on start but will not overwrite them.
 
@@ -51,6 +51,8 @@ Refer to Forge documentation instead to prepare a development environment for us
 $ ./gradlew setupCIWorkspace
 $ ./gradlew build
 ```
+
+You may need to adjust the symlinks in `/usr/lib/jvm/`.
 
 ## "Why" is Strata?
 

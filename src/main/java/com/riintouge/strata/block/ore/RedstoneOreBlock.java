@@ -12,8 +12,8 @@ import java.util.Random;
 
 public class RedstoneOreBlock extends ActivatableOreBlock
 {
-    protected static int DORMANT_LIGHT_LEVEL = 0;
-    protected static int ACTIVE_LIGHT_LEVEL = 9;
+    public static final int DORMANT_LIGHT_LEVEL = 0;
+    public static final int ACTIVE_LIGHT_LEVEL = 9;
 
     public RedstoneOreBlock( IOreInfo oreInfo )
     {

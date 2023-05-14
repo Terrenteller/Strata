@@ -17,36 +17,38 @@ import java.util.regex.Pattern;
 @SideOnly( Side.CLIENT )
 public final class OreBlockModelLoader implements ICustomModelLoader
 {
-    private static final String ResourcePattern = String.format( "^%s:(.+)%s#" , Strata.modid , OreBlock.REGISTRY_NAME_SUFFIX );
-    private static final int ResourcePatternOreNameGroup = 1;
-    private static final Pattern ResourceRegex = Pattern.compile( ResourcePattern );
+    private static final String RESOURCE_REGEX = String.format( "^%s:(.+)%s#" , Strata.MOD_ID , OreBlock.REGISTRY_NAME_SUFFIX );
+    private static final Pattern RESOURCE_PATTERN = Pattern.compile( RESOURCE_REGEX );
+    private static final int ORE_NAME_GROUP = 1;
 
     // ICustomModelLoader overrides
 
     @Override
     public boolean accepts( ResourceLocation modelLocation )
     {
-        Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
+        Matcher matcher = RESOURCE_PATTERN.matcher( modelLocation.toString() );
         if( !matcher.find() )
             return false;
 
-        String oreName = matcher.group( ResourcePatternOreNameGroup );
+        String oreName = matcher.group( ORE_NAME_GROUP );
         return OreRegistry.INSTANCE.contains( oreName );
     }
 
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        Strata.LOGGER.trace( String.format( "OreBlockModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        String modelLocationString = modelLocation.toString();
+        Strata.LOGGER.trace( String.format( "OreBlockModelLoader::loadModel( '%s' )" , modelLocationString ) );
 
-        Matcher matcher = ResourceRegex.matcher( modelLocation.toString() );
-        matcher.find();
+        Matcher matcher = RESOURCE_PATTERN.matcher( modelLocationString );
+        if( !matcher.find() )
+            throw new IllegalArgumentException( modelLocationString );
 
-        String oreName = matcher.group( ResourcePatternOreNameGroup );
+        String oreName = matcher.group( ORE_NAME_GROUP );
         IOreInfo oreInfo = OreRegistry.INSTANCE.find( oreName ).getInfo();
-        ModelResourceLocation templateModelResource = new ModelResourceLocation( oreInfo.blockstateResourceLocation() , null );
+        ModelResourceLocation originalModelResource = new ModelResourceLocation( oreInfo.blockStateResourceLocation() , null );
         IResourceLocationMap textureMap = oreInfo.modelTextureMap();
-        return new ModelRetexturizer( templateModelResource , textureMap );
+        return new ModelRetexturizer( originalModelResource , textureMap );
     }
 
     // IResourceManagerReloadListener overrides

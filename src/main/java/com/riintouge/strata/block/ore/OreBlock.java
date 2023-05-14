@@ -1,6 +1,8 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
@@ -14,6 +16,7 @@ import com.riintouge.strata.network.OreBlockLandingEffectMessage;
 import com.riintouge.strata.network.OreBlockRunningEffectMessage;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.sound.SoundEventTuple;
+import com.riintouge.strata.util.DebugUtil;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.StateUtil;
 import com.riintouge.strata.util.Util;
@@ -59,6 +62,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,28 +74,26 @@ public class OreBlock extends OreBaseBlock
     // Ore blocks and their item blocks have a slightly different registry name
     // so the ore items can have the name of the ore without decoration
     public static final String REGISTRY_NAME_SUFFIX = "_ore";
-
-    protected ThreadLocal< ItemStack > harvestTool = new ThreadLocal<>();
+    protected static final ThreadLocal< ItemStack > HARVEST_TOOL = new ThreadLocal<>();
 
     public OreBlock( IOreInfo oreInfo )
     {
         super( oreInfo , oreInfo.material() );
 
-        setRegistryName( Strata.modid + ":" + oreInfo.oreName() + REGISTRY_NAME_SUFFIX );
+        setCreativeTab( StrataCreativeTabs.ORE_BLOCK_TAB );
+        setHardness( oreInfo.hardness() );
+        setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
+        setRegistryName( Strata.resource( oreInfo.oreName() + REGISTRY_NAME_SUFFIX ) );
+        setResistance( oreInfo.explosionResistance() );
+        setSoundType( oreInfo.soundType() );
+        setTickRandomly( HostRegistry.INSTANCE.doesAnyHostTickRandomly() );
+
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
         if( proxyBlock != null )
             setUnlocalizedName( proxyBlock.getUnlocalizedName() );
         else
-            setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
-
-        setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
-        setSoundType( oreInfo.soundType() );
-        setHardness( oreInfo.hardness() );
-        setResistance( oreInfo.explosionResistance() );
-        setTickRandomly( HostRegistry.ANY_HOST_TICKS );
-
-        setCreativeTab( StrataCreativeTabs.ORE_BLOCK_TAB );
+            setUnlocalizedName( Strata.resource( oreInfo.oreName() ).toString() );
     }
 
     @SideOnly( Side.CLIENT )
@@ -136,11 +139,7 @@ public class OreBlock extends OreBaseBlock
                 TextureAtlasSprite texture = textures.combinedTexture;
 
                 if( texture == null )
-                {
-                    texture = index < numberOfOreParticles
-                        ? textures.hostTexture
-                        : textures.oreTexture;
-                }
+                    texture = index < numberOfOreParticles ? textures.hostTexture : textures.oreTexture;
 
                 if( texture != null )
                 {
@@ -179,15 +178,15 @@ public class OreBlock extends OreBaseBlock
             }
 
             // This loop sampled from ParticleManager.addBlockDestroyEffects()
-            for( int x = 0 ; x < 4 ; ++x )
+            for( int x = 0 ; x < 4 ; x++ )
             {
                 double d0 = ( (double)x + 0.5d ) / 4.0d;
 
-                for( int y = 0 ; y < 4 ; ++y )
+                for( int y = 0 ; y < 4 ; y++ )
                 {
                     double d1 = ( (double)y + 0.5d ) / 4.0d;
 
-                    for( int z = 0 ; z < 4 ; ++z )
+                    for( int z = 0 ; z < 4 ; z++ )
                     {
                         double d2 = ( (double)z + 0.5d ) / 4.0d;
 
@@ -213,7 +212,7 @@ public class OreBlock extends OreBaseBlock
         }
         catch( Exception e )
         {
-            // TODO: warn
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , null ) );
         }
 
         return false;
@@ -305,10 +304,14 @@ public class OreBlock extends OreBaseBlock
     }
 
     @Nullable
-    public IHostInfo getHostInfo( IBlockAccess world , BlockPos pos )
+    public Pair< Block , IBlockState > getHostBlockAndState( IBlockAccess world , BlockPos pos )
     {
-        MetaResourceLocation hostResource = getHost( world , pos );
-        return HostRegistry.INSTANCE.find( hostResource );
+        MetaResourceLocation hostResourceLocation = getHost( world , pos );
+        if( hostResourceLocation == null )
+            return null;
+
+        Block block = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
+        return new ImmutablePair<>( block , block.getStateFromMeta( hostResourceLocation.meta ) );
     }
 
     @Nullable
@@ -343,13 +346,9 @@ public class OreBlock extends OreBaseBlock
         }
         else
         {
-            IHostInfo hostInfo = getHostInfo( worldIn , pos );
-            if( hostInfo == null )
-                return;
-
-            Block hostBlock = Block.getBlockFromName( hostInfo.registryName().toString() );
-            IBlockState hostBlockState = hostBlock.getStateFromMeta( hostInfo.meta() );
-            hostBlock.randomDisplayTick( hostBlockState , worldIn , pos , rand );
+            Pair< Block , IBlockState > hostAndState = getHostBlockAndState( worldIn , pos );
+            if( hostAndState != null )
+                hostAndState.getLeft().randomDisplayTick( hostAndState.getRight(), worldIn , pos , rand );
         }
     }
 
@@ -379,15 +378,15 @@ public class OreBlock extends OreBaseBlock
             }
 
             // This loop sampled from ParticleManager.addBlockDestroyEffects()
-            for( int x = 0 ; x < 4 ; ++x )
+            for( int x = 0 ; x < 4 ; x++ )
             {
                 double d0 = ( (double)x + 0.5d ) / 4.0d;
 
-                for( int y = 0 ; y < 4 ; ++y )
+                for( int y = 0 ; y < 4 ; y++ )
                 {
                     double d1 = ( (double)y + 0.5d ) / 4.0d;
 
-                    for( int z = 0 ; z < 4 ; ++z )
+                    for( int z = 0 ; z < 4 ; z++ )
                     {
                         double d2 = ( (double)z + 0.5d ) / 4.0d;
 
@@ -438,7 +437,7 @@ public class OreBlock extends OreBaseBlock
         }
         catch( Exception e )
         {
-            // TODO: warn
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , null ) );
         }
 
         return false;
@@ -480,7 +479,7 @@ public class OreBlock extends OreBaseBlock
         // The base method says it's server-side but is not annotated as such
         if( !worldObj.isRemote )
         {
-            NetworkManager.INSTANCE.NetworkWrapper.sendToAllAround(
+            NetworkManager.INSTANCE.networkWrapper.sendToAllAround(
                 new OreBlockLandingEffectMessage(
                     (float)entity.posX,
                     (float)entity.posY,
@@ -503,7 +502,7 @@ public class OreBlock extends OreBaseBlock
         if( world.isRemote )
         {
             // These values taken from Entity.createRunningParticles()
-            NetworkManager.INSTANCE.NetworkWrapper.sendToAllAround(
+            NetworkManager.INSTANCE.networkWrapper.sendToAllAround(
                 new OreBlockRunningEffectMessage(
                     (float)( entity.posX + ( RANDOM.nextFloat() - 0.5d ) * (double)entity.width ),
                     (float)( entity.getEntityBoundingBox().minY + 0.1d ),
@@ -537,15 +536,15 @@ public class OreBlock extends OreBaseBlock
         if( !super.canEntityDestroy( state , world , pos , entity ) )
             return false;
 
-        MetaResourceLocation hostResourceLocation = getHost( world , pos );
-        if( hostResourceLocation == null )
+        Pair< Block , IBlockState > hostAndState = getHostBlockAndState( world , pos );
+        if( hostAndState == null )
             return true;
 
-        Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
-        IBlockState hostBlockState = host.getStateFromMeta( hostResourceLocation.meta );
-        return host == Blocks.AIR || host.canEntityDestroy( hostBlockState , world , pos , entity );
+        Block host = hostAndState.getLeft();
+        return host == Blocks.AIR || host.canEntityDestroy( hostAndState.getRight() , world , pos , entity );
     }
 
+    @Deprecated
     @Override
     protected boolean canSilkHarvest()
     {
@@ -573,9 +572,8 @@ public class OreBlock extends OreBaseBlock
         if( hostResourceLocation == null )
             return false;
 
-        Block host = Block.REGISTRY.getObject( hostResourceLocation.resourceLocation );
-        IBlockState hostState = host.getStateFromMeta( hostResourceLocation.meta );
-        if( host.canSustainPlant( hostState , world , pos , direction , plantable ) )
+        Pair< Block , IBlockState > hostAndState = getHostBlockAndState( world , pos );
+        if( hostAndState != null && hostAndState.getLeft().canSustainPlant( hostAndState.getRight() , world , pos , direction , plantable ) )
             return true;
 
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
@@ -643,10 +641,12 @@ public class OreBlock extends OreBaseBlock
         if( proxyBlockState != null )
             oreHardness = proxyBlockState.getBlock().getBlockHardness( proxyBlockState , worldIn , pos );
 
-        IHostInfo hostInfo = getHostInfo( worldIn , pos );
-        return hostInfo != null
-            ? ( hostInfo.hardness() + oreHardness ) / 2.0f
-            : oreHardness;
+        Pair< Block , IBlockState > hostAndState = getHostBlockAndState( worldIn , pos );
+        Float hostHardness = hostAndState != null
+            ? hostAndState.getLeft().getBlockHardness( hostAndState.getRight() , worldIn , pos )
+            : null;
+
+        return hostHardness != null ? ( hostHardness + oreHardness ) / 2.0f : oreHardness;
     }
 
     @Override
@@ -655,20 +655,16 @@ public class OreBlock extends OreBaseBlock
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
 
-        // Our harvestBlock() calls harvestBlock() on the blocks we represent
+        // Only try to get these drops when harvestBlock() is not involved
+        // because our harvestBlock() calls harvestBlock() on the blocks we represent
         // to give them more control over what happens when broken.
         // We cannot determine what can be silk touched here because canSilkHarvest() is unnecessarily protected
         // and we don't have the values to call the state-sensitive overload.
         if( harvesters.get() == null )
         {
-            MetaResourceLocation host = getHost( world , pos );
-            IHostInfo hostInfo = HostRegistry.INSTANCE.find( host );
-
-            if( hostInfo != null )
-            {
-                Block hostBlock = Block.REGISTRY.getObject( host.resourceLocation );
-                hostBlock.getDrops( drops , world , pos , hostBlock.getStateFromMeta( host.meta ) , fortune );
-            }
+            Pair< Block , IBlockState > hostAndState = getHostBlockAndState( world , pos );
+            if( hostAndState != null )
+                hostAndState.getLeft().getDrops( drops , world , pos , hostAndState.getRight() , fortune );
 
             if( proxyBlock != null )
                 proxyBlock.getDrops( drops , world , pos , proxyBlockState , fortune );
@@ -680,7 +676,7 @@ public class OreBlock extends OreBaseBlock
 
             if( weightedDropCollections != null )
             {
-                ItemStack harvestToolOrEmpty = harvestTool.get() != null ? harvestTool.get() : ItemStack.EMPTY;
+                ItemStack harvestToolOrEmpty = HARVEST_TOOL.get() != null ? HARVEST_TOOL.get() : ItemStack.EMPTY;
                 drops.addAll( weightedDropCollections.collectRandomDrops( RANDOM , harvestToolOrEmpty , pos ) );
             }
             else
@@ -699,7 +695,7 @@ public class OreBlock extends OreBaseBlock
         if( proxyBlockState != null )
             return proxyBlockState.getBlock().getExpDrop( proxyBlockState , world , pos , fortune );
 
-        IDropFormula expDropFormula = oreInfo.expDropFormula();
+        IDropFormula expDropFormula = oreInfo.experienceDropFormula();
         if( expDropFormula == null )
             return 0;
 
@@ -797,9 +793,9 @@ public class OreBlock extends OreBaseBlock
     public int getLightValue( IBlockState state , IBlockAccess world , BlockPos pos )
     {
         int hostLightValue = 0;
-        IHostInfo hostInfo = getHostInfo( world , pos );
-        if( hostInfo != null )
-            hostLightValue = hostInfo.lightLevel();
+        Pair< Block , IBlockState > hostAndState = getHostBlockAndState( world , pos );
+        if( hostAndState != null )
+            hostLightValue = hostAndState.getRight().getLightValue( world , pos );
 
         return Math.max( hostLightValue , super.getLightValue( state , world , pos ) );
     }
@@ -838,9 +834,11 @@ public class OreBlock extends OreBaseBlock
     @Override
     public float getSlipperiness( IBlockState state , IBlockAccess world , BlockPos pos , @Nullable Entity entity )
     {
-        IHostInfo hostInfo = getHostInfo( world , pos );
-        Float slipperiness = hostInfo != null ? hostInfo.slipperiness() : null;
-        return slipperiness != null ? slipperiness : super.getSlipperiness( state , world , pos , entity );
+        Pair< Block , IBlockState > hostAndState = getHostBlockAndState( world , pos );
+        if( hostAndState != null )
+            return hostAndState.getLeft().getSlipperiness( hostAndState.getRight() , world , pos , entity );
+
+        return super.getSlipperiness( state , world , pos , entity );
     }
 
     @Deprecated
@@ -857,13 +855,9 @@ public class OreBlock extends OreBaseBlock
     {
         if( RANDOM.nextBoolean() )
         {
-            IHostInfo hostInfo = getHostInfo( world , pos );
-            if( hostInfo != null )
-            {
-                Block hostBlock = Block.REGISTRY.getObject( hostInfo.registryName() );
-                IBlockState hostBlockState = hostBlock.getStateFromMeta( hostInfo.meta() );
-                return hostBlock.getSoundType( hostBlockState , world , pos , null );
-            }
+            Pair< Block , IBlockState > hostAndState = getHostBlockAndState( world , pos );
+            if( hostAndState != null )
+                return hostAndState.getLeft().getSoundType( hostAndState.getRight() , world , pos , null );
         }
 
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
@@ -888,7 +882,7 @@ public class OreBlock extends OreBaseBlock
             // Silk touch involves a separate code path in Block.harvestBlock()
             // which does not support dropping multiple items. Capture the tool here
             // and bypass that logic for getDrops() to figure everything out.
-            harvestTool.set( stack );
+            HARVEST_TOOL.set( stack );
             harvesters.set( player );
             int fortuneLevel = EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , stack );
             dropBlockAsItem( worldIn , pos , state , fortuneLevel );
@@ -962,7 +956,7 @@ public class OreBlock extends OreBaseBlock
         finally
         {
             harvesters.set( null );
-            harvestTool.remove();
+            HARVEST_TOOL.remove();
         }
     }
 

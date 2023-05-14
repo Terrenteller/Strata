@@ -12,24 +12,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly( Side.CLIENT )
 public final class OreItemModelLoader implements ICustomModelLoader
 {
-    private static final String ModelResourceBasePath = "models/item/";
-    private static final String DomainResourcePrefix = Strata.resource( ModelResourceBasePath ).toString();
+    private static final String MODEL_RESOURCE_BASE_PATH = "models/item/";
+    private static final String DOMAIN_RESOURCE_PREFIX = Strata.resource( MODEL_RESOURCE_BASE_PATH ).toString();
 
     // ICustomModelLoader overrides
 
     @Override
     public boolean accepts( ResourceLocation modelLocation )
     {
-        String oreName = modelLocation.toString().replaceFirst( DomainResourcePrefix , "" );
+        String oreName = modelLocation.toString().replaceFirst( DOMAIN_RESOURCE_PREFIX , "" );
         return OreRegistry.INSTANCE.contains( oreName );
     }
 
     @Override
     public IModel loadModel( ResourceLocation modelLocation )
     {
-        Strata.LOGGER.trace( String.format( "OreItemModelLoader::loadModel( \"%s\" )" , modelLocation.toString() ) );
+        Strata.LOGGER.trace( String.format( "OreItemModelLoader::loadModel( '%s' )" , modelLocation.toString() ) );
 
-        String oreName = modelLocation.getResourcePath().replaceFirst( ModelResourceBasePath , "" );
+        String oreName = modelLocation.getResourcePath().replaceFirst( MODEL_RESOURCE_BASE_PATH , "" );
         return new StrataItemModel( OreItemTextureManager.getTextureLocation( oreName ) );
     }
 

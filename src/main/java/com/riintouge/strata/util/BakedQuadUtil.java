@@ -52,7 +52,7 @@ public class BakedQuadUtil
     public static final int[][] RAW_SIDE_EAST  = new int[][] { RAW_TOP_RIGHT_FRONT   , RAW_BOTTOM_RIGHT_FRONT , RAW_BOTTOM_RIGHT_BACK  , RAW_TOP_RIGHT_BACK     };
     public static final int[][][] RAW_SIDE_POINTS = new int[][][] { RAW_SIDE_DOWN , RAW_SIDE_UP , RAW_SIDE_NORTH , RAW_SIDE_SOUTH , RAW_SIDE_WEST , RAW_SIDE_EAST };
 
-    public static final int[] PACKED_NORMALS = new int[] { 0x8100 , 0x7F00 , 0x810000 , 0x7F0000 , 0x81 , 0x7F };
+    public static final int[] PACKED_NORMALS = new int[] { 0x008100 , 0x007F00 , 0x810000 , 0x7F0000 , 0x000081 , 0x00007F };
 
     public static BakedQuad createBakedQuadForFace( int itemRenderLayer , TextureAtlasSprite texture , EnumFacing face )
     {
@@ -106,7 +106,6 @@ public class BakedQuadUtil
 
     // Calculate the normal vector based on four input coordinates.
     // Assumes that the quad is coplanar but should produce a 'reasonable' answer even if not.
-    @Nonnull
     public static int computePackedNormal( Vector3f topLeft , Vector3f bottomLeft , Vector3f bottomRight , Vector3f topRight )
     {
         Vector3f cornerAverage1 = new Vector3f( bottomRight );

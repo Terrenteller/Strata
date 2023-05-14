@@ -66,7 +66,7 @@ public class ParticleOreDigging extends ParticleDigging
             double zSpeedIn,
             int ... arguments )
         {
-            throw new NotImplementedException( "This particle should not be registered with ParticleManager so this method should never be called!" );
+            throw new NotImplementedException( "ParticleOreDigging should not be registered with ParticleManager so this method should never be called!" );
         }
     }
 }

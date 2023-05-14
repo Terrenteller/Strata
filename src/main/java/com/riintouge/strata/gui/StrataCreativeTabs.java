@@ -13,26 +13,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.lang.reflect.Field;
 
 @SideOnly( Side.CLIENT )
-public class StrataCreativeTabs extends CreativeTabs
+public final class StrataCreativeTabs extends CreativeTabs
 {
-    public static StrataCreativeTabs BLOCK_TAB          = new StrataCreativeTabs( "strataBlocksTab"         , Strata.resource( "gneiss" )               );
-    public static StrataCreativeTabs BUILDING_BLOCK_TAB = new StrataCreativeTabs( "strataBuildingBlocksTab" , Strata.resource( "gneiss_stonewall" )     );
-    public static StrataCreativeTabs MISC_BLOCK_TAB     = new StrataCreativeTabs( "strataMiscBlocksTab"     , Strata.resource( "gneiss_pressureplate" ) );
-    public static StrataCreativeTabs BLOCK_FRAGMENT_TAB = new StrataCreativeTabs( "strataBlockFragmentsTab" , Strata.resource( "gneiss_rock" )          );
-    public static StrataCreativeTabs BLOCK_SAMPLE_TAB   = new StrataCreativeTabs( "strataBlockSamplesTab"   , Strata.resource( "gneiss_sample" )        );
-    public static StrataCreativeTabs ORE_BLOCK_TAB      = new StrataCreativeTabs( "strataOreBlocksTab"      , Strata.resource( "banded_iron_ore" )      );
-    public static StrataCreativeTabs ORE_ITEM_TAB       = new StrataCreativeTabs( "strataOreItemsTab"       , Strata.resource( "cinnabar" )             );
-    public static StrataCreativeTabs ORE_SAMPLE_TAB     = new StrataCreativeTabs( "strataOreSamplesTab"     , Strata.resource( "galena_sample" )        );
+    public static final StrataCreativeTabs BLOCK_TAB          = new StrataCreativeTabs( "strataBlocksTab"         , Strata.resource( "gneiss" )               );
+    public static final StrataCreativeTabs BUILDING_BLOCK_TAB = new StrataCreativeTabs( "strataBuildingBlocksTab" , Strata.resource( "gneiss_stonewall" )     );
+    public static final StrataCreativeTabs MISC_BLOCK_TAB     = new StrataCreativeTabs( "strataMiscBlocksTab"     , Strata.resource( "gneiss_pressureplate" ) );
+    public static final StrataCreativeTabs BLOCK_FRAGMENT_TAB = new StrataCreativeTabs( "strataBlockFragmentsTab" , Strata.resource( "gneiss_rock" )          );
+    public static final StrataCreativeTabs BLOCK_SAMPLE_TAB   = new StrataCreativeTabs( "strataBlockSamplesTab"   , Strata.resource( "gneiss_sample" )        );
+    public static final StrataCreativeTabs ORE_BLOCK_TAB      = new StrataCreativeTabs( "strataOreBlocksTab"      , Strata.resource( "banded_iron_ore" )      );
+    public static final StrataCreativeTabs ORE_ITEM_TAB       = new StrataCreativeTabs( "strataOreItemsTab"       , Strata.resource( "cinnabar" )             );
+    public static final StrataCreativeTabs ORE_SAMPLE_TAB     = new StrataCreativeTabs( "strataOreSamplesTab"     , Strata.resource( "galena_sample" )        );
 
     private static int TAB_COUNT;
     private static CreativeTabs FIRST_TAB;
     private static CreativeTabs LAST_TAB;
-    protected final ResourceLocation itemStackResourceLocation;
+    private final ResourceLocation itemStackResource;
 
-    StrataCreativeTabs( String label , ResourceLocation itemStackResourceLocation )
+    StrataCreativeTabs( String label , ResourceLocation itemStackResource )
     {
         super( label );
-        this.itemStackResourceLocation = itemStackResourceLocation;
+        this.itemStackResource = itemStackResource;
 
         if( FIRST_TAB == null )
             FIRST_TAB = this;
@@ -41,23 +41,18 @@ public class StrataCreativeTabs extends CreativeTabs
         LAST_TAB = this;
     }
 
+    // CreativeTabs overrides
+
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( Item.REGISTRY.getObject( itemStackResourceLocation ) );
+        return new ItemStack( Item.REGISTRY.getObject( itemStackResource ) );
     }
 
     // Statics
 
-    public static int getTabCount()
-    {
-        return TAB_COUNT;
-    }
-
     private static Field findTabIndexField() throws Exception
     {
-        Field tabIndexField = null;
-
         for( Field intField : ReflectionUtil.findFieldsByType( CreativeTabs.class , int.class , false ) )
         {
             boolean fieldWasAccessible = intField.isAccessible();
@@ -75,14 +70,14 @@ public class StrataCreativeTabs extends CreativeTabs
 
             if( isTabIndexField )
             {
-                tabIndexField = intField;
-                ReflectionUtil.unfinalizeField( tabIndexField );
+                ReflectionUtil.unfinalizeField( intField );
+                return intField;
             }
             else
                 intField.setAccessible( fieldWasAccessible );
         }
 
-        return tabIndexField;
+        return null;
     }
 
     public static void moveStrataTabsToBeforeOtherModTabs()
@@ -99,7 +94,7 @@ public class StrataCreativeTabs extends CreativeTabs
                 return;
 
             int lastStrataTabIndex = LAST_TAB.getTabIndex();
-            int backwardsOffset = getTabCount();
+            int backwardsOffset = TAB_COUNT;
             int forwardOffset = firstStrataTabIndex - firstModTabIndex;
             CreativeTabs[] currentTabs = CreativeTabs.CREATIVE_TAB_ARRAY;
             CreativeTabs[] rearrangedTabs = new CreativeTabs[ CreativeTabs.CREATIVE_TAB_ARRAY.length ];
@@ -123,7 +118,7 @@ public class StrataCreativeTabs extends CreativeTabs
         }
         catch( Exception e )
         {
-            Strata.LOGGER.error( DebugUtil.prettyPrintException( e , "Caught %s while rearranging creative tabs" ) );
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s while rearranging creative tabs!" ) );
         }
     }
 }

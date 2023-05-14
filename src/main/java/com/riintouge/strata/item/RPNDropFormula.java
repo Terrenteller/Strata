@@ -1,6 +1,7 @@
 package com.riintouge.strata.item;
 
 import com.riintouge.strata.util.RPNExpression;
+import com.riintouge.strata.util.StringUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
@@ -23,11 +24,11 @@ public class RPNDropFormula implements IDropFormula
     public RPNDropFormula( @Nullable String baseExpr , @Nullable String bonusExpr )
     {
         String cleanBaseExpr = baseExpr != null ? baseExpr.trim() : null;
-        cleanBaseExpr = cleanBaseExpr != null && !cleanBaseExpr.isEmpty() ? cleanBaseExpr : "0";
+        cleanBaseExpr = !StringUtil.isNullOrEmpty( cleanBaseExpr ) ? cleanBaseExpr : "0";
         this.baseExpr = new RPNExpression( cleanBaseExpr );
 
         String cleanBonusExpr = bonusExpr != null ? bonusExpr.trim() : null;
-        cleanBonusExpr = cleanBonusExpr != null && !cleanBonusExpr.isEmpty() ? cleanBonusExpr : "0";
+        cleanBonusExpr = !StringUtil.isNullOrEmpty( cleanBonusExpr ) ? cleanBonusExpr : "0";
         this.bonusExpr = new RPNExpression( cleanBonusExpr );
     }
 

@@ -2,25 +2,25 @@ package com.riintouge.strata.image;
 
 public class PixelARGB
 {
-    private static final int ALPHA = 0;
-    private static final int RED = 1;
-    private static final int GREEN = 2;
-    private static final int BLUE = 3;
+    public static final int ALPHA = 0;
+    public static final int RED = 1;
+    public static final int GREEN = 2;
+    public static final int BLUE = 3;
 
-    private int argb[] = new int[ 4 ];
+    protected final byte argb[] = new byte[ 4 ];
 
     public PixelARGB()
     {
         for( int index = 0 ; index < 4 ; index++ )
-            argb[ index ] = 255;
+            argb[ index ] = (byte)255;
     }
 
     public PixelARGB( int pixel )
     {
-        setPixel( pixel );
+        setValue( pixel );
     }
 
-    public PixelARGB( int alpha , int red , int green , int blue )
+    public PixelARGB( byte alpha , byte red , byte green , byte blue )
     {
         setAlpha( alpha );
         setRed( red );
@@ -28,48 +28,56 @@ public class PixelARGB
         setBlue( blue );
     }
 
-    public void setPixel( int pixel ) { argb = decompose( pixel ); }
-
-    public int getAlpha() { return argb[ ALPHA ]; }
-    public void setAlpha( int alpha ) { argb[ ALPHA ] = clamp( alpha ); }
-
-    public int getRed() { return argb[ RED ]; }
-    public void setRed( int red ) { argb[ RED ] = clamp( red ); }
-
-    public int getGreen() { return argb[ GREEN ]; }
-    public void setGreen( int green ) { argb[ GREEN ] = clamp( green ); }
-
-    public int getBlue() { return argb[ BLUE ]; }
-    public void setBlue( int blue ) { argb[ BLUE ] = clamp( blue ); }
-
-    public int getIndex( int index ) { return argb[ index ]; }
-    public void setIndex( int index , int value ) { argb[ index ] = value; }
-
-    public int toInt()
+    public int getValue()
     {
-        int pixel = 0;
-        pixel |= ( argb[ ALPHA ] << 24 ) & 0xFF000000;
-        pixel |= ( argb[ RED ] << 16 ) & 0x00FF0000;
-        pixel |= ( argb[ GREEN ] << 8 ) & 0x0000FF00;
-        pixel |= ( argb[ BLUE ] ) & 0x000000FF;
-
-        return pixel;
+        return 0
+            | ( argb[ ALPHA ] << 24 ) & 0xFF000000
+            | ( argb[   RED ] << 16 ) & 0x00FF0000
+            | ( argb[ GREEN ] <<  8 ) & 0x0000FF00
+            |   argb[  BLUE ]         & 0x000000FF;
     }
 
-    private int clamp( int value )
+    public void setValue( int pixel )
     {
-        return value < 0 ? 0 : ( value > 255 ? 255 : value );
+        argb[ ALPHA ] = (byte)( ( pixel >>> 24 ) & 0xFF );
+        argb[   RED ] = (byte)( ( pixel >>> 16 ) & 0xFF );
+        argb[ GREEN ] = (byte)( ( pixel >>>  8 ) & 0xFF );
+        argb[  BLUE ] = (byte)(   pixel          & 0xFF );
     }
 
-    private int[] decompose( int pixel )
+    public byte[] getValues()
     {
-        int alpha = ( pixel >>> 24 ) & 0xFF;
-        int red = ( pixel >>> 16 ) & 0xFF;
-        int green = ( pixel >>> 8 ) & 0xFF;
-        int blue = pixel & 0xFF;
-
-        return new int[] { alpha , red , green , blue };
+        byte[] values = new byte[ argb.length ];
+        return getValues( values );
     }
+
+    public byte[] getValues( byte[] values )
+    {
+        assert values.length == 4;
+        System.arraycopy( argb , 0 , values , 0 , argb.length );
+        return values;
+    }
+
+    public void setValues( byte[] values )
+    {
+        assert values.length == 4;
+        System.arraycopy( values , 0 , argb , 0 , argb.length );
+    }
+
+    public byte getAlpha() { return argb[ ALPHA ]; }
+    public void setAlpha( byte alpha ) { argb[ ALPHA ] = alpha; }
+
+    public byte getRed() { return argb[ RED ]; }
+    public void setRed( byte red ) { argb[ RED ] = red; }
+
+    public byte getGreen() { return argb[ GREEN ]; }
+    public void setGreen( byte green ) { argb[ GREEN ] = green; }
+
+    public byte getBlue() { return argb[ BLUE ]; }
+    public void setBlue( byte blue ) { argb[ BLUE ] = blue; }
+
+    public byte getIndex( int index ) { return argb[ index ]; }
+    public void setIndex( int index , byte value ) { argb[ index ] = value; }
 
     // Object overrides
 
@@ -78,7 +86,7 @@ public class PixelARGB
     {
         return String.format(
             "PixelARGB %d ( %d , %d , %d , %d )",
-            toInt(),
+            getValue(),
             getAlpha(),
             getRed(),
             getGreen(),

@@ -47,16 +47,16 @@ convertsTo -
 lang.en Mirabilite
 
 ore mica
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/mica
 textureCaps strata:blocks/ore/weak/mica_caps
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/mica normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 lang.en Mica
 
 ore soapstone
-type stone
+tileType stone
 hardness 2.0
 texture strata:blocks/ore/weak/soapstone
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/weak/soapstone normal 100 strata:items/ore/base
@@ -67,7 +67,7 @@ hardness 2.0
 texture strata:blocks/ore/weak/trona
 textureCaps strata:blocks/ore/weak/trona_caps
 fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/ore/weak/trona
-blockstate strata:proto_cube_ym
+blockState strata:proto_cube_ym
 convertsTo -
 lang.en Trona
 
@@ -75,7 +75,7 @@ lang.en Trona
 
 ore bastnasite
 oreDict oreBastnasite
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/bastnasite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/bastnasite normal 100 strata:items/ore/base
@@ -83,7 +83,7 @@ lang.en Bastnäsite
 
 ore fluorite
 oreDict oreFluorite
-type stone
+tileType stone
 hardness 3.0
 texture strata:blocks/ore/medium/fluorite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/medium/fluorite normal 100 strata:items/ore/base
@@ -107,26 +107,26 @@ lang.en Zeolite
 
 ore quartz
 oreDict oreQuartz
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/quartz
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/quartz normal 100 strata:items/ore/base
 lang.en Quartz
 
 ore kyanite
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/kyanite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/kyanite normal 100 strata:items/ore/base
 lang.en Kyanite
 
 ore perlite
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/perlite
 textureCaps strata:blocks/ore/strong/perlite_caps
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/perlite normal 100 strata:items/ore/base
-blockstate strata:proto_cube_y_overlay
+blockState strata:proto_cube_y_overlay
 lang.en Perlite
 
 generate pumice stone
@@ -138,7 +138,7 @@ lang.en Pumice
 
 ore pyrite
 oreDict orePyrite
-type stone
+tileType stone
 hardness 4.0
 texture strata:blocks/ore/strong/pyrite
 oreItemTexture strata:items/ore/mask erase 100 strata:items/ore/border normal 100 strata:blocks/ore/strong/pyrite normal 100 strata:items/ore/base

@@ -4,12 +4,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.function.Supplier;
-import java.util.zip.CRC32;
 
 public class Util
 {
-    private static CRC32 crc32 = new CRC32();
-
     public static boolean isPowerOfTwo( int value )
     {
         return value > 0 && ( value & ( value - 1 ) ) == 0;
@@ -31,6 +28,16 @@ public class Util
     }
 
     public static int clamp( int min , int value , int max )
+    {
+        if( value < min )
+            return min;
+        else if( value > max )
+            return max;
+
+        return value;
+    }
+
+    public static float clamp( float min , float value , float max )
     {
         if( value < min )
             return min;
@@ -71,28 +78,16 @@ public class Util
     }
 
     @Nonnull
-    public static < T > T argumentNullCheck( @Nullable T value , @Nonnull String name ) throws IllegalArgumentException
+    public static < T > T argumentNullCheck( @Nullable T value , @Nonnull String name ) throws NullPointerException
     {
         if( value != null )
             return value;
 
-        throw new IllegalArgumentException( name );
-    }
-
-    public static synchronized long getCRC32( byte[] value )
-    {
-        crc32.reset();
-        crc32.update( value );
-        return crc32.getValue();
+        throw new NullPointerException( name );
     }
 
     public static float randomNegativeOneToPositiveOne( Random random )
     {
         return ( random.nextFloat() * 2.0f ) - 1.0f;
-    }
-
-    public static boolean isNullOrEmpty( String value )
-    {
-        return value == null || value.isEmpty();
     }
 }

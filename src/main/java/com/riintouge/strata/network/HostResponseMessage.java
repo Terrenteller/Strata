@@ -31,8 +31,8 @@ public final class HostResponseMessage extends ZipMessage
         hosts = HostRegistry.INSTANCE.allHostResources();
 
         stream.writeInt( hosts.size() );
-        for( MetaResourceLocation metaResource : hosts )
-            stream.writeUTF( metaResource.toString() );
+        for( MetaResourceLocation host : hosts )
+            stream.writeUTF( host.toString() );
     }
 
     @Override
@@ -77,7 +77,7 @@ public final class HostResponseMessage extends ZipMessage
                 return null;
             }
 
-            // Why does TextComponentTranslation not localize here?
+            // Why does TextComponentTranslation not localize here? Is it because we're server-side?
             TextComponentString text = new TextComponentString(
                 String.format(
                     net.minecraft.util.text.translation.I18n.translateToLocal(

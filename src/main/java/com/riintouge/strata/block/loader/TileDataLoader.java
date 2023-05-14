@@ -1,6 +1,5 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.geo.GeoTileSet;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.geo.HostRegistry;
@@ -9,14 +8,13 @@ import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.block.ore.OreTileSet;
 import com.riintouge.strata.util.Util;
 
-import javax.naming.OperationNotSupportedException;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TileDataLoader
 {
-    private Map< String , Map< TileType , TileData > > tileSetTileDataMap = null;
+    protected Map< String , Map< TileType , TileData > > tileSetTileDataMap = null;
 
     public TileDataLoader()
     {
@@ -30,22 +28,23 @@ public class TileDataLoader
 
     public void loadStream( InputStream stream ) throws IOException
     {
-        load( new BufferedReader( new InputStreamReader( stream , "UTF-8" ) ) );
+        BufferedReader buffer = new BufferedReader( new InputStreamReader( stream , "UTF-8" ) );
+        load( buffer );
+        buffer.close();
     }
 
     public void load( BufferedReader buffer ) throws IOException
     {
+        tileSetTileDataMap = new HashMap<>();
+
         try
         {
-            tileSetTileDataMap = new HashMap<>();
-
             boolean meaningfulLineProcessed = false;
             TileData data = new TileData();
 
             while( buffer.ready() )
             {
                 String line = buffer.readLine().trim();
-
                 if( line.isEmpty() )
                 {
                     if( meaningfulLineProcessed )
@@ -55,13 +54,12 @@ public class TileDataLoader
                         data = new TileData();
                     }
                 }
-                else if( line.charAt( 0 ) != '#' )
+                else if( line.charAt( 0 ) != '#' && line.charAt( 0 ) != ';' && !line.startsWith( "//" ) )
                 {
                     String[] kv = Util.splitKV( line );
                     meaningfulLineProcessed |= data.processKeyValue( kv[ 0 ] , kv[ 1 ] );
                 }
             }
-            buffer.close();
 
             if( meaningfulLineProcessed )
                 processTileData( data );
@@ -78,63 +76,57 @@ public class TileDataLoader
     {
         if( tileData.tileSetName != null && tileData.tileType != null )
         {
+            TileType tileType = tileData.tileType;
             String tileSetName = tileData.tileSetName.toLowerCase();
             Map< TileType , TileData > tileDataMap = tileSetTileDataMap.computeIfAbsent( tileSetName , x -> new HashMap<>() );
 
-            if( tileDataMap.containsKey( tileData.tileType ) )
+            if( tileDataMap.containsKey( tileType ) )
             {
-                Strata.LOGGER.warn( String.format( "Tile '%s' (%s) already loaded. Skipping!" , tileData.tileSetName , tileData.tileType.toString().toLowerCase() ) );
-                return;
+                throw new IllegalStateException(
+                    String.format(
+                        "Tile '%s' (%s) already loaded!",
+                        tileData.tileSetName,
+                        tileType.toString().toLowerCase() ) );
             }
 
-            for( TileType parentType = tileData.tileType.parentType ; parentType != null ; parentType = parentType.parentType )
+            for( TileType parentType = tileType.parentType ; parentType != null ; parentType = parentType.parentType )
             {
                 TileData parentData = tileDataMap.getOrDefault( parentType , null );
                 if( parentData == null )
-                    throw new UnsupportedOperationException( String.format( "'%s' child type '%s' loaded before parent type '%s'!" , tileData.tileSetName , tileData.tileType.toString() , parentType.toString() ) );
+                {
+                    throw new IllegalStateException(
+                        String.format(
+                            "'%s' child type '%s' loaded before parent type '%s'!",
+                            tileData.tileSetName,
+                            tileType.toString(),
+                            parentType.toString() ) );
+                }
 
-                // Only select KVs make sense to propagate from parent to child
-                if( tileData.harvestLevel == null )
-                    tileData.harvestLevel = parentData.harvestLevel;
-                if( tileData.hardness == null )
-                    tileData.hardness = parentData.hardness;
-                if( tileData.explosionResistance == null )
-                    tileData.explosionResistance = parentData.explosionResistance;
-                if( tileData.lightLevel == null )
-                    tileData.lightLevel = parentData.lightLevel;
-                if( tileData.lightOpacity == null )
-                    tileData.lightOpacity = parentData.lightOpacity;
-                if( tileData.slipperiness == null )
-                    tileData.slipperiness = parentData.slipperiness;
-
-                // Surprising as it may be, the texture map is also inheritable.
-                // It will have already been initialized with the owner's registry name which prevents duplication.
-                if( tileData.textureMap == null )
-                    tileData.textureMap = parentData.textureMap;
-
-                // If our sound type matches what the parent would normally use, use whatever the parent actually is.
-                // The sound type should never be null as it initially comes from the tile type.
-                if( tileData.soundType == parentType.soundType )
-                    tileData.soundType = parentData.soundType;
+                inheritFrom( tileData , parentData );
             }
 
-            tileDataMap.put( tileData.tileType , tileData );
+            tileDataMap.put( tileType , tileData );
+
+            // All tertiary types are meant to be defined in config files, but double slabs are special
+            switch( tileType )
+            {
+                case COBBLESLAB:
+                case STONESLAB:
+                case STONEBRICKSLAB:
+                {
+                    TileType doubleSlabsType = TileType.values()[ tileType.ordinal() + 1 ];
+                    tileDataMap.put( doubleSlabsType , tileData.createChildType( doubleSlabsType ) );
+                }
+            }
         }
         else if( tileData.hostMetaResource != null )
         {
-            if( HostRegistry.INSTANCE.find( tileData.hostMetaResource ) != null )
-            {
-                Strata.LOGGER.warn( String.format( "Host '%s' already registered. Skipping!" , tileData.hostMetaResource.toString() ) );
-                return;
-            }
-
             ImmutableHost host;
-
             try
             {
                 host = new ImmutableHost( tileData );
             }
-            catch( IllegalArgumentException e )
+            catch( NullPointerException e )
             {
                 String informativeMessage = String.format(
                     "Failed to create host '%s:%d' with invalid '%s'!",
@@ -142,39 +134,59 @@ public class TileDataLoader
                     tileData.hostMetaResource.meta,
                     e.getMessage() );
 
-                throw new IllegalArgumentException( informativeMessage , e );
+                throw new IllegalStateException( informativeMessage , e );
             }
 
-            HostRegistry.INSTANCE.register( host.registryName() , host.meta() , host );
+            HostRegistry.INSTANCE.register( host );
         }
         else if( tileData.oreName != null )
         {
-            if( OreRegistry.INSTANCE.find( tileData.oreName ) != null )
-            {
-                Strata.LOGGER.warn( String.format( "Ore '%s' already registered. Skipping!" , tileData.oreName ) );
-                return;
-            }
-
             ImmutableOre ore;
-
             try
             {
                 ore = new ImmutableOre( tileData );
             }
-            catch( IllegalArgumentException e )
+            catch( NullPointerException e )
             {
                 String informativeMessage = String.format(
                     "Failed to create ore '%s' with invalid '%s'!",
                     tileData.oreName,
                     e.getMessage() );
 
-                throw new IllegalArgumentException( informativeMessage , e );
+                throw new IllegalStateException( informativeMessage , e );
             }
 
             OreRegistry.INSTANCE.register( new OreTileSet( ore ) );
         }
+        else
+            throw new IllegalArgumentException( "TileData does not represent a tile set, host, or ore!" );
+    }
 
-        // Not all data is guaranteed to be meaningful
+    protected void inheritFrom( TileData child , TileData parent )
+    {
+        // Only select KVs make sense to inherit
+        if( child.harvestLevel == null )
+            child.harvestLevel = parent.harvestLevel;
+        if( child.hardness == null )
+            child.hardness = parent.hardness;
+        if( child.explosionResistance == null )
+            child.explosionResistance = parent.explosionResistance;
+        if( child.lightLevel == null )
+            child.lightLevel = parent.lightLevel;
+        if( child.lightOpacity == null )
+            child.lightOpacity = parent.lightOpacity;
+        if( child.slipperiness == null )
+            child.slipperiness = parent.slipperiness;
+
+        // Surprising as it may be, the texture map is also inheritable.
+        // It will have already been initialized with the owner's registry name which prevents duplication.
+        if( child.textureMap == null )
+            child.textureMap = parent.textureMap;
+
+        // If our sound type matches what the parent would normally use, use whatever the parent actually is.
+        // The sound type should never be null as it initially comes from the tile type.
+        if( child.soundType == parent.tileType.soundType )
+            child.soundType = parent.soundType;
     }
 
     protected void finalizeTileSets()
@@ -186,46 +198,14 @@ public class TileDataLoader
             GeoTileSet tileSet = tileSetMap.computeIfAbsent( tileSetName , x -> new GeoTileSet() );
             Map< TileType , TileData > tileDataMap = tileSetTileDataMap.get( tileSetName );
 
-            for( TileType tileType : TileType.values() )
+            for( TileData tileData : tileDataMap.values() )
             {
-                TileData tileData = tileDataMap.getOrDefault( tileType , null );
-                if( tileData == null )
-                {
-                    // Types with no parent type cannot be created if missing
-                    if( tileType.parentType == null )
-                        continue;
-
-                    // All tertiary types are meant to be defined in config files, but double slabs are special
-                    switch( tileType )
-                    {
-                        case COBBLESLABS:
-                        case STONESLABS:
-                        case STONEBRICKSLABS:
-                            break;
-                        default:
-                            continue;
-                    }
-
-                    try
-                    {
-                        TileData parentData = tileDataMap.get( tileType.parentType );
-                        if( parentData != null )
-                            tileDataMap.put( tileType , tileData = parentData.createMissingChildType( tileType ) );
-                        else
-                            continue;
-                    }
-                    catch( OperationNotSupportedException e )
-                    {
-                        e.printStackTrace();
-                    }
-                }
-
                 ImmutableTile tile;
                 try
                 {
                     tile = new ImmutableTile( tileData );
                 }
-                catch( IllegalArgumentException e )
+                catch( NullPointerException e )
                 {
                     String informativeMessage = String.format(
                         "Failed to create '%s' for '%s' with invalid '%s'!",
@@ -233,12 +213,12 @@ public class TileDataLoader
                         tileSetName,
                         e.getMessage() );
 
-                    throw new IllegalArgumentException( informativeMessage , e );
+                    throw new IllegalStateException( informativeMessage , e );
                 }
 
                 tileSet.addTile( tile );
                 if( tileData.isHost && tileData.tileType.isPrimary )
-                    HostRegistry.INSTANCE.register( tile.registryName() , tile.meta() , tile );
+                    HostRegistry.INSTANCE.register( tile );
             }
         }
 

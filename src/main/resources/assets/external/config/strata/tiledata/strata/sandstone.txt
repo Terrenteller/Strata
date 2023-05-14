@@ -5,7 +5,7 @@ hardness 2.0
 texture strata:blocks/stone/strong/sandstone
 textureCaps strata:blocks/stone/strong/sandstone_caps
 fragmentTexture strata:items/fragments/stone/mask erase 100 strata:items/fragments/stone/highlight screen 100 strata:items/fragments/stone/shadow multiply 100 strata:blocks/stone/strong/sandstone
-blockstate strata:proto_cube_y
+blockState strata:proto_cube_y
 convertsTo minecraft:sandstone
 lang.en Sandstone
 

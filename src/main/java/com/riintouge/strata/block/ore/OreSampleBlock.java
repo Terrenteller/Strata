@@ -33,13 +33,13 @@ public class OreSampleBlock extends SampleBlock
         super( oreBlockState );
         this.oreInfo = oreInfo;
 
-        setRegistryName( Strata.modid + ":" + oreInfo.oreName() + REGISTRY_NAME_SUFFIX );
+        setRegistryName( Strata.resource( oreInfo.oreName() + REGISTRY_NAME_SUFFIX ) );
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
         if( proxyBlock != null )
             setUnlocalizedName( proxyBlock.getUnlocalizedName() );
         else
-            setUnlocalizedName( Strata.modid + ":" + oreInfo.oreName() );
+            setUnlocalizedName( Strata.resource( oreInfo.oreName() ).toString() );
 
         setSoundType( SoundType.GROUND );
         setCreativeTab( StrataCreativeTabs.ORE_SAMPLE_TAB );

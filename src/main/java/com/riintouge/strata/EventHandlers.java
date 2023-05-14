@@ -4,6 +4,7 @@ import com.riintouge.strata.block.geo.GeoBlock;
 import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.OreBlock;
+import com.riintouge.strata.util.DebugUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -30,21 +31,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventBusSubscriber
 public class EventHandlers
 {
-    public static final float unharvestablePenalty = 30f / 100f; // Derived from ForgeHooks.blockStrength()
-    public static final float halfUnharvestablePenalty = unharvestablePenalty + ( ( 1.0f - unharvestablePenalty ) * 0.5f );
-
-    /*
-    @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void blockPlace( BlockEvent.PlaceEvent event )
-    {
-        // TODO: Determine a use case for this method to be implemented, such as block-placing machines from other mods.
-
-        // This causes the block to momentarily appear and play its placement sound.
-        // It also causes client/server item count de-syncronization.
-        // Is there a better way to prevent non-player actions from circumventing the checks in playerInteractEvent()?
-        event.setCanceled( true );
-    }
-    */
+    public static final float UNHARVESTABLE_PENALTY = 30f / 100f; // Derived from ForgeHooks.blockStrength()
+    public static final float HALF_UNHARVESTABLE_PENALTY = UNHARVESTABLE_PENALTY + ( ( 1.0f - UNHARVESTABLE_PENALTY ) * 0.5f );
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
     public static void breakSpeed( PlayerEvent.BreakSpeed event )
@@ -129,14 +117,14 @@ public class EventHandlers
             {
                 // Strong stone ore in a weak stone host with a weak pickaxe?
                 // A weak harvest penalty will do.
-                event.setNewSpeed( event.getNewSpeed() * halfUnharvestablePenalty );
+                event.setNewSpeed( event.getNewSpeed() * HALF_UNHARVESTABLE_PENALTY );
                 return;
             }
             else
             {
                 // Stone in sand with a shovel?
                 // Retain the tool efficiency speed boost but apply a harvest penalty.
-                event.setNewSpeed( event.getNewSpeed() * halfUnharvestablePenalty );
+                event.setNewSpeed( event.getNewSpeed() * HALF_UNHARVESTABLE_PENALTY );
                 return;
             }
         }
@@ -155,7 +143,7 @@ public class EventHandlers
 
         // Strong stone in sand with a weak pickaxe? Stone in sand with an axe?
         // Whatever the case, you're going to have a bad time.
-        event.setNewSpeed( event.getNewSpeed() * unharvestablePenalty );
+        event.setNewSpeed( event.getNewSpeed() * UNHARVESTABLE_PENALTY );
     }
 
     // Taken from EntityPlayer.getDigSpeed()
@@ -200,7 +188,9 @@ public class EventHandlers
         Block plantableBlock = null;
         Block itemBlock = Block.getBlockFromItem( item );
         if( itemBlock instanceof IPlantable )
+        {
             plantableBlock = itemBlock;
+        }
         else
         {
             if( plantableItem != null )
@@ -223,30 +213,28 @@ public class EventHandlers
         {
             // Preempt calls to GeoBlock.canSustainPlant() before World.mayPlace()
             // so we may attempt to override plant sustaining logic.
-            GeoBlock.canSustainPlantEventOverride.set( true );
-            if( plantableBlock != null && !plantableBlock.canPlaceBlockOnSide( world , pos.offset( face ) , face ) )
-                throw new UnsupportedOperationException();
+            GeoBlock.CAN_SUSTAIN_PLANT_EVENT_CHECK.set( true );
 
-            if( plantableItem != null && !eventBlock.canSustainPlant( eventBlockState , world , pos , face , plantableItem ) )
-                throw new UnsupportedOperationException();
-
-            return;
-        }
-        catch( UnsupportedOperationException e )
-        {
-            // Unfortunately, our borderline hacks only get us so far. Plantables which turn the check back around on us
-            // see through our lies. World.getBlockState() returns cached information about GeoBlock rather than that of
-            // a block we defer to. Even if we can override the block state now, we can't during regular update ticks.
-            // Therefore, any plantable which does actual block comparison, such as BlockMushroom, will fail here.
-            // Attempts to extend this convoluted solution to cover these corner cases has not been fruitful.
+            if( plantableBlock != null && !plantableBlock.canPlaceBlockOnSide( world , pos.offset( face ) , face )
+                || plantableItem != null && !eventBlock.canSustainPlant( eventBlockState , world , pos , face , plantableItem ) )
+            {
+                // Unfortunately, our borderline hacks only get us so far.
+                // Plantables which turn the check back around on us see through our lies.
+                // World.getBlockState() returns cached information rather than that of a block we defer to.
+                // Even if we can override the block state now, we can't during regular update ticks.
+                // Therefore, any plantable which does actual block comparison, such as BlockMushroom, will fail here.
+                // Attempts to extend this convoluted solution to cover these corner cases has not been fruitful.
+            }
+            else
+                return;
         }
         catch( Exception e )
         {
-            // TODO: warn
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , null ) );
         }
         finally
         {
-            GeoBlock.canSustainPlantEventOverride.remove();
+            GeoBlock.CAN_SUSTAIN_PLANT_EVENT_CHECK.remove();
         }
 
         event.setUseItem( Event.Result.DENY );
@@ -275,8 +263,7 @@ public class EventHandlers
         IBlockState blockState = world.getBlockState( pos );
         if( blockState.getBlock() instanceof GeoBlock )
         {
-            GeoBlock geoBlock = (GeoBlock)blockState.getBlock();
-            soundType = geoBlock.getTileInfo().soundType();
+            soundType = blockState.getBlock().getSoundType( blockState , world , pos , event.getEntity() );
         }
         else if( blockState.getBlock() instanceof OreBlock )
         {

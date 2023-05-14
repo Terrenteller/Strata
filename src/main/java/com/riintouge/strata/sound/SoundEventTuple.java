@@ -1,6 +1,5 @@
 package com.riintouge.strata.sound;
 
-import com.riintouge.strata.util.Util;
 import net.minecraft.util.SoundEvent;
 
 public class SoundEventTuple
@@ -16,8 +15,8 @@ public class SoundEventTuple
 
     public SoundEventTuple( float volume , float pitch , SoundEvent soundEvent )
     {
-        this.volume = Util.clampNormal( volume );
-        this.pitch = Util.clampNormal( pitch );
+        this.volume = volume;
+        this.pitch = pitch;
         this.soundEvent = soundEvent;
     }
 }

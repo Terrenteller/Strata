@@ -15,13 +15,13 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
+public interface IGeoTileInfo extends IHostInfo, IForgeRegistrable
 {
     @Nonnull
     String tileSetName();
 
     @Nonnull
-    TileType type();
+    TileType tileType();
 
     @Nullable
     String blockOreDictionaryName();
@@ -35,7 +35,7 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     @Nullable
     ItemStack furnaceResult();
 
-    float furnaceExp();
+    float furnaceExperience();
 
     boolean hasFragment();
 
@@ -51,7 +51,7 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     @Nullable
     ItemStack fragmentFurnaceResult();
 
-    float fragmentFurnaceExp();
+    float fragmentFurnaceExperience();
 
     int fragmentBurnTime();
 
@@ -65,11 +65,12 @@ public interface IGeoTileInfo extends IHostInfo , IForgeRegistrable
     ArrayList< IBlockState > sustainsPlantsSustainedBy();
 
     @Nonnull
-    ResourceLocation blockstateResourceLocation();
+    ResourceLocation blockStateResource();
 
     @Nullable
-    IDropFormula expDropFormula();
+    IDropFormula experienceDropFormula();
 
+    @Nullable
     SoundEventTuple ambientSound();
 
     @Nullable

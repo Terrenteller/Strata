@@ -1,12 +1,15 @@
 package com.riintouge.strata.item;
 
 import com.riintouge.strata.misc.LambdaNoThrow;
+import com.riintouge.strata.block.MetaResourceLocation;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -18,8 +21,24 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class ItemHelper
 {
+    @Nullable
+    public static ItemStack metaResourceLocationToItemStack( MetaResourceLocation metaResourceLocation )
+    {
+        Block resultBlock = Block.REGISTRY.getObject( metaResourceLocation.resourceLocation );
+        if( resultBlock != Blocks.AIR )
+            return new ItemStack( resultBlock , 1 , metaResourceLocation.meta );
+
+        Item resultItem = Item.REGISTRY.getObject( metaResourceLocation.resourceLocation );
+        if( resultItem != null && resultItem != Items.AIR )
+            return new ItemStack( resultItem , 1 , metaResourceLocation.meta );
+
+        return null;
+    }
+
     public static EnumActionResult onItemUseWithStatisticsFix(
         EntityPlayer player,
         EnumHand hand,

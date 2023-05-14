@@ -11,9 +11,9 @@ import java.util.Set;
 public class StrataGuiFactory implements IModGuiFactory
 {
     @Override
-    public void initialize( Minecraft minecraftInstance )
+    public GuiScreen createConfigGui( GuiScreen parentScreen )
     {
-        // Nothing to do
+        return new StrataConfigGui( parentScreen );
     }
 
     @Override
@@ -23,9 +23,9 @@ public class StrataGuiFactory implements IModGuiFactory
     }
 
     @Override
-    public GuiScreen createConfigGui( GuiScreen parentScreen )
+    public void initialize( Minecraft minecraftInstance )
     {
-        return new StrataConfigGui( parentScreen );
+        // Nothing to do
     }
 
     @Override

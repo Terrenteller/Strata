@@ -19,11 +19,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class GeoTileSetRegistry
+public final class GeoTileSetRegistry
 {
     public static final GeoTileSetRegistry INSTANCE = new GeoTileSetRegistry();
 
-    private Map< String , GeoTileSet > tileSets = new HashMap<>();
+    private final Map< String , GeoTileSet > tileSetMap = new HashMap<>();
 
     private GeoTileSetRegistry()
     {
@@ -33,29 +33,32 @@ public class GeoTileSetRegistry
     @Nonnull
     public Set< String > tileSetNames()
     {
-        return tileSets.keySet();
+        return tileSetMap.keySet();
     }
 
-    public void register( GeoTileSet tileSet , String tileSetName )
+    public void register( GeoTileSet tileSet , String tileSetName ) throws IllegalStateException
     {
-        tileSets.put( tileSetName , tileSet );
+        if( find( tileSetName ) != null )
+            throw new IllegalStateException( String.format( "Tile set '%s' already registered!" , tileSetName ) );
+
+        tileSetMap.put( tileSetName , tileSet );
     }
 
     public boolean contains( String tileSetName )
     {
-        return tileSets.getOrDefault( tileSetName , null ) != null;
+        return tileSetMap.getOrDefault( tileSetName , null ) != null;
     }
 
     @Nullable
     public IGeoTileSet find( String tileSetName )
     {
-        return tileSets.getOrDefault( tileSetName , null );
+        return tileSetMap.getOrDefault( tileSetName , null );
     }
 
     @Nullable
     public IGeoTileInfo findTileInfo( String tileSetName , TileType tileType )
     {
-        GeoTileSet tileSet = tileSets.getOrDefault( tileSetName , null );
+        GeoTileSet tileSet = tileSetMap.getOrDefault( tileSetName , null );
         return tileSet != null ? tileSet.getInfo( tileType ) : null;
     }
 
@@ -66,12 +69,13 @@ public class GeoTileSetRegistry
     {
         Strata.LOGGER.trace( "GeoTileSetRegistry::registerBlocks()" );
 
-        // NOTE: Multipart models used as dependencies do not seem to get loaded by the
-        // recursive model loading. In the future if necessary, create a new block using
-        // the multipart model and register it here before anything else.
+        // NOTE: Multipart models used as dependencies do not seem to get loaded by recursive model loading.
+        // In the future if necessary, try creating a new block using the multipart model and register it first.
+        // A dummy block using the model may be necessary to get the right stuff loaded before it gets used.
+        // Stacktraces and a brain dump are available upon request.
 
         IForgeRegistry< Block > blockRegistry = event.getRegistry();
-        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSetMap.values() )
             tileSet.registerBlocks( blockRegistry );
     }
 
@@ -81,7 +85,7 @@ public class GeoTileSetRegistry
         Strata.LOGGER.trace( "GeoTileSetRegistry::registerItems()" );
 
         IForgeRegistry< Item > itemRegistry = event.getRegistry();
-        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSetMap.values() )
             tileSet.registerItems( itemRegistry );
     }
 
@@ -91,7 +95,7 @@ public class GeoTileSetRegistry
         Strata.LOGGER.trace( "GeoTileSetRegistry::registerRecipes()" );
 
         IForgeRegistry< IRecipe > recipeRegistry = event.getRegistry();
-        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSetMap.values() )
             tileSet.registerRecipes( recipeRegistry );
     }
 
@@ -100,7 +104,7 @@ public class GeoTileSetRegistry
     {
         Strata.LOGGER.trace( "GeoTileSetRegistry::registerModels()" );
 
-        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSetMap.values() )
             tileSet.registerModels( event );
     }
 
@@ -111,7 +115,7 @@ public class GeoTileSetRegistry
         Strata.LOGGER.trace( "GeoTileSetRegistry::stitchTextures()" );
 
         TextureMap textureMap = event.getMap();
-        for( IForgeRegistrable tileSet : INSTANCE.tileSets.values() )
+        for( IForgeRegistrable tileSet : INSTANCE.tileSetMap.values() )
             tileSet.stitchTextures( textureMap );
     }
 }

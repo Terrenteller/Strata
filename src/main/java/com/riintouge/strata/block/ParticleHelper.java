@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 @SideOnly( Side.CLIENT )
 public class ParticleHelper
 {
-    public static final int DefaultParticleColor = -16777216; // Taken from BlockFalling
+    public static final int DEFAULT_PARTICLE_COLOR = -16777216; // Taken from BlockFalling
 
     public static int getParticleFallingColor( ResourceLocation textureResourceLocation )
     {
@@ -37,7 +37,7 @@ public class ParticleHelper
             return mipmaps.mipmapForEdgeLength( 1 )[ 0 ];
         }
 
-        return DefaultParticleColor;
+        return DEFAULT_PARTICLE_COLOR;
     }
 
     public static void addDestroyEffects(
@@ -47,8 +47,8 @@ public class ParticleHelper
         @Nullable Supplier< TextureAtlasSprite > textureGetter )
     {
         IBlockState state = world.getBlockState( pos ).getActualState( world , pos );
-        if( textureGetter == null && state.getBlock() == Blocks.AIR )
-            return; // TODO: warn
+        if( state.getBlock() == Blocks.AIR )
+            return;
 
         AxisAlignedBB AABB = state.getBoundingBox( world , pos );
         int blockId = Block.getIdFromBlock( state.getBlock() );
@@ -57,19 +57,19 @@ public class ParticleHelper
         double yVelocityOrigin = AABB.minY + ( ( AABB.maxY - AABB.minY ) / 2.0d );
         double zVelocityOrigin = AABB.minZ + ( ( AABB.maxZ - AABB.minZ ) / 2.0d );
 
-        int xParticles = (int)Math.ceil( ( AABB.maxX - AABB.minX ) / 0.25d );
-        int yParticles = (int)Math.ceil( ( AABB.maxY - AABB.minY ) / 0.25d );
-        int zParticles = (int)Math.ceil( ( AABB.maxZ - AABB.minZ ) / 0.25d );
+        int xParticlePlanes = (int)Math.ceil( ( AABB.maxX - AABB.minX ) / 0.25d );
+        int yParticlePlanes = (int)Math.ceil( ( AABB.maxY - AABB.minY ) / 0.25d );
+        int zParticlePlanes = (int)Math.ceil( ( AABB.maxZ - AABB.minZ ) / 0.25d );
 
-        double xOffset = AABB.minX + 0.125;
-        double yOffset = AABB.minY + 0.125;
-        double zOffset = AABB.minZ + 0.125;
+        double xBaseOffset = AABB.minX + 0.125;
+        double yBaseOffset = AABB.minY + 0.125;
+        double zBaseOffset = AABB.minZ + 0.125;
 
-        // When an axis only has a single layer of particles and either min or max is co-planar to a full block face,
+        // When an axis only has a single plane of particles which is co-planar to the side of a full block AABB,
         // move the velocity origin on that axis to the corresponding face so the particles pop away from the side.
         // Otherwise, particles from small blocks like buttons may fly into the block they were attached to.
 
-        if( xParticles == 1 )
+        if( xParticlePlanes == 1 )
         {
             if( AABB.minX == 0.0d )
             {
@@ -78,11 +78,11 @@ public class ParticleHelper
             else if( AABB.maxX == 1.0d )
             {
                 xVelocityOrigin = 1.0f;
-                xOffset = 0.875;
+                xBaseOffset = 0.875;
             }
         }
 
-        if( yParticles == 1 )
+        if( yParticlePlanes == 1 )
         {
             if( AABB.minY == 0.0d )
             {
@@ -91,11 +91,11 @@ public class ParticleHelper
             else if( AABB.maxY == 1.0d )
             {
                 yVelocityOrigin = 1.0f;
-                yOffset = 0.875;
+                yBaseOffset = 0.875;
             }
         }
 
-        if( zParticles == 1 )
+        if( zParticlePlanes == 1 )
         {
             if( AABB.minZ == 0.0d )
             {
@@ -104,32 +104,32 @@ public class ParticleHelper
             else if( AABB.maxZ == 1.0d )
             {
                 zVelocityOrigin = 1.0f;
-                zOffset = 0.875;
+                zBaseOffset = 0.875;
             }
         }
 
         // This loop sampled from ParticleManager.addBlockDestroyEffects()
-        for( int x = 0 ; x < xParticles ; ++x )
+        for( int xPlaneIndex = 0 ; xPlaneIndex < xParticlePlanes ; xPlaneIndex++ )
         {
-            double d0 = xOffset + ( 0.25 * x );
+            double xOffset = xBaseOffset + ( 0.25 * xPlaneIndex );
 
-            for( int y = 0 ; y < yParticles ; ++y )
+            for( int yPlaneIndex = 0 ; yPlaneIndex < yParticlePlanes ; yPlaneIndex++ )
             {
-                double d1 = yOffset + ( 0.25 * y );
+                double yOffset = yBaseOffset + ( 0.25 * yPlaneIndex );
 
-                for( int z = 0 ; z < zParticles ; ++z )
+                for( int zPlaneIndex = 0 ; zPlaneIndex < zParticlePlanes ; zPlaneIndex++ )
                 {
-                    double d2 = zOffset + ( 0.25 * z );
+                    double zOffset = zBaseOffset + ( 0.25 * zPlaneIndex );
 
                     ParticleDigging particleDigging = (ParticleDigging)new ParticleDigging.Factory().createParticle(
                         0, // unused
                         world,
-                        (double)pos.getX() + d0,
-                        (double)pos.getY() + d1,
-                        (double)pos.getZ() + d2,
-                        d0 - xVelocityOrigin,
-                        d1 - yVelocityOrigin,
-                        d2 - zVelocityOrigin,
+                        (double)pos.getX() + xOffset,
+                        (double)pos.getY() + yOffset,
+                        (double)pos.getZ() + zOffset,
+                        xOffset - xVelocityOrigin,
+                        yOffset - yVelocityOrigin,
+                        zOffset - zVelocityOrigin,
                         blockId );
 
                     if( textureGetter != null )

@@ -22,7 +22,7 @@ public class BrewingRecipeReplicator
         // JEI takes a brute-force approach by testing and caching every item that's a potion ingredient.
         // Because Strata's involvement in brewing recipes is minimal and our ingredients should never be seen
         // (our redstone is a proxy ore for vanilla redstone) we are deferring the bulk of this feature.
-        // Unfortunately, JEI doesn't detect what we do have.
+        // Unfortunately, JEI doesn't detect what we do add.
 
         for( IBrewingRecipe brewingRecipe : BrewingRecipeRegistry.getRecipes() )
         {

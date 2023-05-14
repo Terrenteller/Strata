@@ -26,7 +26,7 @@ public final class SoundEventRegistry
         } );
     }
 
-    public SoundType registerAndCreate(
+    public SoundType register(
         float volume,
         float pitch,
         String breakResource,
@@ -51,7 +51,7 @@ public final class SoundEventRegistry
     public static void registerSoundEvents( RegistryEvent.Register< SoundEvent > event )
     {
         for( SoundEvent soundEvent : INSTANCE.soundEventMap.values() )
-            if( soundEvent.getRegistryName().getResourceDomain().equals( Strata.modid ) )
+            if( soundEvent.getRegistryName().getResourceDomain().equals( Strata.MOD_ID ) )
                 event.getRegistry().register( soundEvent );
     }
 }

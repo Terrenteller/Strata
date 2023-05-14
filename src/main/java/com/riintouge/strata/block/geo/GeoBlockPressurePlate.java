@@ -32,17 +32,17 @@ public class GeoBlockPressurePlate extends BlockPressurePlate
         this.tileInfo = tileInfo;
 
         ResourceLocation registryName = tileInfo.registryName();
-        setRegistryName( registryName );
-        setUnlocalizedName( registryName.toString() );
         setCreativeTab( StrataCreativeTabs.MISC_BLOCK_TAB );
-
+        setHardness( tileInfo.hardness() );
         // Vanilla sets a precedent with gold pressure plates.
         // Gold blocks require an iron pick or higher to mine but any level pick will break the plate.
         // This justification is extended to Strata buttons and levers as well.
         setHarvestLevel( tileInfo.harvestTool() , 0 );
-        setSoundType( tileInfo.soundType() );
-        setHardness( tileInfo.hardness() );
+        setRegistryName( registryName );
         setResistance( tileInfo.explosionResistance() );
+        setSoundType( tileInfo.soundType() );
+        setUnlocalizedName( registryName.toString() );
+
         Float slipperiness = tileInfo.slipperiness();
         if( slipperiness != null )
             setDefaultSlipperiness( slipperiness );

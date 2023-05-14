@@ -6,14 +6,15 @@ import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.item.IDropFormula;
+import com.riintouge.strata.item.StaticDropFormula;
 import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -51,9 +52,8 @@ import java.util.function.Supplier;
 
 public class GeoBlock extends BlockFalling
 {
-    public static ThreadLocal< Boolean > canSustainPlantEventOverride = ThreadLocal.withInitial( () -> false );
-    public static ThreadLocal< HarvestReason > HARVEST_REASON = ThreadLocal.withInitial( () -> HarvestReason.UNDEFINED );
-    protected static final PropertyEnum< EnumGeoOrientation > ORIENTATION = PropertyEnum.create( "orientation" , EnumGeoOrientation.class );
+    public static final ThreadLocal< Boolean > CAN_SUSTAIN_PLANT_EVENT_CHECK = ThreadLocal.withInitial( () -> false );
+    public static final ThreadLocal< HarvestReason > HARVEST_REASON = ThreadLocal.withInitial( () -> HarvestReason.UNDEFINED );
 
     protected IGeoTileInfo tileInfo;
 
@@ -70,18 +70,19 @@ public class GeoBlock extends BlockFalling
         this.tileInfo = tileInfo;
 
         ResourceLocation registryName = tileInfo.registryName();
+        setHardness( tileInfo.hardness() );
+        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
         setRegistryName( registryName );
+        setResistance( tileInfo.explosionResistance() );
+        setSoundType( tileInfo.soundType() );
+        setTickRandomly( getTickRandomly() || tileInfo.ticksRandomly() );
         setUnlocalizedName( registryName.toString() );
-        if( tileInfo.type().isPrimary || tileInfo.type() == TileType.COBBLE )
+
+        if( tileInfo.tileType().isPrimary || tileInfo.tileType() == TileType.COBBLE )
             setCreativeTab( StrataCreativeTabs.BLOCK_TAB );
         else
             setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
 
-        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
-        setSoundType( tileInfo.soundType() );
-        setHardness( tileInfo.hardness() );
-        setResistance( tileInfo.explosionResistance() );
-        setTickRandomly( getTickRandomly() || tileInfo.ticksRandomly() );
         Float slipperiness = tileInfo.slipperiness();
         if( slipperiness != null )
             setDefaultSlipperiness( slipperiness );
@@ -89,14 +90,9 @@ public class GeoBlock extends BlockFalling
 
     public boolean canFall()
     {
-        return tileInfo.type() == TileType.SAND
-            || tileInfo.type() == TileType.GRAVEL
+        return tileInfo.tileType() == TileType.SAND
+            || tileInfo.tileType() == TileType.GRAVEL
             || FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.AFFECTED_BY_GRAVITY );
-    }
-
-    public IGeoTileInfo getTileInfo()
-    {
-        return tileInfo;
     }
 
     // BlockFalling overrides
@@ -112,8 +108,9 @@ public class GeoBlock extends BlockFalling
     @SideOnly( Side.CLIENT )
     public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
     {
-        if( tileInfo.ambientSound() != null )
-            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , tileInfo.ambientSound() );
+        SoundEventTuple ambientSound = tileInfo.ambientSound();
+        if( ambientSound != null )
+            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , ambientSound );
 
         if( canFall() )
             super.randomDisplayTick( stateIn , worldIn , pos , rand );
@@ -173,7 +170,7 @@ public class GeoBlock extends BlockFalling
     @Override
     protected boolean canSilkHarvest()
     {
-        if( tileInfo.type().isPrimary && FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.NO_SILK_TOUCH ) )
+        if( tileInfo.tileType().isPrimary && FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.NO_SILK_TOUCH ) )
             return false;
 
         return super.canSilkHarvest();
@@ -182,13 +179,13 @@ public class GeoBlock extends BlockFalling
     @Override
     public boolean canSustainPlant( IBlockState state , IBlockAccess world , BlockPos pos , EnumFacing direction , IPlantable plantable )
     {
-        // Because worldgen may swap an otherwise valid block with us (such as hardened clay with limestone in a mesa),
-        // we cannot accurately determine validity here without knowing worldgen implementation details. As such,
-        // allow anything so existing plants don't drop their items in the world. Prefer strange placement over litter.
-        // Event handlers must enforce actual restrictions.
-        if( !canSustainPlantEventOverride.get() )
+        // Worldgen may swap an otherwise valid block with us (such as hardened clay with limestone in a mesa).
+        // We cannot accurately determine validity here without knowing worldgen implementation details.
+        // As such, allow anything so existing plants don't drop their items in the world.
+        // Prefer strange placement over litter. Event handlers must enforce actual restrictions.
+        if( !CAN_SUSTAIN_PLANT_EVENT_CHECK.get() )
             return true;
-        else if( !tileInfo.type().isPrimary )
+        else if( !tileInfo.tileType().isPrimary )
             return false;
 
         // FIXME: What if there is already a plant at pos which is replaceable?
@@ -206,17 +203,17 @@ public class GeoBlock extends BlockFalling
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer( this , ORIENTATION );
+        return new BlockStateContainer( this , PropertyOrientation.PROPERTY );
     }
 
     @Override
     public int getExpDrop( IBlockState state , IBlockAccess world , BlockPos pos , int fortune )
     {
-        IDropFormula expDropFormula = tileInfo.expDropFormula();
+        IDropFormula expDropFormula = tileInfo.experienceDropFormula();
         if( expDropFormula == null )
             return 0;
 
-        if( !tileInfo.type().isPrimary || state.getValue( ORIENTATION ) != EnumGeoOrientation.NATURAL )
+        if( !tileInfo.tileType().isPrimary || state.getValue( PropertyOrientation.PROPERTY ) != PropertyOrientation.NATURAL )
             return 0;
 
         // We don't have the actual tool at this point but we do have creativity
@@ -241,20 +238,20 @@ public class GeoBlock extends BlockFalling
     {
         Item drop = null;
 
-        if( tileInfo.type() == TileType.CLAY || StrataConfig.dropNonStandardFragments )
+        if( tileInfo.tileType() == TileType.CLAY || StrataConfig.dropNonStandardFragments )
         {
             if( tileInfo.hasFragment() )
             {
                 drop = Item.REGISTRY.getObject( GeoItemFragment.fragmentRegistryName( tileInfo ) );
             }
-            else if( tileInfo.type() == TileType.COBBLE )
+            else if( tileInfo.tileType() == TileType.COBBLE )
             {
                 IGeoTileInfo stoneInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileInfo.tileSetName() , TileType.STONE );
                 drop = stoneInfo != null ? Item.REGISTRY.getObject( GeoItemFragment.fragmentRegistryName( stoneInfo ) ) : null;
             }
         }
 
-        if( drop == null && tileInfo.type() == TileType.STONE )
+        if( drop == null && tileInfo.tileType() == TileType.STONE )
             drop = Item.REGISTRY.getObject( TileType.COBBLE.registryName( tileInfo.tileSetName() ) );
 
         return drop != null ? drop : super.getItemDropped( state , rand , fortune );
@@ -290,7 +287,7 @@ public class GeoBlock extends BlockFalling
     @Override
     public int getMetaFromState( IBlockState state )
     {
-        return ( state.getValue( ORIENTATION ) ).meta;
+        return ( state.getValue( PropertyOrientation.PROPERTY ) ).meta;
     }
 
     @Override
@@ -305,14 +302,15 @@ public class GeoBlock extends BlockFalling
         EntityLivingBase placer )
     {
         return this.getDefaultState()
-            .withProperty( ORIENTATION , EnumGeoOrientation.placedAgainst( facing , placer.getHorizontalFacing() ) );
+            .withProperty( PropertyOrientation.PROPERTY , PropertyOrientation.placedAgainst( facing , placer.getHorizontalFacing() ) );
     }
 
+    @Deprecated
     @Override
     public IBlockState getStateFromMeta( int meta )
     {
         return this.getDefaultState()
-            .withProperty( ORIENTATION , EnumGeoOrientation.VALUES[ meta ] );
+            .withProperty( PropertyOrientation.PROPERTY , PropertyOrientation.VALUES[ meta ] );
     }
 
     @Override
@@ -360,7 +358,7 @@ public class GeoBlock extends BlockFalling
                 replacementBlockResourceLocation = tileInfo.breaksInto();
         }
 
-        if( !tileInfo.type().isPrimary
+        if( !tileInfo.tileType().isPrimary
             || replacementBlockResourceLocation == null
             || ( canSilkHarvest( worldIn , pos , state , player ) && EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , stack ) > 0 ) )
         {
@@ -427,13 +425,13 @@ public class GeoBlock extends BlockFalling
     {
         ResourceLocation fragmentRegistryName = null;
 
-        if( tileInfo.type() == TileType.CLAY || StrataConfig.dropNonStandardFragments )
+        if( tileInfo.tileType() == TileType.CLAY || StrataConfig.dropNonStandardFragments )
         {
             if( tileInfo.hasFragment() )
             {
                 fragmentRegistryName = GeoItemFragment.fragmentRegistryName( tileInfo );
             }
-            else if( tileInfo.type() == TileType.COBBLE )
+            else if( tileInfo.tileType() == TileType.COBBLE )
             {
                 IGeoTileInfo stoneInfo = GeoTileSetRegistry.INSTANCE.findTileInfo( tileInfo.tileSetName() , TileType.STONE );
                 fragmentRegistryName = stoneInfo != null ? GeoItemFragment.fragmentRegistryName( stoneInfo ) : null;
@@ -445,14 +443,14 @@ public class GeoBlock extends BlockFalling
 
         IDropFormula fragmentDropFormula = tileInfo.fragmentDropFormula();
         if( fragmentDropFormula == null )
-            return 4;
+            return StaticDropFormula.STANDARD_FRAGMENT_COUNT;
 
         // We don't have the actual tool at this point but we do have creativity
         ItemStack fakeHarvestTool = new ItemStack( Items.POTATO );
         fakeHarvestTool.addEnchantment( Enchantments.FORTUNE , fortune );
         int dropAmount = fragmentDropFormula.getAmount( random , fakeHarvestTool , null );
 
-        return Util.clamp( 0 , dropAmount , 4 );
+        return Util.clamp( 0 , dropAmount , StaticDropFormula.STANDARD_FRAGMENT_COUNT );
     }
 
     @Override
@@ -485,11 +483,11 @@ public class GeoBlock extends BlockFalling
     public boolean rotateBlock( World world , BlockPos pos , EnumFacing axis )
     {
         IBlockState state = world.getBlockState( pos );
-        EnumGeoOrientation rotatedOrientation = state.getValue( ORIENTATION ).rotate( axis );
+        PropertyOrientation rotatedOrientation = state.getValue( PropertyOrientation.PROPERTY ).rotate( axis );
         if( rotatedOrientation == null )
             return false;
 
-        world.setBlockState( pos , state.withProperty( ORIENTATION , rotatedOrientation ) );
+        world.setBlockState( pos , state.withProperty( PropertyOrientation.PROPERTY , rotatedOrientation ) );
         return true;
     }
 
@@ -507,16 +505,18 @@ public class GeoBlock extends BlockFalling
             super.updateTick( worldIn , pos , state , rand );
     }
 
+    @Deprecated
     @Override
     public IBlockState withMirror( IBlockState state , Mirror mirrorIn )
     {
-        return state.withProperty( ORIENTATION , state.getValue( ORIENTATION ).mirror( mirrorIn ) );
+        return state.withProperty( PropertyOrientation.PROPERTY , state.getValue( PropertyOrientation.PROPERTY ).mirror( mirrorIn ) );
     }
 
+    @Deprecated
     @Override
     public IBlockState withRotation( IBlockState state , Rotation rot )
     {
-        return state.withProperty( ORIENTATION , state.getValue( ORIENTATION ).rotate( rot ) );
+        return state.withProperty( PropertyOrientation.PROPERTY , state.getValue( PropertyOrientation.PROPERTY ).rotate( rot ) );
     }
 
     // Statics

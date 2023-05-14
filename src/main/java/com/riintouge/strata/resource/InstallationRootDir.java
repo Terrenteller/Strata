@@ -1,12 +1,12 @@
 package com.riintouge.strata.resource;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
@@ -16,32 +16,38 @@ import java.util.function.Function;
 
 public class InstallationRootDir
 {
-    private static final String JarExternalDir = "assets/external";
+    public static final Path ABS_ROOT_DIR = Paths.get( Loader.instance().getConfigDir().getParentFile().getAbsolutePath() );
 
-    protected static Path GameRootDir;
-    private String rootSubdirectory;
-    private Path externalPath;
+    public final String subdirectory;
+    public final String internalDir;
+    public final Path externalDir;
 
     public InstallationRootDir( @Nullable String subdirectory )
     {
-        this.rootSubdirectory = subdirectory;
+        Path externalDirInternalPath = Paths.get( "assets/external" );
 
-        if( GameRootDir == null )
-            GameRootDir = Paths.get( Loader.instance().getConfigDir().getParentFile().getAbsolutePath() );
+        if( subdirectory != null )
+        {
+            externalDir = ABS_ROOT_DIR.resolve( subdirectory ).normalize();
+            this.subdirectory = externalDir.toString().substring( ABS_ROOT_DIR.toString().length() + 1 );
+            externalDirInternalPath = externalDirInternalPath.resolve( this.subdirectory );
+        }
+        else
+        {
+            externalDir = ABS_ROOT_DIR;
+            this.subdirectory = null;
+        }
 
-        externalPath = ( rootSubdirectory == null ? GameRootDir : GameRootDir.resolve( rootSubdirectory ) ).normalize();
-    }
-
-    public Path path()
-    {
-        return externalPath;
+        internalDir = externalDirInternalPath.toString()
+            .replaceAll( "\\\\" , JarResourceHelper.JAR_PATH_SEPARATOR )
+            .concat( JarResourceHelper.JAR_PATH_SEPARATOR ); // end with the separator for consumer convenience
     }
 
     @Nonnull
-    public List< String > find( Function< String , Boolean > predicate , boolean recursive ) throws IOException
+    public List< String > find( boolean recursive , Function< String , Boolean > predicate ) throws IOException
     {
-        FileSelector fileSelector = new FileSelector( predicate , recursive );
-        Files.walkFileTree( externalPath , fileSelector );
+        FileSelector fileSelector = new FileSelector( recursive , predicate );
+        Files.walkFileTree( externalDir , fileSelector );
         return fileSelector.selectedFiles();
     }
 
@@ -50,8 +56,8 @@ public class InstallationRootDir
     {
         try
         {
-            FileSelector fileSelector = new FileSelector( s -> true , recursive );
-            Files.walkFileTree( externalPath.resolve( subDirPath ) , fileSelector );
+            FileSelector fileSelector = new FileSelector( recursive , s -> true );
+            Files.walkFileTree( externalDir.resolve( subDirPath ) , fileSelector );
             return fileSelector.selectedFiles();
         }
         catch( NoSuchFileException e )
@@ -61,47 +67,41 @@ public class InstallationRootDir
         }
     }
 
-    public void extractResourceFiles( boolean overwrite )
+    public void extractResources( JarResourceHelper resourceHelper , boolean overwrite ) throws IOException
     {
-        String internalJarDir = String.format( "%s/%s/" , JarExternalDir , rootSubdirectory ).replaceAll( "\\\\" , JarResourceHelper.Separator );
-        for( String path : JarResourceHelper.INSTANCE.find( s -> s.startsWith( internalJarDir ) ) )
+        for( String internalResource : resourceHelper.find( s -> s.startsWith( internalDir ) ) )
         {
-            String resourcePath = path.substring( internalJarDir.length() );
-            File targetFile = new File( externalPath.resolve( resourcePath ).toString() );
+            String relativeResourcePath = internalResource.substring( internalDir.length() );
+            File targetFile = new File( externalDir.resolve( relativeResourcePath ).toString() );
             if( targetFile.exists() && !overwrite )
                 continue;
 
-            targetFile.getParentFile().mkdirs();
-            InputStream stream = InstallationRootDir.class.getClassLoader().getResourceAsStream( path );
-
-            try
-            {
-                Files.copy( stream , targetFile.toPath() , StandardCopyOption.REPLACE_EXISTING );
-            }
-            catch( IOException e )
-            {
-                e.printStackTrace();
-            }
+            targetFile.getParentFile().mkdirs(); // Ignore the return because we expect Files.copy() to complain
+            Files.copy( resourceHelper.getResource( internalDir ) , targetFile.toPath() , StandardCopyOption.REPLACE_EXISTING );
         }
     }
 
+    // Nested classes
+
     protected class FileSelector extends SimpleFileVisitor< Path >
     {
-        private Function< String , Boolean > predicate;
-        private boolean recursive , initialDirectory = true;
-        private List< String > selectedFiles = new Vector<>();
+        protected Function< String , Boolean > predicate;
+        protected boolean recursive , initialDirectory = true;
+        protected List< String > selectedFiles = new Vector<>();
 
-        public FileSelector( Function< String , Boolean > predicate , boolean recursive )
+        public FileSelector( boolean recursive , Function< String , Boolean > predicate )
         {
-            this.predicate = predicate;
             this.recursive = recursive;
+            this.predicate = predicate;
         }
 
         @Nonnull
         public List< String > selectedFiles()
         {
-            return selectedFiles;
+            return ImmutableList.copyOf( selectedFiles );
         }
+
+        // SimpleFileVisitor overrides
 
         @Nonnull
         @Override
@@ -109,14 +109,11 @@ public class InstallationRootDir
         {
             if( recursive )
                 return FileVisitResult.CONTINUE;
+            else if( !initialDirectory )
+                return FileVisitResult.SKIP_SUBTREE;
 
-            if( initialDirectory )
-            {
-                initialDirectory = false;
-                return FileVisitResult.CONTINUE;
-            }
-
-            return FileVisitResult.SKIP_SUBTREE;
+            initialDirectory = false;
+            return FileVisitResult.CONTINUE;
         }
 
         @Nonnull

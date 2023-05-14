@@ -65,7 +65,7 @@ public class GeoItemBlock extends ItemBlock
     @Override
     public int getItemBurnTime( ItemStack itemStack )
     {
-        return tileInfo.type().isPrimary ? tileInfo.burnTime() : 0;
+        return tileInfo.tileType().isPrimary ? tileInfo.burnTime() : 0;
     }
 
     @Override

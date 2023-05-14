@@ -5,6 +5,7 @@ import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SampleBlock;
 import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -33,11 +34,10 @@ public class GeoSampleBlock extends SampleBlock
         super( geoBlockState );
         this.tileInfo = tileInfo;
 
-        setRegistryName( Strata.modid + ":" + tileInfo.tileSetName() + REGISTRY_NAME_SUFFIX );
-        setUnlocalizedName( Strata.modid + ":" + tileInfo.tileSetName() );
-
-        setSoundType( tileInfo.soundType() );
         setCreativeTab( StrataCreativeTabs.BLOCK_SAMPLE_TAB );
+        setRegistryName( Strata.resource( tileInfo.tileSetName() + REGISTRY_NAME_SUFFIX ) );
+        setSoundType( tileInfo.soundType() );
+        setUnlocalizedName( Strata.resource( tileInfo.tileSetName() ).toString() );
     }
 
     // Block overrides
@@ -68,6 +68,7 @@ public class GeoSampleBlock extends SampleBlock
             drops.add( new ItemStack( sampleItemBlock ) );
     }
 
+    @Deprecated
     @Override
     public ItemStack getItem( World worldIn , BlockPos pos , IBlockState state )
     {
@@ -90,7 +91,8 @@ public class GeoSampleBlock extends SampleBlock
     @SideOnly( Side.CLIENT )
     public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
     {
-        if( tileInfo.ambientSound() != null )
-            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , tileInfo.ambientSound() );
+        SoundEventTuple ambientSound = tileInfo.ambientSound();
+        if( ambientSound != null )
+            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , ambientSound );
     }
 }

@@ -38,7 +38,7 @@ import java.util.function.Supplier;
 public class GeoBlockWall extends BlockWall
 {
     public static final PropertyBool TALL = PropertyBool.create( "tall" );
-    protected static ThreadLocal< Boolean > IsRecursingUp = ThreadLocal.withInitial( () -> false );
+    protected static final ThreadLocal< Boolean > IS_RECURSING_UP = ThreadLocal.withInitial( () -> false );
 
     protected IGeoTileInfo tileInfo;
     // The logic for this hack MUST respect the default boolean value.
@@ -53,14 +53,14 @@ public class GeoBlockWall extends BlockWall
         RemoveBlockWallVariantFromBlockState();
 
         ResourceLocation registryName = tileInfo.registryName();
-        setRegistryName( registryName );
-        setUnlocalizedName( registryName.toString() );
         setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
-
         setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
-        setSoundType( tileInfo.soundType() );
         setHardness( tileInfo.hardness() );
+        setRegistryName( registryName );
         setResistance( tileInfo.explosionResistance() );
+        setSoundType( tileInfo.soundType() );
+        setUnlocalizedName( registryName.toString() );
+
         Float slipperiness = tileInfo.slipperiness();
         if( slipperiness != null )
             setDefaultSlipperiness( slipperiness );
@@ -85,9 +85,9 @@ public class GeoBlockWall extends BlockWall
                 .withProperty( WEST , Boolean.FALSE )
                 .withProperty( TALL , Boolean.FALSE ) );
         }
-        catch( Exception ex )
+        catch( Exception e )
         {
-            throw new RuntimeException( ex );
+            throw new RuntimeException( e );
         }
     }
 
@@ -107,12 +107,12 @@ public class GeoBlockWall extends BlockWall
             if( tileInfo.tileSetName().compareTo( otherWall.tileInfo.tileSetName() ) != 0 )
                 return false;
 
-            switch( tileInfo.type() )
+            switch( tileInfo.tileType() )
             {
                 case COBBLEWALL:
                 case COBBLEWALLMOSSY:
                 {
-                    switch( otherWall.tileInfo.type() )
+                    switch( otherWall.tileInfo.tileType() )
                     {
                         case COBBLEWALL:
                         case COBBLEWALLMOSSY:
@@ -122,11 +122,11 @@ public class GeoBlockWall extends BlockWall
                     break;
                 }
                 case STONEWALL:
-                    return otherWall.tileInfo.type() == TileType.STONEWALL;
+                    return otherWall.tileInfo.tileType() == TileType.STONEWALL;
                 case STONEBRICKWALL:
                 case STONEBRICKWALLMOSSY:
                 {
-                    switch( otherWall.tileInfo.type() )
+                    switch( otherWall.tileInfo.tileType() )
                     {
                         case STONEBRICKWALL:
                         case STONEBRICKWALLMOSSY:
@@ -218,7 +218,7 @@ public class GeoBlockWall extends BlockWall
             up |= !worldIn.isAirBlock( pos.up() )
                 || worldIn.getBlockState( pos.offset( EnumFacing.DOWN ) ).getBlock() instanceof BlockWall;
         }
-        else if( !( up && IsRecursingUp.get() ) )
+        else if( !( up && IS_RECURSING_UP.get() ) )
         {
             BlockPos abovePos = pos.offset( EnumFacing.UP );
             IBlockState aboveBlockState = worldIn.getBlockState( abovePos );
@@ -238,12 +238,12 @@ public class GeoBlockWall extends BlockWall
                     if( aboveBlock instanceof BlockWall )
                     {
                         // Recurse upwards
-                        boolean wasRecursingUp = IsRecursingUp.get();
+                        boolean wasRecursingUp = IS_RECURSING_UP.get();
                         if( !wasRecursingUp )
-                            IsRecursingUp.set( true );
+                            IS_RECURSING_UP.set( true );
                         IBlockState aboveBlockActualState = aboveBlock.getActualState( aboveBlockState , worldIn , abovePos );
                         if( !wasRecursingUp )
-                            IsRecursingUp.remove();
+                            IS_RECURSING_UP.remove();
 
                         boolean aboveNorth = StateUtil.getValue( aboveBlockActualState , NORTH , false );
                         boolean aboveEast = StateUtil.getValue( aboveBlockActualState , EAST , false );
@@ -256,7 +256,7 @@ public class GeoBlockWall extends BlockWall
                             || ( north != aboveNorth ) || ( east != aboveEast ) || ( south != aboveSouth ) || ( west != aboveWest );
 
                         // If the wall above has any connections which match ours, all directions are considered "tall".
-                        // This dampens the model state combinatorial explosion in the "proto_wall" blockstate.
+                        // This dampens the model state combinatorial explosion in the "proto_wall" block state.
                         // Visual oddities will occur with certain arrangements, but the overall improvement
                         // is worth the edge cases. This might can be fixed if/when we can load a multipart model
                         // as a dependency. See the note in GeoTileSetRegistry.registerBlocks() for details.

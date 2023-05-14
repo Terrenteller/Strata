@@ -66,7 +66,7 @@ public class ParticleOreBlockDust extends ParticleBlockDust
             double zSpeedIn,
             int ... arguments )
         {
-            throw new NotImplementedException( "This particle should not be registered with ParticleManager so this method should never be called!" );
+            throw new NotImplementedException( "ParticleOreBlockDust should not be registered with ParticleManager so this method should never be called!" );
         }
     }
 }

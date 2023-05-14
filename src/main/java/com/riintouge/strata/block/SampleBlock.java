@@ -40,15 +40,15 @@ public abstract class SampleBlock extends BlockFalling
 {
     // Sample blocks and their item blocks have a slightly different registry name
     // so fragments can have the undecorated name
-    public static String REGISTRY_NAME_SUFFIX = "_sample";
-    protected static double AABB_MIN_X = 3.0 / 16.0;
-    protected static double AABB_MAX_X = 13.0 / 16.0;
-    protected static double AABB_MIN_Z = 3.0 / 16.0;
-    protected static double AABB_MAX_Z = 13.0 / 16.0;
-    protected static AxisAlignedBB AABB = new AxisAlignedBB( AABB_MIN_X , 0 , AABB_MIN_Z , AABB_MAX_X , 4.0 / 16.0 , AABB_MAX_Z );
+    public static final String REGISTRY_NAME_SUFFIX = "_sample";
+    protected static final double AABB_MIN_X = 3.0 / 16.0;
+    protected static final double AABB_MAX_X = 13.0 / 16.0;
+    protected static final double AABB_MIN_Z = 3.0 / 16.0;
+    protected static final double AABB_MAX_Z = 13.0 / 16.0;
+    protected static final AxisAlignedBB AABB = new AxisAlignedBB( AABB_MIN_X , 0 , AABB_MIN_Z , AABB_MAX_X , 4.0 / 16.0 , AABB_MAX_Z );
     // Unfortunately, we have a very small degree of movement to prevent any part of the model floating mysteriously
     // over a ledge. This would be improved if we could programmatically get the extents of the model.
-    protected static double MAX_OFFSET_FROM_CENTER = 2.0 / 16.0;
+    protected static final double MAX_OFFSET_FROM_CENTER = 2.0 / 16.0;
 
     protected IBlockState originalBlockState;
 
@@ -103,6 +103,7 @@ public abstract class SampleBlock extends BlockFalling
         return false;
     }
 
+    @Deprecated
     @Override
     protected boolean canSilkHarvest()
     {
@@ -129,12 +130,14 @@ public abstract class SampleBlock extends BlockFalling
         super.dropBlockAsItemWithChance( worldIn , pos , state , chance , fortune );
     }
 
+    @Deprecated
     @Override
     public BlockFaceShape getBlockFaceShape( IBlockAccess worldIn , IBlockState state , BlockPos pos , EnumFacing face )
     {
         return BlockFaceShape.UNDEFINED;
     }
 
+    @Deprecated
     @Override
     public AxisAlignedBB getBoundingBox( IBlockState state , IBlockAccess source , BlockPos pos )
     {
@@ -160,12 +163,14 @@ public abstract class SampleBlock extends BlockFalling
         return originalBlockState.getBlock().getLocalizedName();
     }
 
+    @Deprecated
+    @Override
     public MapColor getMapColor( IBlockState state , IBlockAccess worldIn , BlockPos pos )
     {
-        // TODO: Does it make sense for samples to show up on a map meaningfully if the ore blocks don't?
         return MapColor.AIR;
     }
 
+    @Deprecated
     @Override
     public EnumPushReaction getMobilityFlag( IBlockState state )
     {
@@ -173,6 +178,7 @@ public abstract class SampleBlock extends BlockFalling
         return EnumPushReaction.DESTROY;
     }
 
+    @Deprecated
     @Override
     public Vec3d getOffset( IBlockState state , IBlockAccess worldIn , BlockPos pos )
     {
@@ -204,30 +210,35 @@ public abstract class SampleBlock extends BlockFalling
         return originalBlockState.getBlock().getUnlocalizedName();
     }
 
+    @Deprecated
     @Override
     public boolean isFullBlock( IBlockState state )
     {
         return false;
     }
 
+    @Deprecated
     @Override
     public boolean isFullCube( IBlockState state )
     {
         return false;
     }
 
+    @Deprecated
     @Override
     public boolean isOpaqueCube( IBlockState state )
     {
         return false;
     }
 
+    @Deprecated
     @Override
     public boolean isSideSolid( IBlockState base_state , IBlockAccess world , BlockPos pos , EnumFacing side )
     {
         return false;
     }
 
+    @Deprecated
     @Override
     public boolean isTopSolid( IBlockState state )
     {

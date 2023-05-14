@@ -18,20 +18,14 @@ import java.util.function.Function;
 
 public class StrataItemModel implements IModel
 {
-    protected ResourceLocation fragmentTextureLocation;
+    protected ResourceLocation textureResource;
 
-    public StrataItemModel( ResourceLocation fragmentTextureLocation )
+    public StrataItemModel( ResourceLocation textureResource )
     {
-        this.fragmentTextureLocation = fragmentTextureLocation;
+        this.textureResource = textureResource;
     }
 
     // IModel overrides
-
-    @Override
-    public Collection< ResourceLocation > getTextures()
-    {
-        return ImmutableList.of( fragmentTextureLocation );
-    }
 
     @Override
     public IBakedModel bake(
@@ -39,7 +33,7 @@ public class StrataItemModel implements IModel
         VertexFormat format,
         Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter )
     {
-        ItemLayerModel itemLayerModel = new ItemLayerModel( ImmutableList.of( fragmentTextureLocation ) );
+        ItemLayerModel itemLayerModel = new ItemLayerModel( ImmutableList.of( textureResource ) );
         IBakedModel bakedModel = itemLayerModel.bake( state , format , bakedTextureGetter );
         ImmutableList.Builder< BakedQuad > builder = ImmutableList.builder();
         builder.addAll( bakedModel.getQuads( null , null , 0 ) );
@@ -49,5 +43,11 @@ public class StrataItemModel implements IModel
             bakedModel.getParticleTexture(),
             Maps.immutableEnumMap( StrataItemCameraTransform.getTransforms( state ) ),
             ItemOverrideList.NONE );
+    }
+
+    @Override
+    public Collection< ResourceLocation > getTextures()
+    {
+        return ImmutableList.of( textureResource );
     }
 }

@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.geo;
 
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Mirror;
@@ -9,9 +10,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public enum EnumGeoOrientation implements IStringSerializable
+public enum PropertyOrientation implements IStringSerializable
 {
-    // Placed by natural means. Does not have an inherent orientation.
+    // Placed by natural means. Does not have an absolute orientation.
     NATURAL ( 0 , 0 , "natural" , 0 ),
 
     UP_NORTH ( 4 , 7 , "up_north" , 5 ),
@@ -29,14 +30,21 @@ public enum EnumGeoOrientation implements IStringSerializable
     DOWN_SOUTH ( 14 , 13 , "down_south" , 15 ),
     DOWN_WEST  ( 15 , 14 , "down_west"  , 12 );
 
-    public static final EnumGeoOrientation[] VALUES = new EnumGeoOrientation[ 16 ];
+    public static final PropertyOrientation[] VALUES = new PropertyOrientation[ 16 ];
+    public static final PropertyEnum< PropertyOrientation > PROPERTY = PropertyEnum.create( "orientation" , PropertyOrientation.class );
 
     public final int meta;
     public final int leftRotIndex;
     public final String name;
     public final int rightRotIndex;
 
-    EnumGeoOrientation( int meta , int leftRotIndex , String name , int rightRotIndex )
+    static
+    {
+        for( PropertyOrientation orientation : values() )
+            VALUES[ orientation.meta ] = orientation;
+    }
+
+    PropertyOrientation( int meta , int leftRotIndex , String name , int rightRotIndex )
     {
         this.meta = meta;
         this.leftRotIndex = leftRotIndex;
@@ -49,13 +57,13 @@ public enum EnumGeoOrientation implements IStringSerializable
         return this.meta;
     }
 
-    public EnumGeoOrientation mirror( Mirror mirror )
+    public PropertyOrientation mirror( Mirror mirror )
     {
         return mirror == Mirror.NONE ? this : rotate( Rotation.CLOCKWISE_180 );
     }
 
     @Nullable
-    public EnumGeoOrientation rotate( @Nonnull EnumFacing facing )
+    public PropertyOrientation rotate( @Nonnull EnumFacing facing )
     {
         if( this == NATURAL )
             return null;
@@ -171,7 +179,7 @@ public enum EnumGeoOrientation implements IStringSerializable
         return null;
     }
 
-    public EnumGeoOrientation rotate( Rotation rot )
+    public PropertyOrientation rotate( Rotation rot )
     {
         switch( rot )
         {
@@ -204,13 +212,7 @@ public enum EnumGeoOrientation implements IStringSerializable
 
     // Statics
 
-    static
-    {
-        for( EnumGeoOrientation orientation : values() )
-            VALUES[ orientation.meta ] = orientation;
-    }
-
-    public static EnumGeoOrientation placedAgainst( @Nonnull EnumFacing blockSide , @Nullable EnumFacing placerHorizontalFacing )
+    public static PropertyOrientation placedAgainst( @Nonnull EnumFacing blockSide , @Nullable EnumFacing placerHorizontalFacing )
     {
         EnumFacing adjustedPlacerHorizontalFacing = placerHorizontalFacing;
         if( placerHorizontalFacing == null
@@ -269,8 +271,8 @@ public enum EnumGeoOrientation implements IStringSerializable
         // We shouldn't be able to get here anyway.
         throw new IllegalStateException(
             String.format(
-                "No appropriate geo orientation for block placed facing \"%s\" against side \"%s\"!",
+                "No appropriate orientation for block placed against side '%s' by placer facing '%s'!",
                 blockSide.toString(),
-                placerHorizontalFacing.toString() ) );
+                adjustedPlacerHorizontalFacing.toString() ) );
     }
 }

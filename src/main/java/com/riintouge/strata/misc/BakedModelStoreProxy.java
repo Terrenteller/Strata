@@ -1,5 +1,6 @@
 package com.riintouge.strata.misc;
 
+import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.DebugUtil;
 import com.riintouge.strata.util.ReflectionUtil;
 import net.minecraft.block.Block;
@@ -62,7 +63,7 @@ public final class BakedModelStoreProxy implements InvocationHandler
         }
         catch( Exception e )
         {
-            DebugUtil.printException( e );
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , null ) );
         }
 
         return null;
@@ -88,7 +89,7 @@ public final class BakedModelStoreProxy implements InvocationHandler
                 if( stateMapperBase == null )
                     return missingModel;
 
-                Object modelResourceLocation = stateMapperBaseMethodPair.getRight().invoke( stateMapperBaseMethodPair.getLeft() , state );
+                Object modelResourceLocation = stateMapperBaseMethodPair.getRight().invoke( stateMapperBase , state );
                 return blockModelShapes.getModelManager().getModel( (ModelResourceLocation)modelResourceLocation );
             }
 
@@ -116,7 +117,7 @@ public final class BakedModelStoreProxy implements InvocationHandler
         }
         catch( Exception e )
         {
-            DebugUtil.printException( e );
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , null ) );
         }
 
         return missingModel;
@@ -149,27 +150,25 @@ public final class BakedModelStoreProxy implements InvocationHandler
                 .getBlockRendererDispatcher()
                 .getBlockModelShapes();
 
-            // Open up BlockModelShapes.bakedModelStore
             Field field = ReflectionUtil.findFieldByType( BlockModelShapes.class , IdentityHashMap.class , true );
             field.setAccessible( true );
             ReflectionUtil.unfinalizeField( field );
 
-            // Inject our proxy if not done already
             Object bakedModelStore = field.get( blockModelShapes );
             if( !( bakedModelStore instanceof Proxy ) )
             {
                 Map< IBlockState , IBakedModel > originalValue = (Map< IBlockState , IBakedModel >)bakedModelStore;
-                Object bakedModelStoreProxyProxy = Proxy.newProxyInstance(
+                Object bakedModelStoreProxy = Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(),
                     new Class[]{ Map.class },
                     new BakedModelStoreProxy( originalValue ) );
-                field.set( blockModelShapes , bakedModelStoreProxyProxy );
+                field.set( blockModelShapes , bakedModelStoreProxy );
                 field.setAccessible( false );
             }
         }
         catch( Exception e )
         {
-            DebugUtil.printException( e );
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s while injecting BakedModelStoreProxy!" ) );
         }
     }
 }

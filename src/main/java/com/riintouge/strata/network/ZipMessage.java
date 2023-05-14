@@ -36,7 +36,6 @@ public abstract class ZipMessage extends DataStreamMessage
         catch( Exception e )
         {
             caughtException = e;
-            e.printStackTrace();
         }
     }
 
@@ -59,7 +58,6 @@ public abstract class ZipMessage extends DataStreamMessage
         catch( Exception e )
         {
             caughtException = e;
-            e.printStackTrace();
         }
     }
 }

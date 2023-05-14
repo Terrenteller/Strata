@@ -30,7 +30,7 @@ public enum TileType
     STONEPOLISHED   ( Tier.SECONDARY , "_stonepolished"   , null , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
 
     // Tertiaries - Manually* specified derivatives of a primary or secondary
-    // * double slabs are special and should not be specified in config files and must immediately follow the single slab in this enum
+    // * Double slabs are special, should not be specified in config files, and must immediately follow the single slab in this enum for indexing purposes
     COBBLESTAIRS        ( Tier.TERTIARY , "_cobblestairs"        , null , Material.ROCK     , SoundType.STONE , "pickaxe" , COBBLE          , "proto_stairs"         , "facing=east,half=bottom,shape=straight" ),
     STONESTAIRS         ( Tier.TERTIARY , "_stonestairs"         , null , Material.ROCK     , SoundType.STONE , "pickaxe" , STONE           , "proto_stairs"         , "facing=east,half=bottom,shape=straight" ),
     STONEBRICKSTAIRS    ( Tier.TERTIARY , "_stonebrickstairs"    , null , Material.ROCK     , SoundType.STONE , "pickaxe" , STONEBRICK      , "proto_stairs"         , "facing=east,half=bottom,shape=straight" ),
@@ -64,7 +64,7 @@ public enum TileType
     public final SoundType soundType;
     public final String harvestTool;
     public final TileType parentType;
-    public final ResourceLocation blockstate;
+    public final ResourceLocation blockStateResource;
     public final String defaultVariant;
     public final ItemStack vanillaItemStack;
 
@@ -76,7 +76,7 @@ public enum TileType
         SoundType soundType,
         String harvestTool,
         TileType parentType,
-        String blockstate,
+        String blockStateName,
         String defaultVariant )
     {
         this.tier = tier;
@@ -87,7 +87,7 @@ public enum TileType
         this.soundType = soundType;
         this.harvestTool = harvestTool;
         this.parentType = parentType;
-        this.blockstate = Strata.resource( blockstate );
+        this.blockStateResource = Strata.resource( blockStateName );
         this.defaultVariant = defaultVariant;
         this.vanillaItemStack = vanillaItemStack( this );
 
@@ -112,23 +112,10 @@ public enum TileType
     // Statics
 
     @Nullable
-    public static TileType tryValueOf( @Nullable String value )
+    public static ItemStack vanillaItemStack( TileType tileType )
     {
-        try
-        {
-            return value != null && !value.isEmpty() ? TileType.valueOf( value.toUpperCase() ) : null;
-        }
-        catch( Exception e )
-        {
-            return null;
-        }
-    }
-
-    @Nullable
-    public static ItemStack vanillaItemStack( TileType type )
-    {
-        // Can't switch on type because the constructor calls this
-        switch( type.name() )
+        // Can't switch on tileType because the constructor calls this
+        switch( tileType.name() )
         {
             case "STONE":
                 return new ItemStack( Blocks.STONE );

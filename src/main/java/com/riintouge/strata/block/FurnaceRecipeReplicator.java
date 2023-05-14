@@ -24,7 +24,7 @@ public class FurnaceRecipeReplicator
             {
                 String domain = ore.getItem().getRegistryName().getResourceDomain();
 
-                if( domain.equalsIgnoreCase( Strata.modid ) )
+                if( domain.equalsIgnoreCase( Strata.MOD_ID ) )
                 {
                     // Ore registration may have already added a smelting recipe
                     if( furnaceRecipes.getSmeltingResult( ore ) == ItemStack.EMPTY )
@@ -44,9 +44,9 @@ public class FurnaceRecipeReplicator
                 ItemStack result = furnaceRecipes.getSmeltingResult( otherOre );
                 if( !result.isEmpty() )
                 {
-                    float exp = furnaceRecipes.getSmeltingExperience( result );
+                    float experience = furnaceRecipes.getSmeltingExperience( result );
                     for( ItemStack strataOre : strataOres )
-                        furnaceRecipes.addSmeltingRecipe( strataOre , result , exp );
+                        furnaceRecipes.addSmeltingRecipe( strataOre , result , experience );
 
                     break;
                 }

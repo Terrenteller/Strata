@@ -15,40 +15,16 @@ import java.util.function.Function;
 
 public class ModelRetexturizer implements IModel
 {
-    private final ResourceLocation templateModelResource;
-    private final ResourceLocation textureResource;
+    private final ResourceLocation originalModelResource;
     private final IResourceLocationMap textureMap;
 
-    public ModelRetexturizer( ResourceLocation templateModelResource , ResourceLocation textureResource )
+    public ModelRetexturizer( ResourceLocation originalModelResource , IResourceLocationMap textureMap )
     {
-        this.templateModelResource = templateModelResource;
-        this.textureMap = null;
-        this.textureResource = textureResource;
-    }
-
-    public ModelRetexturizer( ResourceLocation templateModelResource , IResourceLocationMap textureMap )
-    {
-        this.templateModelResource = templateModelResource;
+        this.originalModelResource = originalModelResource;
         this.textureMap = textureMap;
-        this.textureResource = null;
     }
 
     // IModel overrides
-
-    @Override
-    public Collection< ResourceLocation > getDependencies()
-    {
-        return ImmutableList.of( templateModelResource );
-    }
-
-    @Override
-    public Collection< ResourceLocation > getTextures()
-    {
-        if( textureResource != null )
-            return ImmutableList.of( textureResource );
-
-        return textureMap.getAll();
-    }
 
     @Override
     public IBakedModel bake(
@@ -57,13 +33,23 @@ public class ModelRetexturizer implements IModel
         Function< ResourceLocation , TextureAtlasSprite > bakedTextureGetter )
     {
         IModel model = ModelLoaderRegistry.getModelOrLogError(
-            templateModelResource,
-            "Couldn't load template model: " + templateModelResource );
+            originalModelResource,
+            String.format( "Couldn't load original model '%s'" , originalModelResource ) );
         return model.bake(
             new ModelStateComposition( state , model.getDefaultState() ),
             format,
-            textureResource != null
-                ? ( resourceLocation ) -> bakedTextureGetter.apply( textureResource )
-                : ( resourceLocation ) -> bakedTextureGetter.apply( textureMap.get( resourceLocation ) ) );
+            ( resourceLocation ) -> bakedTextureGetter.apply( textureMap.get( resourceLocation ) ) );
+    }
+
+    @Override
+    public Collection< ResourceLocation > getDependencies()
+    {
+        return ImmutableList.of( originalModelResource );
+    }
+
+    @Override
+    public Collection< ResourceLocation > getTextures()
+    {
+        return textureMap.getAll();
     }
 }

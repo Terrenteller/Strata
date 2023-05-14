@@ -60,26 +60,25 @@ public class GeoBlockSlab extends BlockSlab
         super( Material.ROCK , MapColor.STONE );
         this.tileInfo = tileInfo;
         this.singleSlab = singleSlab != null ? singleSlab : this;
-        // This is what Forge does for BlockSlab in Block.registerBlocks()
         this.useNeighborBrightness = true;
 
         ResourceLocation registryName = tileInfo.registryName();
-        setRegistryName( registryName );
-        setUnlocalizedName( registryName.toString() );
         setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
+        setHardness( tileInfo.hardness() );
+        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
+        setRegistryName( registryName );
+        setResistance( tileInfo.explosionResistance() );
+        setSoundType( tileInfo.soundType() );
+        setUnlocalizedName( registryName.toString() );
+
+        Float slipperiness = tileInfo.slipperiness();
+        if( slipperiness != null )
+            setDefaultSlipperiness( slipperiness );
 
         IBlockState blockState = this.blockState.getBaseState();
         if( !isDouble() )
             blockState = blockState.withProperty( HALF , BlockSlab.EnumBlockHalf.BOTTOM );
         setDefaultState( blockState.withProperty( VARIANT , GeoBlockSlab.Variant.DEFAULT ) );
-
-        setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
-        setSoundType( tileInfo.soundType() );
-        setHardness( tileInfo.hardness() );
-        setResistance( tileInfo.explosionResistance() );
-        Float slipperiness = tileInfo.slipperiness();
-        if( slipperiness != null )
-            setDefaultSlipperiness( slipperiness );
     }
 
     // BlockSlab overrides
@@ -151,6 +150,7 @@ public class GeoBlockSlab extends BlockSlab
             : new BlockStateContainer( this , new IProperty[] { HALF , VARIANT } );
     }
 
+    @Deprecated
     @Override
     public ItemStack getItem( World worldIn , BlockPos pos , IBlockState state )
     {
@@ -182,6 +182,7 @@ public class GeoBlockSlab extends BlockSlab
         return !isDouble() && state.getValue( HALF ) == BlockSlab.EnumBlockHalf.TOP ? TOP_META_BIT : 0;
     }
 
+    @Deprecated
     @Override
     public IBlockState getStateFromMeta( int meta )
     {

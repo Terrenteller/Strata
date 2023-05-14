@@ -183,7 +183,7 @@ public class RPNExpression
             catch( Exception e )
             {
                 String message = String.format(
-                    "Failed to process RPN token \"%s\" in expression \"%s\"!",
+                    "Failed to process RPN token '%s' in expression '%s'!",
                     token,
                     expression );
                 throw new IllegalArgumentException( message , e );

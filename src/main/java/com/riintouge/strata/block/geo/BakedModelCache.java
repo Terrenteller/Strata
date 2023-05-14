@@ -14,7 +14,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,47 +22,35 @@ public final class BakedModelCache implements IResourceManagerReloadListener
 {
     public static final BakedModelCache INSTANCE = new BakedModelCache();
 
-    private Map< MetaResourceLocation , IBakedModel > hostBakedModelMap = new HashMap<>();
-    private Map< String , IBakedModel > bakedOreModelMap = new HashMap<>();
+    private final Map< MetaResourceLocation , IBakedModel > modelMap = new HashMap<>();
 
     private BakedModelCache()
     {
         ( (IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager() ).registerReloadListener( this );
     }
 
-    public void registerBakedOreModel( String oreName , IBakedModel bakedOreModel )
-    {
-        bakedOreModelMap.put( oreName , bakedOreModel );
-    }
-
     @Nonnull
-    public IBakedModel getBakedModel( MetaResourceLocation metaResourceLocation )
+    public IBakedModel getBakedModel( MetaResourceLocation blockRegistryNameAndMeta )
     {
-        IBakedModel hostModel = hostBakedModelMap.getOrDefault( metaResourceLocation , null );
-        if( hostModel == null )
+        IBakedModel model = modelMap.getOrDefault( blockRegistryNameAndMeta , null );
+        if( model == null )
         {
-             ModelManager modelManager = Minecraft.getMinecraft()
+            ModelManager modelManager = Minecraft.getMinecraft()
                 .getBlockRendererDispatcher()
                 .getBlockModelShapes()
                 .getModelManager();
 
-            Block hostBlock = Block.REGISTRY.getObject( metaResourceLocation.resourceLocation );
+            Block block = Block.REGISTRY.getObject( blockRegistryNameAndMeta.resourceLocation );
             Map< IBlockState , ModelResourceLocation > variants = modelManager.getBlockModelShapes()
                 .getBlockStateMapper()
-                .getVariants( hostBlock );
+                .getVariants( block );
 
-            ModelResourceLocation hostModelResource = variants.get( hostBlock.getStateFromMeta( metaResourceLocation.meta ) );
-            hostModel = modelManager.getModel( hostModelResource );
-            hostBakedModelMap.put( metaResourceLocation , hostModel );
+            ModelResourceLocation modelResource = variants.get( block.getStateFromMeta( blockRegistryNameAndMeta.meta ) );
+            model = modelManager.getModel( modelResource );
+            modelMap.put( blockRegistryNameAndMeta , model );
         }
 
-        return hostModel;
-    }
-
-    @Nullable
-    public IBakedModel getBakedOreModel( String oreName )
-    {
-        return bakedOreModelMap.getOrDefault( oreName , null );
+        return model;
     }
 
     // IResourceManagerReloadListener overrides
@@ -71,6 +58,6 @@ public final class BakedModelCache implements IResourceManagerReloadListener
     @Override
     public void onResourceManagerReload( IResourceManager resourceManager )
     {
-        hostBakedModelMap.clear();
+        modelMap.clear();
     }
 }

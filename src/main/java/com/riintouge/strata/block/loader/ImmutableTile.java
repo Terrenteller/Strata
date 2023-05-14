@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.loader;
 
+import com.riintouge.strata.item.ItemHelper;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
@@ -40,20 +41,20 @@ public final class ImmutableTile implements IGeoTileInfo
     private MetaResourceLocation equivalentItemResourceLocation;
     private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation furnaceResult;
-    private Float furnaceExp;
+    private Float furnaceExperience;
     private LayeredTextureLayer[] fragmentTextureLayers;
     private IDropFormula fragmentDropFormula;
     private MetaResourceLocation equivalentFragmentItemResourceLocation;
     private ItemStack equivalentFragmentItemStack = null; // Lazily evaluated
     private MetaResourceLocation fragmentFurnaceResult;
-    private Float fragmentFurnaceExp;
+    private Float fragmentFurnaceExperience;
     private int fragmentBurnTime;
     private MetaResourceLocation breaksIntoResourceLocation;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
-    private ResourceLocation blockstateResourceLocation;
-    private IDropFormula expDropFormula;
+    private ResourceLocation blockStateResource;
+    private IDropFormula experienceDropFormula;
     private SoundEventTuple ambientSound;
     private Integer lightOpacity;
 
@@ -78,29 +79,29 @@ public final class ImmutableTile implements IGeoTileInfo
     private int burnTime;
     private long specialBlockPropertyFlags;
 
-    public ImmutableTile( TileData tileData ) throws IllegalArgumentException
+    public ImmutableTile( TileData tileData ) throws NullPointerException
     {
         Util.argumentNullCheck( tileData , "tileData" );
 
         // IGeoTileInfo
         this.tileSetName = Util.argumentNullCheck( tileData.tileSetName , "tileSetName" );
-        this.tileType = Util.argumentNullCheck( tileData.tileType , "type" );
+        this.tileType = Util.argumentNullCheck( tileData.tileType , "tileType" );
         this.blockOreDictionaryName = tileData.blockOreDictionaryName;
         this.fragmentItemOreDictionaryName = tileData.fragmentItemOreDictionaryName;
         this.equivalentItemResourceLocation = tileData.equivalentItemResourceLocation;
         this.furnaceResult = tileData.furnaceResult;
-        this.furnaceExp = tileData.furnaceExp;
+        this.furnaceExperience = tileData.furnaceExperience;
         if( tileType.isPrimary && tileData.fragmentTextureLayers != null && tileData.fragmentTextureLayers.size() > 0 )
             this.fragmentTextureLayers = tileData.fragmentTextureLayers.toArray( new LayeredTextureLayer[ tileData.fragmentTextureLayers.size() ] );
-        this.fragmentDropFormula = Util.lazyCoalesce( tileData.fragmentDropFormula , () -> new StaticDropFormula( 4 ) );
+        this.fragmentDropFormula = Util.lazyCoalesce( tileData.fragmentDropFormula , () -> new StaticDropFormula( StaticDropFormula.STANDARD_FRAGMENT_COUNT ) );
         this.equivalentFragmentItemResourceLocation = tileData.equivalentFragmentItemResourceLocation;
         this.fragmentFurnaceResult = tileData.fragmentFurnaceResult;
-        this.fragmentFurnaceExp = tileData.fragmentFurnaceExp;
+        this.fragmentFurnaceExperience = tileData.fragmentFurnaceExperience;
         this.fragmentBurnTime = Util.coalesce( tileData.fragmentBurnTime , 0 );
         this.breaksIntoResourceLocation = tileData.breaksIntoResourceLocation;
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
-        this.blockstateResourceLocation = Util.coalesce( tileData.blockstateResourceLocation , this.tileType.blockstate );
-        this.expDropFormula = tileData.expDropFormula;
+        this.blockStateResource = Util.coalesce( tileData.blockStateResource , this.tileType.blockStateResource );
+        this.experienceDropFormula = tileData.experienceDropFormula;
         this.ambientSound = tileData.ambientSound;
         this.lightOpacity = tileData.lightOpacity;
 
@@ -121,8 +122,8 @@ public final class ImmutableTile implements IGeoTileInfo
         this.soundType = Util.argumentNullCheck( tileData.soundType , "soundType" );
         this.harvestTool = Util.argumentNullCheck( tileData.harvestTool , "harvestTool" );
         this.harvestLevel = Util.coalesce( tileData.harvestLevel , 0 );
-        this.hardness = Util.coalesce( tileData.hardness , 1.0f );
-        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 5.0f * this.hardness );
+        this.hardness = Util.coalesce( tileData.hardness , 1.5f );
+        this.explosionResistance = Util.coalesce( tileData.explosionResistance , 10.0f );
         this.lightLevel = Util.coalesce( tileData.lightLevel , 0 );
         this.burnTime = Util.coalesce( tileData.burnTime , 0 );
         this.specialBlockPropertyFlags = Util.coalesce( tileData.specialBlockPropertyFlags , 0L );
@@ -149,7 +150,7 @@ public final class ImmutableTile implements IGeoTileInfo
 
     @Nonnull
     @Override
-    public TileType type()
+    public TileType tileType()
     {
         return tileType;
     }
@@ -197,17 +198,19 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public ItemStack furnaceResult()
     {
-        return furnaceResult != null ? furnaceResult.toItemStack() : null;
+        return furnaceResult != null ? ItemHelper.metaResourceLocationToItemStack( furnaceResult ) : null;
     }
 
     @Override
-    public float furnaceExp()
+    public float furnaceExperience()
     {
-        if( furnaceExp != null )
-            return furnaceExp;
+        if( furnaceExperience == null )
+        {
+            ItemStack furnaceResult = furnaceResult();
+            furnaceExperience = furnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( furnaceResult ) : 0.0f;
+        }
 
-        ItemStack furnaceResult = furnaceResult();
-        return furnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( furnaceResult ) : 0.0f;
+        return furnaceExperience;
     }
 
     @Override
@@ -254,17 +257,19 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public ItemStack fragmentFurnaceResult()
     {
-        return fragmentFurnaceResult != null ? fragmentFurnaceResult.toItemStack() : null;
+        return fragmentFurnaceResult != null ? ItemHelper.metaResourceLocationToItemStack( fragmentFurnaceResult ) : null;
     }
 
     @Override
-    public float fragmentFurnaceExp()
+    public float fragmentFurnaceExperience()
     {
-        if( fragmentFurnaceExp != null )
-            return fragmentFurnaceExp;
+        if( fragmentFurnaceExperience == null )
+        {
+            ItemStack fragmentFurnaceResult = fragmentFurnaceResult();
+            fragmentFurnaceExperience = fragmentFurnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( fragmentFurnaceResult ) : 0.0f;
+        }
 
-        ItemStack fragmentFurnaceResult = fragmentFurnaceResult();
-        return fragmentFurnaceResult != null ? FurnaceRecipes.instance().getSmeltingExperience( fragmentFurnaceResult ) : 0.0f;
+        return fragmentFurnaceExperience;
     }
 
     @Override
@@ -299,6 +304,7 @@ public final class ImmutableTile implements IGeoTileInfo
                 Block otherBlock = ForgeRegistries.BLOCKS.getValue( metaResourceLocation.resourceLocation );
                 sustainsPlantsSustainedBy.add( otherBlock.getStateFromMeta( metaResourceLocation.meta ) );
             }
+
             sustainsPlantsSustainedByRaw = null;
         }
 
@@ -307,15 +313,15 @@ public final class ImmutableTile implements IGeoTileInfo
 
     @Nonnull
     @Override
-    public ResourceLocation blockstateResourceLocation()
+    public ResourceLocation blockStateResource()
     {
-        return blockstateResourceLocation;
+        return blockStateResource;
     }
 
     @Nullable
-    public IDropFormula expDropFormula()
+    public IDropFormula experienceDropFormula()
     {
-        return expDropFormula;
+        return experienceDropFormula;
     }
 
     @Override
@@ -402,6 +408,7 @@ public final class ImmutableTile implements IGeoTileInfo
         return meltsAt != null || sublimatesAt != null;
     }
 
+    @Nonnull
     @Override
     @SideOnly( Side.CLIENT )
     public ProtoBlockTextureMap modelTextureMap()
@@ -413,9 +420,10 @@ public final class ImmutableTile implements IGeoTileInfo
     @SideOnly( Side.CLIENT )
     public int particleFallingColor()
     {
-        return particleFallingColor != null
-            ? particleFallingColor
-            : ( particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) ) );
+        if( particleFallingColor == null )
+            particleFallingColor = ParticleHelper.getParticleFallingColor( modelTextureMap().get( EnumFacing.DOWN ) );
+
+        return particleFallingColor;
     }
 
     // ICommonBlockProperties overrides

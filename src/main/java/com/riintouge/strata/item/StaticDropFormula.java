@@ -9,6 +9,8 @@ import java.util.Random;
 
 public class StaticDropFormula implements IDropFormula
 {
+    public static final int STANDARD_FRAGMENT_COUNT = 4;
+
     public final int amount;
 
     public StaticDropFormula( int amount )

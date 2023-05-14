@@ -3,26 +3,24 @@ package com.riintouge.strata.resource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ResourcePackRepository;
 
-import javax.annotation.Nullable;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ResourcePacksDir extends InstallationRootDir
 {
-    public static final ResourcePacksDir INSTANCE = new ResourcePacksDir();
-
     public ResourcePacksDir()
     {
         super( "resourcepacks" );
     }
 
-    public @Nullable List< String > activeResourcePackPaths()
+    public List< String > activeResourcePackPaths() throws IOException
     {
         try
         {
             ResourcePackRepository resourceRepo = Minecraft.getMinecraft().getResourcePackRepository();
-            final Path resourcePacksPath = resourceRepo.getDirResourcepacks().toPath();
+            Path resourcePacksPath = resourceRepo.getDirResourcepacks().toPath();
             return resourceRepo.getRepositoryEntries()
                 .stream()
                 .map( entry -> resourcePacksPath.resolve( entry.getResourcePackName() ).toAbsolutePath().toString() )
@@ -31,7 +29,7 @@ public class ResourcePacksDir extends InstallationRootDir
         catch( NoClassDefFoundError e )
         {
             // We must be running on a dedicated server
-            return null;
+            return find( false , s -> true );
         }
     }
 }

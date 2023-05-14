@@ -24,7 +24,7 @@ public class WeightedCollection< T >
     public T getRandomObject( Random random )
     {
         if( weightedObjects.size() > 1 )
-            return getRandomInternal( random , weightedObjects , totalWeight );
+            return getRandomObject( random , weightedObjects , totalWeight );
         else if( weightedObjects.size() == 1 )
             return weightedObjects.get( 0 ).getKey();
 
@@ -55,7 +55,7 @@ public class WeightedCollection< T >
             }
 
             // If the threshold exceeds the sum of valid weights, try again using only the valid objects
-            return getRandomInternal( random , validObjects , totalValidWeight );
+            return getRandomObject( random , validObjects , totalValidWeight );
         }
         else if( weightedObjects.size() == 1 )
         {
@@ -66,10 +66,8 @@ public class WeightedCollection< T >
         return null;
     }
 
-    // Statics
-
     @Nullable
-    protected static < T > T getRandomInternal( Random random , List< Pair< T , Integer > > weightedObjects , int totalWeight )
+    protected T getRandomObject( Random random , List< Pair< T , Integer > > weightedObjects , int totalWeight )
     {
         if( weightedObjects.isEmpty() || totalWeight <= 0 )
             return null;

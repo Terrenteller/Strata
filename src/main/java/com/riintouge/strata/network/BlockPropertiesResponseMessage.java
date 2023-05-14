@@ -2,13 +2,16 @@ package com.riintouge.strata.network;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
+import com.riintouge.strata.block.geo.HostRegistry;
 import com.riintouge.strata.block.geo.ICommonBlockProperties;
+import com.riintouge.strata.block.geo.IHostInfo;
 import com.riintouge.strata.block.MetaResourceLocation;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.*;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.IOreTileSet;
 import com.riintouge.strata.block.ore.OreRegistry;
+import com.riintouge.strata.util.EnumUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -24,7 +27,7 @@ import java.util.*;
 
 public final class BlockPropertiesResponseMessage extends ZipMessage
 {
-    private long SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK = SpecialBlockPropertyFlags.ACTIVATABLE;
+    private final long synchronizedBlockPropertyFlagsMask = SpecialBlockPropertyFlags.ACTIVATABLE;
     private int mismatches = 0;
     private String firstMismatch = null;
 
@@ -35,8 +38,6 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
 
     private void writeBlockProperties( ICommonBlockProperties properties , DataOutputStream stream ) throws IOException
     {
-        // TODO: It'd be really nice if we could read/write/compare these straight from the interface
-
         // We can't serialize the material. Try our best for the important parts.
         stream.writeBoolean( properties.material().isReplaceable() );
         stream.writeBoolean( properties.material().isToolNotRequired() );
@@ -44,7 +45,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         stream.writeInt( properties.harvestLevel() );
         stream.writeFloat( properties.hardness() );
         stream.writeFloat( properties.explosionResistance() );
-        stream.writeLong( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
+        stream.writeLong( properties.specialBlockPropertyFlags() & synchronizedBlockPropertyFlagsMask );
 
         if( properties instanceof IOreInfo )
         {
@@ -80,7 +81,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         equivalent &= harvestLevel == properties.harvestLevel();
         equivalent &= hardness == properties.hardness();
         equivalent &= explosionResistance == properties.explosionResistance();
-        equivalent &= specialBlockPropertyFlags == ( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
+        equivalent &= specialBlockPropertyFlags == ( properties.specialBlockPropertyFlags() & synchronizedBlockPropertyFlagsMask );
 
         return equivalent;
     }
@@ -110,7 +111,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
         boolean equivalent = true;
         equivalent &= isReplaceable == properties.material().isReplaceable();
         equivalent &= toolNotRequired == properties.material().isToolNotRequired();
-        equivalent &= specialBlockPropertyFlags == ( properties.specialBlockPropertyFlags() & SYNCRONIZED_BLOCK_PROPERTY_FLAGS_MASK );
+        equivalent &= specialBlockPropertyFlags == ( properties.specialBlockPropertyFlags() & synchronizedBlockPropertyFlagsMask );
 
         if( !proxyBlockRegistryName.isEmpty() && proxyBlockRegistryName.compareToIgnoreCase( ourProxyBlockRegistryName ) == 0 )
         {
@@ -173,7 +174,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
             }
         }
 
-        // Tilesets
+        // Tile sets
         {
             Set< String > tileSetNames = GeoTileSetRegistry.INSTANCE.tileSetNames();
             stream.writeInt( tileSetNames.size() );
@@ -199,7 +200,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
 
                 for( IGeoTileInfo tileInfo : tileInfos )
                 {
-                    stream.writeUTF( tileInfo.type().toString() );
+                    stream.writeUTF( tileInfo.tileType().toString() );
                     writeBlockProperties( tileInfo , stream );
                 }
             }
@@ -239,7 +240,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
             }
         }
 
-        // Tilesets
+        // Tile sets
         {
             int tileSetNameCount = stream.readInt();
             for( int tileSetIndex = 0 ; tileSetIndex < tileSetNameCount ; tileSetIndex++ )
@@ -250,7 +251,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
                 for( int tileInfoIndex = 0 ; tileInfoIndex < tileInfoCount ; tileInfoIndex++ )
                 {
                     String tileTypeName = stream.readUTF();
-                    TileType tileType = TileType.tryValueOf( tileTypeName );
+                    TileType tileType = EnumUtil.valueOfOrNull( TileType.class , tileTypeName );
                     IGeoTileInfo tileInfo = tileType != null
                         ? GeoTileSetRegistry.INSTANCE.findTileInfo( tileSetName , tileType )
                         : null;
@@ -291,7 +292,7 @@ public final class BlockPropertiesResponseMessage extends ZipMessage
                 return null;
             }
 
-            // Why does TextComponentTranslation not localize here?
+            // Why does TextComponentTranslation not localize here? Is it because we're server-side?
             TextComponentString text = new TextComponentString(
                 String.format(
                     net.minecraft.util.text.translation.I18n.translateToLocal(

@@ -1,5 +1,6 @@
 package com.riintouge.strata;
 
+import com.riintouge.strata.misc.ConfigHelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -9,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.io.File;
 
 @EventBusSubscriber
-public final class StrataConfig extends ConfigBase
+public final class StrataConfig
 {
     public static final StrataConfig INSTANCE = new StrataConfig();
 
@@ -28,7 +29,7 @@ public final class StrataConfig extends ConfigBase
 
     public StrataConfig()
     {
-        config = new Configuration( new File( Loader.instance().getConfigDir() , Strata.modid + ".cfg" ) );
+        config = new Configuration( new File( Loader.instance().getConfigDir() , Strata.MOD_ID + ".cfg" ) );
     }
 
     public void init()
@@ -46,18 +47,20 @@ public final class StrataConfig extends ConfigBase
         if( load && !config.isChild )
             config.load();
 
-        pushCategory( config , CATEGORY_CLIENT );
-        useModernWallStyle = getBoolean( "useModernWallStyle" , true );
-        usePrecomputedOreParticles = getBoolean( "usePrecomputedOreParticles" , true );
-        additionalBlockSounds = getBoolean( "additionalBlockSounds" , true );
-        restrictSampleOffset = getBoolean( "restrictSampleOffset" , true );
-        prioritizeCreativeTabs = getBoolean( "prioritizeCreativeTabs" , true );
-        popCategory( true );
+        ConfigHelper configHelper = new ConfigHelper( config );
 
-        pushCategory( config , CATEGORY_SERVER );
-        enforceClientSynchronization = getBoolean( "enforceClientSynchronization" , true );
-        dropNonStandardFragments = getBoolean( "dropNonStandardFragments" , false );
-        popCategory( true );
+        configHelper.beginCategory( CATEGORY_CLIENT );
+        useModernWallStyle = configHelper.getBoolean( "useModernWallStyle" , true );
+        usePrecomputedOreParticles = configHelper.getBoolean( "usePrecomputedOreParticles" , true );
+        additionalBlockSounds = configHelper.getBoolean( "additionalBlockSounds" , true );
+        restrictSampleOffset = configHelper.getBoolean( "restrictSampleOffset" , true );
+        prioritizeCreativeTabs = configHelper.getBoolean( "prioritizeCreativeTabs" , true );
+        configHelper.endCategory( true );
+
+        configHelper.beginCategory( CATEGORY_SERVER );
+        enforceClientSynchronization = configHelper.getBoolean( "enforceClientSynchronization" , true );
+        dropNonStandardFragments = configHelper.getBoolean( "dropNonStandardFragments" , false );
+        configHelper.endCategory( true );
 
         if( config.hasChanged() )
             config.save();
@@ -68,7 +71,7 @@ public final class StrataConfig extends ConfigBase
     @SubscribeEvent
     public static void onConfigChanged( ConfigChangedEvent.OnConfigChangedEvent event )
     {
-        if( event.getModID().equals( Strata.modid ) )
+        if( event.getModID().equals( Strata.MOD_ID ) )
             INSTANCE.sync( false );
     }
 }

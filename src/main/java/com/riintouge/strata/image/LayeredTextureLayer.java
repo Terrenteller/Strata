@@ -4,28 +4,28 @@ import net.minecraft.util.ResourceLocation;
 
 public class LayeredTextureLayer
 {
-    public final ResourceLocation resource;
+    public final ResourceLocation textureResource;
     public final BlendMode blendMode;
     public final float opacity;
 
-    public LayeredTextureLayer( ResourceLocation resource )
+    public LayeredTextureLayer( ResourceLocation textureResource )
     {
-        this( resource , BlendMode.NORMAL , 100.0f );
+        this( textureResource , BlendMode.NORMAL , 100.0f );
     }
 
-    public LayeredTextureLayer( ResourceLocation resource , BlendMode blendMode )
+    public LayeredTextureLayer( ResourceLocation textureResource , BlendMode blendMode )
     {
-        this( resource , blendMode , 100.0f );
+        this( textureResource , blendMode , 100.0f );
     }
 
-    public LayeredTextureLayer( ResourceLocation resource , float opacity )
+    public LayeredTextureLayer( ResourceLocation textureResource , float opacity )
     {
-        this( resource , BlendMode.NORMAL , opacity );
+        this( textureResource , BlendMode.NORMAL , opacity );
     }
 
-    public LayeredTextureLayer( ResourceLocation resource , BlendMode blendMode , float opacity )
+    public LayeredTextureLayer( ResourceLocation textureResource , BlendMode blendMode , float opacity )
     {
-        this.resource = resource;
+        this.textureResource = textureResource;
         this.blendMode = blendMode;
         this.opacity = opacity;
     }
