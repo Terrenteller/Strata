@@ -2,15 +2,15 @@
     "parent": "block/block",
     "elements": [
         {
-            "from": [ 5, 6, 6 ],
-            "to": [ 11, 10, 10 ],
+            "from": [  5,  6,  6 ],
+            "to":   [ 11, 10, 10 ],
             "faces": {
-                "up":    { "uv": [ 5, 10, 11,  6 ] , "texture": "#up" },
-                "down":  { "uv": [ 5,  6, 11, 10 ] , "texture": "#down" },
-                "north": { "uv": [ 5, 12, 11, 16 ] , "texture": "#north" },
-                "south": { "uv": [ 5, 12, 11, 16 ] , "texture": "#south" },
-                "east":  { "uv": [ 6, 12, 10, 16 ] , "texture": "#east" },
-                "west":  { "uv": [ 6, 12, 10, 16 ] , "texture": "#west" }
+                "up":    { "uv": [  5, 10, 11,  6 ] , "texture": "#up"    },
+                "down":  { "uv": [  5,  6, 11, 10 ] , "texture": "#down"  },
+                "north": { "uv": [  5, 12, 11, 16 ] , "texture": "#north" },
+                "south": { "uv": [  5, 12, 11, 16 ] , "texture": "#south" },
+                "east":  { "uv": [  6, 12, 10, 16 ] , "texture": "#east"  },
+                "west":  { "uv": [  6, 12, 10, 16 ] , "texture": "#west"  }
             }
         }
     ]

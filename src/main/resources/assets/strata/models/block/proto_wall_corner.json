@@ -1,4 +1,5 @@
 {
+    "parent": "block/block",
     "textures": {
         "particle": "strata:meta/all",
         "up": "strata:meta/up",
@@ -11,39 +12,39 @@
     "elements": [
         {
             "__comment": "Post",
-            "from": [ 4, 0, 4 ],
-            "to": [ 12, 16, 12 ],
+            "from": [  4,  0,  4 ],
+            "to":   [ 12, 16, 12 ],
             "faces": {
-                "up":    { "texture": "#up", "cullface": "up" },
-                "down":  { "texture": "#down", "cullface": "down" },
+                "up":    { "texture": "#up"   , "cullface": "up"   },
+                "down":  { "texture": "#down" , "cullface": "down" },
                 "north": { "texture": "#north" },
                 "south": { "texture": "#south" },
-                "east":  { "texture": "#east" },
-                "west":  { "texture": "#west" }
+                "east":  { "texture": "#east"  },
+                "west":  { "texture": "#west"  }
             }
         },
         {
             "__comment": "North",
-            "from": [ 5, 0, 0 ],
-            "to": [ 11, 14, 8 ],
+            "from": [  5,  0,  0 ],
+            "to":   [ 11, 14,  8 ],
             "faces": {
-                "up":    { "texture": "#up" },
-                "down":  { "texture": "#down", "cullface": "down" },
+                "up":    { "texture": "#up"    },
+                "down":  { "texture": "#down" , "cullface": "down" },
                 "north": { "texture": "#north" },
-                "east":  { "texture": "#east" },
-                "west":  { "texture": "#west" }
+                "east":  { "texture": "#east"  },
+                "west":  { "texture": "#west"  }
             }
         },
         {
             "__comment": "East",
-            "from": [ 8, 0, 5 ],
-            "to": [ 16, 14, 11 ],
+            "from": [  8,  0,  5 ],
+            "to":   [ 16, 14, 11 ],
             "faces": {
-                "up":    { "texture": "#up" },
-                "down":  { "texture": "#down", "cullface": "down" },
+                "up":    { "texture": "#up"    },
+                "down":  { "texture": "#down" , "cullface": "down" },
                 "north": { "texture": "#north" },
                 "south": { "texture": "#south" },
-                "east":  { "texture": "#east" }
+                "east":  { "texture": "#east"  }
             }
         }
     ]

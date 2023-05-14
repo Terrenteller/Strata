@@ -1,15 +1,16 @@
 {
+    "parent": "block/block",
     "elements": [
         {
-            "from": [ 1, 0, 1 ],
-            "to": [ 15, 0.5, 15 ],
+            "from": [  1, 0.0,  1 ],
+            "to":   [ 15, 0.5, 15 ],
             "faces": {
-                "up":    { "uv": [ 1,  1, 15, 15   ] , "texture": "#up" },
-                "down":  { "uv": [ 1,  1, 15, 15   ] , "texture": "#down" , "cullface": "down" },
-                "north": { "uv": [ 1, 15, 15, 15.5 ] , "texture": "#north" },
-                "south": { "uv": [ 1, 15, 15, 15.5 ] , "texture": "#south" },
-                "east":  { "uv": [ 1, 15, 15, 15.5 ] , "texture": "#east" },
-                "west":  { "uv": [ 1, 15, 15, 15.5 ] , "texture": "#west" }
+                "up":    { "uv": [  1,  1, 15, 15   ] , "texture": "#up"    },
+                "down":  { "uv": [  1,  1, 15, 15   ] , "texture": "#down" , "cullface": "down" },
+                "north": { "uv": [  1, 15, 15, 15.5 ] , "texture": "#north" },
+                "south": { "uv": [  1, 15, 15, 15.5 ] , "texture": "#south" },
+                "east":  { "uv": [  1, 15, 15, 15.5 ] , "texture": "#east"  },
+                "west":  { "uv": [  1, 15, 15, 15.5 ] , "texture": "#west"  }
             }
         }
     ]

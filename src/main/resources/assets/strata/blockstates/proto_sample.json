@@ -1,5 +1,16 @@
 {
     "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "particle": "strata:meta/up",
+            "up": "strata:meta/up",
+            "down": "strata:meta/down",
+            "north": "strata:meta/north",
+            "south": "strata:meta/south",
+            "east": "strata:meta/east",
+            "west": "strata:meta/west"
+        }
+    },
     "variants": {
         "normal": [
             { "model": "strata:proto_sample" , "x": 0 , "y":   0 },

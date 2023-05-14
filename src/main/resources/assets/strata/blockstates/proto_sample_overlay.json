@@ -1,5 +1,17 @@
 {
     "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "particle": "minecraft:blocks/gravel",
+            "gravel": "minecraft:blocks/gravel",
+            "up": "strata:meta/up",
+            "down": "strata:meta/down",
+            "north": "strata:meta/north",
+            "south": "strata:meta/south",
+            "east": "strata:meta/east",
+            "west": "strata:meta/west"
+        }
+    },
     "variants": {
         "normal": [
             { "model": "strata:proto_sample_overlay" , "x": 0 , "y":   0 },

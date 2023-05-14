@@ -2,13 +2,13 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {
+            "particle": "strata:meta/all",
             "up": "strata:meta/up",
             "down": "strata:meta/down",
             "north": "strata:meta/north",
             "south": "strata:meta/south",
             "east": "strata:meta/east",
-            "west": "strata:meta/west",
-            "particle": "strata:meta/all"
+            "west": "strata:meta/west"
         }
     },
     "variants": {
