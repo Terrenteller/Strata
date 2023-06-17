@@ -4,11 +4,13 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.DebugUtil;
+import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,6 +18,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +29,7 @@ public class LayeredTexture extends TextureAtlasSprite
 {
     protected static final Cache< ResourceLocation , SquareMipmapHelper > MIPMAP_CACHE;
     protected static final Pair< int[][] , Integer > MISSING_FRAME_INFO;
+    protected static final Field ANIMATION_METADATA_FIELD;
 
     protected final LayeredTextureLayer[] layers;
 
@@ -36,8 +40,13 @@ public class LayeredTexture extends TextureAtlasSprite
         int[][] frame = new int[ Minecraft.getMinecraft().gameSettings.mipmapLevels + 1 ][];
         frame[ 0 ] = TextureUtil.MISSING_TEXTURE_DATA;
         int edgeLength = Util.squareRootOfPowerOfTwo( TextureUtil.MISSING_TEXTURE_DATA.length );
-
         MISSING_FRAME_INFO = new ImmutablePair<>( frame , edgeLength );
+
+        ANIMATION_METADATA_FIELD = ReflectionUtil.findFieldByType( TextureAtlasSprite.class , AnimationMetadataSection.class , false );
+        if( ANIMATION_METADATA_FIELD != null )
+            ANIMATION_METADATA_FIELD.setAccessible( true );
+        else
+            Strata.LOGGER.error( "Failed to acquire the AnimationMetadataSection field on TextureAtlasSprite!" );
     }
 
     public LayeredTexture( ResourceLocation registryName , LayeredTextureLayer[] layers )
@@ -106,6 +115,18 @@ public class LayeredTexture extends TextureAtlasSprite
 
                 for( int index = 0 ; index < texture.getFrameCount() ; index++ )
                     framesTextureData.add( texture.getFrameTextureData( index ) );
+
+                if( texture.hasAnimationMetadata() && ANIMATION_METADATA_FIELD != null )
+                {
+                    try
+                    {
+                        ANIMATION_METADATA_FIELD.set( this , ANIMATION_METADATA_FIELD.get( texture ) );
+                    }
+                    catch( Exception e )
+                    {
+                        Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , String.format( "Caught %%s while getting texture animation metadata from '%s'!" , textureResource.toString() ) ) );
+                    }
+                }
             }
             else
             {

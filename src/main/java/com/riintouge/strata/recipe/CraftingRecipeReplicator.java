@@ -49,7 +49,7 @@ public final class CraftingRecipeReplicator
         }
         catch( Exception e )
         {
-            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s while locating field 'ShapedOreRecipe.mirrored'!" ) );
+            Strata.LOGGER.error( DebugUtil.prettyPrintThrowable( e , "Caught %s while acquiring the 'mirrored' field on ShapedOreRecipe!" ) );
             tempShapedOreRecipeMirroredField = null;
         }
         this.shapedOreRecipeMirroredField = tempShapedOreRecipeMirroredField;
