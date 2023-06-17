@@ -1,6 +1,6 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.block;
 
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

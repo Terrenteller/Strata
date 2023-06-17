@@ -1,4 +1,4 @@
-package com.riintouge.strata.block;
+package com.riintouge.strata.misc;
 
 import net.minecraft.util.ResourceLocation;
 

@@ -1,6 +1,8 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.item.ore.OreItem;
+import com.riintouge.strata.item.ore.OreItemBlock;
 import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

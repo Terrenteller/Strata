@@ -1,4 +1,4 @@
-package com.riintouge.strata.block;
+package com.riintouge.strata.recipe;
 
 import com.riintouge.strata.Strata;
 import net.minecraft.item.ItemStack;

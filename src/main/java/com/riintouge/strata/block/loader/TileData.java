@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.TileType;

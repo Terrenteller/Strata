@@ -1,6 +1,9 @@
-package com.riintouge.strata.block.ore;
+package com.riintouge.strata.item.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.ore.IOreInfo;
+import com.riintouge.strata.block.ore.IOreTileSet;
+import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTexture;
 import com.riintouge.strata.image.LayeredTextureLayer;

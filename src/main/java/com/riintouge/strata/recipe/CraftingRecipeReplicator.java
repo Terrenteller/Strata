@@ -1,4 +1,4 @@
-package com.riintouge.strata.block;
+package com.riintouge.strata.recipe;
 
 import com.google.common.collect.ImmutableList;
 import com.riintouge.strata.Strata;
@@ -30,16 +30,16 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public final class RecipeReplicator
+public final class CraftingRecipeReplicator
 {
-    public static final RecipeReplicator INSTANCE = new RecipeReplicator();
+    public static final CraftingRecipeReplicator INSTANCE = new CraftingRecipeReplicator();
 
     private final Map< Class , IReplicator > recipeClassReplicatorMap = new HashMap<>();
     private final List< Pair< List< ItemStack > , Ingredient > > ingredientInfos = new ArrayList<>();
     private final Set< Pattern > blacklistedRecipes = new HashSet<>();
     private final Field shapedOreRecipeMirroredField;
 
-    private RecipeReplicator()
+    private CraftingRecipeReplicator()
     {
         Field tempShapedOreRecipeMirroredField;
         try
@@ -312,7 +312,7 @@ public final class RecipeReplicator
 
         for( Map.Entry< ResourceLocation , IRecipe > recipe : recipeRegistry.getEntries() )
         {
-            IRecipe copy = RecipeReplicator.INSTANCE.replicate( recipe.getValue() );
+            IRecipe copy = CraftingRecipeReplicator.INSTANCE.replicate( recipe.getValue() );
             if( copy != null )
                 copies.add( copy );
         }

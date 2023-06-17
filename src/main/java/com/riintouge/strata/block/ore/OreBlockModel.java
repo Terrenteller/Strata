@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.MetaResourceLocation;
-import com.riintouge.strata.block.geo.BakedModelCache;
+import com.riintouge.strata.misc.MetaResourceLocation;
+import com.riintouge.strata.block.BakedModelCache;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

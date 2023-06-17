@@ -1,4 +1,4 @@
-package com.riintouge.strata.util;
+package com.riintouge.strata.misc;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

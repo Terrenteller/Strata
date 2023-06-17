@@ -1,4 +1,4 @@
-package com.riintouge.strata.block;
+package com.riintouge.strata.misc;
 
 import com.sun.istack.internal.NotNull;
 import net.minecraft.block.state.IBlockState;

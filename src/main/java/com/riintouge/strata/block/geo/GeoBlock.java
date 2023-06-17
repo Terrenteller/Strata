@@ -1,12 +1,14 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.block.host.IHostInfo;
 import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.item.StaticDropFormula;
+import com.riintouge.strata.item.geo.GeoItemFragment;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.FlagUtil;

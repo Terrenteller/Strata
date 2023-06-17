@@ -1,8 +1,8 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.block.host;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.IForgeRegistrable;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.IForgeRegistrable;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.loader.ImmutableTile;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;

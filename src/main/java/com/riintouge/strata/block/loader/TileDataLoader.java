@@ -2,7 +2,7 @@ package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.block.geo.GeoTileSet;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
-import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.block.host.HostRegistry;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.block.ore.OreTileSet;

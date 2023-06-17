@@ -2,10 +2,10 @@ package com.riintouge.strata.network;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.geo.HostRegistry;
-import com.riintouge.strata.block.geo.ICommonBlockProperties;
-import com.riintouge.strata.block.geo.IHostInfo;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.block.host.HostRegistry;
+import com.riintouge.strata.block.ICommonBlockProperties;
+import com.riintouge.strata.block.host.IHostInfo;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.*;
 import com.riintouge.strata.block.ore.IOreInfo;

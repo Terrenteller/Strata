@@ -1,9 +1,9 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.IForgeRegistrable;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.IForgeRegistrable;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
-import com.riintouge.strata.block.geo.ICommonBlockProperties;
+import com.riintouge.strata.block.ICommonBlockProperties;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.IDropFormula;

@@ -1,5 +1,6 @@
-package com.riintouge.strata.block.ore;
+package com.riintouge.strata.item.ore;
 
+import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.item.ItemHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

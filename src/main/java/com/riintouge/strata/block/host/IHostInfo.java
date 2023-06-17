@@ -1,7 +1,8 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.block.host;
 
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
+import com.riintouge.strata.block.ICommonBlockProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

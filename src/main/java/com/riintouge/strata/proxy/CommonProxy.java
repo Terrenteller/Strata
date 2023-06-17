@@ -5,10 +5,10 @@ import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.Blocks;
 import com.riintouge.strata.recipe.BrewingRecipeReplicator;
-import com.riintouge.strata.block.FurnaceRecipeReplicator;
-import com.riintouge.strata.block.RecipeReplicator;
+import com.riintouge.strata.recipe.FurnaceRecipeReplicator;
+import com.riintouge.strata.recipe.CraftingRecipeReplicator;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
-import com.riintouge.strata.block.geo.HostRegistry;
+import com.riintouge.strata.block.host.HostRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.network.NetworkManager;
 import com.riintouge.strata.resource.ConfigDir;
@@ -64,7 +64,7 @@ public class CommonProxy
         Strata.LOGGER.trace( "CommonProxy::init()" );
 
         FurnaceRecipeReplicator.replicateAndRegister();
-        RecipeReplicator.replicateAndRegister();
+        CraftingRecipeReplicator.replicateAndRegister();
     }
 
     public void postInit( FMLPostInitializationEvent event )

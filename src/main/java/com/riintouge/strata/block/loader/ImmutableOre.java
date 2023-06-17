@@ -1,9 +1,9 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.misc.IForgeRegistrable;
 import com.riintouge.strata.item.ItemHelper;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.TileType;

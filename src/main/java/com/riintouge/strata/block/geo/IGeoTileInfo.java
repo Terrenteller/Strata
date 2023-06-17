@@ -1,7 +1,8 @@
 package com.riintouge.strata.block.geo;
 
-import com.riintouge.strata.block.IForgeRegistrable;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.IForgeRegistrable;
+import com.riintouge.strata.misc.MetaResourceLocation;
+import com.riintouge.strata.block.host.IHostInfo;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.IDropFormula;
 import com.riintouge.strata.sound.SoundEventTuple;

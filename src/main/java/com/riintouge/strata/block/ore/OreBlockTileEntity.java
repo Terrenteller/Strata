@@ -1,10 +1,10 @@
 package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.geo.GeoBlock;
-import com.riintouge.strata.block.geo.HostRegistry;
-import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.block.host.HostRegistry;
+import com.riintouge.strata.block.host.IHostInfo;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.util.StateUtil;
 import com.riintouge.strata.util.StringUtil;

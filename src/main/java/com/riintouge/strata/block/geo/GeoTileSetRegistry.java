@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.IForgeRegistrable;
+import com.riintouge.strata.misc.IForgeRegistrable;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;

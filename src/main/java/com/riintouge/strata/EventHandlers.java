@@ -1,7 +1,7 @@
 package com.riintouge.strata;
 
 import com.riintouge.strata.block.geo.GeoBlock;
-import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.block.host.IHostInfo;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.OreBlock;
 import com.riintouge.strata.util.DebugUtil;

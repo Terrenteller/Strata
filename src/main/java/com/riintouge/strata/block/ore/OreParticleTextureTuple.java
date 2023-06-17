@@ -1,10 +1,10 @@
 package com.riintouge.strata.block.ore;
 
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
-import com.riintouge.strata.block.geo.BakedModelCache;
-import com.riintouge.strata.block.geo.HostRegistry;
-import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.block.BakedModelCache;
+import com.riintouge.strata.block.host.HostRegistry;
+import com.riintouge.strata.block.host.IHostInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;

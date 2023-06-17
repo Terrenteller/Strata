@@ -1,6 +1,9 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.item.geo;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.block.geo.GeoTileSetRegistry;
+import com.riintouge.strata.block.geo.IGeoTileInfo;
+import com.riintouge.strata.block.geo.IGeoTileSet;
 import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.item.ItemHelper;

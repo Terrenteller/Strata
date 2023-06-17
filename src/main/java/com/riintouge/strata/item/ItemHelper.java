@@ -1,7 +1,7 @@
 package com.riintouge.strata.item;
 
 import com.riintouge.strata.misc.LambdaNoThrow;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

@@ -1,11 +1,12 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.item.geo;
 
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.item.ItemHelper;
-import net.minecraft.block.BlockSlab;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemSlab;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -15,13 +16,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class GeoItemBlockSlab extends ItemSlab
+public class GeoItemBlock extends ItemBlock
 {
     protected IGeoTileInfo tileInfo;
 
-    public GeoItemBlockSlab( IGeoTileInfo tileInfo , BlockSlab singleSlab , BlockSlab doubleSlab )
+    public GeoItemBlock( IGeoTileInfo tileInfo , Block block )
     {
-        super( singleSlab , singleSlab , doubleSlab );
+        super( block );
         this.tileInfo = tileInfo;
 
         String blockRegistryName = block.getRegistryName().toString();
@@ -43,7 +44,30 @@ public class GeoItemBlockSlab extends ItemSlab
         return getUnlocalizedName();
     }
 
+    @Override
+    public EnumActionResult onItemUse(
+        EntityPlayer player,
+        World worldIn,
+        BlockPos pos,
+        EnumHand hand,
+        EnumFacing facing,
+        float hitX,
+        float hitY,
+        float hitZ )
+    {
+        return ItemHelper.onItemUseWithStatisticsFix(
+            player,
+            hand,
+            () -> super.onItemUse( player , worldIn , pos , hand , facing , hitX , hitY , hitZ ) );
+    }
+
     // Item overrides
+
+    @Override
+    public int getItemBurnTime( ItemStack itemStack )
+    {
+        return tileInfo.tileType().isPrimary ? tileInfo.burnTime() : 0;
+    }
 
     @Override
     public String getItemStackDisplayName( ItemStack stack )
@@ -60,22 +84,5 @@ public class GeoItemBlockSlab extends ItemSlab
         return ( equivalentItemStack != null && equivalentItemStack.hasEffect() )
             || FlagUtil.check( tileInfo.specialBlockPropertyFlags() , SpecialBlockPropertyFlags.HAS_EFFECT )
             || super.hasEffect( stack );
-    }
-
-    @Override
-    public EnumActionResult onItemUse(
-        EntityPlayer player,
-        World worldIn,
-        BlockPos pos,
-        EnumHand hand,
-        EnumFacing facing,
-        float hitX,
-        float hitY,
-        float hitZ )
-    {
-        return ItemHelper.onItemUseWithStatisticsFix(
-            player,
-            hand,
-            () -> super.onItemUse( player , worldIn , pos , hand , facing , hitX , hitY , hitZ ) );
     }
 }

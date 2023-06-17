@@ -2,7 +2,7 @@ package com.riintouge.strata.block.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SampleBlock;
-import com.riintouge.strata.block.RecipeReplicator;
+import com.riintouge.strata.recipe.CraftingRecipeReplicator;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -145,7 +145,7 @@ public final class OreRegistry
 
             if( equivalentItem != null && !equivalentItem.isEmpty() )
             {
-                RecipeReplicator.INSTANCE.associate( equivalentItem , new ItemStack( tileSet.getItem() ) );
+                CraftingRecipeReplicator.INSTANCE.associate( equivalentItem , new ItemStack( tileSet.getItem() ) );
                 GameRegistry.addShapelessRecipe(
                     Strata.resource( oreInfo.oreName() + "_equivalent" ),
                     null,

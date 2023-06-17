@@ -2,6 +2,7 @@ package com.riintouge.strata.block;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.loader.TileDataLoader;
+import com.riintouge.strata.recipe.CraftingRecipeReplicator;
 import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.resource.ResourcePacksDir;
 import com.riintouge.strata.util.DebugUtil;
@@ -102,7 +103,7 @@ public final class Blocks
         {
             try
             {
-                RecipeReplicator.processRecipeFile( path );
+                CraftingRecipeReplicator.processRecipeFile( path );
             }
             catch( Exception e )
             {
@@ -170,7 +171,7 @@ public final class Blocks
                     {
                         try
                         {
-                            RecipeReplicator.processRecipeFile( recipeFilePath );
+                            CraftingRecipeReplicator.processRecipeFile( recipeFilePath );
                         }
                         catch( Exception e )
                         {
@@ -225,7 +226,7 @@ public final class Blocks
                     {
                         String modID = matcher.group( RESOURCE_PACK_RECIPE_PATH_MOD_ID_GROUP );
                         if( modID.equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
-                            RecipeReplicator.processRecipeStream( zipFile.getInputStream( zipEntry ) );
+                            CraftingRecipeReplicator.processRecipeStream( zipFile.getInputStream( zipEntry ) );
                     }
                 }
             }

@@ -1,7 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.block.IResourceLocationMap;
+import com.riintouge.strata.misc.IResourceLocationMap;
 import com.riintouge.strata.block.ModelRetexturizer;
 import com.riintouge.strata.util.EnumUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

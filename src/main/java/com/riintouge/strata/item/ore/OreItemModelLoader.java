@@ -1,6 +1,7 @@
-package com.riintouge.strata.block.ore;
+package com.riintouge.strata.item.ore;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.item.StrataItemModel;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;

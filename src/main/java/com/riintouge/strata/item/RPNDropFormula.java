@@ -1,6 +1,6 @@
 package com.riintouge.strata.item;
 
-import com.riintouge.strata.util.RPNExpression;
+import com.riintouge.strata.misc.RPNExpression;
 import com.riintouge.strata.util.StringUtil;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;

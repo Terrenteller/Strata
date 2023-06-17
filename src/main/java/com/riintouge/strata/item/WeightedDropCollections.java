@@ -1,7 +1,7 @@
 package com.riintouge.strata.item;
 
 import com.google.common.collect.Iterables;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.misc.WeightedCollection;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

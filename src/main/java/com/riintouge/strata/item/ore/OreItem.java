@@ -1,7 +1,8 @@
-package com.riintouge.strata.block.ore;
+package com.riintouge.strata.item.ore;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.util.FlagUtil;
 import com.riintouge.strata.item.ItemHelper;

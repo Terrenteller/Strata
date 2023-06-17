@@ -18,7 +18,7 @@ import java.util.Optional;
 // These values were very unscientifically taken from the result of model.getAllTransforms()
 // in ModelLoader.VanillaModelWrapper.bakeImpl() for "minecraft:models/item/clay_ball".
 @SideOnly( Side.CLIENT )
-public enum StrataItemCameraTransform
+public enum StrataItemCameraTransforms
 {
     THIRD_PERSON_LEFT_HAND(
         new Vector3f( 0.0f , 0.0f , 0.0f ),
@@ -62,7 +62,7 @@ public enum StrataItemCameraTransform
 
     public final TRSRTransformation TRSR;
 
-    StrataItemCameraTransform( Vector3f rotation , Vector3f translation , Vector3f scale )
+    StrataItemCameraTransforms( Vector3f rotation , Vector3f translation , Vector3f scale )
     {
         TRSR = TRSRTransformation.blockCenterToCorner(
             TRSRTransformation.from(

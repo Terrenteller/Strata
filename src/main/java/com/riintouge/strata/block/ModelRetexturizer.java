@@ -1,6 +1,7 @@
 package com.riintouge.strata.block;
 
 import com.google.common.collect.ImmutableList;
+import com.riintouge.strata.misc.IResourceLocationMap;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;

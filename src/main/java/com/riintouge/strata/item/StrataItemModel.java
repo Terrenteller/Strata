@@ -41,7 +41,7 @@ public class StrataItemModel implements IModel
         return new BakedItemModel(
             builder.build(),
             bakedModel.getParticleTexture(),
-            Maps.immutableEnumMap( StrataItemCameraTransform.getTransforms( state ) ),
+            Maps.immutableEnumMap( StrataItemCameraTransforms.getTransforms( state ) ),
             ItemOverrideList.NONE );
     }
 

@@ -1,6 +1,9 @@
-package com.riintouge.strata.block.geo;
+package com.riintouge.strata.item.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.block.geo.GeoTileSetRegistry;
+import com.riintouge.strata.block.geo.IGeoTileInfo;
+import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.item.StrataItemModel;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;

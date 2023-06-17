@@ -1,10 +1,10 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.block.IForgeRegistrable;
-import com.riintouge.strata.block.MetaResourceLocation;
+import com.riintouge.strata.misc.IForgeRegistrable;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
-import com.riintouge.strata.block.geo.IHostInfo;
+import com.riintouge.strata.block.host.IHostInfo;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
