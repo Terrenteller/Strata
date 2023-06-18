@@ -11,6 +11,7 @@ blacklist minecraft:stone_brick_slab
 blacklist minecraft:stone_button
 blacklist minecraft:lever
 blacklist minecraft:stone_pressure_plate
+blacklist minecraft:clay
 
 # Strata has equivalents which convert directly to these vanilla blocks
 blacklist minecraft:andesite

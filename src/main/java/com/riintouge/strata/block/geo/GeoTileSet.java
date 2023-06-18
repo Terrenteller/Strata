@@ -289,6 +289,7 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
                 ItemStack equivalentFragmentItem = tileInfo.equivalentFragmentItemStack();
                 if( equivalentFragmentItem != null && !equivalentFragmentItem.isEmpty() )
                 {
+                    CraftingRecipeReplicator.INSTANCE.associate( new ItemStack( fragmentItem ) , equivalentFragmentItem );
                     createEquivalentItemConversionRecipe(
                         GeoItemFragment.fragmentRegistryName( tileInfo ),
                         fragmentItem,
