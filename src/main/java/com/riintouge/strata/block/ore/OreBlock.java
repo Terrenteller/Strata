@@ -368,7 +368,9 @@ public class OreBlock extends OreBaseBlock
 
             IHostInfo hostInfo = getHostInfo( state );
             ProtoBlockTextureMap hostTextureMap = hostInfo != null ? hostInfo.modelTextureMap() : null;
+            TextureAtlasSprite hostTextures[] = hostTextureMap != null ? hostTextureMap.getTextures() : null;
             ProtoBlockTextureMap oreTextureMap = oreInfo.modelTextureMap();
+            TextureAtlasSprite oreTextures[] = oreTextureMap != null ? oreTextureMap.getTextures() : null;
 
             if( hostTextureMap == null && hostInfo != null )
             {
@@ -404,8 +406,7 @@ public class OreBlock extends OreBaseBlock
                                 d2 - 0.5d,
                                 blockId );
 
-                            EnumFacing facing = EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ];
-                            TextureAtlasSprite texture = hostTextureMap.getTexture( facing );
+                            TextureAtlasSprite texture = hostTextures[ RANDOM.nextInt( 6 ) ];
                             particleDigging.setBlockPos( pos ).setParticleTexture( texture );
                             manager.addEffect( particleDigging );
                         }
@@ -424,8 +425,7 @@ public class OreBlock extends OreBaseBlock
                                 d2 - 0.5d,
                                 blockId );
 
-                            EnumFacing facing = EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ];
-                            TextureAtlasSprite texture = oreTextureMap.getTexture( facing );
+                            TextureAtlasSprite texture = oreTextures[ RANDOM.nextInt( 6 ) ];
                             particleDigging.setBlockPos( pos ).setParticleTexture( texture );
                             manager.addEffect( particleDigging );
                         }

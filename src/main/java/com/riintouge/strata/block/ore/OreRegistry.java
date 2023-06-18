@@ -205,13 +205,24 @@ public final class OreRegistry
 
     @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void stitchTextures( TextureStitchEvent.Pre event )
+    public static void stitchTexturesPre( TextureStitchEvent.Pre event )
     {
-        Strata.LOGGER.trace( "OreRegistry::stitchTextures()" );
+        Strata.LOGGER.trace( "OreRegistry::stitchTexturesPre()" );
 
         TextureMap textureMap = event.getMap();
         for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
-            tileSet.getInfo().stitchTextures( textureMap );
+            tileSet.getInfo().stitchTextures( textureMap , true );
+    }
+
+    @SideOnly( Side.CLIENT )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void stitchTexturesPost( TextureStitchEvent.Post event )
+    {
+        Strata.LOGGER.trace( "OreRegistry::stitchTexturesPost()" );
+
+        TextureMap textureMap = event.getMap();
+        for( IOreTileSet tileSet : INSTANCE.oreMap.values() )
+            tileSet.getInfo().stitchTextures( textureMap , false );
     }
 
     @SideOnly( Side.CLIENT )

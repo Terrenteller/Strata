@@ -375,8 +375,8 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     @Override
     @SideOnly( Side.CLIENT )
-    public void stitchTextures( TextureMap textureMap )
+    public void stitchTextures( TextureMap textureMap , boolean pre )
     {
-        modelTextureMap.stitchTextures( textureMap );
+        modelTextureMap.stitchTextures( textureMap , pre );
     }
 }

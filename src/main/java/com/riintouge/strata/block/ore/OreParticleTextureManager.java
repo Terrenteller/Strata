@@ -62,9 +62,9 @@ public final class OreParticleTextureManager
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void stitchTextures( TextureStitchEvent.Pre event )
+    public static void stitchTexturesPre( TextureStitchEvent.Pre event )
     {
-        Strata.LOGGER.trace( "OreParticleTextureManager::stitchTextures()" );
+        Strata.LOGGER.trace( "OreParticleTextureManager::stitchTexturesPre()" );
 
         if( !StrataConfig.usePrecomputedOreParticles )
             return;

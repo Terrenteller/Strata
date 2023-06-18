@@ -37,9 +37,9 @@ public final class GeoItemFragmentTextureManager
     }
 
     @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void stitchTextures( TextureStitchEvent.Pre event )
+    public static void stitchTexturesPre( TextureStitchEvent.Pre event )
     {
-        Strata.LOGGER.trace( "GeoItemFragmentTextureManager::stitchTextures()" );
+        Strata.LOGGER.trace( "GeoItemFragmentTextureManager::stitchTexturesPre()" );
 
         TextureMap textureMap = event.getMap();
         GeoTileSetRegistry tileSetRegistry = GeoTileSetRegistry.INSTANCE;

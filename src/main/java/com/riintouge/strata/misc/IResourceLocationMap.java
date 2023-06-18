@@ -8,11 +8,11 @@ import java.util.Collection;
 
 public interface IResourceLocationMap
 {
-    @Nonnull
-    ResourceLocation get( ResourceLocation originalResource );
+    @Nullable
+    ResourceLocation get( @Nullable ResourceLocation originalResource );
 
     @Nullable
-    ResourceLocation getOrDefault( ResourceLocation originalResource , ResourceLocation defaultValue );
+    ResourceLocation getOrDefault( @Nullable ResourceLocation originalResource , @Nullable ResourceLocation defaultValue );
 
     @Nonnull
     Collection< ResourceLocation > getAll();

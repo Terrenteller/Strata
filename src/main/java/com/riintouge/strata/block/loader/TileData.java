@@ -571,7 +571,7 @@ public class TileData
 
         String[] components = value.toLowerCase().split( " " );
         if( ( ( components.length - 1 ) % 3 ) != 0 )
-            return layers;
+            throw new IllegalArgumentException( "Invalid number of layered texture arguments!" );
 
         if( components.length > 1 )
         {

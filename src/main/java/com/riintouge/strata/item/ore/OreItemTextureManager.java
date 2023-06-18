@@ -39,9 +39,9 @@ public final class OreItemTextureManager
 
     @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void stitchTextures( TextureStitchEvent.Pre event )
+    public static void stitchTexturesPre( TextureStitchEvent.Pre event )
     {
-        Strata.LOGGER.trace( "OreItemTextureManager::stitchTextures()" );
+        Strata.LOGGER.trace( "OreItemTextureManager::stitchTexturesPre()" );
 
         TextureMap textureMap = event.getMap();
 

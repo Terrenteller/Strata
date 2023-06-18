@@ -8,7 +8,10 @@ import com.riintouge.strata.block.host.IHostInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly( Side.CLIENT )
 public class OreParticleTextureTuple
 {
     public final TextureAtlasSprite combinedTexture;

@@ -558,20 +558,16 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
 
     @Override
     @SideOnly( Side.CLIENT )
-    public void stitchTextures( TextureMap textureMap )
+    public void stitchTextures( TextureMap textureMap , boolean pre )
     {
-        // TODO: Don't generate a texture if a texture already exists, such as from a texture pack.
-        // I think ModelDynBucket has example code for this...
-
-        // Stitching the same texture multiple times leads to weird lookup failures.
+        // Stitching the same texture multiple times leads to bizarre issues.
         // No exceptions make it back to us, but we'll end up with (sometimes malformed) water and lava particles.
         Set< ProtoBlockTextureMap > textureMaps = new HashSet<>();
-
         for( IGeoTileInfo tileInfo : tileInfos )
             if( tileInfo != null )
                 textureMaps.add( tileInfo.modelTextureMap() );
 
         for( ProtoBlockTextureMap tileTextureMap : textureMaps )
-            tileTextureMap.stitchTextures( textureMap );
+            tileTextureMap.stitchTextures( textureMap , pre );
     }
 }

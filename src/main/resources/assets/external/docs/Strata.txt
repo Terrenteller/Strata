@@ -189,6 +189,7 @@ Description:
     Only `texture` is required. The other keys override a side or group of sides.
     If the tile type has a parent, the parent's complete texture map is the default.
     Specifying any of these keys will generate a new and distinct texture map.
+    Only the first frame of an animated texture will be used when multiple layers are involved.
     Although Strata does not generate host blocks, these textures are used for their particles.
     Must come after `generate`, `host`, or `ore`.
 

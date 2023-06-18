@@ -115,7 +115,8 @@ public class GeoBlockSlab extends BlockSlab
     @SideOnly( Side.CLIENT )
     public boolean addDestroyEffects( World world , BlockPos pos , ParticleManager manager )
     {
-        Supplier< TextureAtlasSprite > textureGetter = () -> tileInfo.modelTextureMap().getTexture( EnumFacing.VALUES[ RANDOM.nextInt( 6 ) ] );
+        TextureAtlasSprite textures[] = tileInfo.modelTextureMap().getTextures();
+        Supplier< TextureAtlasSprite > textureGetter = () -> textures[ RANDOM.nextInt( 6 ) ];
         ParticleHelper.addDestroyEffects( world , pos , manager , textureGetter );
 
         return true;

@@ -3,20 +3,19 @@ package com.riintouge.strata.misc;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface IMultiFacingResourceMap< T extends Enum >
 {
-    @Nonnull
-    T getActualMultiFacing( T multiFacing );
-
-    @Nonnull
-    T getActualMultiFacing( EnumFacing facing );
-
-    @Nonnull
-    ResourceLocation get( T multiFacing );
+    @Nullable
+    T getActualMultiFacing( @Nullable T multiFacing );
 
     @Nullable
-    ResourceLocation getOrDefault( T multiFacing , ResourceLocation defaultValue );
+    T getActualMultiFacing( @Nullable EnumFacing facing );
+
+    @Nullable
+    ResourceLocation get( @Nullable T multiFacing );
+
+    @Nullable
+    ResourceLocation getOrDefault( @Nullable T multiFacing , @Nullable ResourceLocation defaultValue );
 }

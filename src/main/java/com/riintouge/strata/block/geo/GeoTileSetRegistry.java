@@ -110,12 +110,23 @@ public final class GeoTileSetRegistry
 
     @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void stitchTextures( TextureStitchEvent.Pre event )
+    public static void stitchTexturesPre( TextureStitchEvent.Pre event )
     {
-        Strata.LOGGER.trace( "GeoTileSetRegistry::stitchTextures()" );
+        Strata.LOGGER.trace( "GeoTileSetRegistry::stitchTexturesPre()" );
 
         TextureMap textureMap = event.getMap();
         for( IForgeRegistrable tileSet : INSTANCE.tileSetMap.values() )
-            tileSet.stitchTextures( textureMap );
+            tileSet.stitchTextures( textureMap , true );
+    }
+
+    @SideOnly( Side.CLIENT )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void stitchTexturesPost( TextureStitchEvent.Post event )
+    {
+        Strata.LOGGER.trace( "GeoTileSetRegistry::stitchTexturesPost()" );
+
+        TextureMap textureMap = event.getMap();
+        for( IForgeRegistrable tileSet : INSTANCE.tileSetMap.values() )
+            tileSet.stitchTextures( textureMap , false );
     }
 }

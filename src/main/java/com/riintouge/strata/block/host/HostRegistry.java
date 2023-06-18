@@ -86,16 +86,30 @@ public final class HostRegistry
 
     @SideOnly( Side.CLIENT )
     @SubscribeEvent( priority = EventPriority.LOWEST )
-    public static void stitchTextures( TextureStitchEvent.Pre event )
+    public static void stitchTexturesPre( TextureStitchEvent.Pre event )
     {
-        Strata.LOGGER.trace( "HostRegistry::stitchTextures()" );
+        Strata.LOGGER.trace( "HostRegistry::stitchTexturesPre()" );
 
-        TextureMap textureMap = event.getMap();
+        stitchTextures( event.getMap() , true );
+    }
+
+    @SideOnly( Side.CLIENT )
+    @SubscribeEvent( priority = EventPriority.LOWEST )
+    public static void stitchTexturesPost( TextureStitchEvent.Post event )
+    {
+        Strata.LOGGER.trace( "HostRegistry::stitchTexturesPost()" );
+
+        stitchTextures( event.getMap() , false );
+    }
+
+    @SideOnly( Side.CLIENT )
+    private static void stitchTextures( TextureMap textureMap , boolean pre )
+    {
         for( IHostInfo[] hostInfos : INSTANCE.hostMap.values() )
             for( IHostInfo hostInfo : hostInfos )
                 if( hostInfo instanceof ImmutableTile ) // FIXME: We're not supposed to know about tiles here
                     break;
                 else if( hostInfo instanceof IForgeRegistrable )
-                    ( (IForgeRegistrable)hostInfo ).stitchTextures( textureMap );
+                    ( (IForgeRegistrable)hostInfo ).stitchTextures( textureMap , pre );
     }
 }

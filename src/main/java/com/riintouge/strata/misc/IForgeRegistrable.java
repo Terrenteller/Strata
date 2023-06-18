@@ -32,7 +32,7 @@ public interface IForgeRegistrable
     }
 
     @SideOnly( Side.CLIENT )
-    default void stitchTextures( TextureMap textureMap )
+    default void stitchTextures( TextureMap textureMap , boolean pre )
     {
         // Dummy
     }

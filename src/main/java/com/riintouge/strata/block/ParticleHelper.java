@@ -25,8 +25,11 @@ public class ParticleHelper
 {
     public static final int DEFAULT_PARTICLE_COLOR = -16777216; // Taken from BlockFalling
 
-    public static int getParticleFallingColor( ResourceLocation textureResourceLocation )
+    public static int getParticleFallingColor( @Nullable ResourceLocation textureResourceLocation )
     {
+        if( textureResourceLocation == null )
+            return DEFAULT_PARTICLE_COLOR;
+
         TextureAtlasSprite texture = Minecraft.getMinecraft()
             .getTextureMapBlocks()
             .getTextureExtry( textureResourceLocation.toString() );
