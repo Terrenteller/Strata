@@ -1,8 +1,12 @@
 package com.riintouge.strata.misc;
 
+import com.riintouge.strata.util.Util;
 import com.sun.istack.internal.NotNull;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.regex.Matcher;
@@ -30,29 +34,22 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
         this.meta = meta;
     }
 
+    public MetaResourceLocation( Pair< ResourceLocation , Integer > resourceLocationAndMeta )
+    {
+        this.resourceLocation = resourceLocationAndMeta.getLeft();
+        this.meta = Util.coalesce( resourceLocationAndMeta.getRight() , 0 );
+    }
+
     public MetaResourceLocation( String resourceString )
     {
-        Matcher matcher = RESOURCE_PATTERN.matcher( resourceString.toLowerCase() );
-        if( !matcher.find() )
-            throw new IllegalArgumentException( resourceString );
-
-        this.resourceLocation = new ResourceLocation( matcher.group( DOMAIN_GROUP ) , matcher.group( PATH_GROUP ) );
-
-        String metaString = matcher.group( META_GROUP );
-        if( metaString != null )
-        {
-            this.meta = Integer.parseInt( metaString );
-            if( this.meta < 0 || this.meta > 15 )
-                throw new IllegalArgumentException( resourceString );
-        }
-        else
-            this.meta = 0;
+        this( parseIntoPair( resourceString ) );
     }
 
     public MetaResourceLocation( IBlockState blockState )
     {
-        this.resourceLocation = blockState.getBlock().getRegistryName();
-        this.meta = blockState.getBlock().getMetaFromState( blockState );
+        Block block = blockState.getBlock();
+        this.resourceLocation = block.getRegistryName();
+        this.meta = block.getMetaFromState( blockState );
     }
 
     public boolean equals( @Nullable MetaResourceLocation other )
@@ -95,5 +92,28 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     public String toString()
     {
         return String.format( "%s:%d" , resourceLocation.toString() , meta );
+    }
+
+    // Statics
+
+    public static Pair< ResourceLocation , Integer > parseIntoPair( String resourceString )
+    {
+        // TODO: What about bracketed variants like strata:diorite[orientation=side_north]
+        Matcher matcher = RESOURCE_PATTERN.matcher( resourceString.toLowerCase() );
+        if( !matcher.find() )
+            throw new IllegalArgumentException( resourceString );
+
+        ResourceLocation resourceLocation = new ResourceLocation( matcher.group( DOMAIN_GROUP ) , matcher.group( PATH_GROUP ) );
+        Integer meta = null;
+
+        String metaString = matcher.group( META_GROUP );
+        if( metaString != null )
+        {
+            meta = Integer.parseInt( metaString );
+            if( meta < 0 || meta > 15 )
+                throw new IllegalArgumentException( resourceString );
+        }
+
+        return new ImmutablePair<>( resourceLocation , meta );
     }
 }

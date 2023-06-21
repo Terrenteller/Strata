@@ -1,5 +1,6 @@
 package com.riintouge.strata;
 
+import com.riintouge.strata.command.StrataCommandTree;
 import com.riintouge.strata.proxy.CommonProxy;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
@@ -8,6 +9,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,21 +37,27 @@ public class Strata
     public static CommonProxy PROXY;
 
     @EventHandler
-    public void preInit( FMLPreInitializationEvent event )
+    public void preInitializationEvent( FMLPreInitializationEvent event )
     {
         PROXY.preInit( event );
     }
 
     @EventHandler
-    public void init( FMLInitializationEvent event )
+    public void initializationEvent( FMLInitializationEvent event )
     {
         PROXY.init( event );
     }
 
     @EventHandler
-    public void postInit( FMLPostInitializationEvent event )
+    public void postInitializationEvent( FMLPostInitializationEvent event )
     {
         PROXY.postInit( event );
+    }
+
+    @EventHandler
+    public void serverStartingEvent( FMLServerStartingEvent event )
+    {
+        event.registerServerCommand( new StrataCommandTree() );
     }
 
     // Statics
