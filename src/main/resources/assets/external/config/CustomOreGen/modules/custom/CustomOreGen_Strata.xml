@@ -369,7 +369,7 @@
 
         <!-- FIXME: Malachite is missing from PFAA Geologica and therefore Strata -->
         <OptionChoice name="StrataGenCopper" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
-          <Description>Redistribute or replace copper ore (chalcopyrite).</Description>
+          <Description>Redistribute or replace copper ore (azurite, chalcopyrite, malachite).</Description>
           <DisplayName>Copper (Chalcopyrite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
@@ -474,7 +474,7 @@
         </OptionChoice>
 
         <OptionChoice name="StrataGenTin" default=":=false" displayState=":=if(?StrataGenRocks &amp; ?StrataCustomOreOverride, &quot;shown&quot;, &quot;hidden&quot;)" displayGroup="groupStrata">
-          <Description>Redistribute or replace tin ore (cassiterite).</Description>
+          <Description>Redistribute or replace tin ore (cassiterite, teallite).</Description>
           <DisplayName>Tin (Cassiterite) ┤</DisplayName>
           <Choice value="true" displayValue="Redistribute" />
           <Choice value="false" displayValue="In-place replacement" />
@@ -634,25 +634,37 @@
 
       <!-- When a substitute preset inherits from another and specifies block replacements, inherited replacements
       are null and void. This may be intentional. For example, PresetLimestoneOceanic replaces with limestone whatever
-      PresetPrimarySedimentaryOceanic replaces (stone and dirt, and the time of writing), and
+      PresetPrimarySedimentaryOceanic replaces (stone and dirt, at the time of writing), and
       PresetPrimarySedimentaryOceanic inherits from PresetPrimaryStratum which replaces stone (and ores, originally).
-      Because PresetPrimarySedimentaryOceanic specifies replacements, it did not replace the ores
-      that PresetPrimaryStratum did and would leave behind unsightly clumps of ores in strange places.
+      Because PresetPrimarySedimentaryOceanic specifies replacements, it does not replace the ores
+      that PresetPrimaryStratum does and leaves behind unsightly clumps of ores in strange places.
       We can't fix this in COG (because it may not be a bug, for one). What we can do is replace the ores
       that we are going to generate with stone prior to further substitution which is expected to replace stone.
-      This was reproducible with seed 3310535551474286366 with iron ore near -815 37 355 and coal ore near -654 43 513.
+      This was reproducible with iron ore near -815 37 355 and coal ore near -654 43 513 in seed 3310535551474286366.
       Both of these occurred within PresetLimestoneOceanic's area of effect. -->
+
+      <!-- By default, Geolosys retroactively replaces ores. This can be disabled, but it is unknown whether COG will
+      run after all other world generation mods or even if world generation mods run in a deterministic order.
+      A quick test shows that COG replaces Geolosys-generated teallite around 197 27 234 in seed 725881844950. -->
 
       <IfCondition condition=":=?StrataVanillaOreOverride">
         <IfCondition condition=":=?StrataGenCoal">
           <Then>
             <Substitute name="CoalToStone" block="minecraft:stone">
               <ReplacesOre block="oreCoal" />
+              <ReplacesOre block="oreBlockCoal_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="CoalSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample_vanilla:0" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="CoalToStrata" block="strata:coal_ore">
               <ReplacesOre block="oreCoal" />
+              <ReplacesOre block="oreBlockCoal_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="CoalSampleToStrata" block="strata:coal_sample">
+              <Replaces block="geolosys:ore_sample_vanilla:0" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -660,11 +672,19 @@
           <Then>
             <Substitute name="DiamondToStone" block="minecraft:stone">
               <ReplacesOre block="oreDiamond" />
+              <ReplacesOre block="oreBlockKimberlite_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="DiamondSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample_vanilla:5" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="DiamondToStrata" block="strata:diamond_ore">
               <ReplacesOre block="oreDiamond" />
+              <ReplacesOre block="oreBlockKimberlite_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="DiamondSampleToStrata" block="strata:diamond_sample">
+              <Replaces block="geolosys:ore_sample_vanilla:5" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -672,11 +692,19 @@
           <Then>
             <Substitute name="EmeraldToStone" block="minecraft:stone">
               <ReplacesOre block="oreEmerald" />
+              <ReplacesOre block="oreBlockBeryl_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="EmeraldSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample_vanilla:6" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="EmeraldToStrata" block="strata:emerald_ore">
               <ReplacesOre block="oreEmerald" />
+              <ReplacesOre block="oreBlockBeryl_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="EmeraldSampleToStrata" block="strata:emerald_sample">
+              <Replaces block="geolosys:ore_sample_vanilla:6" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -684,11 +712,19 @@
           <Then>
             <Substitute name="GoldToStone" block="minecraft:stone">
               <ReplacesOre block="oreGold" />
+              <ReplacesOre block="oreBlockGold_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="GoldSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample_vanilla:2" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="GoldToStrata" block="strata:gold_ore">
               <ReplacesOre block="oreGold" />
+              <ReplacesOre block="oreBlockGold_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="GoldSampleToStrata" block="strata:gold_sample">
+              <Replaces block="geolosys:ore_sample_vanilla:2" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -696,11 +732,19 @@
           <Then>
             <Substitute name="IronToStone" block="minecraft:stone">
               <ReplacesOre block="oreIron" />
+              <ReplacesOre block="oreBlockHematite_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="IronSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:0" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="IronToStrata" block="strata:iron_ore">
               <Replaces block="minecraft:iron_ore" />
+              <ReplacesOre block="oreBlockHematite_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="IronSampleToStrata" block="strata:iron_sample">
+              <Replaces block="geolosys:ore_sample:0" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -708,11 +752,19 @@
           <Then>
             <Substitute name="LapisToStone" block="minecraft:stone">
               <ReplacesOre block="oreLapis" />
+              <ReplacesOre block="oreBlockLapis_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LapisSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample_vanilla:3" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="LapisToStrata" block="strata:lapis_ore">
               <ReplacesOre block="oreLapis" />
+              <ReplacesOre block="oreBlockLapis_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LapisSampleToStrata" block="strata:lapis_sample">
+              <Replaces block="geolosys:ore_sample_vanilla:3" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -720,11 +772,19 @@
           <Then>
             <Substitute name="RedstoneToStone" block="minecraft:stone">
               <ReplacesOre block="oreRedstone" />
+              <ReplacesOre block="oreBlockCinnabar_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="RedstoneSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample_vanilla:1" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="RedstoneToStrata" block="strata:redstone_ore">
               <ReplacesOre block="oreRedstone" />
+              <ReplacesOre block="oreBlockCinnabar_vanilla" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="RedstoneSampleToStrata" block="strata:redstone_sample">
+              <Replaces block="geolosys:ore_sample_vanilla:1" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -733,15 +793,29 @@
       <IfCondition condition=":=?StrataCustomOreOverride">
         <IfCondition condition=":=?StrataGenAluminium">
           <Then>
-            <Substitute name="AluminumToStone" block="minecraft:stone">
+            <Substitute name="AluminiumToStone" block="minecraft:stone">
+              <ReplacesOre block="oreAluminium" />
+              <ReplacesOre block="oreAluminum" />
               <ReplacesOre block="oreBauxite" />
+              <ReplacesOre block="oreBlockBauxite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="AluminiumSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:7" />
             </Substitute>
           </Then>
           <Else>
-            <Substitute name="AluminumToStrata">
+            <Substitute name="AluminiumToStrata">
               <OreBlock block="strata:alunite_ore" weight="0.5"/>
               <OreBlock block="strata:bauxite_ore" weight="0.5"/>
+              <ReplacesOre block="oreAluminium" />
+              <ReplacesOre block="oreAluminum" />
               <ReplacesOre block="oreBauxite" />
+              <ReplacesOre block="oreBlockBauxite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="AluminiumSampleToStrata">
+              <OreBlock block="strata:alunite_sample" weight="0.5"/>
+              <OreBlock block="strata:bauxite_sample" weight="0.5"/>
+              <Replaces block="geolosys:ore_sample:7" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -821,11 +895,13 @@
           <Then>
             <Substitute name="CaesiumToStone" block="minecraft:stone">
               <ReplacesOre block="oreCaesium" />
+              <ReplacesOre block="oreCesium" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="CaesiumToStrata" block="strata:pollucite_ore">
               <ReplacesOre block="oreCaesium" />
+              <ReplacesOre block="oreCesium" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -845,11 +921,23 @@
           <Then>
             <Substitute name="CopperToStone" block="minecraft:stone">
               <ReplacesOre block="oreCopper" />
+              <ReplacesOre block="oreBlockAzurite" /> <!-- Geolosys -->
+              <ReplacesOre block="oreBlockMalachite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="CopperSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:2" />
+              <Replaces block="geolosys:ore_sample:3" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="CopperToStrata" block="strata:chalcopyrite_ore">
               <ReplacesOre block="oreCopper" />
+              <ReplacesOre block="oreBlockAzurite" /> <!-- Geolosys -->
+              <ReplacesOre block="oreBlockMalachite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="CopperSampleToStrata" block="strata:chalcopyrite_sample">
+              <Replaces block="geolosys:ore_sample:2" />
+              <Replaces block="geolosys:ore_sample:3" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -868,12 +956,44 @@
         <IfCondition condition=":=?StrataGenLead">
           <Then>
             <Substitute name="LeadToStone" block="minecraft:stone">
+              <ReplacesOre block="oreGalena" />
               <ReplacesOre block="oreLead" />
+              <ReplacesOre block="oreBlockGalena" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LeadSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:6" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="LeadToStrata" block="strata:galena_ore">
+              <ReplacesOre block="oreGalena" />
               <ReplacesOre block="oreLead" />
+              <ReplacesOre block="oreBlockGalena" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LeadSampleToStrata" block="strata:galena_sample">
+              <Replaces block="geolosys:ore_sample:6" />
+            </Substitute>
+          </Else>
+        </IfCondition>
+        <IfCondition condition=":=?StrataGenLaterites">
+          <Then>
+            <Substitute name="LimoniteToStone" block="minecraft:stone">
+              <ReplacesOre block="oreBlockLimonite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LimoniteSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:1" />
+            </Substitute>
+          </Then>
+          <Else>
+            <Substitute name="LimoniteToStrata">
+              <OreBlock block="strata:brown_limonite_ore" weight="0.5"/>
+              <OreBlock block="strata:yellow_limonite_ore" weight="0.5"/>
+              <ReplacesOre block="oreBlockLimonite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LimoniteSampleToStrata">
+              <OreBlock block="strata:brown_limonite_sample" weight="0.5"/>
+              <OreBlock block="strata:yellow_limonite_sample" weight="0.5"/>
+              <Replaces block="geolosys:ore_sample:1" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -1003,11 +1123,23 @@
           <Then>
             <Substitute name="TinToStone" block="minecraft:stone">
               <ReplacesOre block="oreTin" />
+              <ReplacesOre block="oreBlockCassiterite" /> <!-- Geolosys -->
+              <ReplacesOre block="oreBlockTeallite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="TinSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:4" />
+              <Replaces block="geolosys:ore_sample:5" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="TinToStrata" block="strata:cassiterite_ore">
               <ReplacesOre block="oreTin" />
+              <ReplacesOre block="oreBlockCassiterite" /> <!-- Geolosys -->
+              <ReplacesOre block="oreBlockTeallite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="TinSampleToStrata" block="strata:cassiterite_sample">
+              <Replaces block="geolosys:ore_sample:4" />
+              <Replaces block="geolosys:ore_sample:5" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -1041,11 +1173,19 @@
           <Then>
             <Substitute name="UraniumToStone" block="minecraft:stone">
               <ReplacesOre block="oreUranium" />
+              <ReplacesOre block="oreBlockAutunite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="UraniumSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:9" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="UraniumToStrata" block="strata:pitchblende_ore">
               <ReplacesOre block="oreUranium" />
+              <ReplacesOre block="oreBlockAutunite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="UraniumSampleToStrata" block="strata:pitchblende_sample">
+              <Replaces block="geolosys:ore_sample:9" />
             </Substitute>
           </Else>
         </IfCondition>
@@ -1077,11 +1217,19 @@
           <Then>
             <Substitute name="LeadZincToStone" block="minecraft:stone">
               <ReplacesOre block="oreZinc" />
+              <ReplacesOre block="oreBlockSphalerite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LeadZincSampleToAir" block="minecraft:air">
+              <Replaces block="geolosys:ore_sample:10" />
             </Substitute>
           </Then>
           <Else>
             <Substitute name="LeadZincToStrata" block="strata:sphalerite_ore">
               <ReplacesOre block="oreZinc" />
+              <ReplacesOre block="oreBlockSphalerite" /> <!-- Geolosys -->
+            </Substitute>
+            <Substitute name="LeadZincSampleToStrata" block="strata:sphalerite_sample">
+              <Replaces block="geolosys:ore_sample:10" />
             </Substitute>
           </Else>
         </IfCondition>
