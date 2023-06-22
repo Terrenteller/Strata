@@ -1,7 +1,6 @@
 package com.riintouge.strata.util;
 
-import com.sun.istack.internal.NotNull;
-
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,7 +22,7 @@ public class ReflectionUtil
         return null;
     }
 
-    @NotNull
+    @Nonnull
     public static List< Field > findFieldsByType( Class clazz , Class type , boolean allowAssignable )
     {
         List< Field > fields = new ArrayList<>();

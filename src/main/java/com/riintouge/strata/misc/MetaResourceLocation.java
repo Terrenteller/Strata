@@ -1,13 +1,13 @@
 package com.riintouge.strata.misc;
 
 import com.riintouge.strata.util.Util;
-import com.sun.istack.internal.NotNull;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,7 +60,7 @@ public class MetaResourceLocation implements Comparable< MetaResourceLocation >
     // Comparable overrides
 
     @Override
-    public int compareTo( @NotNull MetaResourceLocation other )
+    public int compareTo( @Nonnull MetaResourceLocation other )
     {
         int comparison = resourceLocation.compareTo( other.resourceLocation );
         if( comparison != 0 )

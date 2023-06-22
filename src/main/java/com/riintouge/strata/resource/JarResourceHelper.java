@@ -10,6 +10,8 @@ import java.util.Vector;
 import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JarResourceHelper
 {
@@ -22,7 +24,7 @@ public class JarResourceHelper
     {
         this.clazz = clazz;
 
-        JarFile jar = new JarFile( clazz.getProtectionDomain().getCodeSource().getLocation().getFile() );
+        JarFile jar = new JarFile( getTopLevelClassFile( clazz ) );
         Enumeration< JarEntry > entries = jar.entries();
         while( entries.hasMoreElements() )
         {
@@ -47,5 +49,17 @@ public class JarResourceHelper
     public InputStream getResource( String internalFilePath )
     {
         return clazz.getClassLoader().getResourceAsStream( internalFilePath );
+    }
+
+    public String getTopLevelClassFile( Class clazz )
+    {
+        Pattern regex = Pattern.compile( "^(?:[a-z]+:)*([^!]+)" );
+        String classPath = clazz.getProtectionDomain().getCodeSource().getLocation().toString();
+        Matcher match = regex.matcher( classPath );
+
+        if( !match.find() )
+            throw new IllegalArgumentException( clazz.getCanonicalName() );
+
+        return match.group( 1 );
     }
 }

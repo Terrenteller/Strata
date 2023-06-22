@@ -46,6 +46,9 @@ public class InstallationRootDir
     @Nonnull
     public List< String > find( boolean recursive , Function< String , Boolean > predicate ) throws IOException
     {
+        if( !Files.exists( externalDir ) )
+            return Collections.emptyList();
+
         FileSelector fileSelector = new FileSelector( recursive , predicate );
         Files.walkFileTree( externalDir , fileSelector );
         return fileSelector.selectedFiles();
@@ -54,17 +57,13 @@ public class InstallationRootDir
     @Nonnull
     public List< String > allIn( String subDirPath , boolean recursive ) throws IOException
     {
-        try
-        {
-            FileSelector fileSelector = new FileSelector( recursive , s -> true );
-            Files.walkFileTree( externalDir.resolve( subDirPath ) , fileSelector );
-            return fileSelector.selectedFiles();
-        }
-        catch( NoSuchFileException e )
-        {
-            // No files in a path which doesn't exist
+        Path resolvedSubdirectory = externalDir.resolve( subDirPath );
+        if( !Files.exists( resolvedSubdirectory ) )
             return Collections.emptyList();
-        }
+
+        FileSelector fileSelector = new FileSelector( recursive , s -> true );
+        Files.walkFileTree( resolvedSubdirectory , fileSelector );
+        return fileSelector.selectedFiles();
     }
 
     public void extractResources( JarResourceHelper resourceHelper , boolean overwrite ) throws IOException
