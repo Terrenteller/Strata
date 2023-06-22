@@ -215,7 +215,8 @@ Value: [<volume:float> <pitch:float>] <SoundEvent>
 Description:
     Randomly play a SoundEvent from the block like the crackle of an active furnace (but a lot less often).
     volume and pitch are multipliers and default to 1.0.
-    Only applies to ores and primary tile types.
+    If the tile type has a parent, the parent's value is the default.
+    Does not apply to non-generated hosts.
 
 Key: blockState
 Value: <ResourceLocation>

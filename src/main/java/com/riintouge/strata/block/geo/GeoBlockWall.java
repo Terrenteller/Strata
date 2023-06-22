@@ -3,6 +3,8 @@ package com.riintouge.strata.block.geo;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.gui.StrataCreativeTabs;
+import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.StateUtil;
 import net.minecraft.block.Block;
@@ -33,6 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class GeoBlockWall extends BlockWall
@@ -322,5 +325,16 @@ public class GeoBlockWall extends BlockWall
         GeoBlock.onFallenUponCommon( this , worldIn , pos , entityIn , fallDistance );
 
         super.onFallenUpon( worldIn , pos , entityIn , fallDistance );
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
+    {
+        SoundEventTuple ambientSound = tileInfo.ambientSound();
+        if( ambientSound != null )
+            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , ambientSound );
+
+        super.randomDisplayTick( stateIn , worldIn , pos , rand );
     }
 }

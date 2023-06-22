@@ -177,6 +177,8 @@ public class TileDataLoader
             child.lightOpacity = parent.lightOpacity;
         if( child.slipperiness == null )
             child.slipperiness = parent.slipperiness;
+        if( child.ambientSound == null )
+            child.ambientSound = parent.ambientSound;
 
         // Surprising as it may be, the texture map is also inheritable.
         // It will have already been initialized with the owner's registry name which prevents duplication.

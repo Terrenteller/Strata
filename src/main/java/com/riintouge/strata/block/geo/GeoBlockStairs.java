@@ -2,6 +2,8 @@ package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.gui.StrataCreativeTabs;
+import com.riintouge.strata.sound.AmbientSoundHelper;
+import com.riintouge.strata.sound.SoundEventTuple;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -20,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class GeoBlockStairs extends BlockStairs
@@ -99,5 +102,16 @@ public class GeoBlockStairs extends BlockStairs
         GeoBlock.onFallenUponCommon( this , worldIn , pos , entityIn , fallDistance );
 
         super.onFallenUpon( worldIn , pos , entityIn , fallDistance );
+    }
+
+    @Override
+    @SideOnly( Side.CLIENT )
+    public void randomDisplayTick( IBlockState stateIn , World worldIn , BlockPos pos , Random rand )
+    {
+        SoundEventTuple ambientSound = tileInfo.ambientSound();
+        if( ambientSound != null )
+            AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , ambientSound );
+
+        super.randomDisplayTick( stateIn , worldIn , pos , rand );
     }
 }
