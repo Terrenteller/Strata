@@ -23,13 +23,13 @@ public class ActivatableOreBlock extends OreBlock
         setTickRandomly( true );
     }
 
-    protected boolean isActive( IBlockAccess world , BlockPos pos )
+    public boolean isActive( IBlockAccess world , BlockPos pos )
     {
         OreBlockTileEntity tileEntity = getTileEntity( world , pos );
         return tileEntity != null && tileEntity.isActive();
     }
 
-    protected void setActive( World worldIn , BlockPos pos , boolean activated )
+    public void setActive( World worldIn , BlockPos pos , boolean activated )
     {
         if( !worldIn.isRemote )
         {

@@ -22,7 +22,7 @@ public class RedstoneOreBlock extends ActivatableOreBlock
 
     // ActivatableOreBlock overrides
 
-    protected void setActive( World worldIn , BlockPos pos , boolean activated )
+    public void setActive( World worldIn , BlockPos pos , boolean activated )
     {
         super.setActive( worldIn , pos , activated );
 

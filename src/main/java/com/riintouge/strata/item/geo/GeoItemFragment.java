@@ -79,6 +79,10 @@ public class GeoItemFragment extends Item
     @Override
     public EnumActionResult onItemUse( EntityPlayer player , World worldIn , BlockPos pos , EnumHand hand , EnumFacing facing , float hitX , float hitY , float hitZ )
     {
+        // Try not to interfere with the throwing of the fragment which we assume is more important
+        if( !( player.isSneaking() && facing == EnumFacing.UP ) )
+            return EnumActionResult.PASS;
+
         IGeoTileSet geoTileSet = GeoTileSetRegistry.INSTANCE.find( tileInfo.tileSetName() );
         Block sampleBlock = geoTileSet != null ? geoTileSet.getSampleBlock() : null;
         if( sampleBlock == null )

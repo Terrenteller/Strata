@@ -2,19 +2,22 @@ package com.riintouge.strata.proxy;
 
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
-import com.riintouge.strata.block.SampleBlockModelLoader;
 import com.riintouge.strata.block.BakedModelCache;
+import com.riintouge.strata.block.SampleBlockModelLoader;
 import com.riintouge.strata.block.geo.GeoBlockModelLoader;
+import com.riintouge.strata.block.ore.OreBlockModelLoader;
+import com.riintouge.strata.block.ore.OreParticleTextureManager;
+import com.riintouge.strata.entity.EntityThrowableGeoItemFragment;
+import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.item.geo.GeoItemFragmentModelLoader;
 import com.riintouge.strata.item.geo.GeoItemFragmentTextureManager;
-import com.riintouge.strata.block.ore.OreBlockModelLoader;
 import com.riintouge.strata.item.ore.OreItemModelLoader;
 import com.riintouge.strata.item.ore.OreItemTextureManager;
-import com.riintouge.strata.block.ore.OreParticleTextureManager;
-import com.riintouge.strata.gui.StrataCreativeTabs;
 import com.riintouge.strata.misc.BakedModelStoreProxy;
+import com.riintouge.strata.render.RenderEntityThrowableGeoItemFragment;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -40,6 +43,8 @@ public class ClientProxy extends CommonProxy
         ModelLoaderRegistry.registerLoader( new OreBlockModelLoader() );
         ModelLoaderRegistry.registerLoader( new OreItemModelLoader() );
         ModelLoaderRegistry.registerLoader( new SampleBlockModelLoader() );
+
+        RenderingRegistry.registerEntityRenderingHandler( EntityThrowableGeoItemFragment.class , RenderEntityThrowableGeoItemFragment::new );
     }
 
     @Override

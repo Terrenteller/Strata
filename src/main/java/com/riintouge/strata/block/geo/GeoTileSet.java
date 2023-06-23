@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.item.geo.ThrowableGeoItemFragment;
 import com.riintouge.strata.misc.IForgeRegistrable;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.recipe.CraftingRecipeReplicator;
@@ -215,7 +216,9 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
 
             if( tileType.isPrimary && tileInfo.hasFragment() )
             {
-                fragmentItem = new GeoItemFragment( tileInfo );
+                fragmentItem = tileType == TileType.STONE
+                    ? new ThrowableGeoItemFragment( tileInfo )
+                    : new GeoItemFragment( tileInfo );
                 itemRegistry.register( fragmentItem );
 
                 if( tileInfo.fragmentItemOreDictionaryName() != null )

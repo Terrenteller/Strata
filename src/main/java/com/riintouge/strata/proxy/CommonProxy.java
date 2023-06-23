@@ -4,6 +4,7 @@ import com.riintouge.strata.EventHandlers;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.StrataConfig;
 import com.riintouge.strata.block.Blocks;
+import com.riintouge.strata.entity.EntityThrowableGeoItemFragment;
 import com.riintouge.strata.recipe.BrewingRecipeReplicator;
 import com.riintouge.strata.recipe.FurnaceRecipeReplicator;
 import com.riintouge.strata.recipe.CraftingRecipeReplicator;
@@ -16,16 +17,21 @@ import com.riintouge.strata.resource.DocsDir;
 import com.riintouge.strata.resource.JarResourceHelper;
 import com.riintouge.strata.sound.SoundEventRegistry;
 import com.riintouge.strata.util.DebugUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.io.IOException;
 import java.util.zip.ZipException;
 
 public class CommonProxy
 {
+    private static int nextEntityID = 0;
+
     public void preInit( FMLPreInitializationEvent event )
     {
         Strata.LOGGER.trace( "CommonProxy::preInit()" );
@@ -57,6 +63,8 @@ public class CommonProxy
         MinecraftForge.EVENT_BUS.register( OreRegistry.class );
         MinecraftForge.EVENT_BUS.register( SoundEventRegistry.class );
         MinecraftForge.EVENT_BUS.register( BrewingRecipeReplicator.class );
+
+        registerEntity( EntityThrowableGeoItemFragment.class , 64 , 10 , true );
     }
 
     public void init( FMLInitializationEvent event )
@@ -70,5 +78,25 @@ public class CommonProxy
     public void postInit( FMLPostInitializationEvent event )
     {
         // Nothing to do
+    }
+
+    // Statics
+
+    private static < T extends Entity > void registerEntity(
+        Class< T > entityClass,
+        int trackingRange,
+        int updateFrequency,
+        boolean sendsVelocityUpdates )
+    {
+        ResourceLocation entityResource = Strata.resource( entityClass.getSimpleName() );
+        EntityRegistry.registerModEntity(
+            entityResource,
+            entityClass,
+            entityResource.toString().replace( ":" , "." ),
+            nextEntityID++,
+            Strata.INSTANCE,
+            trackingRange,
+            updateFrequency,
+            sendsVelocityUpdates );
     }
 }

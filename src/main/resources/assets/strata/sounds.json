@@ -1,0 +1,8 @@
+{
+    "item.fragment.throw": {
+        "sounds": [
+            "minecraft:random/bow"
+        ],
+        "subtitle": "strata.subtitles.item.fragment.throw"
+    }
+}

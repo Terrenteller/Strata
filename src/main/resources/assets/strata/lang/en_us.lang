@@ -1,7 +1,5 @@
 #PARSE_ESCAPES
 
-# GUI
-
 ### Configuration
 
 strata.config.main=Strata Configuration
@@ -47,6 +45,10 @@ itemGroup.strataOreBlocksTab=Strata Ore Blocks
 itemGroup.strataOreItemsTab=Strata Ore Items
 itemGroup.strataOreSamplesTab=Strata Ore Samples
 
+### Entities
+
+entity.strata.entitythrowablegeoitemfragment.name=Thrown Geo Item Fragment
+
 ### Miscellaneous
 
 strata.multiplayer.disconnect.missingHosts=[Strata] Client is missing host '%s' and %d other(s)
@@ -58,3 +60,7 @@ strata.multiplayer.warning.missingHosts=[Strata] §cClient is missing host '%s' 
 strata.multiplayer.warning.unsynchronizedProperties=[Strata] §cClient block properties are out-of-sync with '%s' and %d other(s)!
 strata.multiplayer.warning.unexpectedHandshakeError=[Strata] §eThe server encountered an error during client negotiation. Client may be out-of-sync.
 strata.multiplayer.warning.noResponse=[Strata] §eClient did not reply to the server's handshake. Client may be out-of-sync.
+
+### Subtitles
+
+strata.subtitles.item.fragment.throw=Fragment flies

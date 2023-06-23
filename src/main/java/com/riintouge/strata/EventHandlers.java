@@ -2,6 +2,7 @@ package com.riintouge.strata;
 
 import com.riintouge.strata.block.geo.GeoBlock;
 import com.riintouge.strata.block.host.IHostInfo;
+import com.riintouge.strata.block.ore.ActivatableOreBlock;
 import com.riintouge.strata.block.ore.IOreInfo;
 import com.riintouge.strata.block.ore.OreBlock;
 import com.riintouge.strata.util.DebugUtil;
@@ -245,18 +246,14 @@ public class EventHandlers
     public static void projectileImpactEvent( ProjectileImpactEvent event )
     {
         World world = event.getEntity().world;
-        if( world == null
-            || ( world.isRemote && !StrataConfig.additionalBlockSounds )
-            || event.getRayTraceResult().typeOfHit != RayTraceResult.Type.BLOCK )
-        {
+        if( world == null || event.getRayTraceResult().typeOfHit != RayTraceResult.Type.BLOCK )
             return;
-        }
 
-        float volumeDivisor = 1.0f;
+        float volumeMultiplier = 1.0f;
         if( event instanceof ProjectileImpactEvent.Throwable )
-            volumeDivisor = 3.0f;
-        else if( !( event instanceof ProjectileImpactEvent.Arrow ) )
-            return;
+            volumeMultiplier = 1.0f / 3.0f;
+        else if( event instanceof ProjectileImpactEvent.Fireball )
+            volumeMultiplier = 0.0f;
 
         SoundType soundType;
         BlockPos pos = event.getRayTraceResult().getBlockPos();
@@ -269,19 +266,22 @@ public class EventHandlers
         {
             OreBlock oreBlock = (OreBlock)blockState.getBlock();
             soundType = oreBlock.getSoundType( blockState , world , pos , event.getEntity() );
+
+            if( !world.isRemote && oreBlock instanceof ActivatableOreBlock )
+                ( (ActivatableOreBlock)oreBlock ).setActive( world , pos , true );
         }
         else
             soundType = blockState.getBlock().getSoundType( blockState , world , pos , event.getEntity() );
 
-        if( soundType != null )
+        if( world.isRemote && StrataConfig.additionalBlockSounds && soundType != null && volumeMultiplier > 0.0f )
         {
             world.playSound(
                 pos.getX(),
                 pos.getY(),
                 pos.getZ(),
                 soundType.getHitSound(),
-                SoundCategory.NEUTRAL,
-                soundType.volume / volumeDivisor,
+                SoundCategory.BLOCKS,
+                soundType.volume * volumeMultiplier,
                 soundType.pitch,
                 false );
         }
