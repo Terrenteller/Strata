@@ -144,6 +144,12 @@ public abstract class SampleBlock extends BlockFalling
         return AABB;
     }
 
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox( IBlockState blockState , IBlockAccess worldIn , BlockPos pos )
+    {
+        return NULL_AABB;
+    }
+
     @Deprecated
     @Override
     public int getLightValue( IBlockState state )
@@ -229,6 +235,12 @@ public abstract class SampleBlock extends BlockFalling
     public boolean isOpaqueCube( IBlockState state )
     {
         return false;
+    }
+
+    @Override
+    public boolean isPassable( IBlockAccess worldIn , BlockPos pos )
+    {
+        return true;
     }
 
     @Deprecated
