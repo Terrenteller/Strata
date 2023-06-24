@@ -21,6 +21,28 @@ public class WeightedCollection< T >
     }
 
     @Nullable
+    public Pair< T , Integer > find( T object )
+    {
+        for( Pair< T , Integer > pair : weightedObjects )
+            if( pair.getKey().equals( object ) )
+                return pair;
+
+        return null;
+    }
+
+    public void remove( Pair< T , Integer > pair )
+    {
+        if( pair != null )
+            if( weightedObjects.remove( pair ) )
+                totalWeight -= pair.getValue();
+    }
+
+    public void remove( T object )
+    {
+        remove( find( object ) );
+    }
+
+    @Nullable
     public T getRandomObject( Random random )
     {
         if( weightedObjects.size() > 1 )

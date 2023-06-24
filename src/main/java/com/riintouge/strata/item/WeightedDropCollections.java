@@ -34,28 +34,42 @@ public class WeightedDropCollections
 
         for( WeightedCollection< Pair< MetaResourceLocation , IDropFormula > > dropGroup : dropsByGroup.values() )
         {
-            Pair< MetaResourceLocation , IDropFormula > drop = dropGroup.getRandomObject( random );
-            if( drop == null )
-                continue;
+            ItemStack drop = null;
 
-            int dropAmount = drop.getValue().getAmount( random , harvestTool , pos );
-            if( dropAmount <= 0 )
-                continue;
+            while( true )
+            {
+                Pair< MetaResourceLocation , IDropFormula > dropPair = dropGroup.getRandomObject( random );
+                if( dropPair == null )
+                    break;
 
-            MetaResourceLocation metaResource = drop.getKey();
-            Item item = Item.getByNameOrId( metaResource.resourceLocation.toString() );
-            if( item != null )
-            {
-                ItemStack itemStack = new ItemStack( item , Math.min( dropAmount , item.getItemStackLimit() ) , metaResource.meta );
-                drops.add( itemStack );
+                int dropAmount = dropPair.getValue().getAmount( random , harvestTool , pos );
+                if( dropAmount <= 0 )
+                    break;
+
+                MetaResourceLocation metaResource = dropPair.getKey();
+                Item item = Item.getByNameOrId( metaResource.resourceLocation.toString() );
+                if( item != null )
+                {
+                    drop = new ItemStack( item , Math.min( dropAmount , item.getItemStackLimit() ) , metaResource.meta );
+                    break;
+                }
+                else
+                {
+                    // How can we get an item stack of the block if it doesn't have an item?
+                    // Perhaps there is a name difference? Will this code produce a meaningful result?
+                    Block block = Block.getBlockFromName( metaResource.resourceLocation.toString() );
+                    if( block != null )
+                    {
+                        drop = new ItemStack( block , Math.min( dropAmount , 64 ) , metaResource.meta );
+                        break;
+                    }
+                }
+
+                dropGroup.remove( dropPair );
             }
-            else
-            {
-                // How can we ever have an item stack if the block doesn't have an item? Will this code ever run?
-                Block block = Block.getBlockFromName( metaResource.resourceLocation.toString() );
-                ItemStack itemStack = new ItemStack( block , Math.min( dropAmount , 64 ) , metaResource.meta );
-                drops.add( itemStack );
-            }
+
+            if( drop != null && !drop.isEmpty() )
+                drops.add( drop );
         }
 
         return drops;

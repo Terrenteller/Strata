@@ -11,7 +11,7 @@ Tiles with a parent tile type must be defined after their parent. Tile sets
 cannot be split across multiple files and should be limited to one per file.
 
 `` refers to a key
-'' refers to part of the value
+'' refers to a variable part of the key or value
 <> values are required
 [] values are optional
 
@@ -271,7 +271,7 @@ Description:
     Controls the number of fragments dropped by a primary tile type.
     The "minimum only" form (e.g. "4") will always drop the exact amount.
     The "minimum-maximum" form (e.g. "1-4") will use vanilla's standard fortune formula.
-    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
+    The RPN form (e.g. "1 ~ f 2 *") will drop 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
     The position of the block is not available and the variables "x", "y", and "z" will evaluate to zero.
     The level of fortune replaces the variable "f".
@@ -309,6 +309,7 @@ Key: proxyOre
 Value: <ResourceLocation>[:<meta>]
 Description:
     Displays the name, shows the tooltip, drops the drops, sustains the plants, etc. of the specified block instead.
+    Equivalent key-values are still important should the block specified by the ResourceLocation not exist.
     Only applies to ores, and specifically, their blocks. Use `convertsTo` to do the same for the ore item.
 
 Key: hostAffinities
@@ -327,22 +328,26 @@ Key: dropGroup.<groupName>
 Value: [weight:int] <ResourceLocation> [minimum:int[-<maximum:int>]]
 OR: [weight:int] <ResourceLocation> <minDropExpr:RPNExpression>[ ~ <maxBonusDropExpr:RPNExpression>]
 Description:
-    Controls the probability and amount of what items an ore can drop.
-    'weight' controls how likely an item is within a group and defaults to 100.
+    Controls what an ore may drop.
+    'groupName' identifies a set of mutually-exclusive drops.
+    Multiple of the same key may be used as values are additive.
+    'weight' affects how likely a drop is within a group and defaults to 100.
     'weight' is treated as a ratio. The sum of weights does not have to equal 100.
-    ResourceLocation refers to the item that will drop.
-    ResourceLocation may be "*" to represent the ore's own item or "-" to represent to no item at all (no drop).
+    ResourceLocation refers to the item or block that will drop.
+    ResourceLocation may also be "*" to represent the ore's own item or "-" to represent no drop.
+    A drop whose ResourceLocation does not resolve to an item or block will have no effect on the group.
     The "minimum only" form (e.g. "5") will always drop the exact amount.
     The "minimum-maximum" form (e.g. "4-9" for lapis) will use vanilla's standard fortune formula.
-    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
+    The RPN form (e.g. "1 ~ f 2 *") will drop 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
     The position of the block replaces the variables "x", "y", and "z".
     The level of fortune replaces the variable "f".
     Enchantment levels replace resource location variables (e.g. fortune, minecraft:fortune, or mymod:myenchant).
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one item with Fortune III.
-    All groups are evaluated independently to provide multiple drops at once.
-    Never drops more than a full stack from each group.
+    A single drop is selected from each group and is limited to a full stack.
+    If no drop groups are specified, the ore simply drops a single one of its items.
+    Must come after `ore`.
 
 Key: experience
 Value: [minimum:int[-<maximum:int>]]
@@ -352,7 +357,7 @@ Description:
     Controls the amount of experience a block can drop.
     The "minimum only" form (e.g. "5") will always drop the exact amount.
     The "minimum-maximum" form (e.g. "4-9") will use vanilla's standard fortune formula.
-    The RPN form (e.g. "1 ~ f 2 *") will drop at least 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
+    The RPN form (e.g. "1 ~ f 2 *") will drop 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
     The position of the block replaces the variables "x", "y", and "z".
     The level of fortune replaces the variable "f".
