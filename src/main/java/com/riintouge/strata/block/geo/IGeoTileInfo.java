@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.geo;
 
+import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.misc.IForgeRegistrable;
 import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.host.IHostInfo;
@@ -58,6 +59,9 @@ public interface IGeoTileInfo extends IHostInfo, IForgeRegistrable
 
     @Nullable
     MetaResourceLocation breaksInto();
+
+    @Nullable
+    WeightedDropCollections weightedDropGroups();
 
     @Nonnull
     ArrayList< EnumPlantType > sustainedPlantTypes();

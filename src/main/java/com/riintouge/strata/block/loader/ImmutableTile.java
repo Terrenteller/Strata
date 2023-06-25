@@ -1,15 +1,12 @@
 package com.riintouge.strata.block.loader;
 
-import com.riintouge.strata.item.ItemHelper;
+import com.riintouge.strata.item.*;
 import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.geo.IGeoTileInfo;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.LayeredTextureLayer;
-import com.riintouge.strata.item.IDropFormula;
-import com.riintouge.strata.item.LocalizationRegistry;
-import com.riintouge.strata.item.StaticDropFormula;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
@@ -50,6 +47,7 @@ public final class ImmutableTile implements IGeoTileInfo
     private Float fragmentFurnaceExperience;
     private int fragmentBurnTime;
     private MetaResourceLocation breaksIntoResourceLocation;
+    private WeightedDropCollections weightedDropCollections;
     private ArrayList< EnumPlantType > sustainedPlantTypes;
     private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
     private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
@@ -99,6 +97,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.fragmentFurnaceExperience = tileData.fragmentFurnaceExperience;
         this.fragmentBurnTime = Util.coalesce( tileData.fragmentBurnTime , 0 );
         this.breaksIntoResourceLocation = tileData.breaksIntoResourceLocation;
+        this.weightedDropCollections = tileData.weightedDropCollections;
         this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
         this.blockStateResource = Util.coalesce( tileData.blockStateResource , this.tileType.blockStateResource );
         this.experienceDropFormula = tileData.experienceDropFormula;
@@ -283,6 +282,13 @@ public final class ImmutableTile implements IGeoTileInfo
     public MetaResourceLocation breaksInto()
     {
         return breaksIntoResourceLocation;
+    }
+
+    @Nullable
+    @Override
+    public WeightedDropCollections weightedDropGroups()
+    {
+        return weightedDropCollections;
     }
 
     @Nonnull

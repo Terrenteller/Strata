@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.StrataConfig;
+import com.riintouge.strata.item.WeightedDropCollections;
 import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
@@ -12,11 +13,11 @@ import com.riintouge.strata.item.geo.GeoItemFragment;
 import com.riintouge.strata.sound.AmbientSoundHelper;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.FlagUtil;
+import com.riintouge.strata.util.StateUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -44,6 +45,9 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -322,69 +326,92 @@ public class GeoBlock extends BlockFalling
         return EnumFacing.VALUES;
     }
 
+    @Override
     public void harvestBlock( World worldIn , EntityPlayer player , BlockPos pos , IBlockState state , @Nullable TileEntity te , ItemStack stack )
     {
-        MetaResourceLocation replacementBlockResourceLocation = null;
-
-        // meltsAt() and sublimatesAt() determine whether meltsInto() and sublimatesInto() are meaningful,
-        // respectively. However, it doesn't make sense to require *Into() to not be null
-        // assuming it will only be used when *At() is valid. If the block does not melt or sublimate,
-        // *Into() returning null is the right thing to do. Therefore, we end up with a slight disconnect
-        // between what we require in text, require in code, and what the code actually does with missing values.
-        // tl;dr TileData requires both parameters but the interface does not enforce it.
-        switch( HARVEST_REASON.get() )
+        if( tileInfo.tileType().isPrimary )
         {
-            case SUBLIMATE:
-                replacementBlockResourceLocation = tileInfo.sublimatesInto();
-                if( replacementBlockResourceLocation == null )
-                    replacementBlockResourceLocation = new MetaResourceLocation( "minecraft:air" );
-                if( worldIn instanceof WorldServer )
+            MetaResourceLocation replacementBlockResourceLocation;
+
+            // meltsAt() and sublimatesAt() determine whether meltsInto() and sublimatesInto() are meaningful,
+            // respectively. However, it doesn't make sense to require *Into() to not be null
+            // assuming it will only be used when *At() is valid. If the block does not melt or sublimate,
+            // *Into() returning null is the right thing to do. Therefore, we end up with a slight disconnect
+            // between what we require in text, require in code, and what the code actually does with missing values.
+            // tl;dr TileData requires both parameters but the interface does not enforce it.
+            switch( HARVEST_REASON.get() )
+            {
+                case SUBLIMATE:
                 {
-                    ( (WorldServer)worldIn ).spawnParticle(
-                        EnumParticleTypes.SMOKE_LARGE,
-                        pos.getX() + 0.5,
-                        pos.getY() + 0.25,
-                        pos.getZ() + 0.5,
-                        8,
-                        0.5,
-                        0.25,
-                        0.5,
-                        0.0 );
+                    replacementBlockResourceLocation = tileInfo.sublimatesInto();
+                    if( replacementBlockResourceLocation == null )
+                        replacementBlockResourceLocation = new MetaResourceLocation( "minecraft:air" );
+
+                    if( worldIn instanceof WorldServer )
+                    {
+                        ( (WorldServer)worldIn ).spawnParticle(
+                            EnumParticleTypes.SMOKE_LARGE,
+                            pos.getX() + 0.5,
+                            pos.getY() + 0.25,
+                            pos.getZ() + 0.5,
+                            8,
+                            0.5,
+                            0.25,
+                            0.5,
+                            0.0 );
+                    }
+
+                    break;
                 }
-                break;
-            case MELT:
-                replacementBlockResourceLocation = tileInfo.meltsInto();
-                if( replacementBlockResourceLocation == null )
-                    replacementBlockResourceLocation = new MetaResourceLocation( "minecraft:air" );
-                break;
-            default:
-                replacementBlockResourceLocation = tileInfo.breaksInto();
+                case MELT:
+                {
+                    replacementBlockResourceLocation = tileInfo.meltsInto();
+                    if( replacementBlockResourceLocation == null )
+                        replacementBlockResourceLocation = new MetaResourceLocation( "minecraft:air" );
+
+                    break;
+                }
+                default:
+                {
+                    replacementBlockResourceLocation = tileInfo.breaksInto();
+                }
+            }
+
+            if( replacementBlockResourceLocation != null )
+            {
+                Block replacementBlock = Block.REGISTRY.getObject( replacementBlockResourceLocation.resourceLocation );
+                IBlockState replacementBlockState = replacementBlock.getStateFromMeta( replacementBlockResourceLocation.meta );
+                Fluid replacementFluid = FluidRegistry.lookupFluidForBlock( replacementBlock );
+                FluidStack fluidStack = replacementFluid != null ? new FluidStack( replacementFluid , Fluid.BUCKET_VOLUME ) : null;
+                if( fluidStack == null || !worldIn.provider.doesWaterVaporize() || !replacementFluid.doesVaporize( fluidStack ) )
+                {
+                    // Ice requires a solid block or liquid below it to turn into water.
+                    // No explanation is given, so we don't bother.
+                    worldIn.setBlockState( pos , replacementBlockState );
+                }
+
+                if( HARVEST_REASON.get() == HarvestReason.UNDEFINED )
+                {
+                    StatBase blockStats = StatList.getBlockStats( this );
+                    if( blockStats != null )
+                        player.addStat( blockStats );
+                    player.addExhaustion( 0.005f ); // Taken from Block.harvestBlock()
+                }
+
+                return;
+            }
+
+            if( StateUtil.getValue( state , PropertyOrientation.PROPERTY ) == PropertyOrientation.NATURAL
+                && ( !canSilkHarvest( worldIn , pos , state , player ) || EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , stack ) <= 0 ) )
+            {
+                WeightedDropCollections weightedDropCollections = tileInfo.weightedDropGroups();
+                if( weightedDropCollections != null )
+                    for( ItemStack itemStack : weightedDropCollections.collectRandomDrops( RANDOM , stack , pos ) )
+                        spawnAsEntity( worldIn , pos , itemStack );
+            }
         }
 
-        if( !tileInfo.tileType().isPrimary
-            || replacementBlockResourceLocation == null
-            || ( canSilkHarvest( worldIn , pos , state , player ) && EnchantmentHelper.getEnchantmentLevel( Enchantments.SILK_TOUCH , stack ) > 0 ) )
-        {
-            // Consider overriding getDrops() to drop all the fragments in a single stack.
-            // Unless it is more visually pleasing to possibly see multiple item stacks?
-            // Would we want to ensure fragments drop in a more dispersed way?
-            // What about a toggle to ease the burden on stack-combining anti-lag mods?
-            super.harvestBlock( worldIn , player , pos , state , te , stack );
-            return;
-        }
-
-        StatBase blockStats = StatList.getBlockStats( this );
-        if( blockStats != null )
-            player.addStat( blockStats );
-        player.addExhaustion( 0.005f ); // Taken from Block.harvestBlock()
-
-        Block replacementBlock = Block.REGISTRY.getObject( replacementBlockResourceLocation.resourceLocation );
-        IBlockState replacementBlockState = replacementBlock.getStateFromMeta( replacementBlockResourceLocation.meta );
-        Material replacementMaterial = replacementBlock.getMaterial( replacementBlockState );
-
-        // Ice requires a solid block or liquid below it to turn into water. No explanation is given.
-        if( !( replacementMaterial == Material.WATER && worldIn.provider.doesWaterVaporize() ) )
-            worldIn.setBlockState( pos , replacementBlockState );
+        super.harvestBlock( worldIn , player , pos , state , te , stack );
     }
 
     @Override

@@ -62,9 +62,6 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
     ItemStack proxyBlockItemStack();
 
     @Nullable
-    WeightedDropCollections weightedDropGroups();
-
-    @Nullable
     MetaResourceLocation forcedHost();
 
     @Nullable
@@ -72,6 +69,9 @@ public interface IOreInfo extends ICommonBlockProperties , IForgeRegistrable
 
     @Nullable
     MetaResourceLocation breaksInto();
+
+    @Nullable
+    WeightedDropCollections weightedDropGroups();
 
     @Nullable
     IDropFormula experienceDropFormula();

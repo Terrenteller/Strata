@@ -10,6 +10,7 @@ import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.*;
 import com.riintouge.strata.sound.SoundEventRegistry;
 import com.riintouge.strata.sound.SoundEventTuple;
+import com.riintouge.strata.util.StringUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -63,7 +64,6 @@ public class TileData
     public MetaResourceLocation proxyOreResourceLocation = null;
     public List< LayeredTextureLayer > oreItemTextureLayers = null;
     public IDropFormula experienceDropFormula = null;
-    public WeightedDropCollections weightedDropCollections = null;
     public MetaResourceLocation forcedHost = null;
     public List< MetaResourceLocation > hostAffinities = null;
 
@@ -95,6 +95,7 @@ public class TileData
     public LayeredTextureLayer[][] layeredTextureLayers = null;
     public Map< String , String > languageMap = null;
     public Map< String , String > tooltipMap = null;
+    public WeightedDropCollections weightedDropCollections = null;
 
     // It is imperative that documentation in Strata.txt stay up-to-date with this method!
     public boolean processKeyValue( String key , String value )
@@ -432,6 +433,11 @@ public class TileData
             switch( metaResource )
             {
                 case "*":
+                    // A primary tile type may drop fragments normally or may do so because of a server config option.
+                    // Since we cannot guarantee consistency, the wildcard is limited to ores.
+                    if( StringUtil.isNullOrEmpty( oreName ) )
+                        return false;
+
                     metaResourceLocation = new MetaResourceLocation( Strata.resource( oreName ) , 0 );
                     break;
                 case "-":

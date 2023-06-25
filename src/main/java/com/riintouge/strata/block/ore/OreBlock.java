@@ -673,7 +673,6 @@ public class OreBlock extends OreBaseBlock
         if( proxyBlock == null )
         {
             WeightedDropCollections weightedDropCollections = oreInfo.weightedDropGroups();
-
             if( weightedDropCollections != null )
             {
                 ItemStack harvestToolOrEmpty = HARVEST_TOOL.get() != null ? HARVEST_TOOL.get() : ItemStack.EMPTY;

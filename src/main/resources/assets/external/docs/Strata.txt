@@ -328,7 +328,7 @@ Key: dropGroup.<groupName>
 Value: [weight:int] <ResourceLocation> [minimum:int[-<maximum:int>]]
 OR: [weight:int] <ResourceLocation> <minDropExpr:RPNExpression>[ ~ <maxBonusDropExpr:RPNExpression>]
 Description:
-    Controls what an ore may drop.
+    Replaces an ore's default item drop or supplements a natural primary tile type's block or fragment drop.
     'groupName' identifies a set of mutually-exclusive drops.
     Multiple of the same key may be used as values are additive.
     'weight' affects how likely a drop is within a group and defaults to 100.
@@ -346,8 +346,8 @@ Description:
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one item with Fortune III.
     A single drop is selected from each group and is limited to a full stack.
-    If no drop groups are specified, the ore simply drops a single one of its items.
-    Must come after `ore`.
+    Silk touch has no effect on ores but will prevent supplemental drops from natural primary tile types.
+    Must come after `generate` or `ore`.
 
 Key: experience
 Value: [minimum:int[-<maximum:int>]]
@@ -364,7 +364,7 @@ Description:
     Other enchantments are not available and will evaluate to zero.
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one experience with Fortune III.
-    Only applies to ores and naturally-placed primary tile types.
+    Only applies to ores and naturally-placed, primary tile types.
 
 Key: lang.<language>[_<region>]
 Value: <String>

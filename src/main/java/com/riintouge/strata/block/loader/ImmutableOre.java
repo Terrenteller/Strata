@@ -52,10 +52,10 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private MetaResourceLocation proxyBlockResourceLocation;
     private IBlockState proxyBlockState = null; // Lazily evaluated
     private ItemStack proxyBlockItemStack = null; // Lazily evaluated
-    private WeightedDropCollections weightedDropCollections;
     private MetaResourceLocation forcedHost;
     private List< MetaResourceLocation > hostAffinities;
     private MetaResourceLocation breaksIntoResourceLocation;
+    private WeightedDropCollections weightedDropCollections;
     private IDropFormula experienceDropFormula;
     private SoundEventTuple ambientSound;
 
@@ -87,10 +87,10 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         this.furnaceResult = tileData.furnaceResult;
         this.furnaceExperience = tileData.furnaceExperience;
         this.proxyBlockResourceLocation = tileData.proxyOreResourceLocation;
-        this.weightedDropCollections = tileData.weightedDropCollections;
         this.forcedHost = tileData.forcedHost;
         this.hostAffinities = tileData.hostAffinities;
         this.breaksIntoResourceLocation = tileData.breaksIntoResourceLocation;
+        this.weightedDropCollections = tileData.weightedDropCollections;
         this.experienceDropFormula = tileData.experienceDropFormula;
         this.ambientSound = tileData.ambientSound;
 
@@ -259,13 +259,6 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
 
     @Nullable
     @Override
-    public WeightedDropCollections weightedDropGroups()
-    {
-        return weightedDropCollections;
-    }
-
-    @Nullable
-    @Override
     public MetaResourceLocation forcedHost()
     {
         return forcedHost;
@@ -283,6 +276,13 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     public MetaResourceLocation breaksInto()
     {
         return breaksIntoResourceLocation;
+    }
+
+    @Nullable
+    @Override
+    public WeightedDropCollections weightedDropGroups()
+    {
+        return weightedDropCollections;
     }
 
     @Nullable
