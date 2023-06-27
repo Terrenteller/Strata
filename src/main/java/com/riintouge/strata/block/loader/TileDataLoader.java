@@ -180,9 +180,9 @@ public class TileDataLoader
         if( child.ambientSound == null )
             child.ambientSound = parent.ambientSound;
 
-        // Surprising as it may be, the texture map is also inheritable.
+        // The texture map only makes sense to inherit for tertiary tile types.
         // It will have already been initialized with the owner's registry name which prevents duplication.
-        if( child.textureMap == null )
+        if( child.textureMap == null && child.tileType.tier == TileType.Tier.TERTIARY )
             child.textureMap = parent.textureMap;
 
         // If our sound type matches what the parent would normally use, use whatever the parent actually is.

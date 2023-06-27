@@ -23,11 +23,11 @@ public enum TileType
     GLASS  ( Tier.PRIMARY , "" , "_shard" , Material.GLASS  , SoundType.GLASS  , ""        , null , "proto_cube_gimbal" , null ),
 
     // Secondaries - Manually specified derivatives of a primary
-    COBBLE          ( Tier.SECONDARY , "_cobble"          , null , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
-    COBBLEMOSSY     ( Tier.SECONDARY , "_cobblemossy"     , null , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
-    STONEBRICK      ( Tier.SECONDARY , "_stonebrick"      , null , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
-    STONEBRICKMOSSY ( Tier.SECONDARY , "_stonebrickmossy" , null , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
-    STONEPOLISHED   ( Tier.SECONDARY , "_stonepolished"   , null , Material.ROCK , SoundType.STONE , "pickaxe" , null , "proto_cube" , null ),
+    COBBLE          ( Tier.SECONDARY , "_cobble"          , null , Material.ROCK , SoundType.STONE , "pickaxe" , STONE , "proto_cube" , null ),
+    COBBLEMOSSY     ( Tier.SECONDARY , "_cobblemossy"     , null , Material.ROCK , SoundType.STONE , "pickaxe" , STONE , "proto_cube" , null ),
+    STONEBRICK      ( Tier.SECONDARY , "_stonebrick"      , null , Material.ROCK , SoundType.STONE , "pickaxe" , STONE , "proto_cube" , null ),
+    STONEBRICKMOSSY ( Tier.SECONDARY , "_stonebrickmossy" , null , Material.ROCK , SoundType.STONE , "pickaxe" , STONE , "proto_cube" , null ),
+    STONEPOLISHED   ( Tier.SECONDARY , "_stonepolished"   , null , Material.ROCK , SoundType.STONE , "pickaxe" , STONE , "proto_cube" , null ),
 
     // Tertiaries - Manually* specified derivatives of a primary or secondary
     // * Double slabs are special, should not be specified in config files, and must immediately follow the single slab in this enum for indexing purposes
