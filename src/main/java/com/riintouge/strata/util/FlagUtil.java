@@ -1,6 +1,6 @@
 package com.riintouge.strata.util;
 
-public class FlagUtil
+public final class FlagUtil
 {
     // byte
 

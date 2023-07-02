@@ -3,7 +3,7 @@ package com.riintouge.strata.util;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class DebugUtil
+public final class DebugUtil
 {
     public static void printCallStack()
     {

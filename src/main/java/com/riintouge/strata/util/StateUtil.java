@@ -11,7 +11,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class StateUtil
+public final class StateUtil
 {
     @Nullable
     public static IExtendedBlockState getCompleteBlockState( IBlockState state , IBlockAccess blockAccess , BlockPos pos )

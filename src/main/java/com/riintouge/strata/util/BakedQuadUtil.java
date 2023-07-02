@@ -11,7 +11,7 @@ import java.awt.*;
 // This code is heavily modified from TheGreyGhosts's wonderful repo here:
 // https://github.com/TheGreyGhost/MinecraftByExample
 
-public class BakedQuadUtil
+public final class BakedQuadUtil
 {
     public static final float AXIS_MIN = 0.0f;
     public static final float AXIS_MAX = 1.0f;

@@ -2,7 +2,7 @@ package com.riintouge.strata.util;
 
 import javax.annotation.Nullable;
 
-public class StringUtil
+public final class StringUtil
 {
     public static boolean isNullOrEmpty( @Nullable String value )
     {

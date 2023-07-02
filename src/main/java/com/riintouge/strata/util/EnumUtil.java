@@ -2,7 +2,7 @@ package com.riintouge.strata.util;
 
 import javax.annotation.Nullable;
 
-public class EnumUtil
+public final class EnumUtil
 {
     @Nullable
     public static < T extends Enum< T > > T valueOfOrNull( Class< T > clazz , @Nullable String value )

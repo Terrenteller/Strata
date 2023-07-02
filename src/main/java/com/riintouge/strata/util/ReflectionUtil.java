@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ReflectionUtil
+public final class ReflectionUtil
 {
     @Nullable
     public static Field findFieldByType( Class clazz , Class type , boolean allowAssignable )
