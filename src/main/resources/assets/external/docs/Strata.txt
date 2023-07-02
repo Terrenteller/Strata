@@ -3,7 +3,7 @@
 Tiles, hosts, and ores are defined by a contiguous block of non-empty lines
 in plain-text files under `config/strata/tiledata/<modid>` for files on disk
 or `assets/strata/config/strata/tiledata/<modid>` for files in a resource pack.
-Files under each "modid" directory are only processed if that mod is present.
+Files under each <modid> directory are only processed if that mod is active.
 Lines work as key-value pairs (or with multiple values or no value), are read
 sequentially, and will replace any value set directly or indirectly by a
 previous key-value. Line order does not matter unless stated otherwise.

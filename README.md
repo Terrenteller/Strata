@@ -36,7 +36,7 @@ _NOTE: COG has a long-standing bug of replacing `emerald_ore` with `monster_egg`
 - `config/strata/recipe/<modid>/blacklist.txt` restricts recipe replication
     - One recipe resource location regular expression per line
 
-`<modid>` directories are only processed if a mod with that ID is present. Strata will extract its own configuration into corresponding directories on start but will not overwrite them.
+`<modid>` directories are only processed if a mod with that ID is active. Strata will extract its own configuration into corresponding directories on start but will not overwrite them.
 
 For step-by-step instructions, consult the "Your First" series of tutorials on [the wiki](https://github.com/Terrenteller/Strata/wiki).
 

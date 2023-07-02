@@ -32,12 +32,12 @@ public final class Blocks
     private static final String MOD_ID_REGEX = "[a-z0-9]+";
 
     private static final String RESOURCE_PACK_TILE_DATA_PATH = String.format( "%s/tiledata" , STRATA_ASSET_CONFIG_PATH );
-    private static final String RESOURCE_PACK_TILE_DATA_PATH_REGEX = String.format( "^%s/(%s)" , RESOURCE_PACK_TILE_DATA_PATH , MOD_ID_REGEX );
+    private static final String RESOURCE_PACK_TILE_DATA_PATH_REGEX = String.format( "^%s/(%s)[/.]" , RESOURCE_PACK_TILE_DATA_PATH , MOD_ID_REGEX );
     private static final Pattern RESOURCE_PACK_TILE_DATA_PATH_PATTERN = Pattern.compile( RESOURCE_PACK_TILE_DATA_PATH_REGEX );
     private static final int RESOURCE_PACK_TILE_DATA_PATH_MOD_ID_GROUP = 1;
 
     private static final String RESOURCE_PACK_RECIPE_PATH = String.format( "%s/recipe" , STRATA_ASSET_CONFIG_PATH );
-    private static final String RESOURCE_PACK_RECIPE_PATH_REGEX = String.format( "^%s/(%s)" , RESOURCE_PACK_RECIPE_PATH , MOD_ID_REGEX );
+    private static final String RESOURCE_PACK_RECIPE_PATH_REGEX = String.format( "^%s/(%s)[/.]" , RESOURCE_PACK_RECIPE_PATH , MOD_ID_REGEX );
     private static final Pattern RESOURCE_PACK_RECIPE_PATH_PATTERN = Pattern.compile( RESOURCE_PACK_RECIPE_PATH_REGEX );
     private static final int RESOURCE_PACK_RECIPE_PATH_MOD_ID_GROUP = 1;
 
@@ -54,7 +54,7 @@ public final class Blocks
         processConfigFilesForMod( tileDataLoader , configDir , Strata.MOD_ID );
 
         // Priority #2: Config files outside our domain
-        for( ModContainer mod : Loader.instance().getIndexedModList().values() )
+        for( ModContainer mod : Loader.instance().getActiveModList() )
         {
             String modID = mod.getModId();
             if( !modID.equalsIgnoreCase( Strata.MOD_ID ) )
@@ -116,7 +116,7 @@ public final class Blocks
     private static void processLooseResourcePack(
         TileDataLoader tileDataLoader,
         String resourcePackPath,
-        boolean inOurDomain )
+        boolean firstPass )
         throws IOException
     {
         File[] unpackedTileDataDomainDirs = Paths.get( resourcePackPath )
@@ -128,7 +128,7 @@ public final class Blocks
         {
             for( File unpackedTileDataDomainDir : unpackedTileDataDomainDirs )
             {
-                if( unpackedTileDataDomainDir.getName().equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
+                if( shouldProcessModForPass( unpackedTileDataDomainDir.getName() , firstPass ) )
                 {
                     List< String > tileDataFilePaths = Files.walk( unpackedTileDataDomainDir.toPath() )
                         .filter( Files::isRegularFile )
@@ -160,7 +160,7 @@ public final class Blocks
         {
             for( File unpackedRecipeDomainDir : unpackedRecipeDomainDirs )
             {
-                if( unpackedRecipeDomainDir.getName().equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
+                if( shouldProcessModForPass( unpackedRecipeDomainDir.getName() , firstPass ) )
                 {
                     List< String > recipeFilePaths = Files.walk( unpackedRecipeDomainDir.toPath() )
                         .filter( Files::isRegularFile )
@@ -187,7 +187,7 @@ public final class Blocks
     private static void processCompressedResourcePack(
         TileDataLoader tileDataLoader,
         String resourcePackFilePath,
-        boolean inOurDomain )
+        boolean firstPass )
         throws IOException
     {
         ZipFile zipFile;
@@ -216,7 +216,7 @@ public final class Blocks
                 if( matcher.find() )
                 {
                     String modID = matcher.group( RESOURCE_PACK_TILE_DATA_PATH_MOD_ID_GROUP );
-                    if( modID.equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
+                    if( shouldProcessModForPass( modID , firstPass ) )
                         tileDataLoader.loadStream( zipFile.getInputStream( zipEntry ) );
                 }
                 else
@@ -225,7 +225,7 @@ public final class Blocks
                     if( matcher.find() )
                     {
                         String modID = matcher.group( RESOURCE_PACK_RECIPE_PATH_MOD_ID_GROUP );
-                        if( modID.equalsIgnoreCase( Strata.MOD_ID ) == inOurDomain )
+                        if( shouldProcessModForPass( modID , firstPass ) )
                             CraftingRecipeReplicator.processRecipeStream( zipFile.getInputStream( zipEntry ) );
                     }
                 }
@@ -236,5 +236,21 @@ public final class Blocks
                 throw e;
             }
         }
+    }
+
+    private static boolean shouldProcessModForPass( String modID , boolean firstPass )
+    {
+        boolean isStrata = modID.equalsIgnoreCase( Strata.MOD_ID );
+
+        if( firstPass )
+            return isStrata;
+        else if( isStrata )
+            return false;
+
+        for( ModContainer mod : Loader.instance().getActiveModList() )
+            if( modID.equalsIgnoreCase( mod.getModId() ) )
+                return true;
+
+        return false;
     }
 }
