@@ -30,6 +30,11 @@ Type: meta
 Description:
     An integer from 0 to 15 (inclusive).
 
+Type: MetaResourceLocation
+Description:
+    A string of the form "<ResourceLocation>[:<meta>]".
+    The meta value defaults to zero when omitted.
+
 Type: normal
 Description:
     A floating-point value from 0.0 to 1.0 (inclusive).
@@ -71,7 +76,7 @@ Description:
     Double slabs are special and should not be explicitly defined.
 
 Key: host
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Registers the block as one from which ores may acquire various properties.
     When used with `generate`, Value is unnecessary and ignored, and only applies to primary tile types.
@@ -129,10 +134,10 @@ Description:
     If the tile type has a parent, the parent's value is the default.
 
 Key: sustains
-Value: <<EnumPlantType>|<ResourceLocation>[:<meta>]>+
+Value: <EnumPlantType1|MetaResourceLocation1> ... [EnumPlantTypeN|MetaResourceLocationN]
 Description:
     Allows the block to sustain EnumPlantType(s) and/or what is sustained by other block(s).
-    Due to mod load ordering, the ResourceLocation cannot omit the domain.
+    Due to mod load ordering, MetaResourceLocation(s) cannot omit the domain.
     Only applies to primary tile types.
     Disclaimer: This may not work due to caching Strata cannot intercept. Some plants check for specific block(s).
 
@@ -158,7 +163,7 @@ Description:
     If the tile type has a parent, the parent's value is the default.
 
 Key: meltsAtInto
-Value: <int> <ResourceLocation>[:<meta>]
+Value: <int> <MetaResourceLocation>
 Description:
     Randomly replaces the block with another when any adjacent block light level meets or exceeds the threshold.
     If the block emits a sufficient amount of light it can melt itself regardless of neighbouring light levels.
@@ -166,7 +171,7 @@ Description:
     Only applies to primary tile types.
 
 Key: sublimatesAtInto
-Value: <int> <ResourceLocation>[:<meta>]
+Value: <int> <MetaResourceLocation>
 Description:
     Randomly replaces the block with another when any adjacent block light level meets or exceeds the threshold.
     If the block emits a sufficient amount of light it can sublimate itself regardless of neighbouring light levels.
@@ -227,14 +232,14 @@ Description:
     Does not apply to non-generated hosts.
 
 Key: breaksInto
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Replaces the block with another when harvested without silk touch.
     Drops will be forfeit to prevent infinite duplication.
     Only applies to ores and primary tile types.
 
 Key: convertsTo
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Creates a one-way, one-to-one conversion recipe to another item for compatibility purposes.
     This equivalency is also used for recipe replication eligibility.
@@ -242,7 +247,7 @@ Description:
     For ores, this applies to the ore item, not the creative mode item block, and functions like `proxyOre`.
 
 Key: furnaceResult
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Adds a furnace recipe or overrides `oreDict`'s behaviour.
     Only applies to ores and primary tile types.
@@ -281,12 +286,12 @@ Description:
     Never drops more than four fragments to prevent infinite duplication.
 
 Key: fragmentConvertsTo
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Creates a one-way, one-to-one conversion recipe to another item for compatibility purposes.
 
 Key: fragmentFurnaceResult
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Adds a furnace recipe for the fragment or overrides `oreDict`'s behaviour.
 
@@ -306,20 +311,20 @@ Description:
     For reference, there are 20 ticks per second and it takes 10 seconds to smelt an item. Vanilla coal is 1600.
 
 Key: proxyOre
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Displays the name, shows the tooltip, drops the drops, sustains the plants, etc. of the specified block instead.
-    Equivalent key-values are still important should the block specified by the ResourceLocation not exist.
+    Equivalent key-values are still important should the block specified by MetaResourceLocation not exist.
     Only applies to ores, and specifically, their blocks. Use `convertsTo` to do the same for the ore item.
 
 Key: hostAffinities
-Value: <<ResourceLocation>[:<meta>]>+
+Value: <MetaResourceLocation1> ... [MetaResourceLocationN]
 Description:
     Prioritizes one or more hosts for an ore in descending order.
     Default host selection heuristics apply if the ore is not adjacent to a listed host.
 
 Key: forceHost
-Value: <ResourceLocation>[:<meta>]
+Value: <MetaResourceLocation>
 Description:
     Forces the ore to acquire a specific host if it exists.
     This is provided for compatibility but is not what Strata was designed for.
