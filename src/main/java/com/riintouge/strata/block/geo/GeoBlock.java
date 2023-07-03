@@ -380,13 +380,13 @@ public class GeoBlock extends BlockFalling
             if( replacementBlockResourceLocation != null )
             {
                 Block replacementBlock = Block.REGISTRY.getObject( replacementBlockResourceLocation.resourceLocation );
-                IBlockState replacementBlockState = replacementBlock.getStateFromMeta( replacementBlockResourceLocation.meta );
                 Fluid replacementFluid = FluidRegistry.lookupFluidForBlock( replacementBlock );
                 FluidStack fluidStack = replacementFluid != null ? new FluidStack( replacementFluid , Fluid.BUCKET_VOLUME ) : null;
                 if( fluidStack == null || !worldIn.provider.doesWaterVaporize() || !replacementFluid.doesVaporize( fluidStack ) )
                 {
                     // Ice requires a solid block or liquid below it to turn into water.
                     // No explanation is given, so we don't bother.
+                    IBlockState replacementBlockState = replacementBlock.getStateFromMeta( replacementBlockResourceLocation.meta );
                     worldIn.setBlockState( pos , replacementBlockState );
                 }
 

@@ -1,12 +1,9 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import net.minecraft.block.BlockStoneSlab;
-import net.minecraft.block.BlockWall;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -66,7 +63,7 @@ public enum TileType
     public final TileType parentType;
     public final ResourceLocation blockStateResource;
     public final String defaultVariant;
-    public final ItemStack vanillaItemStack;
+    public final MetaResourceLocation vanillaItemRegistryName;
 
     TileType(
         Tier tier,
@@ -89,20 +86,20 @@ public enum TileType
         this.parentType = parentType;
         this.blockStateResource = Strata.resource( blockStateName );
         this.defaultVariant = defaultVariant;
-        this.vanillaItemStack = vanillaItemStack( this );
+        this.vanillaItemRegistryName = vanillaItemRegistryName( this );
 
         assert ( tier == Tier.PRIMARY ) == ( fragmentResourceLocationSuffix != null );
         assert ( tier == Tier.TERTIARY ) == ( parentType != null );
     }
 
     @Nonnull
-    public ResourceLocation registryName( String tileSetName )
+    public ResourceLocation registryName( @Nonnull String tileSetName )
     {
         return Strata.resource( tileSetName + resourceLocationSuffix );
     }
 
     @Nullable
-    public ResourceLocation fragmentRegistryName( String tileSetName )
+    public ResourceLocation fragmentRegistryName( @Nonnull String tileSetName )
     {
         return fragmentResourceLocationSuffix != null
             ? Strata.resource( tileSetName + fragmentResourceLocationSuffix )
@@ -111,44 +108,46 @@ public enum TileType
 
     // Statics
 
-    @Nullable
-    public static ItemStack vanillaItemStack( TileType tileType )
+    @Nonnull
+    private static MetaResourceLocation vanillaItemRegistryName( @Nonnull TileType tileType )
     {
         // Can't switch on tileType because the constructor calls this
         switch( tileType.name() )
         {
             case "STONE":
-                return new ItemStack( Blocks.STONE );
+                return new MetaResourceLocation( "minecraft:stone" );
             case "COBBLE":
-                return new ItemStack( Blocks.COBBLESTONE );
+                return new MetaResourceLocation( "minecraft:cobblestone" );
             case "COBBLEMOSSY":
-                return new ItemStack( Blocks.MOSSY_COBBLESTONE );
+                return new MetaResourceLocation( "minecraft:mossy_cobblestone" );
             case "STONEBRICK":
-                return new ItemStack( Blocks.STONEBRICK );
+                return new MetaResourceLocation( "minecraft:stonebrick" );
             case "STONEBRICKMOSSY":
-                return new ItemStack( Blocks.STONEBRICK , 1 , 1 );
+                return new MetaResourceLocation( "minecraft:stonebrick:1" );
             case "COBBLESTAIRS":
-                return new ItemStack( Blocks.STONE_STAIRS );
+                return new MetaResourceLocation( "minecraft:stone_stairs" );
             case "STONEBRICKSTAIRS":
-                return new ItemStack( Blocks.STONE_BRICK_STAIRS );
+                return new MetaResourceLocation( "minecraft:stone_brick_stairs" );
             case "COBBLESLAB":
-                return new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.COBBLESTONE.getMetadata() );
+                return new MetaResourceLocation( "minecraft:stone_slab:3" );
             case "STONESLAB":
-                return new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.STONE.getMetadata() );
+                return new MetaResourceLocation( "minecraft:stone_slab" );
             case "STONEBRICKSLAB":
-                return new ItemStack( Blocks.STONE_SLAB , 1 , BlockStoneSlab.EnumType.SMOOTHBRICK.getMetadata() );
+                return new MetaResourceLocation( "minecraft:stone_slab:5" );
             case "COBBLEWALL":
-                return new ItemStack( Blocks.COBBLESTONE_WALL );
+                return new MetaResourceLocation( "minecraft:cobblestone_wall" );
             case "COBBLEWALLMOSSY":
-                return new ItemStack( Blocks.COBBLESTONE_WALL , 1 , BlockWall.EnumType.MOSSY.getMetadata() );
+                return new MetaResourceLocation( "minecraft:cobblestone_wall:1" );
             case "BUTTON":
-                return new ItemStack( Blocks.STONE_BUTTON );
+                return new MetaResourceLocation( "minecraft:stone_button" );
             case "LEVER":
-                return new ItemStack( Blocks.LEVER );
+                return new MetaResourceLocation( "minecraft:lever" );
             case "PRESSUREPLATE":
-                return new ItemStack( Blocks.STONE_PRESSURE_PLATE );
+                return new MetaResourceLocation( "minecraft:stone_pressure_plate" );
         }
 
-        return null;
+        // FIXME: This ought to return null but the tile data loader cannot differentiate
+        // between an implicit default and a value explicitly set to the default
+        return new MetaResourceLocation( "minecraft:air" );
     }
 }

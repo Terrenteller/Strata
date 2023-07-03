@@ -241,9 +241,8 @@ Description:
 Key: convertsTo
 Value: <MetaResourceLocation>
 Description:
-    Creates a one-way, one-to-one conversion recipe to another item for compatibility purposes.
-    This equivalency is also used for recipe replication eligibility.
-    Some tile types have a pre-determined, vanilla equivalent. Use a hyphen to ignore it.
+    Overrides the vanilla-equivalent item defined by the tile type used for recipe creation and replication.
+    A value of "-" will prevent this behaviour entirely and extends to all descendant tile types.
     For ores, this applies to the ore item, not the creative mode item block, and functions like `proxyOre`.
 
 Key: furnaceResult

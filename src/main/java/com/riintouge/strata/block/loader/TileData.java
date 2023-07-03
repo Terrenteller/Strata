@@ -14,7 +14,6 @@ import com.riintouge.strata.util.StringUtil;
 import com.riintouge.strata.util.Util;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -152,9 +151,7 @@ public class TileData
             }
             case "convertsTo":
             {
-                equivalentItemResourceLocation = value.equals( "-" )
-                    ? new MetaResourceLocation( Blocks.AIR.getRegistryName() , 0 )
-                    : new MetaResourceLocation( value );
+                equivalentItemResourceLocation = value.equals( "-" ) ? null : new MetaResourceLocation( value );
                 return true;
             }
             case "dragonImmune":
@@ -402,6 +399,9 @@ public class TileData
                 // to get non-enum Material and SoundType values from distinct KVs
                 material = tileType.material;
                 soundType = tileType.soundType;
+                if( oreName == null )
+                    equivalentItemResourceLocation = tileType.vanillaItemRegistryName;
+
                 return true;
             }
             case "witherImmune":

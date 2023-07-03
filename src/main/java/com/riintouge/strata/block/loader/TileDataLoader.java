@@ -199,6 +199,10 @@ public class TileDataLoader
         // The sound type may be null when we are initializing a double slab.
         if( child.soundType == null || child.soundType == parent.tileType.soundType )
             child.soundType = parent.soundType;
+
+        // The child should not convert to anything if the parent does not convert to anything
+        if( parent.equivalentItemResourceLocation == null )
+            child.equivalentItemResourceLocation = null;
     }
 
     protected void finalizeTileSets()

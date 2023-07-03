@@ -170,10 +170,6 @@ public class EventHandlers
         if( world == null || face == null )
             return;
 
-        ItemStack itemStack = event.getItemStack();
-        if( itemStack.isEmpty() )
-            return;
-
         BlockPos pos = event.getPos();
         IBlockState eventBlockState = world.getBlockState( pos );
         Block eventBlock = eventBlockState.getBlock();
@@ -182,6 +178,7 @@ public class EventHandlers
 
         // Do we need to be concerned about IGrowable?
         IPlantable plantableItem = null;
+        ItemStack itemStack = event.getItemStack();
         Item item = itemStack.getItem();
         if( item instanceof IPlantable )
             plantableItem = (IPlantable)item;

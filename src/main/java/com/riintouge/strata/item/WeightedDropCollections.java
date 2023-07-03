@@ -68,7 +68,7 @@ public class WeightedDropCollections
                 dropGroup.remove( dropPair );
             }
 
-            if( drop != null && !drop.isEmpty() )
+            if( !ItemHelper.isNullOrAirOrEmpty( drop ) )
                 drops.add( drop );
         }
 
@@ -82,10 +82,11 @@ public class WeightedDropCollections
         Pair< MetaResourceLocation , IDropFormula > dropPair = dropGroup.getRandomObject( random , ( pair ) ->
         {
             MetaResourceLocation metaResourceLocation = pair.getKey();
-            ItemStack itemStack = new ItemStack( Item.REGISTRY.getObject( metaResourceLocation.resourceLocation ) , 1 , metaResourceLocation.meta );
-            return !itemStack.isEmpty();
+            ItemStack itemStack = ItemHelper.metaResourceLocationToItemStack( metaResourceLocation );
+            return itemStack != null && !itemStack.isEmpty();
         } );
 
-        return new ItemStack( Item.REGISTRY.getObject( dropPair.getKey().resourceLocation ) , 1 , dropPair.getKey().meta );
+        ItemStack drop = dropPair != null ? ItemHelper.metaResourceLocationToItemStack( dropPair.getKey() ) : null;
+        return drop != null ? drop : ItemStack.EMPTY;
     }
 }

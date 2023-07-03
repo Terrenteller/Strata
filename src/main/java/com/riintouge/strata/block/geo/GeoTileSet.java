@@ -1,6 +1,7 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.item.ItemHelper;
 import com.riintouge.strata.item.geo.ThrowableGeoItemFragment;
 import com.riintouge.strata.misc.IForgeRegistrable;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
@@ -514,7 +515,7 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
             }
 
             ItemStack equivalentItem = tileInfo.equivalentItemStack();
-            if( equivalentItem != null && !equivalentItem.isEmpty() )
+            if( !ItemHelper.isNullOrAirOrEmpty( equivalentItem ) )
             {
                 CraftingRecipeReplicator.INSTANCE.associate( equivalentItem , new ItemStack( itemBlock ) );
                 createEquivalentItemConversionRecipe( registryName , itemBlock , equivalentItem );
