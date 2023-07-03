@@ -196,19 +196,15 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public ItemStack equivalentItemStack()
     {
+        if( equivalentItemStack != null || equivalentItemResourceLocation == null )
+            return equivalentItemStack;
+
         // Deferred resolution until reasonably sure the item has been created
-        if( equivalentItemResourceLocation != null )
-        {
-            if( !equivalentItemResourceLocation.resourceLocation.equals( Blocks.AIR.getRegistryName() ) )
-            {
-                Item equivalentItem = Item.REGISTRY.getObject( equivalentItemResourceLocation.resourceLocation );
-                if( equivalentItem != null )
-                    equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
-            }
+        equivalentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentItemResourceLocation );
+        if( ItemHelper.isNullOrAirOrEmpty( equivalentItemStack ) )
+            equivalentItemStack = null;
 
-            equivalentItemResourceLocation = null;
-        }
-
+        equivalentItemResourceLocation = null;
         return equivalentItemStack;
     }
 

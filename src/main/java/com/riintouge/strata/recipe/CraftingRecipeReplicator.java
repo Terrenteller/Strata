@@ -1,6 +1,5 @@
 package com.riintouge.strata.recipe;
 
-import com.google.common.collect.ImmutableList;
 import com.riintouge.strata.Strata;
 import com.riintouge.strata.util.DebugUtil;
 import com.riintouge.strata.util.ReflectionUtil;
@@ -19,23 +18,21 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class CraftingRecipeReplicator
 {
     public static final CraftingRecipeReplicator INSTANCE = new CraftingRecipeReplicator();
 
     private final Map< Class , IReplicator > recipeClassReplicatorMap = new HashMap<>();
-    private final List< Pair< List< ItemStack > , Ingredient > > ingredientInfos = new ArrayList<>();
+    private final CraftingRecipeItemStackAssociator globalAssociations = new CraftingRecipeItemStackAssociator();
     private final Set< Pattern > blacklistedRecipes = new HashSet<>();
     private final Field shapedOreRecipeMirroredField;
 
@@ -113,61 +110,15 @@ public final class CraftingRecipeReplicator
 
     public void associate( ItemStack original , ItemStack alternative )
     {
-        for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
-        {
-            List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
-            for( ItemStack itemStack : matchingItemStacks )
-            {
-                // Transitivity is very important so we don't end up with incomplete recipes!
-                boolean originalIsKnown = ItemStack.areItemStacksEqual( original , itemStack );
-                boolean alternativeIsKnown = ItemStack.areItemStacksEqual( alternative , itemStack );
-
-                if( originalIsKnown || alternativeIsKnown )
-                {
-                    if( !originalIsKnown )
-                    {
-                        matchingItemStacks.add( original );
-                        ingredientInfo.setValue( null );
-                    }
-
-                    if( !alternativeIsKnown )
-                    {
-                        matchingItemStacks.add( alternative );
-                        ingredientInfo.setValue( null );
-                    }
-
-                    return;
-                }
-            }
-        }
-
-        List< ItemStack > matchingItemStacks = new ArrayList<>();
-        // Keeping the original item is important so our recipe can mix and match.
-        // The original recipe will become a subset of ours but we get the same result so it doesn't matter.
-        // We don't remove the original recipe because there's no telling how it may be referenced.
-        matchingItemStacks.add( original );
-        matchingItemStacks.add( alternative );
-        ingredientInfos.add( new MutablePair<>( matchingItemStacks , null ) );
+         globalAssociations.associate( original , alternative );
     }
 
-    public ImmutableList< ItemStack > getAssociatedItems( Predicate< ItemStack > predicate )
+    public Collection< ItemStack > getAssociatedItems( ItemStack itemStack )
     {
-        ImmutableList.Builder< ItemStack > associatedItems = new ImmutableList.Builder<>();
-
-        for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
-        {
-            List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
-            for( ItemStack itemStack : matchingItemStacks )
-            {
-                if( predicate.test( itemStack ) )
-                {
-                    associatedItems.addAll( matchingItemStacks );
-                    break; // We can't stop at the first result because predicate may be testing multiple items
-                }
-            }
-        }
-
-        return associatedItems.build();
+        return globalAssociations.getAssociations( itemStack )
+            .stream()
+            .map( x -> x.itemStack )
+            .collect( Collectors.toSet() );
     }
 
     public boolean isRecipeBlacklisted( String recipeResourceLocationString )
@@ -191,36 +142,8 @@ public final class CraftingRecipeReplicator
         }
 
         for( Ingredient ing : recipe.getIngredients() )
-        {
-            if( !canReplicateIngredient( ing ) )
-                continue;
-
-            for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
-            {
-                boolean anyMatchInCurrentList = false , allMatchInCurrentList = true;
-                List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
-
-                for( ItemStack itemStack : matchingItemStacks )
-                {
-                    if( ing.apply( itemStack ) )
-                    {
-                        anyMatchInCurrentList = true;
-                        continue;
-                    }
-
-                    allMatchInCurrentList = false;
-                    if( anyMatchInCurrentList )
-                        break;
-                }
-
-                // We only have a meaningful replication if any of the original ingredients
-                // accept some, but not all, of the items we consider associated.
-                // Otherwise, that means we have no replacement for the original ingredient
-                // or we are redundant with the original ingredient, respectively.
-                if( anyMatchInCurrentList && !allMatchInCurrentList )
-                    return true;
-            }
-        }
+            if( canReplicateIngredient( ing ) && globalAssociations.hasExtendedAssociations( ing ) )
+                return true;
 
         return false;
     }
@@ -255,50 +178,26 @@ public final class CraftingRecipeReplicator
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
     }
 
-    protected Ingredient getCompleteIngredientOrOriginal( Ingredient original )
+    protected Ingredient getReplicatedIngredientOrOriginal( Ingredient original )
     {
         if( !canReplicateIngredient( original ) )
             return original;
 
         List< Ingredient > matchingIngredients = new ArrayList<>();
-        for( Pair< List< ItemStack > , Ingredient > ingredientInfo : ingredientInfos )
-        {
-            List< ItemStack > matchingItemStacks = ingredientInfo.getLeft();
-            for( ItemStack itemStack : matchingItemStacks )
-            {
-                if( original.apply( itemStack ) )
-                {
-                    Ingredient ing = ingredientInfo.getRight();
-                    if( ing == null )
-                    {
-                        ing = Ingredient.fromStacks( matchingItemStacks.toArray( new ItemStack[ 0 ] ) );
-                        ingredientInfo.setValue( ing );
-                    }
+        matchingIngredients.add( original );
+        matchingIngredients.addAll( globalAssociations.getExtendingIngredients( original ) );
 
-                    matchingIngredients.add( ing );
-                    break;
-                }
-            }
-        }
-
-        switch( matchingIngredients.size() )
-        {
-            case 0:
-                return original;
-            case 1:
-                return matchingIngredients.get( 0 );
-            default:
-                return new ReplicatedCompoundIngredient( matchingIngredients );
-        }
+        return matchingIngredients.size() == 1
+            ? matchingIngredients.get( 0 )
+            : new ReplicatedCompoundIngredient( matchingIngredients );
     }
 
     @Nonnull
     protected NonNullList< Ingredient > substitute( NonNullList< Ingredient > ings )
     {
         NonNullList< Ingredient > replacedIngredients = NonNullList.create();
-
         for( Ingredient ing : ings )
-            replacedIngredients.add( getCompleteIngredientOrOriginal( ing ) );
+            replacedIngredients.add( getReplicatedIngredientOrOriginal( ing ) );
 
         return replacedIngredients;
     }
@@ -361,6 +260,7 @@ public final class CraftingRecipeReplicator
     {
         public ReplicatedCompoundIngredient( Collection< Ingredient > children )
         {
+            // CompoundIngredient's constructor is protected for no good reason
             super( children );
         }
     }

@@ -333,10 +333,10 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
                         GameRegistry.addShapedRecipe(
                             registryName,
                             null,
-                            new ItemStack( stoneItemBlock , 4 ),
+                            new ItemStack( itemBlock , 4 ),
                             "XX ",
                             " XX",
-                            'X' , itemBlock );
+                            'X' , stoneItemBlock );
                     }
 
                     break;
@@ -364,10 +364,10 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
                         GameRegistry.addShapedRecipe(
                             registryName,
                             null,
-                            new ItemStack( stoneItemBlock , 4 ),
+                            new ItemStack( itemBlock , 4 ),
                             "XX",
                             "XX",
-                            'X' , itemBlock );
+                            'X' , stoneItemBlock );
                     }
 
                     break;

@@ -1,6 +1,5 @@
 package com.riintouge.strata.recipe;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 
@@ -22,12 +21,7 @@ public class BrewingRecipeWrapper implements IBrewingRecipe
         if( originalRecipe.isIngredient( input ) )
             return input;
 
-        // Stack sizes must be equal to match
-        ItemStack singleInput = input.copy();
-        singleInput.setCount( 1 );
-
-        ImmutableList< ItemStack > matchingItemStacks = CraftingRecipeReplicator.INSTANCE.getAssociatedItems( x -> ItemStack.areItemStacksEqual( x , singleInput ) );
-        for( ItemStack itemStack : matchingItemStacks )
+        for( ItemStack itemStack : CraftingRecipeReplicator.INSTANCE.getAssociatedItems( input ) )
             if( itemStack != input && originalRecipe.isIngredient( itemStack ) )
                 return itemStack;
 

@@ -25,16 +25,21 @@ import javax.annotation.Nullable;
 
 public class ItemHelper
 {
+    public static boolean isNullOrAirOrEmpty( @Nullable ItemStack itemStack )
+    {
+        return itemStack == null || itemStack.getItem() == Items.AIR || itemStack.isEmpty();
+    }
+
     @Nullable
     public static ItemStack metaResourceLocationToItemStack( MetaResourceLocation metaResourceLocation )
     {
-        Block resultBlock = Block.REGISTRY.getObject( metaResourceLocation.resourceLocation );
-        if( resultBlock != Blocks.AIR )
-            return new ItemStack( resultBlock , 1 , metaResourceLocation.meta );
-
         Item resultItem = Item.REGISTRY.getObject( metaResourceLocation.resourceLocation );
         if( resultItem != null && resultItem != Items.AIR )
             return new ItemStack( resultItem , 1 , metaResourceLocation.meta );
+
+        Block resultBlock = Block.REGISTRY.getObject( metaResourceLocation.resourceLocation );
+        if( resultBlock != Blocks.AIR )
+            return new ItemStack( resultBlock , 1 , metaResourceLocation.meta );
 
         return null;
     }

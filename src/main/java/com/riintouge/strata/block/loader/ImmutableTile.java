@@ -13,7 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -172,24 +171,15 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public ItemStack equivalentItemStack()
     {
-        if( equivalentItemResourceLocation == null )
-            return tileType.vanillaItemStack;
+        if( equivalentItemStack != null || equivalentItemResourceLocation == null )
+            return equivalentItemStack;
 
         // Deferred resolution until reasonably sure the item has been created
-        if( equivalentItemStack == null )
-        {
-            if( equivalentItemResourceLocation.resourceLocation.equals( Blocks.AIR.getRegistryName() ) )
-            {
-                equivalentItemStack = ItemStack.EMPTY;
-            }
-            else
-            {
-                Item equivalentItem = Item.REGISTRY.getObject( equivalentItemResourceLocation.resourceLocation );
-                if( equivalentItem != null )
-                    equivalentItemStack = new ItemStack( equivalentItem , 1 , equivalentItemResourceLocation.meta );
-            }
-        }
+        equivalentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentItemResourceLocation );
+        if( ItemHelper.isNullOrAirOrEmpty( equivalentItemStack ) )
+            equivalentItemStack = null;
 
+        equivalentItemResourceLocation = null;
         return equivalentItemStack;
     }
 
@@ -236,19 +226,18 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public ItemStack equivalentFragmentItemStack()
     {
-        // Deferred resolution until reasonably sure the item has been created
-        if( equivalentFragmentItemResourceLocation != null )
-        {
-            if( hasFragment() )
-            {
-                Item equivalentFragmentItem = Item.REGISTRY.getObject( equivalentFragmentItemResourceLocation.resourceLocation );
-                if( equivalentFragmentItem != null )
-                    equivalentFragmentItemStack = new ItemStack( equivalentFragmentItem , 1 , equivalentFragmentItemResourceLocation.meta );
-            }
+        if( equivalentFragmentItemStack != null || equivalentFragmentItemResourceLocation == null )
+            return equivalentFragmentItemStack;
 
-            equivalentFragmentItemResourceLocation = null;
+        // Deferred resolution until reasonably sure the item has been created
+        if( hasFragment() )
+        {
+            equivalentFragmentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentFragmentItemResourceLocation );
+            if( ItemHelper.isNullOrAirOrEmpty( equivalentFragmentItemStack ) )
+                equivalentFragmentItemStack = null;
         }
 
+        equivalentFragmentItemResourceLocation = null;
         return equivalentFragmentItemStack;
     }
 

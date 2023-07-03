@@ -2,8 +2,8 @@ package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.block.geo.GeoTileSet;
 import com.riintouge.strata.block.geo.GeoTileSetRegistry;
-import com.riintouge.strata.block.host.HostRegistry;
 import com.riintouge.strata.block.geo.TileType;
+import com.riintouge.strata.block.host.HostRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.block.ore.OreTileSet;
 import com.riintouge.strata.util.Util;
@@ -89,7 +89,8 @@ public class TileDataLoader
                         tileType.toString().toLowerCase() ) );
             }
 
-            for( TileType parentType = tileType.parentType ; parentType != null ; parentType = parentType.parentType )
+            TileType parentType = tileType.parentType;
+            if( parentType != null )
             {
                 TileData parentData = tileDataMap.getOrDefault( parentType , null );
                 if( parentData == null )
@@ -115,7 +116,10 @@ public class TileDataLoader
                 case STONEBRICKSLAB:
                 {
                     TileType doubleSlabsType = TileType.values()[ tileType.ordinal() + 1 ];
-                    tileDataMap.put( doubleSlabsType , tileData.createChildType( doubleSlabsType ) );
+                    TileData doubleSlabsData = new TileData();
+                    doubleSlabsData.tileType = doubleSlabsType;
+                    inheritFrom( doubleSlabsData , tileData );
+                    tileDataMap.put( doubleSlabsType , doubleSlabsData );
                 }
             }
         }
@@ -165,6 +169,12 @@ public class TileDataLoader
     protected void inheritFrom( TileData child , TileData parent )
     {
         // Only select KVs make sense to inherit
+        if( child.tileSetName == null )
+            child.tileSetName = parent.tileSetName;
+        if( child.material == null )
+            child.material = parent.material;
+        if( child.harvestTool == null )
+            child.harvestTool = parent.harvestTool;
         if( child.harvestLevel == null )
             child.harvestLevel = parent.harvestLevel;
         if( child.hardness == null )
@@ -186,8 +196,8 @@ public class TileDataLoader
             child.textureMap = parent.textureMap;
 
         // If our sound type matches what the parent would normally use, use whatever the parent actually is.
-        // The sound type should never be null as it initially comes from the tile type.
-        if( child.soundType == parent.tileType.soundType )
+        // The sound type may be null when we are initializing a double slab.
+        if( child.soundType == null || child.soundType == parent.tileType.soundType )
             child.soundType = parent.soundType;
     }
 

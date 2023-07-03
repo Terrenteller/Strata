@@ -1,13 +1,13 @@
 package com.riintouge.strata.block.loader;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
 import com.riintouge.strata.block.geo.TileType;
 import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.*;
+import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.sound.SoundEventRegistry;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.StringUtil;
@@ -397,13 +397,11 @@ public class TileData
             case "tileType":
             {
                 tileType = TileType.valueOf( value.toUpperCase() );
-                if( harvestTool == null )
-                    harvestTool = tileType.harvestTool;
+                harvestTool = tileType.harvestTool;
                 // Obsfucation prevents us from using reflection
                 // to get non-enum Material and SoundType values from distinct KVs
                 material = tileType.material;
-                if( soundType == null )
-                    soundType = tileType.soundType;
+                soundType = tileType.soundType;
                 return true;
             }
             case "witherImmune":
@@ -508,25 +506,6 @@ public class TileData
         }
 
         return false;
-    }
-
-    public TileData createChildType( TileType tileType ) throws UnsupportedOperationException
-    {
-        if( this.tileSetName == null || this.tileType == null || tileType.parentType != this.tileType )
-            throw new UnsupportedOperationException();
-
-        TileData child = new TileData();
-        child.tileSetName = this.tileSetName;
-        child.tileType = tileType;
-        child.material = this.material;
-        child.soundType = this.soundType;
-        child.harvestTool = this.harvestTool;
-        child.harvestLevel = this.harvestLevel;
-        child.hardness = this.hardness;
-        child.explosionResistance = this.explosionResistance;
-        child.textureMap = this.textureMap;
-
-        return child;
     }
 
     protected void setSpecialBlockPropertyFlag( long flag )
