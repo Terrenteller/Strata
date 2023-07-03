@@ -17,7 +17,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.EnumPlantType;
 import org.apache.commons.lang3.EnumUtils;
 
@@ -555,7 +554,8 @@ public class TileData
 
             IDropFormula dropFormula = new RPNDropFormula( base , bonus );
             // Perform a test evaluation of the RPN. This will throw if the expression is invalid.
-            dropFormula.getAmount( new Random() , null , new BlockPos( 0 , 0 , 0 ) );
+            // FIXME: Move to a post-initialization sanity check. Non-vanilla enchantments are not registered yet.
+            //dropFormula.getAmount( new Random() , null , new BlockPos( 0 , 0 , 0 ) );
 
             return dropFormula;
         }
