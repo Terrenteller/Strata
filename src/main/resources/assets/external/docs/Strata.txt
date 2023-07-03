@@ -286,8 +286,9 @@ Description:
     The "minimum-maximum" form (e.g. "1-4") will use vanilla's standard fortune formula.
     The RPN form (e.g. "1 ~ f 2 *") will drop 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
-    The position of the block is not available and the variables "x", "y", and "z" will evaluate to zero.
+    The game difficulty replaces the variable "d".
     The level of fortune replaces the variable "f".
+    The position of the block is not available and the variables "x", "y", and "z" will evaluate to zero.
     Other enchantments are not available and will evaluate to zero.
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one fragment with Fortune III.
@@ -353,9 +354,10 @@ Description:
     The "minimum-maximum" form (e.g. "4-9" for lapis) will use vanilla's standard fortune formula.
     The RPN form (e.g. "1 ~ f 2 *") will drop 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
-    The position of the block replaces the variables "x", "y", and "z".
+    The game difficulty replaces the variable "d".
     The level of fortune replaces the variable "f".
-    Enchantment levels replace resource location variables (e.g. fortune, minecraft:fortune, or mymod:myenchant).
+    The position of the block replaces the variables "x", "y", and "z".
+    Enchantment levels replace resource location variables (e.g. "fortune", "minecraft:fortune", or "mymod:myenchant").
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one item with Fortune III.
     A single drop is selected from each group and is limited to a full stack.
@@ -372,8 +374,9 @@ Description:
     The "minimum-maximum" form (e.g. "4-9") will use vanilla's standard fortune formula.
     The RPN form (e.g. "1 ~ f 2 *") will drop 'minDropExpr' and up to and including 'maxBonusDropExpr' more.
     'maxBonusDropExpr' will use a discrete uniform distribution (all values equally probable).
-    The position of the block replaces the variables "x", "y", and "z".
+    The game difficulty replaces the variable "d".
     The level of fortune replaces the variable "f".
+    The position of the block replaces the variables "x", "y", and "z".
     Other enchantments are not available and will evaluate to zero.
     Expression results are rounded to the nearest integer. Negative results are clamped to zero.
     For example, "0 ~ 0.2 f *" has a 50% chance of dropping one experience with Fortune III.

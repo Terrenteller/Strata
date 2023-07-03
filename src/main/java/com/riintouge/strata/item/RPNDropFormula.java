@@ -2,6 +2,7 @@ package com.riintouge.strata.item;
 
 import com.riintouge.strata.misc.RPNExpression;
 import com.riintouge.strata.util.StringUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
@@ -41,6 +42,8 @@ public class RPNDropFormula implements IDropFormula
         {
             switch( variable )
             {
+                case "d":
+                    return (double)Minecraft.getMinecraft().gameSettings.difficulty.getDifficultyId();
                 case "f":
                     return harvestTool != null
                         ? (double)EnchantmentHelper.getEnchantmentLevel( Enchantments.FORTUNE , harvestTool )
