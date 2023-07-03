@@ -9,6 +9,7 @@ sequentially, and will replace any value set directly or indirectly by a
 previous key-value. Line order does not matter unless stated otherwise.
 Tiles with a parent tile type must be defined after their parent. Tile sets
 cannot be split across multiple files and should be limited to one per file.
+Tile data file names should match their contained tile set for consistency.
 
 `` refers to a key
 '' refers to a variable part of the key or value
@@ -226,9 +227,10 @@ Description:
 Key: blockState
 Value: <ResourceLocation>
 Description:
-    Sets the block state that defines the block's appearance in the world.
-    The block state is normally set by the tile type.
-    Custom block states cannot omit variants.
+    Sets the block state which maps block variant(s) to their model(s).
+    The block state is normally set by the tile type but may be changed to improve texture alignment or other visuals.
+    Strata's standard block state files are found in the JAR under "assets/strata/blockstates".
+    Custom block states provided by resource packs cannot omit variants.
     Does not apply to non-generated hosts.
 
 Key: breaksInto
@@ -244,6 +246,13 @@ Description:
     Overrides the vanilla-equivalent item defined by the tile type used for recipe creation and replication.
     A value of "-" will prevent this behaviour entirely and extends to all descendant tile types.
     For ores, this applies to the ore item, not the creative mode item block, and functions like `proxyOre`.
+
+Key: convertsToIn
+Value: <MetaResourceLocation> <recipeNameRegex1> ... [recipeNameRegexN]
+Description:
+    Allows the item to substitute for another in matching recipes.
+    Does not conflict with `convertsTo`.
+    Must come after `generate`.
 
 Key: furnaceResult
 Value: <MetaResourceLocation>

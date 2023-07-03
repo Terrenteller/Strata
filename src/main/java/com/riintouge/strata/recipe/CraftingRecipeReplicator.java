@@ -1,6 +1,10 @@
 package com.riintouge.strata.recipe;
 
 import com.riintouge.strata.Strata;
+import com.riintouge.strata.item.ItemHelper;
+import com.riintouge.strata.misc.MetaResourceLocation;
+import com.riintouge.strata.misc.ObjectAssociator;
+import com.riintouge.strata.util.CollectionUtil;
 import com.riintouge.strata.util.DebugUtil;
 import com.riintouge.strata.util.ReflectionUtil;
 import com.riintouge.strata.util.Util;
@@ -14,16 +18,20 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IngredientNBT;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -33,6 +41,8 @@ public final class CraftingRecipeReplicator
 
     private final Map< Class , IReplicator > recipeClassReplicatorMap = new HashMap<>();
     private final CraftingRecipeItemStackAssociator globalAssociations = new CraftingRecipeItemStackAssociator();
+    private final Map< String , ObjectAssociator< String > > rawRecipeSpecificAssociations = new HashMap<>();
+    private Map< Pattern , CraftingRecipeItemStackAssociator > recipeSpecificAssociations = null;
     private final Set< Pattern > blacklistedRecipes = new HashSet<>();
     private final Field shapedOreRecipeMirroredField;
 
@@ -58,7 +68,7 @@ public final class CraftingRecipeReplicator
                 shapedRecipe.getGroup(),
                 shapedRecipe.getRecipeWidth(),
                 shapedRecipe.getRecipeHeight(),
-                substitute( shapedRecipe.getIngredients() ),
+                substitute( recipe , shapedRecipe.getIngredients() ),
                 shapedRecipe.getRecipeOutput() );
         } );
 
@@ -68,7 +78,7 @@ public final class CraftingRecipeReplicator
             CraftingHelper.ShapedPrimer primer = new CraftingHelper.ShapedPrimer();
             primer.width = shapedOreRecipe.getRecipeWidth();
             primer.height = shapedOreRecipe.getRecipeHeight();
-            primer.input = substitute( shapedOreRecipe.getIngredients() );
+            primer.input = substitute( recipe , shapedOreRecipe.getIngredients() );
 
             if( shapedOreRecipeMirroredField != null )
             {
@@ -95,7 +105,7 @@ public final class CraftingRecipeReplicator
             return new ShapelessRecipes(
                 shapelessRecipe.getGroup(),
                 shapelessRecipe.getRecipeOutput(),
-                substitute( shapelessRecipe.getIngredients() ) );
+                substitute( recipe , shapelessRecipe.getIngredients() ) );
         } );
 
         recipeClassReplicatorMap.put( ShapelessOreRecipe.class , recipe ->
@@ -103,14 +113,22 @@ public final class CraftingRecipeReplicator
             ShapelessOreRecipe shapelessRecipe = (ShapelessOreRecipe)recipe;
             return new ShapelessOreRecipe(
                 new ResourceLocation( shapelessRecipe.getGroup() ),
-                substitute( shapelessRecipe.getIngredients() ),
+                substitute( recipe , shapelessRecipe.getIngredients() ),
                 shapelessRecipe.getRecipeOutput() );
         } );
     }
 
     public void associate( ItemStack original , ItemStack alternative )
     {
-         globalAssociations.associate( original , alternative );
+        globalAssociations.associate( original , alternative );
+    }
+
+    public void associateWithIn( String itemRegistryName , String originalItemRegistryName , String recipeRegistryNameRegex )
+    {
+        ObjectAssociator< String > equivalentItemGroups = rawRecipeSpecificAssociations.computeIfAbsent( recipeRegistryNameRegex , x -> new ObjectAssociator<>() );
+        equivalentItemGroups.associate( originalItemRegistryName , itemRegistryName );
+
+        recipeSpecificAssociations = null;
     }
 
     public Collection< ItemStack > getAssociatedItems( ItemStack itemStack )
@@ -141,9 +159,23 @@ public final class CraftingRecipeReplicator
             return false;
         }
 
+        rebuildRecipeSpecificAssociationsIfNecessary();
+        String recipeRegistryName = recipeResourceLocation.toString();
+        List< CraftingRecipeItemStackAssociator > associators = new ArrayList<>();
+        associators.add( globalAssociations );
+
+        for( Pair< Pattern , CraftingRecipeItemStackAssociator > pair : CollectionUtil.inPairs( recipeSpecificAssociations ) )
+        {
+            Matcher matcher = pair.getKey().matcher( recipeRegistryName );
+            if( matcher.matches() )
+                associators.add( pair.getValue() );
+        }
+
         for( Ingredient ing : recipe.getIngredients() )
-            if( canReplicateIngredient( ing ) && globalAssociations.hasExtendedAssociations( ing ) )
-                return true;
+            if( canReplicateIngredient( ing ) )
+                for( CraftingRecipeItemStackAssociator associator : associators )
+                    if( associator.hasExtendedAssociations( ing ) )
+                        return true;
 
         return false;
     }
@@ -178,7 +210,56 @@ public final class CraftingRecipeReplicator
         return Strata.resource( String.format( "%s_%s" , resourceLocation.getResourceDomain() , resourceLocation.getResourcePath() ) );
     }
 
-    protected Ingredient getReplicatedIngredientOrOriginal( Ingredient original )
+    protected void rebuildRecipeSpecificAssociationsIfNecessary()
+    {
+        if( recipeSpecificAssociations != null )
+            return;
+
+        recipeSpecificAssociations = new HashMap<>();
+
+        for( Pair< String , ObjectAssociator< String > > pair : CollectionUtil.inPairs( rawRecipeSpecificAssociations ) )
+        {
+            CraftingRecipeItemStackAssociator associator = new CraftingRecipeItemStackAssociator();
+
+            for( Collection< String > equivalentItemGroup : pair.getValue().allAssociations() )
+            {
+                ItemStack firstItemStack = null;
+
+                for( String metaResourceLocationString : equivalentItemGroup )
+                {
+                    MetaResourceLocation metaResourceLocation = new MetaResourceLocation( metaResourceLocationString );
+                    ItemStack itemStack = ItemHelper.metaResourceLocationToItemStack( metaResourceLocation );
+                    if( itemStack == null )
+                    {
+                        for( ModContainer mod : Loader.instance().getActiveModList() )
+                        {
+                            if( metaResourceLocation.resourceLocation.getResourceDomain().equalsIgnoreCase( mod.getModId() ) )
+                            {
+                                Strata.LOGGER.error(
+                                    String.format(
+                                        "Failed to resolve '%s' for recipe replication!",
+                                        metaResourceLocationString ) );
+
+                                break;
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    if( firstItemStack == null )
+                        firstItemStack = itemStack;
+                    else
+                        associator.associate( firstItemStack , itemStack );
+                }
+            }
+
+            if( associator.groups() > 0 )
+                recipeSpecificAssociations.put( Pattern.compile( pair.getKey() ) , associator );
+        }
+    }
+
+    protected Ingredient getReplicatedIngredientOrOriginal( IRecipe recipe , Ingredient original )
     {
         if( !canReplicateIngredient( original ) )
             return original;
@@ -187,17 +268,27 @@ public final class CraftingRecipeReplicator
         matchingIngredients.add( original );
         matchingIngredients.addAll( globalAssociations.getExtendingIngredients( original ) );
 
+        String recipeRegistryNameString = recipe.getRegistryName().toString();
+        rebuildRecipeSpecificAssociationsIfNecessary();
+
+        for( Pair< Pattern , CraftingRecipeItemStackAssociator > pair : CollectionUtil.inPairs( recipeSpecificAssociations ) )
+        {
+            Matcher matcher = pair.getKey().matcher( recipeRegistryNameString );
+            if( matcher.matches() )
+                matchingIngredients.addAll( pair.getValue().getExtendingIngredients( original ) );
+        }
+
         return matchingIngredients.size() == 1
             ? matchingIngredients.get( 0 )
             : new ReplicatedCompoundIngredient( matchingIngredients );
     }
 
     @Nonnull
-    protected NonNullList< Ingredient > substitute( NonNullList< Ingredient > ings )
+    protected NonNullList< Ingredient > substitute( IRecipe recipe , NonNullList< Ingredient > ings )
     {
         NonNullList< Ingredient > replacedIngredients = NonNullList.create();
         for( Ingredient ing : ings )
-            replacedIngredients.add( getReplicatedIngredientOrOriginal( ing ) );
+            replacedIngredients.add( getReplicatedIngredientOrOriginal( recipe , ing ) );
 
         return replacedIngredients;
     }

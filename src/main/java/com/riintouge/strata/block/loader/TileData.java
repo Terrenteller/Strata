@@ -8,6 +8,7 @@ import com.riintouge.strata.image.BlendMode;
 import com.riintouge.strata.image.LayeredTextureLayer;
 import com.riintouge.strata.item.*;
 import com.riintouge.strata.misc.MetaResourceLocation;
+import com.riintouge.strata.recipe.CraftingRecipeReplicator;
 import com.riintouge.strata.sound.SoundEventRegistry;
 import com.riintouge.strata.sound.SoundEventTuple;
 import com.riintouge.strata.util.StringUtil;
@@ -152,6 +153,18 @@ public class TileData
             case "convertsTo":
             {
                 equivalentItemResourceLocation = value.equals( "-" ) ? null : new MetaResourceLocation( value );
+                return true;
+            }
+            case "convertsToIn":
+            {
+                String values[] = value.split( " " );
+                if( values.length < 2 )
+                    return false;
+
+                String registryName = tileType.registryName( tileSetName ).toString();
+                for( int index = 1 ; index < values.length ; index++ )
+                    CraftingRecipeReplicator.INSTANCE.associateWithIn( registryName , values[ 0 ] , values[ index ] );
+
                 return true;
             }
             case "dragonImmune":

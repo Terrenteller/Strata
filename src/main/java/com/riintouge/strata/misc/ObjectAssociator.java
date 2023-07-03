@@ -10,6 +10,9 @@ public class ObjectAssociator< T >
 
     public void associate( T a , T b )
     {
+        if( a.equals( b ) )
+            return;
+
         Collection< T > groupA = findInternal( a );
         Collection< T > groupB = findInternal( b );
 
@@ -30,8 +33,7 @@ public class ObjectAssociator< T >
         {
             Collection< T > collection = createEmptyCollection();
             makeAssociation( a , collection );
-            if( !b.equals( a ) )
-                makeAssociation( b , collection );
+            makeAssociation( b , collection );
 
             groups.add( collection );
         }
@@ -49,6 +51,11 @@ public class ObjectAssociator< T >
             listBuilder.add( Collections.unmodifiableCollection( group ) );
 
         return listBuilder.build();
+    }
+
+    public int groups()
+    {
+        return groups.size();
     }
 
     protected Collection< T > findInternal( T value )
