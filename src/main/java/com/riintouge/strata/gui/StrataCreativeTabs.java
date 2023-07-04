@@ -7,12 +7,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
 
-@SideOnly( Side.CLIENT )
 public final class StrataCreativeTabs extends CreativeTabs
 {
     public static final StrataCreativeTabs BLOCK_TAB          = new StrataCreativeTabs( "strataBlocksTab"         , Strata.resource( "gneiss" )               );

@@ -17,7 +17,7 @@ public abstract class ZipMessage extends DataStreamMessage
             toBytes( new DataOutputStream( byteArrayOutputStream ) );
 
             byte[] originalData = byteArrayOutputStream.toByteArray();
-            buf.writeShort( originalData.length );
+            buf.writeInt( originalData.length );
 
             Deflater deflater = new Deflater( Deflater.BEST_COMPRESSION , false );
             deflater.setInput( originalData );
@@ -44,7 +44,7 @@ public abstract class ZipMessage extends DataStreamMessage
     {
         try
         {
-            byte[] originalData = new byte[ buf.readShort() ];
+            byte[] originalData = new byte[ buf.readInt() ];
             byte[] compressedBytes = new byte[ buf.readableBytes() ];
             buf.readBytes( compressedBytes );
 
