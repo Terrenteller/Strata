@@ -64,10 +64,10 @@ public interface IGeoTileInfo extends IHostInfo, IForgeRegistrable
     WeightedDropCollections weightedDropGroups();
 
     @Nonnull
-    ArrayList< EnumPlantType > sustainedPlantTypes();
+    List< EnumPlantType > sustainedPlantTypes();
 
     @Nonnull
-    ArrayList< IBlockState > sustainsPlantsSustainedBy();
+    List< IBlockState > sustainsPlantsSustainedBy();
 
     @Nonnull
     ResourceLocation blockStateResource();

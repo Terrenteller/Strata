@@ -1,5 +1,6 @@
 package com.riintouge.strata.block.loader;
 
+import com.google.common.collect.ImmutableList;
 import com.riintouge.strata.item.*;
 import com.riintouge.strata.misc.MetaResourceLocation;
 import com.riintouge.strata.block.ParticleHelper;
@@ -13,7 +14,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumFacing;
@@ -35,21 +35,19 @@ public final class ImmutableTile implements IGeoTileInfo
     private String blockOreDictionaryName;
     private String fragmentItemOreDictionaryName;
     private MetaResourceLocation equivalentItemResourceLocation;
-    private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation furnaceResult;
     private Float furnaceExperience;
     private LayeredTextureLayer[] fragmentTextureLayers;
     private IDropFormula fragmentDropFormula;
     private MetaResourceLocation equivalentFragmentItemResourceLocation;
-    private ItemStack equivalentFragmentItemStack = null; // Lazily evaluated
     private MetaResourceLocation fragmentFurnaceResult;
     private Float fragmentFurnaceExperience;
     private int fragmentBurnTime;
     private MetaResourceLocation breaksIntoResourceLocation;
     private WeightedDropCollections weightedDropCollections;
-    private ArrayList< EnumPlantType > sustainedPlantTypes;
-    private ArrayList< MetaResourceLocation > sustainsPlantsSustainedByRaw;
-    private ArrayList< IBlockState > sustainsPlantsSustainedBy = new ArrayList<>(); // Lazily populated
+    private List< EnumPlantType > sustainedPlantTypes;
+    private List< MetaResourceLocation > sustainsPlantsSustainedByRaw;
+    private List< IBlockState > sustainsPlantsSustainedBy = null; // Lazily evaluated
     private ResourceLocation blockStateResource;
     private IDropFormula experienceDropFormula;
     private SoundEventTuple ambientSound;
@@ -97,7 +95,7 @@ public final class ImmutableTile implements IGeoTileInfo
         this.fragmentBurnTime = Util.coalesce( tileData.fragmentBurnTime , 0 );
         this.breaksIntoResourceLocation = tileData.breaksIntoResourceLocation;
         this.weightedDropCollections = tileData.weightedDropCollections;
-        this.sustainedPlantTypes = Util.lazyCoalesce( tileData.sustainedPlantTypes , ArrayList::new );
+        this.sustainedPlantTypes = tileData.sustainedPlantTypes != null ? Collections.unmodifiableList( tileData.sustainedPlantTypes ) : Collections.emptyList();
         this.blockStateResource = Util.coalesce( tileData.blockStateResource , this.tileType.blockStateResource );
         this.experienceDropFormula = tileData.experienceDropFormula;
         this.ambientSound = tileData.ambientSound;
@@ -171,16 +169,12 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public ItemStack equivalentItemStack()
     {
-        if( equivalentItemStack != null || equivalentItemResourceLocation == null )
-            return equivalentItemStack;
+        if( equivalentItemResourceLocation == null )
+            return null;
 
         // Deferred resolution until reasonably sure the item has been created
-        equivalentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentItemResourceLocation );
-        if( ItemHelper.isNullOrAirOrEmpty( equivalentItemStack ) )
-            equivalentItemStack = null;
-
-        equivalentItemResourceLocation = null;
-        return equivalentItemStack;
+        ItemStack equivalentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentItemResourceLocation );
+        return ItemHelper.isNullOrAirOrEmpty( equivalentItemStack ) ? null : equivalentItemStack;
     }
 
     @Nullable
@@ -226,19 +220,12 @@ public final class ImmutableTile implements IGeoTileInfo
     @Override
     public ItemStack equivalentFragmentItemStack()
     {
-        if( equivalentFragmentItemStack != null || equivalentFragmentItemResourceLocation == null )
-            return equivalentFragmentItemStack;
+        if( equivalentFragmentItemResourceLocation == null )
+            return null;
 
         // Deferred resolution until reasonably sure the item has been created
-        if( hasFragment() )
-        {
-            equivalentFragmentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentFragmentItemResourceLocation );
-            if( ItemHelper.isNullOrAirOrEmpty( equivalentFragmentItemStack ) )
-                equivalentFragmentItemStack = null;
-        }
-
-        equivalentFragmentItemResourceLocation = null;
-        return equivalentFragmentItemStack;
+        ItemStack equivalentFragmentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentFragmentItemResourceLocation );
+        return ItemHelper.isNullOrAirOrEmpty( equivalentFragmentItemStack ) ? null : equivalentFragmentItemStack;
     }
 
     @Nullable
@@ -282,28 +269,31 @@ public final class ImmutableTile implements IGeoTileInfo
 
     @Nonnull
     @Override
-    public ArrayList< EnumPlantType > sustainedPlantTypes()
+    public List< EnumPlantType > sustainedPlantTypes()
     {
         return sustainedPlantTypes;
     }
 
     @Nonnull
     @Override
-    public ArrayList< IBlockState > sustainsPlantsSustainedBy()
+    public List< IBlockState > sustainsPlantsSustainedBy()
     {
         // Deferred resolution until reasonably sure the block(s) have been created
         if( sustainsPlantsSustainedByRaw != null )
         {
+            ImmutableList.Builder< IBlockState > sustainsPlantsSustainedByBuilder = new ImmutableList.Builder();
+
             for( MetaResourceLocation metaResourceLocation : sustainsPlantsSustainedByRaw )
             {
                 Block otherBlock = ForgeRegistries.BLOCKS.getValue( metaResourceLocation.resourceLocation );
-                sustainsPlantsSustainedBy.add( otherBlock.getStateFromMeta( metaResourceLocation.meta ) );
+                sustainsPlantsSustainedByBuilder.add( otherBlock.getStateFromMeta( metaResourceLocation.meta ) );
             }
 
+            sustainsPlantsSustainedBy = sustainsPlantsSustainedByBuilder.build();
             sustainsPlantsSustainedByRaw = null;
         }
 
-        return sustainsPlantsSustainedBy;
+        return sustainsPlantsSustainedBy != null ? sustainsPlantsSustainedBy : Collections.emptyList();
     }
 
     @Nonnull

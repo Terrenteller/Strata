@@ -46,12 +46,11 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     private ResourceLocation blockStateResourceLocation;
     private LayeredTextureLayer[] oreItemTextureLayers;
     private MetaResourceLocation equivalentItemResourceLocation;
-    private ItemStack equivalentItemStack = null; // Lazily evaluated
     private MetaResourceLocation furnaceResult;
     private Float furnaceExperience;
     private MetaResourceLocation proxyBlockResourceLocation;
+    private Block proxyBlock = null; // Lazily evaluated
     private IBlockState proxyBlockState = null; // Lazily evaluated
-    private ItemStack proxyBlockItemStack = null; // Lazily evaluated
     private MetaResourceLocation forcedHost;
     private List< MetaResourceLocation > hostAffinities;
     private MetaResourceLocation breaksIntoResourceLocation;
@@ -116,18 +115,21 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
             Util.lazyCoalesce( tileData.tooltipMap , HashMap::new ) );
     }
 
-    private void resolveProxyMembers()
+    private void resolveProxyMembersIfNecessary()
     {
-        if( proxyBlockResourceLocation == null )
+        if( proxyBlockResourceLocation == null || proxyBlock != null )
             return;
 
-        Block proxyBlock = Block.REGISTRY.getObject( proxyBlockResourceLocation.resourceLocation );
-        if( proxyBlock.equals( Blocks.AIR ) )
+        proxyBlock = Block.REGISTRY.getObject( proxyBlockResourceLocation.resourceLocation );
+        if( proxyBlock == null || proxyBlock.equals( Blocks.AIR ) )
+        {
+            proxyBlock = null;
+            proxyBlockResourceLocation = null;
             return;
+        }
 
-        proxyBlockState = proxyBlock.getStateFromMeta( proxyBlockResourceLocation.meta );
-        proxyBlockItemStack = new ItemStack( Item.getItemFromBlock( proxyBlock ) , 1 , proxyBlockResourceLocation.meta );
-        proxyBlockResourceLocation = null;
+        if( proxyBlockState == null )
+            proxyBlockState = proxyBlock.getStateFromMeta( proxyBlockResourceLocation.meta );
     }
 
     // IOreInfo overrides
@@ -193,19 +195,16 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
         return oreItemTextureLayers;
     }
 
+    @Nullable
     @Override
     public ItemStack equivalentItemStack()
     {
-        if( equivalentItemStack != null || equivalentItemResourceLocation == null )
-            return equivalentItemStack;
+        if( equivalentItemResourceLocation == null )
+            return null;
 
         // Deferred resolution until reasonably sure the item has been created
-        equivalentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentItemResourceLocation );
-        if( ItemHelper.isNullOrAirOrEmpty( equivalentItemStack ) )
-            equivalentItemStack = null;
-
-        equivalentItemResourceLocation = null;
-        return equivalentItemStack;
+        ItemStack equivalentItemStack = ItemHelper.metaResourceLocationToItemStack( equivalentItemResourceLocation );
+        return ItemHelper.isNullOrAirOrEmpty( equivalentItemStack ) ? null : equivalentItemStack;
     }
 
     @Nullable
@@ -239,7 +238,7 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public IBlockState proxyBlockState()
     {
-        resolveProxyMembers();
+        resolveProxyMembersIfNecessary();
 
         return proxyBlockState;
     }
@@ -248,9 +247,9 @@ public final class ImmutableOre implements IOreInfo , IForgeRegistrable
     @Override
     public ItemStack proxyBlockItemStack()
     {
-        resolveProxyMembers();
+        resolveProxyMembersIfNecessary();
 
-        return proxyBlockItemStack;
+        return proxyBlock != null ? new ItemStack( Item.getItemFromBlock( proxyBlock ) , 1 , proxyBlockResourceLocation.meta ) : null;
     }
 
     @Nullable
