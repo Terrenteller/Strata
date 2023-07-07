@@ -340,6 +340,10 @@ public class OreBlock extends OreBaseBlock
             if( canFall() )
                 super.randomDisplayTick( stateIn , worldIn , pos , rand );
 
+            IBlockState proxyBlockState = oreInfo.proxyBlockState();
+            if( proxyBlockState != null )
+                proxyBlockState.getBlock().randomDisplayTick( proxyBlockState , worldIn , pos , rand );
+
             SoundEventTuple oreAmbientSound = oreInfo.ambientSound();
             if( oreAmbientSound != null )
                 AmbientSoundHelper.playForRandomDisplayTick( worldIn , pos , rand , oreAmbientSound );
