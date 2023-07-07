@@ -256,7 +256,6 @@ public class CountBlocksCommand extends CommandBase
     @Override
     public String getUsage( ICommandSender sender )
     {
-        // We probably shouldn't know we're a sub-command of /strata
         return "/strata countBlocks <radius:int> <verbosity:int> [ResourceLocation1[:<meta>] ... ResourceLocationN[:<meta>]]";
     }
 
