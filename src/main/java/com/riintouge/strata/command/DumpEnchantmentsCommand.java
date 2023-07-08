@@ -131,7 +131,7 @@ public class DumpEnchantmentsCommand extends CommandBase
 
             List< String > lines = new ArrayList<>();
             if( !name.equalsIgnoreCase( enchantment.getName() ) )
-                lines.add( String.format( "%s (%s)" , enchantment.getRegistryName().toString() , name ) );
+                lines.add( String.format( "%s \"%s\"" , enchantment.getRegistryName().toString() , name ) );
             else
                 lines.add( enchantment.getRegistryName().toString() );
 

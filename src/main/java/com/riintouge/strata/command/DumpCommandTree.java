@@ -8,6 +8,7 @@ public class DumpCommandTree extends CommandTreeBase
     public DumpCommandTree()
     {
         addSubcommand( new DumpEnchantmentsCommand() );
+        addSubcommand( new DumpOreDictCommand() );
     }
 
     // CommandTreeBase overrides
