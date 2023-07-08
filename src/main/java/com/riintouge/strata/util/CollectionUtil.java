@@ -3,13 +3,54 @@ package com.riintouge.strata.util;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class CollectionUtil
 {
+    public static < T > Iterable< EnumeratedElement< T > > enumerate( Collection< T > collection )
+    {
+        return new EnumeratedCollectionIterable<>( collection );
+    }
+
+    private final static class EnumeratedCollectionIterable< T > implements Iterable< EnumeratedElement< T > >
+    {
+        private final Collection< T > collection;
+
+        public EnumeratedCollectionIterable( Collection< T > collection )
+        {
+            this.collection = collection;
+        }
+
+        // Iterable overrides
+
+        @Override
+        public Iterator< EnumeratedElement< T > > iterator()
+        {
+            AtomicInteger index = new AtomicInteger( 0 );
+
+            return collection.stream()
+                .map( x -> new EnumeratedElement<>( x , index.getAndIncrement() , collection.size() ) )
+                .iterator();
+        }
+    }
+
+    public static class EnumeratedElement< T >
+    {
+        public final T element;
+        public final int index;
+        public final boolean isFirst;
+        public final boolean isLast;
+
+        public EnumeratedElement( T element , int index , int size )
+        {
+            this.element = element;
+            this.index = index;
+            this.isFirst = index == 0;
+            this.isLast = index == ( size - 1 );
+        }
+    }
+
     public static < K , V > Iterable< Pair< K , V > > inPairs( Map< K , V > map )
     {
         return new MapPairIterable<>( map );

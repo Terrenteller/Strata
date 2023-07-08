@@ -141,7 +141,7 @@ public class DumpOreDictCommand extends CommandBase
             else
                 lines.add( "\tEMPTY" );
 
-            return StringUtil.join( "\n" , lines , x -> x );
+            return String.join( "\n" , lines );
         }
     }
 }

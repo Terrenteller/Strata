@@ -148,7 +148,7 @@ public class DumpEnchantmentsCommand extends CommandBase
             if( conflicts.size() > 0 )
                 lines.add( "\tConflicts with " + StringUtil.join( ", " , conflicts , x -> x.getRegistryName().toString() ) );
 
-            return StringUtil.join( "\n" , lines , x -> x );
+            return String.join( "\n" , lines );
         }
     }
 }
