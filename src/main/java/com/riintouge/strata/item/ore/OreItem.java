@@ -30,10 +30,11 @@ public class OreItem extends Item
     {
         this.oreInfo = oreInfo;
 
-        ResourceLocation resource = Strata.resource( oreInfo.oreName() );
+        ResourceLocation registryName = Strata.resource( oreInfo.oreName() );
         setCreativeTab( StrataCreativeTabs.ORE_ITEM_TAB );
-        setRegistryName( resource );
-        setUnlocalizedName( resource.toString() );
+        StrataCreativeTabs.ORE_ITEM_TAB.setFallbackItemStackResource( registryName );
+        setRegistryName( registryName );
+        setUnlocalizedName( registryName.toString() );
     }
 
     // Item overrides

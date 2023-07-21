@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 
 public final class StrataCreativeTabs extends CreativeTabs
 {
+    // TODO: Add tab item stack resource locations as mod configuration options
     public static final StrataCreativeTabs BLOCK_TAB          = new StrataCreativeTabs( "strataBlocksTab"         , Strata.resource( "gneiss" )               );
     public static final StrataCreativeTabs BUILDING_BLOCK_TAB = new StrataCreativeTabs( "strataBuildingBlocksTab" , Strata.resource( "gneiss_stonewall" )     );
     public static final StrataCreativeTabs MISC_BLOCK_TAB     = new StrataCreativeTabs( "strataMiscBlocksTab"     , Strata.resource( "gneiss_pressureplate" ) );
@@ -25,6 +26,7 @@ public final class StrataCreativeTabs extends CreativeTabs
     private static CreativeTabs FIRST_TAB;
     private static CreativeTabs LAST_TAB;
     private final ResourceLocation itemStackResource;
+    private ResourceLocation fallbackItemStackResource;
 
     StrataCreativeTabs( String label , ResourceLocation itemStackResource )
     {
@@ -38,12 +40,22 @@ public final class StrataCreativeTabs extends CreativeTabs
         LAST_TAB = this;
     }
 
+    public void setFallbackItemStackResource( ResourceLocation fallbackItemStackResource )
+    {
+        if( this.fallbackItemStackResource == null )
+            this.fallbackItemStackResource = fallbackItemStackResource;
+    }
+
     // CreativeTabs overrides
 
     @Override
     public ItemStack getTabIconItem()
     {
-        return new ItemStack( Item.REGISTRY.getObject( itemStackResource ) );
+        Item item = Item.REGISTRY.getObject( itemStackResource );
+        if( item == null )
+            item = Item.REGISTRY.getObject( fallbackItemStackResource );
+
+        return item != null ? new ItemStack( item ) : ItemStack.EMPTY;
     }
 
     // Statics

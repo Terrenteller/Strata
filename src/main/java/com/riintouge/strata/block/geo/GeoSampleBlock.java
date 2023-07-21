@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -33,8 +34,10 @@ public class GeoSampleBlock extends SampleBlock
         super( geoBlockState );
         this.tileInfo = tileInfo;
 
+        ResourceLocation registryName = Strata.resource( tileInfo.tileSetName() + REGISTRY_NAME_SUFFIX );
         setCreativeTab( StrataCreativeTabs.BLOCK_SAMPLE_TAB );
-        setRegistryName( Strata.resource( tileInfo.tileSetName() + REGISTRY_NAME_SUFFIX ) );
+        StrataCreativeTabs.BLOCK_SAMPLE_TAB.setFallbackItemStackResource( registryName );
+        setRegistryName( registryName );
         setSoundType( tileInfo.soundType() );
         setUnlocalizedName( Strata.resource( tileInfo.tileSetName() ).toString() );
     }

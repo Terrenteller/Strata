@@ -47,6 +47,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
@@ -80,10 +81,12 @@ public class OreBlock extends OreBaseBlock
     {
         super( oreInfo , oreInfo.material() );
 
+        ResourceLocation registryName = Strata.resource( oreInfo.oreName() + REGISTRY_NAME_SUFFIX );
         setCreativeTab( StrataCreativeTabs.ORE_BLOCK_TAB );
+        StrataCreativeTabs.ORE_BLOCK_TAB.setFallbackItemStackResource( registryName );
         setHardness( oreInfo.hardness() );
         setHarvestLevel( oreInfo.harvestTool() , oreInfo.harvestLevel() );
-        setRegistryName( Strata.resource( oreInfo.oreName() + REGISTRY_NAME_SUFFIX ) );
+        setRegistryName( registryName );
         setResistance( oreInfo.explosionResistance() );
         setSoundType( oreInfo.soundType() );
         setTickRandomly( HostRegistry.INSTANCE.doesAnyHostTickRandomly() );

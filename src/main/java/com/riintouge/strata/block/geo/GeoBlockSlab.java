@@ -18,7 +18,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -66,6 +65,7 @@ public class GeoBlockSlab extends BlockSlab
 
         ResourceLocation registryName = tileInfo.registryName();
         setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
+        StrataCreativeTabs.BUILDING_BLOCK_TAB.setFallbackItemStackResource( registryName );
         setHardness( tileInfo.hardness() );
         setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
         setRegistryName( registryName );

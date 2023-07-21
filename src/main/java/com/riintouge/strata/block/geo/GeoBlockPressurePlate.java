@@ -10,7 +10,6 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -36,6 +35,7 @@ public class GeoBlockPressurePlate extends BlockPressurePlate
 
         ResourceLocation registryName = tileInfo.registryName();
         setCreativeTab( StrataCreativeTabs.MISC_BLOCK_TAB );
+        StrataCreativeTabs.MISC_BLOCK_TAB.setFallbackItemStackResource( registryName );
         setHardness( tileInfo.hardness() );
         // Vanilla sets a precedent with gold pressure plates.
         // Gold blocks require an iron pick or higher to mine but any level pick will break the plate.

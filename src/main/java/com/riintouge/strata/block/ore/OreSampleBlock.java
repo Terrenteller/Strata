@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -33,16 +34,18 @@ public class OreSampleBlock extends SampleBlock
         super( oreBlockState );
         this.oreInfo = oreInfo;
 
-        setRegistryName( Strata.resource( oreInfo.oreName() + REGISTRY_NAME_SUFFIX ) );
+        ResourceLocation registryName = Strata.resource( oreInfo.oreName() + REGISTRY_NAME_SUFFIX );
+        setCreativeTab( StrataCreativeTabs.ORE_SAMPLE_TAB );
+        StrataCreativeTabs.ORE_SAMPLE_TAB.setFallbackItemStackResource( registryName );
+        setRegistryName( registryName );
+        setSoundType( SoundType.GROUND );
+
         IBlockState proxyBlockState = oreInfo.proxyBlockState();
         Block proxyBlock = proxyBlockState != null ? proxyBlockState.getBlock() : null;
         if( proxyBlock != null )
             setUnlocalizedName( proxyBlock.getUnlocalizedName() );
         else
             setUnlocalizedName( Strata.resource( oreInfo.oreName() ).toString() );
-
-        setSoundType( SoundType.GROUND );
-        setCreativeTab( StrataCreativeTabs.ORE_SAMPLE_TAB );
     }
 
     // Block overrides

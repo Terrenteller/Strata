@@ -85,9 +85,15 @@ public class GeoBlock extends BlockFalling
         setUnlocalizedName( registryName.toString() );
 
         if( tileInfo.tileType().isPrimary || tileInfo.tileType() == TileType.COBBLE )
+        {
             setCreativeTab( StrataCreativeTabs.BLOCK_TAB );
+            StrataCreativeTabs.BLOCK_TAB.setFallbackItemStackResource( registryName );
+        }
         else
+        {
             setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
+            StrataCreativeTabs.BUILDING_BLOCK_TAB.setFallbackItemStackResource( registryName );
+        }
 
         Float slipperiness = tileInfo.slipperiness();
         if( slipperiness != null )

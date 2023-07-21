@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -37,6 +36,7 @@ public class GeoBlockStairs extends BlockStairs
 
         ResourceLocation registryName = tileInfo.registryName();
         setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
+        StrataCreativeTabs.BUILDING_BLOCK_TAB.setFallbackItemStackResource( registryName );
         setHardness( tileInfo.hardness() );
         setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
         setRegistryName( registryName );

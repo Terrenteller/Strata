@@ -57,6 +57,7 @@ public class GeoBlockWall extends BlockWall
 
         ResourceLocation registryName = tileInfo.registryName();
         setCreativeTab( StrataCreativeTabs.BUILDING_BLOCK_TAB );
+        StrataCreativeTabs.BUILDING_BLOCK_TAB.setFallbackItemStackResource( registryName );
         setHarvestLevel( tileInfo.harvestTool() , tileInfo.harvestLevel() );
         setHardness( tileInfo.hardness() );
         setRegistryName( registryName );

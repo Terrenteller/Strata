@@ -30,11 +30,12 @@ public class GeoItemFragment extends Item
     {
         this.tileInfo = tileInfo;
 
-        ResourceLocation resource = GeoItemFragment.fragmentRegistryName( tileInfo );
-        assert resource != null;
+        ResourceLocation registryName = GeoItemFragment.fragmentRegistryName( tileInfo );
+        assert registryName != null;
         setCreativeTab( StrataCreativeTabs.BLOCK_FRAGMENT_TAB );
-        setRegistryName( resource );
-        setUnlocalizedName( resource.toString() );
+        StrataCreativeTabs.BLOCK_FRAGMENT_TAB.setFallbackItemStackResource( registryName );
+        setRegistryName( registryName );
+        setUnlocalizedName( registryName.toString() );
     }
 
     // Item overrides
