@@ -1,15 +1,15 @@
 package com.riintouge.strata.block.geo;
 
 import com.riintouge.strata.Strata;
-import com.riintouge.strata.item.ItemHelper;
-import com.riintouge.strata.item.geo.ThrowableGeoItemFragment;
-import com.riintouge.strata.misc.IForgeRegistrable;
 import com.riintouge.strata.block.ProtoBlockTextureMap;
-import com.riintouge.strata.recipe.CraftingRecipeReplicator;
 import com.riintouge.strata.block.SpecialBlockPropertyFlags;
+import com.riintouge.strata.item.ItemHelper;
 import com.riintouge.strata.item.geo.GeoItemBlock;
 import com.riintouge.strata.item.geo.GeoItemBlockSlab;
 import com.riintouge.strata.item.geo.GeoItemFragment;
+import com.riintouge.strata.item.geo.ThrowableGeoItemFragment;
+import com.riintouge.strata.misc.IForgeRegistrable;
+import com.riintouge.strata.recipe.CraftingRecipeReplicator;
 import com.riintouge.strata.util.FlagUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -45,6 +45,24 @@ public class GeoTileSet implements IGeoTileSet , IForgeRegistrable
     protected GeoItemFragment fragmentItem;
     protected Block sampleBlock;
     protected ItemBlock sampleItemBlock;
+
+    static
+    {
+        // We expect to create equivalents of these recipes. Our items should not play a role in the originals.
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:cobblestone_slab" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:cobblestone_wall" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:stone_slab" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:stone_stairs" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:stonebrick" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:mossy_cobblestone" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:mossy_stonebrick" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:stone_brick_stairs" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:stone_brick_slab" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:stone_button" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:lever" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:stone_pressure_plate" );
+        CraftingRecipeReplicator.INSTANCE.blacklistRecipe( "minecraft:clay" );
+    }
 
     public GeoTileSet()
     {

@@ -12,7 +12,6 @@ import com.riintouge.strata.block.geo.GeoTileSetRegistry;
 import com.riintouge.strata.block.host.HostRegistry;
 import com.riintouge.strata.block.ore.OreRegistry;
 import com.riintouge.strata.network.NetworkManager;
-import com.riintouge.strata.resource.ConfigDir;
 import com.riintouge.strata.resource.DocsDir;
 import com.riintouge.strata.resource.JarResourceHelper;
 import com.riintouge.strata.sound.SoundEventRegistry;
@@ -39,7 +38,6 @@ public class CommonProxy
         try
         {
             JarResourceHelper strataResources = new JarResourceHelper( Strata.class );
-            ( new ConfigDir() ).extractResources( strataResources , false );
             ( new DocsDir() ).extractResources( strataResources , true );
         }
         catch( ZipException e )

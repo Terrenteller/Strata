@@ -139,6 +139,11 @@ public final class CraftingRecipeReplicator
             .collect( Collectors.toSet() );
     }
 
+    public void blacklistRecipe( String recipeResourceLocationString )
+    {
+        blacklistedRecipes.add( Pattern.compile( recipeResourceLocationString ) );
+    }
+
     public boolean isRecipeBlacklisted( String recipeResourceLocationString )
     {
         return blacklistedRecipes.stream().anyMatch( x -> x.matcher( recipeResourceLocationString ).matches() );
@@ -330,7 +335,7 @@ public final class CraftingRecipeReplicator
             switch( kv[ 0 ] )
             {
                 case "blacklist":
-                    INSTANCE.blacklistedRecipes.add( Pattern.compile( kv[ 1 ] ) );
+                    INSTANCE.blacklistRecipe( kv[ 1 ] );
                     break;
             }
         }
