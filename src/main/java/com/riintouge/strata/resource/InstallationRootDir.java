@@ -76,7 +76,7 @@ public class InstallationRootDir
                 continue;
 
             targetFile.getParentFile().mkdirs(); // Ignore the return because we expect Files.copy() to complain
-            Files.copy( resourceHelper.getResource( internalDir ) , targetFile.toPath() , StandardCopyOption.REPLACE_EXISTING );
+            Files.copy( resourceHelper.getResource( internalResource ) , targetFile.toPath() , StandardCopyOption.REPLACE_EXISTING );
         }
     }
 

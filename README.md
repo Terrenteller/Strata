@@ -1,71 +1,58 @@
+
+## Prologue
+
+Once upon a time, there was a mod named [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) that fell by the wayside. Disappointed with the thought of a revitalized and colourful underground that might never be, I took it upon myself to re-imagine the "Geologica" part of the PFAA triad, leaving Chemica and Fabrica to established tech mods like Mekanism and Immersive Engineering.
+
+As you may have anticipated, the result is Strata!
+
 ## What is Strata?
 
-Strata is a Forge-based, rock and ore generation mod for Minecraft with a focus on providing a platform for new content via plain-text configuration files of minimal complexity.
+Strata is a Forge-based geological block generation and ore compatibility mod for Minecraft and spiritual successor to PFAA Geologica. It provides a platform for new content through resource packs which contain non-standard plain-text configuration files of minimal complexity. Strata's primary directive is to shape a consistent gameplay experience across the blocks it creates and the blocks it does not create but may represent.
 
-Want to see what Strata is in pictures? Check [the gallery](https://github.com/Terrenteller/Strata/wiki/Gallery)!
+Want to see what Strata can do in pictures? Check [the gallery](https://github.com/Terrenteller/Strata/wiki/Gallery)!
 
 ## What makes Strata special?
 
-_Flexibility_ and **integration**.
+_Flexibility_ and **compatibility**.
 
 - Strata is not a world generation mod. Ideally, Strata is compatible with all of them!
 - Plain-text configuration files allow anyone to create custom content without a line of code!
 - Tile sets make it easy to define entire suites of stone blocks and their derivatives. Just add textures!
-- Strata will load tile data from resource packs on both client and server. One ZIP to rule them all!
-- Strata's two-in-one ore-in-host-rock system welcomes mod content cross-pollination and resource packs!
-- Ores take on the appearance and properties of their host and drop both when mined!
-- Strata will replicate existing recipes using custom content!
-- Ores support the same plants as their hosts! (technical exceptions withstanding)
+- Ores take on the appearance and properties of their host and drop both when harvested!
+- Strata's two-in-one ore-in-host system welcomes mod content cross-pollination and texture packs!
 - Strata's redstone ore acts like vanilla redstone ore! (yes, this is important)
+- Strata will load tile data from resource packs on both client and server. One ZIP to rule them all!
+- Strata will replicate standard crafting recipes using new content!
 - Strata has no hard dependency on any other mod or modding library! (sans Forge, of course)
 
 ## How do I use Strata?
 
-Strata will have little to no effect on gameplay outside of creative mode without a world generation mod to bring it to life (as much as rocks can have). Currently, the only option is [CustomOreGen](https://github.com/lawremi/CustomOreGen).
+Given Strata's primary directive, actual content and its application are secondary, and two-part:
 
-Strata's COG XML is 100% vanilla-compatible out-of-the-box, but is disabled as a whole by default. Given that changes to world generation are ironically destructive, it is easier to turn Strata on than it is to turn off. You may do so in the "Strata" tab of "Custom Ore Generation" options when creating a new world.
+#### 1. Resource packs
+
+Did you know resource packs can carry any payload? They're just a collection of files, after all. Strata utilizes this "feature" to neatly bundle tile data with its assets for easy distribution of synchronized content. Featured resource packs are managed separately from the code in the [Strata-Resource-Packs](https://github.com/Terrenteller/Strata-Resource-Packs) repository.
+
+For step-by-step instructions on creating new content, consult the "Your First" tutorial series on [the wiki](https://github.com/Terrenteller/Strata/wiki).
+
+#### 2. World generation
+
+Strata will have little to no effect on gameplay outside of creative mode without a world generation mod to bring it to life (as much as rocks can have). The premier (and currently only) option is [CustomOreGen](https://github.com/lawremi/CustomOreGen). Options provided by compatible resource packs are found in the "Custom Ore Generation" GUI when creating a new world.
 
 _NOTE: COG has a long-standing bug of replacing `emerald_ore` with `monster_egg` [here](https://github.com/lawremi/CustomOreGen/blob/db939431ccab85707754c69c6d54858d1fcdf9ff/src/main/resources/config/modules/Vanilla.xml#L2059). You will likely want to turn off COG's handling of vanilla ore generation in the "Vanilla" tab if you do not fix this yourself._
 
-## How do I use Strata to create my own content?
-
-- `docs/Strata.txt` describes tiledata key-values for the current version
-- `config/strata/tiledata/<modid>` directories contain tile/host/ore configuration files
-    - **Clients must know about everything the server does else the client will hang upon connecting**
-        - Unfortunately, the hang occurs outside of Strata's influence
-- `config/strata/recipe/<modid>/blacklist.txt` restricts recipe replication
-    - One recipe resource location regular expression per line
-
-`<modid>` directories are only processed if a mod with that ID is active. Strata will extract its own configuration into corresponding directories on start but will not overwrite them.
-
-For step-by-step instructions, consult the "Your First" series of tutorials on [the wiki](https://github.com/Terrenteller/Strata/wiki).
-
 ## How do I build Strata?
 
-Refer to Forge documentation instead to prepare a development environment for use with an IDE.
+If configuration files are not enough, please refer to Forge documentation for the version in `build.gradle` to prepare a development environment.
 
 **Arch Linux**
 
-```
-# pacman -Sy jdk8-openjdk
-$ ./gradlew setupCIWorkspace
-$ ./gradlew build
-```
-
-You may need to adjust the symlinks in `/usr/lib/jvm/`.
-
-## "Why" is Strata?
-
-Once upon a time, there was a mod called [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) that fell by the wayside. Disappointed with the thought of what might never be, I took it upon myself to re-imagine the "Geologica" part of the PFAA triad, leaving Chemica and Fabrica to established tech mods like Mekanism and Immersive Engineering.
+1. Install `jdk8-openjdk`
+2. Adjust the symlinks in `/usr/lib/jvm/` or edit the run configuration
 
 ## Legal stuff
 
 Strata is licenced under [LGPL 3.0](LICENCE.md) unless where otherwise stated. Markdown-formatted licences are provided by [IQAndreas/markdown-licenses](https://github.com/IQAndreas/markdown-licenses).
-
-Original and remixed [PerFabricaAdAstra](https://github.com/lawremi/PerFabricaAdAstra) assets were, and are still, licensed under [The Artistic License 2.0](artistic-v2.0.md).
-
-- Changes (where applicable) include, but may not be limited to:
-    - Image resizing, tiling and edge resynthesis, and colour and transparency adjustments
 
 Original and remixed [Geolosys](https://github.com/oitsjustjose/Geolosys) assets were, and still are, licensed under [GPL 3.0](gnu-gpl-v3.0.md).
 
