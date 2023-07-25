@@ -7,9 +7,19 @@ As you may have anticipated, the result is Strata!
 
 ## What is Strata?
 
-Strata is a Forge-based geological block generation and ore compatibility mod for Minecraft and spiritual successor to PFAA Geologica. It provides a platform for new content through resource packs which contain non-standard plain-text configuration files of minimal complexity. Strata's primary directive is to shape a consistent gameplay experience across the blocks it creates and the blocks it does not create but may represent.
+Strata is a Forge-based geological block generation and ore compatibility mod for Minecraft and spiritual successor to PFAA Geologica. It provides a platform for new content through resource packs which contain non-standard plain-text configuration files of minimal complexity. Strata's primary directive is to shape a consistent gameplay experience across the blocks it creates and the blocks it does not create but may represent. This is a fancy way to say Strata makes everyone's rocks and ores play nicely together.
 
-Want to see what Strata can do in pictures? Check [the gallery](https://github.com/Terrenteller/Strata/wiki/Gallery)!
+Want to see what Strata is in pictures? Check [the gallery](https://github.com/Terrenteller/Strata/wiki/Gallery)!
+
+## What can Strata do?
+
+**Strata can create almost any generic geological block and its entourage.** From stone, sand, gravel, and dirt to walls, stairs, buttons, and levers, the options are many. Clay can break into fragments like vanilla and be put right back together. Stone and cobblestone can break into fragments like TerraFirmaCraft. Stone fragments can be thrown like a snowball after being drawn like a bow and be crafted into cobblestone which can be smelted and crafted further. A Strata block that converts to another can be used as the other block in most recipes without fuss and be crafted directly into the other block for every other situation.
+
+**Strata can create highly-adaptive ores.** If another mod's ores are insufficient or something special is required, Strata ores are overachievers. Not only do they have robust drop options, they also have the concept of a "host" (like "host rock" but may not be rock). This allows Strata ores to look and behave as if they are in another block without requiring a block to be made for every ore/host combination. The host is normally determined when the ore is placed into the world based on simple heuristics using the adjacent blocks. For example, if sand is a host and an ore is placed in a body of sand, the ore will adapt to look like it's in sand, sound like it's in sand, and break like it's in sand - no tool required even if the ore normally requires one. Non-Strata blocks can be deemed as hosts as well for maximum compatibility.
+
+**Strata can mimic almost any other ore.** These ores are called "proxy" ores and defer as much to the original ore as possible. Light emission, tooltip localization, client-side random tick passive particle effects, and harvest behaviour (think drops in a more general sense) are several such things proxy ores figure out on the fly. Proxy ores sound redundant, but are key to blending hosts and ores from other mods.
+
+**Strata can give you some things for free.** Most notably, Geolosys-like "samples" are created automatically where appropriate. Ore samples can only be broken and picked up to prevent re-rolling, but other samples can be placed back down for decoration using the fragment item.
 
 ## What makes Strata special?
 
